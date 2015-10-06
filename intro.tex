@@ -1,0 +1,433 @@
+\documentclass{beamer}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage[english,bulgarian]{babel}
+
+\deftranslation[to=bulgarian]{Theorem}{Теорема}
+
+\mode<presentation>
+{
+%  \usetheme{Hannover}
+}
+
+\usepackage{fp}
+
+\title{Какво е функционално програмиране?}
+
+\author{Трифон Трифонов}
+
+\date{\small Функционално програмиране, спец. Информатика, 2015/16 г.}
+
+\subject{LectureSlides}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section*{Императивен и декларативен стил}
+
+\begin{frame}
+  \frametitle{Императивен стил}
+
+  Описваме последователно изчислителните стъпки.
+
+  \begin{columns}[t,onlytextwidth]
+    \column{0.5\textwidth}
+
+    \textbf{Неструктурирано програмиране}
+
+    \begin{enumerate}
+    \item Въведи \tt a, \tt b
+    \item Ако \tt{a = b}, към 6.
+    \item Ако \tt{a > b}, към 5.
+    \item \tt{b $\leftarrow$ b - a}; към 2.
+    \item \tt{a $\leftarrow$ b - a}; към 2.
+    \item Изведи a
+    \item Край
+    \end{enumerate}
+
+    \column{0.5\textwidth}
+
+    \textbf{Структурирано програмиране}
+
+    \begin{itemize}
+    \item Въведи \tt a, \tt b
+    \item Докато \tt{a != b}
+      \begin{itemize}
+      \item Ако \tt{a > b}
+        \begin{itemize}
+        \item \tt{a $\leftarrow$ b - a}
+        \end{itemize}
+      \item В противен случай
+        \begin{itemize}
+        \item \tt{b $\leftarrow$ b - a}
+        \end{itemize}        
+      \end{itemize}
+    \item Изведи \tt a
+    \end{itemize}
+
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Декларативен стил}
+
+  Описваме свойствата на желания резултат.
+  \vspace{1em}
+
+  \textbf{Програмиране с ограничения}
+
+  \begin{itemize}
+  \item Дадени са \tt a и \tt b.
+  \item Търсим \tt d, такова че:
+    \begin{itemize}
+    \item \tt{1 $\leq$ d $\leq$ a,b}
+    \item ``\tt d е делител на \tt a''
+    \item ``\tt d е делител на \tt b''
+    \item \tt d е възможно най-голямо, където
+    \item за дадени \tt x и \tt y казваме, че ``\tt x е делител на \tt y'', ако
+    \item намерим такова естествено число \tt k, че
+      \begin{itemize}
+      \item \tt{1 $\leq$ k $\leq$ y}
+      \item \tt k * \tt x = \tt y
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Декларативен стил (2)}
+
+  Описваме свойствата на желания резултат.
+  \vspace{1em}
+
+  \textbf{Логическо програмиране}
+
+  \begin{itemize}
+  \item Описваме релацията над естествени числа $gcd(a,b,c)$
+  \item $\forall a \, gcd(a,a,a)$ (факт)
+
+  \item $\forall a\forall b ( a > b \land \forall c (gcd(a-b,b,c) \rightarrow gcd(a,b,c)))$ (правило)
+  \item $\forall a\forall b ( a < b \land \forall c (gcd(a,b-a,c) \rightarrow gcd(a,b,c)))$ (правило)
+  \item Дадени са $a, b$
+  \item Намери такова $c$, за което $gcd(a,b,c)$
+  \end{itemize}
+
+  \pause
+
+  \textbf{Пример:}
+  Нека $a = 8, b = 12$. Тогава:
+
+  $gcd(4,4,4) \rightarrow gcd(8,4,4) \rightarrow gcd(8,12,4)$
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Декларативен стил (3)}
+
+  Описваме свойствата на желания резултат.
+  \vspace{1em}
+
+  \textbf{Функционално програмиране}
+
+  \begin{itemize}
+  \item Функцията над естествени числа $gcd(a,b)$ притежава следните свойства:
+  \item $gcd(a,a) = a$
+  \item $gcd(a-b,b) = gcd(a,b)$, ако $a > b$
+  \item $gcd(a,b-a) = gcd(a,b)$, ако $b > a$
+  \item Дадени са $a, b$
+  \item Да се пресметне $gcd(a,b)$.
+  \end{itemize}
+
+  \pause
+
+  \textbf{Пример:}
+  Нека $a = 8, b = 12$.
+
+  $gcd(8,12) = gcd(8,4) = gcd(4,4) = 4$.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Още един пример}
+
+  Да се намери сумата на квадратите на нечетните числа в списъка \tt l.
+
+  \begin{columns}[t,onlytextwidth]
+    \column{0.5\textwidth}
+    
+    \textbf{Императивен стил}
+    \begin{itemize}
+    \item Нека \tt{s = 0}.
+    \item За \tt i от 1 до \tt{length(l)}:
+      \begin{itemize}
+      \item Ако \tt{l[i]} е нечетно, то
+        \begin{itemize}
+        \item \tt{s = s + l[i]$^2$}.
+        \end{itemize}
+      \end{itemize}
+    \item Изведи \tt s.
+    \end{itemize}
+
+    \column{0.5\textwidth}
+
+    \textbf{Функционален стил}
+    
+    \begin{itemize}
+    \item От елементите на \tt l:
+    \item Избери нечетните
+    \item Приложи над резултата функцията $x^2$
+    \item Приложи над резултата операцията $+$.
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Още един пример (2)}
+  \textbf{C++:}
+\begin{verbatim}
+int s = 0;
+for(int i = 0; i < sizeof(l); i++)
+  if (l[i] % 2 != 0)
+    s += l[i] * l[i];
+cout << s;
+\end{verbatim}
+  
+  \pause
+  \textbf{Scheme:} \tt{(apply + (map square (filter odd? l)))}
+  \vspace{1em}
+
+  \pause
+  \textbf{Haskell:} \tt{foldr1 (+) [x * x | x <- l, odd x]}
+\end{frame}
+
+\section*{Изчислителни модели}
+
+\begin{frame}
+  \frametitle{Какво може да се сметне с компютър?}
+  
+  Нека $f:\mathbb N\to\mathbb N$ е функция над естествени числа.
+
+  Примери: $f(x) = x^2$, $f(x) = x$-тото число на Фибоначи.
+  \vspace{2em}
+  \pause
+
+  \textbf{Въпрос 1:} Какво означава да изчислим $f$ с компютър?
+  \vspace{2em}
+  \pause
+
+  \textbf{Въпрос 2:} Какво означава ``алгоритъм'' или ``програма''?
+  \vspace{2em}
+
+  \pause
+
+  \textbf{Върпос 3:} Има ли функции, които не могат да бъдат изчислени с компютър?
+\end{frame}
+
+\begin{frame}
+  \frametitle{Машина на Тюринг}
+
+  \includegraphics[width=\textwidth]{turing.pdf}
+
+  Казваме, че машината \textbf{$M$ изчислява функцията $f_M$}, ако за лента, в която е записано (в двоичен вид) числото $n$, $M$ завършва и записва върху лентата числото $f_M(n)$.
+
+  Ако $M$ не завърши, казваме, че \textbf{$f_M(n)$ не е дефинирана}. 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Има неизчислими функции!}
+
+  \begin{itemize}[<+->]
+  \item Всяка машина на Тюринг може да се кодира като дълго естествено число.
+  \item Всяка изчислима функция се изчислява от (поне една) машина.
+  \item Следователно, изчислимите функции са не повече от естествените числа (изброимо много).
+  \item Но функциите от вида $\mathbb N \to \mathbb N$ са колкото редиците от естествени числа
+\ldots
+  \item \ldots които са неизброимо много! (защо?).
+  \item Следователно, има неизброимо много неизчислими функции. \qed
+  \item \alert{Но кои са те?}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Стоп проблем}
+
+  Нека с $\mt n$ означаваме машината на Тюринг с код $n$.
+
+  Разглеждаме функцията:
+  \begin{equation*}
+    halts(n) = \mt n\text{ завършва над лента с числото }n.
+  \end{equation*}
+
+  \pause
+
+  $halts$ не е изчислима!
+
+  \pause
+
+  Да допуснем, че $halts$ се изчислява от машина на Тюринг $H$.
+
+  Дефинираме нова машина на Тюринг $D$:
+
+  \begin{enumerate}
+  \item (тук слагаме всички инструкции на $H$)
+  \item[$k+1$.] \tt{IFZERO} $k+3$
+  \item[$k+2$.] \tt{JUMP} $k+1$
+  \item[$k+3$.] \tt{STOP}
+  \end{enumerate}
+  
+  Нека $D = \mt d$. Завършва ли $D$ над $d$? \qed
+\end{frame}
+
+\begin{frame}
+  \frametitle{Въпроси за изчислимост}
+
+  Според вас изчислими ли са следните функции?
+  \begin{itemize}[<+->]
+  \item $f_1(n) = n$ е просто число
+  \item $f_2(n) = n$-тото поред просто число
+  \item $f_3(n) = n$-тата цифра на числото $\pi$
+  \item $f_4(n) = $ има $n$ последователни седмици в числото $\pi$
+  \item $f_5(n) = n$ е код на множество от матрици 3x3, които могат да се умножат в някакъв ред, така че да се получи O
+  \item $f_6(n) = n$ е код на вярна съждителна формула
+  \item $f_7(n) = n$ е код на вярна предикатна формула
+  \item $f_8(n) = m$, където $\mt m$ пресмята $f_8$ 
+  \item $f_9(n) = $ машините $\mt n$ и $\mt{2n}$ изчисляват еднакви функции
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{$\lambda$-смятане}
+
+  Нека разполагаме с изброимо много променливи $x,y,z,\ldots$
+  \vspace{1em}
+
+  Три вида $\lambda$-изрази ($E$)
+  \begin{itemize}
+  \item $x$ (променлива)
+  \item $E_1(E_2)$ (апликация, прилагане на функция)
+  \item $\lambda x \, E$ (абстракция, конструиране на функция)
+  \end{itemize}
+  \vspace{1em}
+
+  \pause
+
+  Примери: $\lambda x\, x, \quad (\lambda x\, x)(z), \quad \lambda f\lambda x\, f(f(f(x)))$
+  \vspace{1em}
+
+  \pause
+
+  Едно изчислително правило:
+  \begin{equation*}
+    (\lambda x\,E_1)(E_2) \mapsto E_1[x := E_2].
+  \end{equation*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Машини на Тюринг = $\lambda$-смятане}
+
+  \begin{theorem}[Alan Turing, 1937]
+  Функциите, които могат да се изчислят с машина на Тюринг са точно тези, които могат да се напишат с $\lambda$-израз.
+  \end{theorem}
+
+  \pause
+
+  \begin{center}
+    \begin{tabular}{|rcl|}
+      \hline
+      Машини на Тюринг & = & императивен стил за програмиране\\
+      $\lambda$-смятане & = & функционален стил за програмиране\\
+      \hline
+    \end{tabular}
+  \end{center}
+
+  \pause
+
+  \textbf{Факт: }Почти всички съвременни езици за програмиране са със същата изчислителна сила като на машините на Тюринг.
+  \vspace{1em}
+
+  \pause
+
+  \textbf{Тезис на Church-Turing:} Всяка функция, чието изчисление може да се автоматизира, може да бъде пресметната с машина на Тюринг.
+  
+\end{frame}
+
+\section*{Особености на функционалното програмиране}
+
+\begin{frame}
+  \frametitle{Във функционалното програмиране...}
+
+  ... има:
+  \begin{itemize}[<+->]
+  \item функции с параметри, (абстракция)
+  \item които могат да се прилагат над аргументи, (апликация)
+  \item които могат да са други функции (функции от висок ред)
+  \item и могат да се дефинират чрез себе си, (рекурсия)
+  \end{itemize}
+  \vspace{1 em}
+  \pause
+  ... но няма:
+  \begin{itemize}[<+->]
+  \item памет
+  \item присвояване
+  \item цикли
+  \item прескачане (goto, break, return)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Защо функционално програмиране?}
+
+  \begin{itemize}[<+->]
+  \item Кратки и ясни програми (изразителност)
+  \item Лесна проверка за коректност
+  \item При еднакви входни данни връщат един и същ резултат (референциална прозрачност), \pause което позволява...
+  \item Избягване на повторно пресмятане на резултати чрез запомняне (мемоизация)
+  \item Премахване на части от програмата, които не участват в крайния резултат (мъртъв код)
+  \item Пренареждане на програмата за по-ефективно изпълнение (стратегия за оценяване)
+  \item Паралелно изпълнение на независими части от програмата (паралелизация)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[<1-2>]
+  \frametitle{Видове функционални езици}
+
+  \begin{itemize}
+  \item според типовата система
+    \begin{itemize}
+    \item динамично типизирани (стойностите имат тип) \onslide<2->{[\textbf{Scheme}]}
+    \item статично типизирани (променливите имат тип) \onslide<2->{[\textbf{Haskell}]}
+    \end{itemize}
+  \item според страничните ефекти
+    \begin{itemize}
+    \item нечисти (със странични ефекти) \onslide<2->{[\textbf{Scheme}]}
+    \item чисти (без странични ефекти) \onslide<2->{[\textbf{Haskell}]}
+    \end{itemize}
+  \item според стратегията за оценяване
+    \begin{itemize}
+    \item стриктно (първо сметни, после предай)  \onslide<2->{[\textbf{Scheme}]}
+    \item мързеливо (първо предай, после смятай) \onslide<2->{[\textbf{Haskell}]}
+    \end{itemize}
+  \end{itemize}
+
+  \pause
+\end{frame}
+
+\begin{frame}
+  \frametitle{История на функционалното програмиране}
+
+  \begin{itemize}[<+->]
+  \item[(1936)] Church и Rosser дефинират $\lambda$-смятането
+  \item[(1960)] McCarthy създава първият функционален език LISP
+  \item[(1975)] Steele и Sussman създават \textbf{Scheme}, диалект на LISP
+  \item[(1977)] Backus (авторът на FORTRAN) популяризира функционалния стил
+  \item[(1985)] Turner създава Miranda, първият комерсиален чист функционален език
+  \item[(1990)] Публикувана е първата версия на \textbf{Haskell}
+  \item[(1990-те)] Функционални елементи започват да се появяват в императивни езици: Python (1991), JavaScript (1995), Ruby (1995), ActionScript (1998)
+  \item[(2000-те)] Функционалният стил на програмиране превзема света: Scala (2003), F\# (2005), C\# (2007), Clojure (2007), C++11 (2011), Java 8 (2014)
+  \end{itemize}
+\end{frame}
+
+\end{document}
