@@ -1,0 +1,10 @@
+*.aux
+*.log
+*.nav
+*.out
+intro.pdf
+org.pdf
+scheme_basics.pdf
+*.snm
+*.toc
+*.vrb
