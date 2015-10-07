@@ -1,0 +1,156 @@
+\documentclass{beamer}
+\usepackage{fp}
+
+\title{Основни понятия в Scheme}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Що за език е Scheme?}
+
+  \begin{itemize}
+  \item Създаден през 1975 г. от Guy L.~Steele и  Gerald Jay Sussman
+  \item Диалект на LISP, създаден с учебна цел
+  \item ``Structure and Interpretation of Computer Programs'', Abelson \& Sussman, MIT Press, 1985.
+  \item Минималистичен синтаксис
+  \item Най-разпространен стандарт: R$^5$RS
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Програмиране на Scheme}
+
+  \begin{itemize}
+  \item Среда за програмиране: DrRacket
+  \item Има компилатори и интерпретатори
+    \begin{itemize}
+    \item Ние ще ползваме интерпретатор
+    \end{itemize}
+  \item REPL = Read-Eval-Print-Loop
+  \item Програма = списък от дефиниции
+  \item Изпълнение = оценка на израз
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Синтаксис в Scheme}
+
+  \begin{itemize}
+  \item Атоми
+    \begin{itemize}
+    \item Булеви константи (\tt{\#f}, \tt{\#t})
+    \item Числа (\tt{15}, \tt{2/3}, \tt{-1.532})
+    \item Низове (\tt{"Scheme"}, \tt{"hi "})
+    \item Символи (\tt f, \tt{square}, \tt +, \tt{find-min})
+    \end{itemize}
+  \item Комбинации\\
+    \vspace{1em}
+    \tt{\alert({}<израз$_1$> <израз$_2$> \ldots <израз$_n$>\alert)}
+  \end{itemize}
+
+  \pause
+  Това е!
+\end{frame}
+
+\begin{frame}
+  \frametitle{Семантика на Scheme}
+
+  На всеки израз се дава оценка.
+  \begin{itemize}
+  \item Оценката на булевите константи, числата и низовете са самите те
+  \item Оценката на символ е стойността, свързана с него
+  \item Оценка на комбинация \textbf{(основно правило за оценяване)}\\
+    \vspace{1em}
+    \begin{tabular}{cccccc}
+      (&<израз$_1$>&<израз$_2$>&\ldots&<израз$_n$>&)\\
+      &$\big\downarrow$&$\big\downarrow$&&$\big\downarrow$&\\
+      (&<оценка$_1$>&<оценка$_2$>&\ldots&<оценка$_n$>&)
+    \end{tabular}\\
+    \vspace{1em}
+    Функцията <оценка$_1$> се прилага над аргументите <оценка$_2$>\ldots<оценка$_n$>. \\
+    Резултатът е оценката на цялата комбинация.
+
+    \vspace{1em}
+    Ако <оценка$_1$> не е функция --- грешка.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Пример}
+  \begin{center}
+    \begin{tabular}{cccc}
+      \tt{(+}&\tt{(* 2 3)}&\tt{(- 10 7)}&\tt)\\
+      \tt{(+}&\big\downarrow&\big\downarrow&\tt)\\
+      \tt{(+}&\tt{6}&\tt{3}&\tt)\\
+      \big\downarrow&&&\\
+      9
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Дефиниции}
+
+  \begin{itemize}
+  \item \tt{\alert{(define} <символ> <израз>\alert)}
+  \item Оценява \tt{<израз>} и свързва \tt{<символ>} с оценката му.
+  \item Примери:
+    \begin{itemize}
+    \item \tt{(define x 2.5)}
+    \item \tt{(define s "Scheme is cool")}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Среди}
+  
+  \begin{itemize}
+  \item Връзката между символите и техните оценки се записват в речник, който се нарича \textbf{среда}.
+  \item Всеки символ има най-много една оценка в дадена среда.
+  \item В даден момент могат да съществуват много среди, но само една от която е активна.
+  \item \alert{Един символ може да има различни оценки в различни среди.}
+  \item При стартиране Scheme по подразбиране работи в \textbf{глобалната среда}.
+  \item В глобалната среда са дефинирани символи за стандартни операции и функции.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Специални форми}
+
+  \begin{itemize}[<+->]
+  \item По основното правило ли се оценява \tt{(define x 2.5)}?
+  \item \alert{Не!}
+  \item В синтаксиса на Scheme има конструкции, които са изключение от стандартното правило.
+  \item Такива конструкции се наричат \textbf{специални форми}.
+  \item \tt{define} е специална форма.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Цитиране}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Дефиниция на функции}
+
+  \begin{itemize}
+  \item \tt{\alert{(define (}{}<функция> \{<параметър>\}\alert{)} <тяло>\alert{)}}
+  \item \tt{<функция>} и \tt{<параметър>} са символи
+  \item \tt{<тяло>} е \tt{<израз>}
+  \item Символът \tt{<функция>} се свързва с поредица от инструкции, които пресмятат \tt{<тяло>} при подадени стойности на \tt{<параметър>}.
+  \item \textbf{Примери:}
+    \begin{itemize}
+    \item \tt{(define (square x) (* x x))}
+    \item \tt{(define (1+ k) (+ k 1))}
+    \item \tt{(define (plus-minus x y z) (- (+ x y) z))}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\end{document}
