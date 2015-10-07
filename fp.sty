@@ -1,3 +1,21 @@
-% Кратки команди за форматиране
+% стандартни пакети
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage[english,bulgarian]{babel}
+
+% кратки команди за форматиране
 \renewcommand{\tt}{\texttt}
 \newcommand{\mt}[1]{\{#1\}}
+
+% превод на стандартни среди
+\deftranslation[to=bulgarian]{Theorem}{Теорема}
+
+% настройки общи за всички слайдове
+\mode<presentation>
+{
+%  \usetheme{Hannover}
+}
+\author{Трифон Трифонов}
+\date{\small Функционално програмиране, спец. Информатика, 2015/16 г.}
+\subject{LectureSlides}

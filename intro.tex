@@ -1,25 +1,7 @@
 \documentclass{beamer}
-\usepackage[T2A]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{hyperref}
-\usepackage[english,bulgarian]{babel}
-
-\deftranslation[to=bulgarian]{Theorem}{Теорема}
-
-\mode<presentation>
-{
-%  \usetheme{Hannover}
-}
-
 \usepackage{fp}
 
 \title{Какво е функционално програмиране?}
-
-\author{Трифон Трифонов}
-
-\date{\small Функционално програмиране, спец. Информатика, 2015/16 г.}
-
-\subject{LectureSlides}
 
 \begin{document}
 
@@ -108,10 +90,10 @@
 
   \begin{itemize}
   \item Описваме релацията над естествени числа $gcd(a,b,c)$
-  \item $\forall a \, gcd(a,a,a)$ (факт)
+  \item $\forall a \, gcd(a,a,a)$ \textbf{[факт]}
 
-  \item $\forall a\forall b ( a > b \land \forall c (gcd(a-b,b,c) \rightarrow gcd(a,b,c)))$ (правило)
-  \item $\forall a\forall b ( a < b \land \forall c (gcd(a,b-a,c) \rightarrow gcd(a,b,c)))$ (правило)
+  \item $\forall a\forall b ( a > b \land \forall c (gcd(a-b,b,c) \rightarrow gcd(a,b,c)))$ \textbf{[правило]}
+  \item $\forall a\forall b ( a < b \land \forall c (gcd(a,b-a,c) \rightarrow gcd(a,b,c)))$ \textbf{[правило]}
   \item Дадени са $a, b$
   \item Намери такова $c$, за което $gcd(a,b,c)$
   \end{itemize}
