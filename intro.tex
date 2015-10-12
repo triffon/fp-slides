@@ -1,4 +1,4 @@
-\documentclass{beamer}
+p\documentclass{beamer}
 \usepackage{fp}
 
 \title{Какво е функционално програмиране?}
@@ -48,7 +48,7 @@
       \item В противен случай
         \begin{itemize}
         \item \tt{b $\leftarrow$ b - a}
-        \end{itemize}        
+        \end{itemize}
       \end{itemize}
     \item Изведи \tt a
     \end{itemize}
@@ -141,7 +141,7 @@
 
   \begin{columns}[t,onlytextwidth]
     \column{0.5\textwidth}
-    
+
     \textbf{Императивен стил}
     \begin{itemize}
     \item Нека \tt{s = 0}.
@@ -158,7 +158,7 @@
     \column{0.5\textwidth}
 
     \textbf{Функционален стил}
-    
+
     \begin{itemize}
     \item От елементите на \tt l:
     \item Избери нечетните
@@ -178,7 +178,7 @@ for(int i = 0; i < sizeof(l); i++)
     s += l[i] * l[i];
 cout << s;
 \end{verbatim}
-  
+
   \pause
   \textbf{Scheme:} \tt{(apply + (map square (filter odd? l)))}
   \vspace{1em}
@@ -191,7 +191,7 @@ cout << s;
 
 \begin{frame}
   \frametitle{Какво може да се сметне с компютър?}
-  
+
   Нека $f:\mathbb N\to\mathbb N$ е функция над естествени числа.
 
   Примери: $f(x) = x^2$, $f(x) = x$-тото число на Фибоначи.
@@ -213,11 +213,11 @@ cout << s;
 \begin{frame}
   \frametitle{Машина на Тюринг}
 
-  \includegraphics[width=\textwidth]{turing.pdf}
+  \includegraphics[width=0.9\textwidth]{turing.pdf}
 
   Казваме, че машината \textbf{$M$ изчислява функцията $f_M$}, ако за лента, в която е записано (в двоичен вид) числото $n$, $M$ завършва и записва върху лентата числото $f_M(n)$.
 
-  Ако $M$ не завърши, казваме, че \textbf{$f_M(n)$ не е дефинирана}. 
+  Ако $M$ не завърши, казваме, че \textbf{$f_M(n)$ не е дефинирана}.
 \end{frame}
 
 \begin{frame}
@@ -255,13 +255,15 @@ cout << s;
 
   Дефинираме нова машина на Тюринг $D$:
 
+  \setlength{\leftmargini}{30pt}
   \begin{enumerate}
+    \setbeamertemplate{enumerate items}[default]
   \item (тук слагаме всички инструкции на $H$)
   \item[$k+1$.] \tt{IFZERO} $k+3$
   \item[$k+2$.] \tt{JUMP} $k+1$
   \item[$k+3$.] \tt{STOP}
   \end{enumerate}
-  
+
   Нека $D = \mt d$. Завършва ли $D$ над $d$? \qed
 \end{frame}
 
@@ -277,7 +279,7 @@ cout << s;
   \item $f_5(n) = n$ е код на множество от матрици 3x3, които могат да се умножат в някакъв ред, така че да се получи O
   \item $f_6(n) = n$ е код на вярна съждителна формула
   \item $f_7(n) = n$ е код на вярна предикатна формула
-  \item $f_8(n) = m$, където $\mt m$ пресмята $f_8$ 
+  \item $f_8(n) = m$, където $\mt m$ пресмята $f_8$
   \item $f_9(n) = $ машините $\mt n$ и $\mt{2n}$ изчисляват еднакви функции
   \end{itemize}
 \end{frame}
@@ -335,7 +337,7 @@ cout << s;
   \pause
 
   \textbf{Тезис на Church-Turing:} Всяка функция, чието изчисление може да се автоматизира, може да бъде пресметната с машина на Тюринг.
-  
+
 \end{frame}
 
 \section*{Особености на функционалното програмиране}
@@ -402,15 +404,16 @@ cout << s;
 \begin{frame}
   \frametitle{История на функционалното програмиране}
 
+  \setlength{\leftmargini}{11ex}
   \begin{itemize}[<+->]
   \item[(1936)] Church и Rosser дефинират $\lambda$-смятането
-  \item[(1960)] McCarthy създава първият функционален език LISP
+  \item[(1960)] McCarthy създава първия функционален език LISP
   \item[(1975)] Steele и Sussman създават \textbf{Scheme}, диалект на LISP
   \item[(1977)] Backus (авторът на FORTRAN) популяризира функционалния стил
   \item[(1985)] Turner създава Miranda, първият комерсиален чист функционален език
   \item[(1990)] Публикувана е първата версия на \textbf{Haskell}
-  \item[(1990-те)] Функционални елементи започват да се появяват в императивни езици: Python (1991), JavaScript (1995), Ruby (1995), ActionScript (1998)
-  \item[(2000-те)] Функционалният стил на програмиране превзема света: Scala (2003), F\# (2005), C\# (2007), Clojure (2007), C++11 (2011), Java 8 (2014)
+  \item[(1990--2000)] Функционални елементи започват да се появяват в императивни езици: Python (1991), JavaScript (1995), Ruby (1995), ActionScript (1998)
+  \item[(2000--)] Функционалният стил на програмиране превзема света: Scala (2003), F\# (2005), C\# (2007), Clojure (2007), C++11 (2011), Java 8 (2014)
   \end{itemize}
 \end{frame}
 
