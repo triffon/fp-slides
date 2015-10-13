@@ -40,6 +40,8 @@
   \end{itemize}
 \end{frame}
 
+\section{Синтаксис и семантика}
+
 \begin{frame}
   \frametitle{Синтаксис в Scheme}
 
@@ -48,12 +50,13 @@
     \begin{itemize}
     \item Булеви константи (\tt{\#f}, \tt{\#t})
     \item Числа (\tt{15}, \tt{2/3}, \tt{-1.532})
+    \item Знаци (\tt{\#\textbackslash a}, \tt{\#\textbackslash newline}
     \item Низове (\tt{"Scheme"}, \tt{"hi "})
     \item Символи (\tt f, \tt{square}, \tt +, \tt{find-min})
     \end{itemize}
   \item Комбинации\\
     \vspace{1em}
-    \tt{\alert({}<израз$_1$> <израз$_2$> \ldots <израз$_n$>\alert)}
+    \alert({}<израз$_1$> <израз$_2$> \ldots <израз$_n$>\alert)
   \end{itemize}
 \end{frame}
 
@@ -62,10 +65,11 @@
 
   На всеки израз се дава оценка.
   \begin{itemize}[<+->]
-  \item Оценката на булевите константи, числата и низовете са самите те
+  \item Оценката на булевите константи, знаците, числата и низовете са самите те
     \begin{itemize}
     \item \evalsto 5 5
     \item \evalsto{\#t}{\#t}
+    \item \evalsto{\#\textbackslash a}{\#\textbackslash a}
     \item \evalsto{"scheme"}{"scheme"}
     \end{itemize}
   \item Оценката на символ е стойността, свързана с него
@@ -136,8 +140,8 @@
   \frametitle{Дефиниция на символи}
 
   \begin{itemize}[<+->]
-  \item \tt{\alert{(define} <символ> <израз>\alert)}
-  \item Оценява \tt{<израз>} и свързва \tt{<символ>} с оценката му.
+  \item \tta{(define} <символ> <израз>\tta)
+  \item Оценява <израз> и свързва <символ> с оценката му.
   \item Примери:
     \begin{itemize}
     \item \tt{(define s "Scheme is cool")}
@@ -168,9 +172,9 @@
   \frametitle{Цитиране}
 
   \begin{itemize}[<+->]
-  \item \tt{\alert{(quote} <израз>\alert)}
-  \item Алтернативен запис: \tt{\alert' <израз>}
-  \item Оценката на \tt{(' <израз>)} е самият \tt{<израз>}
+  \item \tta{(quote} <израз>\tta)
+  \item Алтернативен запис: \tta'<израз>
+  \item Оценката на \tt{(quote} <израз>\tt) или \tt'{}<израз> е самият <израз>
   \item \textbf{Примери:}
     \begin{itemize}
     \item \evalsto{'2}2
@@ -189,20 +193,30 @@
   \frametitle{Дефиниция на функции}
 
   \begin{itemize}[<+->]
-  \item \tt{\alert{(define (}{}<функция> \{<параметър>\}\alert{)} <тяло>\alert{)}}
-  \item \tt{<функция>} и \tt{<параметър>} са символи
-  \item \tt{<тяло>} е \tt{<израз>}
-  \item Символът \tt{<функция>} се свързва с поредица от инструкции, които пресмятат \tt{<тяло>} при подадени стойности на \tt{<параметър>}
-  \item \textbf{Примери:}
-    \begin{itemize}
-    \item \tt{(define (square x) (* x x))}
-    \item \evalsto{(square 5)}{25}
-    \item \tt{(define (1+ k) (+ k 1))}
-    \item \evalsto{(square (1+ (square 3)))}{100}
-    \item \tt{(define (f x y) (+ (square (1+ x)) (square y) 5)) ;} $(x+1)^2 + y^2 + 5$
-    \item \evalsto{(f 2 4)}{30}
-    \end{itemize}
+  \item \tta{(define (}{}<функция> \{{}<параметър>\}\tta) <тяло>\tta)
+  \item {}<функция> и <параметър> са символи
+  \item {}<тяло> е <израз>
+  \item Символът <функция> се свързва с поредица от инструкции, които пресмятат <тяло> при подадени стойности на <параметър>
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Примери за дефиниция на функции}
+
+  \begin{itemize}[<+->]
+  \item \tt{(define (square x) (* x x))}
+  \item \evalsto{(square 5)}{25}
+  \item \tt{(define (1+ k) (+ k 1))}
+  \item \evalsto{(square (1+ (square 3)))}{100}
+  \item \tt{(define (f x y) (+ (square (1+ x)) (square y) 5))}
+  \item \evalsto{(f 2 4)}{30}
+  \item \tt{(define (g 0) (- (g (+ x 1)) 1))}
+  \item \evalsto{(f 0)}{\ldots}
+  \item \tt{(define (h) (+ 2 3))}
+  \item \evalsto{h}{\#<procedure:h>}
+  \item \evalsto{(h)}5
+  \end{itemize}
+
 \end{frame}
 
 \begin{frame}
@@ -226,18 +240,188 @@
   \end{center}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Среди}
+\section{Стандартни функции}
 
-  \begin{itemize}
-  \item Връзката между символите и техните оценки се записват в речник, който се нарича \textbf{среда}.
-  \item Всеки символ има най-много една оценка в дадена среда.
-  \item В даден момент могат да съществуват много среди, но само една от която е активна.
-  \item \alert{Един символ може да има различни оценки в различни среди.}
-  \item При стартиране Scheme по подразбиране работи в \textbf{глобалната среда}.
-  \item В глобалната среда са дефинирани символи за стандартни операции и функции.
+\begin{frame}
+  \frametitle{Стандартни числови функции}
+
+  Аритметични операци
+
+  \tt{+}, \tt{-}, \tt{*}, \tt{/}
+
+  \vspace{1em}
+  Други числови функции
+
+  \tt{remainder}, \tt{quotient}, \tt{max}, \tt{min}, \tt{gcd}, \tt{lcm}
+
+  \vspace{1em}
+  Функции за закръгляне
+
+  \tt{floor}, \tt{ceiling}, \tt{round}
+
+  \vspace{1em}
+  Функции над дробни числа
+
+  \tt{exp}, \tt{log}, \tt{sin}, \tt{cos}, \tt{tan}, \tt{asin}, \tt{acos}, \tt{atan}, \tt{expt}, \tt{sqrt}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Стандартни предикати}
+
+  Предикати за сравнение на числа
+
+  \tt{<}, \tt{>}, \tt{=}, \tt{<=}, \tt{>=}
+
+  \vspace{1em}
+  Числови предикати
+
+  \tt{zero?}, \tt{negative?}, \tt{positive?}, \tt{odd?}, \tt{even?}
+
+  \vspace{1em}
+  Предикати за проверка на тип
+
+  \tt{boolean?}, \tt{number?}, \tt{char?}, \tt{string?}, \tt{symbol?}, \tt{procedure?}
+\end{frame}
+
+\section{Условни изрази}
+
+\begin{frame}
+  \frametitle{Условна форма \tt{if}}
+
+  \begin{itemize}[<+->]
+  \item \tta{(if} <условие> <израз$_1$> <израз$_2$>\tta)
+  \item Оценява се \tt{<условие>}
+    \begin{itemize}
+    \item Ако оценката е \tt{\#t} --- връща се оценката на <израз$_1$>
+    \item Ако оценката е \tt{\#f} --- връща се оценката на <израз$_2$>
+    \end{itemize}
+  \item \alert{\tt{if} е специална форма!}
   \end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Примери с условната форма \tt{if}}
 
+  \begin{itemize}[<+->]
+  \item \evalsto{(if (< 3 5) (+ 7 3) (- 4 2))}{10}
+  \item \tt{(define (abs x) (if (< x 0) (- x) x))}
+  \item \evalsto{(abs -5)}5, \evalsto{(abs (+ 1 2))}3
+  \item \tt{(define (f x) (if (< x 5) (+ x 2) "Error"))}
+  \item \evalsto{(f 3)}5, \evalsto{(f 5)}{"Error"}
+  \item \tt{(define (g x y) (if (< x y) (+ x y) (* x y)))}
+  \item \tt{(define (g x y) ((if (< x y) + *) x y))}
+  \item \evalsto{(g 2 3)}5, \evalsto{(g 3 2)}6
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Форма за многозначен избор \tt{cond}}
+
+  \begin{itemize}[<+->]
+  \item \tta{(cond} \{\tta({}<условие> <израз>\tta)\} [\tta{(else} <израз>\tta)]\tta)
+  \item \tta{(cond (}{}<условие$_1$> <израз$_1$>\tta)\\
+    \tta{\hskip 7ex(}{}<условие$_2$> <израз$_2$>\tta)\\
+    \hskip 7ex\ldots\\
+    \tta{\hskip 7ex(}{}<условие$_n$> <израз$_n$>\tta)\\
+    \tta{\hskip 7ex(else} <израз$_{n+1}$>\tta{))}
+  \item Оценява се <условие$_1$>, при \tt{\#t} се връща <израз$_1$>, а при \tt{\#f}:
+  \item Оценява се <условие$_2$>, при \tt{\#t} се връща <израз$_2$>, а при \tt{\#f}:
+  \item \ldots
+  \item Оценява се <условие$_n$>, при \tt{\#t} се връща <израз$_n$>, а при \tt{\#f}:
+  \item Връща се <израз$_{n+1}$>
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Пример с формата \tt{cond}}
+
+\begin{verbatim}
+(define (grade x)
+  (cond ((>= x 5.5) "Отличен")
+        ((>= x 4.5) "Много добър")
+        ((>= x 3.5) "Добър")
+        ((>= x 3)   "Среден")
+        (else       "Слаб")))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Форма за разглеждане на случаи \tt{case}}
+
+  \begin{itemize}[<+->]
+  \item \tta{(case} <тест> \{\tta({}\{<случай>\} <израз>\tta)\} [\tta{(else} <израз>\tta)]\tta)
+  \item \tta{(case }<тест> \tta{((}{}<случай$_{1,1}$> \ldots <случай$_{1,k_1}$>\tta) <израз$_1$>\tta)\\
+    \tta{\hskip 16ex((}{}<случай$_{2,1}$> \ldots <случай$_{2,k_2}$>\tta) <израз$_2$>\tta)\\
+    \hskip 16ex\ldots\\
+    \tta{\hskip 16ex((}{}<случай$_{n,1}$> \ldots <случай$_{n,k_n}$>\tta) <израз$_n$>\tta)\\
+    \tta{\hskip 16ex(else} <израз$_{n+1}$>\tta{))}
+  \item Оценява се <тест>
+  \item при някое от <случай$_{1,1}$>\ldots<случай$_{1,k_1}$> $\rightarrow$ <израз$_1$>, иначе:
+  \item при някое от <случай$_{2,1}$>\ldots<случай$_{2,k_2}$> $\rightarrow$ <израз$_2$>, иначе:
+  \item \ldots
+  \item при някое от <случай$_{n,1}$>\ldots<случай$_{n,k_n}$> $\rightarrow$ <израз$_n$>, иначе:
+  \item Връща се <израз$_{n+1}$>
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Пример с формата cond}
+
+\begin{verbatim}
+(define (days-in-month m y)
+  (case m
+    ((1 3 5 7 8 10 12) 31)
+    ((4 6 9 11) 30)
+    (else (if (leap? y) 29 28))))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Логически операции}
+
+  \begin{itemize}[<+->]
+  \item \tta{(not} <булев-израз>\tta)
+    \begin{itemize}
+    \item Връща отрицанието на <булев-израз>
+    \end{itemize}
+  \item \tta{(and} \{<булев-израз>\}\tta)
+  \item \tta{(and} <булев-израз$_1$> <булев-израз$_2$> \ldots <булев-израз$_n$>\tta)
+    \begin{itemize}
+    \item Оценява последователно всички <булев-израз$_i$>
+    \item Ако всички се оценяват до \tt{\#t}, връща \tt{\#t}
+    \item Ако <булев-израз$_i$> се оценява до \tt{\#f}, връща
+      \tt{\#f} без да оценява следващите <булев-израз$_{i+1}$> \ldots <булев-израз$_n$>
+    \end{itemize}
+  \item \tta{(or} \{<булев-израз>\}\tta)
+  \item \tta{(or} <булев-израз$_1$> <булев-израз$_2$> \ldots <булев-израз$_n$>\tta)
+    \begin{itemize}
+    \item Оценява последователно всички <булев-израз$_i$>
+    \item Ако всички се оценяват до \tt{\#f}, връща \tt{\#f}
+    \item Ако <булев-израз$_i$> се оценява до \tt{\#t}, връща
+      \tt{\#t} без да оценява следващите <булев-израз$_{i+1}$> \ldots <булев-израз$_n$>
+    \end{itemize}
+  \item \alert{\tt{and} и \tt{or} са специални форми!}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Примери с логически операции}
+
+  \begin{tabular}{lcl}
+    \tt{(not x)} &$\longleftrightarrow$& \tt{(if x \#f \#t)}\\
+    \tt{(and x y)} &$\longleftrightarrow$& \tt{(if x y \#f)}\\
+    \tt{(or x y)} &$\longleftrightarrow$& \tt{(if x \#t y)}
+  \end{tabular}
+
+
+\begin{verbatim}
+(define (divisible? a b)
+  (= (remainder a b) 0))
+
+(define (leap? y)
+  (and (divisible? y 4)
+       (or (not (divisible? y 100))
+           (divisible? y 400))))
+\end{verbatim}
+\end{frame}
 \end{document}
