@@ -3,11 +3,15 @@
 
 \title{Основни понятия в Scheme}
 
+\date{14 октомври 2015 г.}
+
 \begin{document}
 
 \begin{frame}
   \titlepage
 \end{frame}
+
+\section{Въведение в Scheme}
 
 \begin{frame}
   \frametitle{Що за език е Scheme?}
@@ -51,64 +55,180 @@
     \vspace{1em}
     \tt{\alert({}<израз$_1$> <израз$_2$> \ldots <израз$_n$>\alert)}
   \end{itemize}
-
-  \pause
-  Това е!
 \end{frame}
 
-\begin{frame}
-  \frametitle{Семантика на Scheme}
+\begin{frame}[fragile]
+  \frametitle{Оценки на атоми}
 
   На всеки израз се дава оценка.
-  \begin{itemize}
+  \begin{itemize}[<+->]
   \item Оценката на булевите константи, числата и низовете са самите те
-  \item Оценката на символ е стойността, свързана с него
-  \item Оценка на комбинация \textbf{(основно правило за оценяване)}\\
-    \vspace{1em}
-    \begin{tabular}{cccccc}
-      (&<израз$_1$>&<израз$_2$>&\ldots&<израз$_n$>&)\\
-      &$\big\downarrow$&$\big\downarrow$&&$\big\downarrow$&\\
-      (&<оценка$_1$>&<оценка$_2$>&\ldots&<оценка$_n$>&)
-    \end{tabular}\\
-    \vspace{1em}
-    Функцията <оценка$_1$> се прилага над аргументите <оценка$_2$>\ldots<оценка$_n$>. \\
-    Резултатът е оценката на цялата комбинация.
-
-    \vspace{1em}
-    Ако <оценка$_1$> не е функция --- грешка.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Пример}
-  \begin{center}
-    \begin{tabular}{cccc}
-      \tt{(+}&\tt{(* 2 3)}&\tt{(- 10 7)}&\tt)\\
-      \tt{(+}&\big\downarrow&\big\downarrow&\tt)\\
-      \tt{(+}&\tt{6}&\tt{3}&\tt)\\
-      \big\downarrow&&&\\
-      9
-    \end{tabular}
-  \end{center}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Дефиниции}
-
-  \begin{itemize}
-  \item \tt{\alert{(define} <символ> <израз>\alert)}
-  \item Оценява \tt{<израз>} и свързва \tt{<символ>} с оценката му.
-  \item Примери:
     \begin{itemize}
-    \item \tt{(define x 2.5)}
-    \item \tt{(define s "Scheme is cool")}
+    \item \evalsto 5 5
+    \item \evalsto{\#t}{\#t}
+    \item \evalsto{"scheme"}{"scheme"}
+    \end{itemize}
+  \item Оценката на символ е стойността, свързана с него
+    \begin{itemize}
+    \item \evalsto +{\#<procedure:+>}
+    \item \evalstoerr a
+    \item \tt{(define a 5)}
+    \item \evalsto a5
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
+  \frametitle{Основно правило за оценяване}
+
+  Оценка на комбинация \textbf{(основно правило за оценяване)}
+
+  \vspace{1em}
+  \begin{equation*}
+    \newcommand{\evals}{\text{\small се оценява до}}
+    \underbrace{%
+      \begin{array}{cccccc}
+        (&\text{<израз}_0\text{>}&\text{<израз}_1\text{>}&\ldots&\text{<израз}_n\text{>}&)\\
+         &\vert&\vert&&\vert&\\
+         &\evals&\evals&&\evals&\\
+         &\bda&\bda&&\bda&\\
+        (&f&v_1&\ldots&v_n&)
+      \end{array}
+    }_{%
+      \begin{array}{c}
+        \vert\\
+        \evals\\
+        \bda\\
+        f(v_1,\ldots,v_n)
+      \end{array}}
+  \end{equation*}
+
+  \pause
+
+  Ако $f$ не е функция --- \alert{грешка!}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Пример за оценяване на комбинации}
+  \begin{equation*}
+    \underbrace{%
+      \begin{tabular}{cccc}
+        \tt{(+}&$\underbrace{\tt{(* 2 3)}}_{}$&$\underbrace{\tt{(- 14 6 5)}}_{}$&\tt)\\
+               &\bda&\bda&\\
+        \tt{(+}&\tt{6}&\tt{3}&\tt)
+      \end{tabular}
+    }_{%
+      \begin{tabular}{c}
+        \bda\\
+        \tt 9
+      \end{tabular}}
+  \end{equation*}
+
+  \vspace{2em}
+  \begin{center}
+    \evalstoerr {(1 2 3)}
+  \end{center}
+\end{frame}
+
+\section{Дефиниции в Scheme}
+
+\begin{frame}
+  \frametitle{Дефиниция на символи}
+
+  \begin{itemize}[<+->]
+  \item \tt{\alert{(define} <символ> <израз>\alert)}
+  \item Оценява \tt{<израз>} и свързва \tt{<символ>} с оценката му.
+  \item Примери:
+    \begin{itemize}
+    \item \tt{(define s "Scheme is cool")}
+    \item \evalsto s{"Scheme is cool"}
+    \item \tt{(define x 2.5)}
+    \item \evalsto x{2.5}
+    \item \evalsto{(+ x 3.2)}{5.7}
+    \item \tt{(define y (+ x 3.2))}
+    \item \evalsto{(> y 3)}{\#t}
+    \item \evalstoerr{(define z (+ y z))}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Специални форми}
+
+  \begin{itemize}[<+->]
+  \item По основното правило ли се оценява \tt{(define x 2.5)}?
+  \item \alert{Не!}
+  \item В синтаксиса на Scheme има конструкции, които са изключение от стандартното правило
+  \item Такива конструкции се наричат \textbf{специални форми}
+  \item \tt{define} е пример за специална форма
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Цитиране}
+
+  \begin{itemize}[<+->]
+  \item \tt{\alert{(quote} <израз>\alert)}
+  \item Алтернативен запис: \tt{\alert' <израз>}
+  \item Оценката на \tt{(' <израз>)} е самият \tt{<израз>}
+  \item \textbf{Примери:}
+    \begin{itemize}
+    \item \evalsto{'2}2
+    \item \evalsto{'+}+
+    \item \evalsto{'(+ 2 3)}{(+ 2 3)}
+    \item \evalsto{(quote quote)}{quote}
+    \item \evalstoerr{('+ 2 3)}
+    \item \evalstoerr{(/ 2 0)}
+    \item \evalsto{'(/ 2 0)}{(/ 2 0)}
+    \item \evalsto{'(+ 1 '(* 3 4))}{(+ 1 (quote (* 3 4)))}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Дефиниция на функции}
+
+  \begin{itemize}[<+->]
+  \item \tt{\alert{(define (}{}<функция> \{<параметър>\}\alert{)} <тяло>\alert{)}}
+  \item \tt{<функция>} и \tt{<параметър>} са символи
+  \item \tt{<тяло>} е \tt{<израз>}
+  \item Символът \tt{<функция>} се свързва с поредица от инструкции, които пресмятат \tt{<тяло>} при подадени стойности на \tt{<параметър>}
+  \item \textbf{Примери:}
+    \begin{itemize}
+    \item \tt{(define (square x) (* x x))}
+    \item \evalsto{(square 5)}{25}
+    \item \tt{(define (1+ k) (+ k 1))}
+    \item \evalsto{(square (1+ (square 3)))}{100}
+    \item \tt{(define (f x y) (+ (square (1+ x)) (square y) 5)) ;} $(x+1)^2 + y^2 + 5$
+    \item \evalsto{(f 2 4)}{30}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Оценяване на комбинации с дефинирани функции}
+  \begin{center}
+    \begin{tabular}{c}
+      \tt{(f 2 4)}\\
+      \pause\nxt{\bda\\
+      \tt{(+ (square (1+ 2)) (square 4) 5)}\\
+      \nxt{\bda\\
+      \tt{(+ (square (+ 2 1)) (square 4) 5)}\\
+      \nxt{\bda\\
+      \tt{(+ (square 3) (square 4) 5)}\\
+      \nxt{\bda\\
+      \tt{(+ (* 3 3) (* 4 4) 5)}\\
+      \nxt{\bda\\
+      \tt{(+ 9 16 5)}\\
+      \nxt{\bda\\
+      \tt{30}}}}}}}
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
   \frametitle{Среди}
-  
+
   \begin{itemize}
   \item Връзката между символите и техните оценки се записват в речник, който се нарича \textbf{среда}.
   \item Всеки символ има най-много една оценка в дадена среда.
@@ -119,38 +239,5 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Специални форми}
-
-  \begin{itemize}[<+->]
-  \item По основното правило ли се оценява \tt{(define x 2.5)}?
-  \item \alert{Не!}
-  \item В синтаксиса на Scheme има конструкции, които са изключение от стандартното правило.
-  \item Такива конструкции се наричат \textbf{специални форми}.
-  \item \tt{define} е специална форма.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Цитиране}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{Дефиниция на функции}
-
-  \begin{itemize}
-  \item \tt{\alert{(define (}{}<функция> \{<параметър>\}\alert{)} <тяло>\alert{)}}
-  \item \tt{<функция>} и \tt{<параметър>} са символи
-  \item \tt{<тяло>} е \tt{<израз>}
-  \item Символът \tt{<функция>} се свързва с поредица от инструкции, които пресмятат \tt{<тяло>} при подадени стойности на \tt{<параметър>}.
-  \item \textbf{Примери:}
-    \begin{itemize}
-    \item \tt{(define (square x) (* x x))}
-    \item \tt{(define (1+ k) (+ k 1))}
-    \item \tt{(define (plus-minus x y z) (- (+ x y) z))}
-    \end{itemize}
-  \end{itemize}
-\end{frame}
 
 \end{document}

@@ -7,6 +7,8 @@
 % кратки команди за форматиране
 \renewcommand{\tt}{\texttt}
 \newcommand{\mt}[1]{\{#1\}}
+\newcommand{\bda}{\big\downarrow}
+\newcommand{\nxt}[1]{\visible<+->{#1}}
 
 % превод на стандартни среди
 \deftranslation[to=bulgarian]{Theorem}{Теорема}
@@ -20,3 +22,7 @@
 \author{Трифон Трифонов}
 \institute[ФП-И 15/16]{\small Функционално програмиране, спец. Информатика, 2015/16 г.}
 \subject{LectureSlides}
+
+% макроси
+\newcommand{\evalsto}[2]{\tt{#1 $\longrightarrow$ #2}}
+\newcommand{\evalstoerr}[1]{\tt{#1 $\longrightarrow$} \alert{Грешка!}}
