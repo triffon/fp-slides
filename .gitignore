@@ -1,3 +1,4 @@
+*~
 *.aux
 *.log
 *.nav
@@ -5,6 +6,7 @@
 intro.pdf
 org.pdf
 scheme_basics.pdf
+scheme_envs.pdf
 *.snm
 *.toc
 *.vrb
