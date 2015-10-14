@@ -27,3 +27,11 @@
 % макроси
 \newcommand{\evalsto}[2]{\tt{#1 $\longrightarrow$ #2}}
 \newcommand{\evalstoerr}[1]{\tt{#1 $\longrightarrow$} \alert{Грешка!}}
+\newcommand{\funcenv}[3]{\begin{tabular}{||l@{\hskip 1ex}l@{\hskip 1ex}l||}%
+                           \hline
+                           Параметри&:&\tt{#1}\\
+                           Тяло&:&\tt{#2}\\
+                           Среда&:&\textbf{#3}\\
+                           \hline
+                         \end{tabular}}
+                         

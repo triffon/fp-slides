@@ -1,0 +1,133 @@
+\documentclass{beamer}
+\usepackage{fp}
+
+\title[Среди и процеси]{Модел на средите и изчислителни процеси}
+
+\date{14 октомври 2015 г.}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Модел на средите}
+
+\begin{frame}
+  \frametitle{Среди в Scheme}
+
+  \begin{itemize}[<+->]
+  \item Връзката между символите и техните оценки се записват в речник, който се нарича \textbf{среда}.
+  \item Всеки символ има най-много една оценка в дадена среда.
+  \item В даден момент могат да съществуват много среди, но само една от която е активна.
+  \item \alert{Един символ може да има различни оценки в различни среди.}
+  \item При стартиране Scheme по подразбиране работи в \textbf{глобалната среда}.
+  \item В глобалната среда са дефинирани символи за стандартни операции и функции.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Пример за среда}
+
+  \begin{columns}[t,onlytextwidth]
+    \column{0.5\textwidth}
+    {}
+
+    \begin{itemize}[<+->]
+    \item \evalstoerr r
+    \item \tt{(define r 5)}
+    \item \evalsto{(+ r 3)}8
+    \item \tt{(define (sq x) (* x x))}
+    \item \evalsto{(sq 3)}9
+    \item \evalsto{(sq r)}{25}
+    \end{itemize}
+
+    \column{0.5\textwidth}
+    {}
+
+    \begin{tabular}{|l@{\hskip 1ex}l@{\hskip 1ex}l|}
+      \hline
+      \textbf{E}&&
+      \only<2->{\\\tt r&:&\tt 5}
+      \only<4->{\\\tt{sq}&:&\funcenv x{(* x x)}E}
+      \\[1.5em]\hline
+    \end{tabular}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Функции и среди}
+
+  \begin{itemize}[<+->]
+  \item Всяка функция \tt f пази указател към средата \textbf E, в която е дефинирана.
+  \item При извикване на \tt f:
+    \begin{itemize}
+    \item създава се нова среда \textbf{E$_1$}, която разширява \textbf{E}
+    \item в \textbf{E$_1$} всеки символ означаващ формален параметър се свързва с оценката на фактическия параметър
+    \item тялото на $f$ се изпълнява в \textbf{E$_1$}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Дърво от среди}
+  \begin{itemize}[<+->]
+  \item Всяка среда пази указател към своя ``родителска среда'', която разширява
+  \item така се получава дърво от среди
+  \item при оценка на символ в дадена среда \textbf E
+    \begin{itemize}
+    \item първо се търси оценката му в \textbf E
+    \item ако символът не е дефиниран в \textbf E, се преминава към родителската среда
+    \item при достигане на най-горната среда, ако символът не е дефиниран и в нея се извежда съобщение за грешка
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Извикване на дефинирана функция}
+
+  \begin{columns}[t,onlytextwidth]
+    \column{0.5\textwidth}
+    {}
+
+    \begin{itemize}[<+->]
+    \item \tt{(define r 5)}
+    \item \tt{(define (sq x) (* x x))}
+    \item \begin{tabular}[t]{lc}
+            \{\textbf E\} &\tt{(sq r)}\\
+            \nxt{&\bda\\
+            \{\textbf E\} &\tt{(sq 5)}\\
+            \nxt{&\bda\\
+            \{\textbf{E$_1$}\} &\tt{(* x x)}\\
+            \nxt{&\bda\\
+            \{\textbf{E$_1$}\} &\tt{(* 5 5)}\\
+            \nxt{&\bda\\
+            &\tt{25}}}}}
+          \end{tabular}
+        \end{itemize}
+
+    \column{0.5\textwidth}
+    {}
+
+    \begin{tabular}{c}      
+    \begin{tabular}{|l@{\hskip 1ex}l@{\hskip 1ex}l|}
+      \hline
+      \textbf{E}&&
+      \only<1->{\\\tt r&:&\tt 5}
+      \only<2->{\\\tt{sq}&:&\funcenv x{(* x x)}E}
+      \\[1.5em]\hline
+    \end{tabular}\\
+      \only<5->{
+      \Bigg\uparrow\\
+    \begin{tabular}{|l@{\hskip 1ex}l@{\hskip 1ex}l|}
+      \hline
+      \textbf{E$_1$}&&\\
+%      \hline&&\\[-1em]\hline
+      x&:&5
+      \\\hline
+    \end{tabular}}
+    \end{tabular}
+  \end{columns} 
+\end{frame}
+
+\end{document}
