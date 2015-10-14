@@ -50,7 +50,7 @@
     \begin{itemize}
     \item Булеви константи (\tt{\#f}, \tt{\#t})
     \item Числа (\tt{15}, \tt{2/3}, \tt{-1.532})
-    \item Знаци (\tt{\#\textbackslash a}, \tt{\#\textbackslash newline}
+    \item Знаци (\tt{\#\textbackslash a}, \tt{\#\textbackslash newline})
     \item Низове (\tt{"Scheme"}, \tt{"hi "})
     \item Символи (\tt f, \tt{square}, \tt +, \tt{find-min})
     \end{itemize}
@@ -210,7 +210,7 @@
   \item \evalsto{(square (1+ (square 3)))}{100}
   \item \tt{(define (f x y) (+ (square (1+ x)) (square y) 5))}
   \item \evalsto{(f 2 4)}{30}
-  \item \tt{(define (g 0) (- (g (+ x 1)) 1))}
+  \item \tt{(define (g x) (- (g (+ x 1)) 1))}
   \item \evalsto{(g 0)}{\ldots}
   \item \tt{(define (h) (+ 2 3))}
   \item \evalsto{h}{\#<procedure:h>}
@@ -349,7 +349,7 @@
   \frametitle{Форма за разглеждане на случаи \tt{case}}
 
   \begin{itemize}[<+->]
-  \item \tta{(case} <тест> \{\tta({}\{<случай>\} <израз>\tta)\} [\tta{(else} <израз>\tta)]\tta)
+  \item \tta{(case} <тест> \{\tta({}\tta(\{<случай>\}\tta) <израз>\tta)\} [\tta{(else} <израз>\tta)]\tta)
   \item \tta{(case }<тест> \tta{((}{}<случай$_{1,1}$> \ldots <случай$_{1,k_1}$>\tta) <израз$_1$>\tta)\\
     \tta{\hskip 16ex((}{}<случай$_{2,1}$> \ldots <случай$_{2,k_2}$>\tta) <израз$_2$>\tta)\\
     \hskip 16ex\ldots\\
