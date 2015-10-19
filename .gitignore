@@ -1,4 +1,7 @@
 *~
+.*
+\#*
+_region_.tex
 *.aux
 *.log
 *.nav
