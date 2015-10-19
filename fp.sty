@@ -1,20 +1,18 @@
-% стандартни пакети
+%%% стандартни пакети
+
+% поддръжка на български език
 \usepackage[T2A]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{hyperref}
 \usepackage[english,bulgarian]{babel}
-
-% кратки команди за форматиране
-\renewcommand{\tt}{\texttt}
-\newcommand{\tta}[1]{\tt{\alert{#1}}}
-\newcommand{\mt}[1]{\{#1\}}
-\newcommand{\bda}{\big\downarrow}
-\newcommand{\nxt}[1]{\visible<+->{#1}}
-
-% превод на стандартни среди
 \deftranslation[to=bulgarian]{Theorem}{Теорема}
 
-% настройки общи за всички слайдове
+% поддръжка на линкове
+\usepackage{hyperref}
+
+% двойни разделителни черти в таблици
+\usepackage{hhline}
+
+%%% настройки общи за всички слайдове
 \mode<presentation>
 {
   \usetheme{CambridgeUS}
@@ -24,14 +22,52 @@
 \institute[ФП-И 15/16]{\small Функционално програмиране, спец. Информатика, 2015/16 г.}
 \subject{LectureSlides}
 
-% макроси
+%%% кратки команди за форматиране
+
+% код
+\renewcommand{\tt}{\texttt}
+
+% код в червено
+\newcommand{\tta}[1]{\tt{\alert{#1}}}
+
+% машина на Тюринг по даден код
+\newcommand{\mt}[1]{\{#1\}}
+
+% стрелка надолу за вериги от оценки
+\newcommand{\bda}{\big\downarrow}
+
+% по-приличен pause (за математика и таблици)
+\newcommand{\nxt}[1]{\visible<+->{#1}}
+
+% оценка в среда
+\newcommand{\inenv}[1]{\{\textbf{#1}\}}
+
+%%% макроси
+
+% оценява се до стойност
 \newcommand{\evalsto}[2]{\tt{#1 $\longrightarrow$ #2}}
-\newcommand{\evalstoerr}[1]{\tt{#1 $\longrightarrow$} \alert{Грешка!}}
+
+% грешка при оценяване
+\newcommand{\evalstoerr}[1]{\evalsto{#1}{\textsf{\alert{Грешка!}}}}
+
+% оценка на функция в среда
 \newcommand{\funcenv}[3]{\begin{tabular}{||l@{\hskip 1ex}l@{\hskip 1ex}l||}%
                            \hline
                            Параметри&:&\tt{#1}\\
                            Тяло&:&\tt{#2}\\
                            Среда&:&\textbf{#3}\\
                            \hline
-                         \end{tabular}}
-                         
+                         \end{tabular}
+                         \\[-0.5\normalbaselineskip] &&}
+
+% среда за среда :)
+\newenvironment{env}[1]{
+  \begin{tabular}{|l*2{@{\hskip 1ex}l}|}
+    \hline\textbf{#1}&&
+}{
+  \\\hline
+  \end{tabular}
+}
+
+% двойна разделителна черта: слага се преди първия елемент в средата
+\newcommand{\firstinenv}{\hhline{|*3{=}|}}

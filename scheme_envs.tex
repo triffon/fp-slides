@@ -3,7 +3,7 @@
 
 \title[Среди и процеси]{Модел на средите и изчислителни процеси}
 
-\date{14 октомври 2015 г.}
+\date{21 октомври 2015 г.}
 
 \begin{document}
 
@@ -19,8 +19,9 @@
   \begin{itemize}[<+->]
   \item Връзката между символите и техните оценки се записват в речник, който се нарича \textbf{среда}.
   \item Всеки символ има най-много една оценка в дадена среда.
-  \item В даден момент могат да съществуват много среди, но само една от която е активна.
-  \item \alert{Един символ може да има различни оценки в различни среди.}
+  \item В даден момент могат да съществуват много среди.
+  \item Символите винаги се оценяват в една конкретна среда.
+  \item \alert{Символите могат да има различни оценки в различни среди.}
   \item При стартиране Scheme по подразбиране работи в \textbf{глобалната среда}.
   \item В глобалната среда са дефинирани символи за стандартни операции и функции.
   \end{itemize}
@@ -45,13 +46,14 @@
     \column{0.5\textwidth}
     {}
 
-    \begin{tabular}{|l@{\hskip 1ex}l@{\hskip 1ex}l|}
-      \hline
-      \textbf{E}&&
-      \only<2->{\\\tt r&:&\tt 5}
-      \only<4->{\\\tt{sq}&:&\funcenv x{(* x x)}E}
-      \\[1.5em]\hline
-    \end{tabular}
+    \begin{env}{E}
+      \only<2->{
+        \\\firstinenv\tt r&:&\tt 5
+      }
+      \only<4->{
+        \\\tt{sq}&:&\funcenv x{(* x x)}E
+      }
+    \end{env}
   \end{columns}
 \end{frame}
 
@@ -94,13 +96,13 @@
     \item \tt{(define r 5)}
     \item \tt{(define (sq x) (* x x))}
     \item \begin{tabular}[t]{lc}
-            \{\textbf E\} &\tt{(sq r)}\\
+            \inenv E&\tt{(sq r)}\\
             \nxt{&\bda\\
-            \{\textbf E\} &\tt{(sq 5)}\\
+            \inenv E &\tt{(sq 5)}\\
             \nxt{&\bda\\
-            \{\textbf{E$_1$}\} &\tt{(* x x)}\\
+            \inenv {E$_1$} &\tt{(* x x)}\\
             \nxt{&\bda\\
-            \{\textbf{E$_1$}\} &\tt{(* 5 5)}\\
+            \inenv {E$_1$} &\tt{(* 5 5)}\\
             \nxt{&\bda\\
             &\tt{25}}}}}
           \end{tabular}
@@ -109,25 +111,88 @@
     \column{0.5\textwidth}
     {}
 
-    \begin{tabular}{c}      
-    \begin{tabular}{|l@{\hskip 1ex}l@{\hskip 1ex}l|}
-      \hline
-      \textbf{E}&&
-      \only<1->{\\\tt r&:&\tt 5}
-      \only<2->{\\\tt{sq}&:&\funcenv x{(* x x)}E}
-      \\[1.5em]\hline
-    \end{tabular}\\
+    \begin{tabular}{c}
+      \begin{env}{E}
+        \\\firstinenv\tt r&:&\tt 5
+        \only<2->{\\\tt{sq}&:&\funcenv x{(* x x)}E}
+      \end{env}
+      \\
       \only<5->{
       \Bigg\uparrow\\
-    \begin{tabular}{|l@{\hskip 1ex}l@{\hskip 1ex}l|}
-      \hline
-      \textbf{E$_1$}&&\\
-%      \hline&&\\[-1em]\hline
-      x&:&5
-      \\\hline
-    \end{tabular}}
+      \begin{env}{E$_1$}
+        \\\firstinenv\tt x&:&5
+      \end{env}}
     \end{tabular}
   \end{columns} 
 \end{frame}
 
+\section{Рекурсия}
+
+\begin{frame}
+  \frametitle{Какво е рекурсия?}
+
+  \pause
+  Повторение чрез позоваване на себе си
+  \vspace{1em}
+  
+  \pause
+  Рекурсивна функция: дефинира се чрез себе си
+
+  \begin{equation*}
+    n! =
+    \begin{cases}
+      1,&\text{ при }n = 0,\\
+      n\cdot (n-1)!,&\text{ при }n > 0.
+    \end{cases}
+  \end{equation*}
+  \vspace{1em}
+
+  \pause
+  По-точно: решение на рекурсивно уравнение
+  \begin{equation*}
+    \onslide<5->{\Gamma(f)(n) :=} f(n) =
+    \begin{cases}
+      1,&\text{ при }n = 0,\\
+      n \cdot f(n-1),&\text{ при }n > 0.
+    \end{cases}.
+  \end{equation*}
+  \vspace{2em}
+
+  \pause
+  \alert{$n!$ е ``най-малкото'' решение на горното уравнение $\Gamma(f) = f$.}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Най-малка неподвижна точка}
+
+  \begin{theorem}[Knaster-Tarski]
+    Ако $\Gamma$ е изчислим оператор, то уравнението $f = \Gamma(f)$ има единствено най-малко решение \pause (\textbf{най-малка неподвижна точка на $\Gamma$}). \pause Нещо повече, $f$ това решение е точно това, което би се сметнало от рекурсивна програма пресмятаща $f$ чрез $\Gamma$.
+  \end{theorem}
+
+  \pause
+
+\begin{verbatim}
+(define (fact n)
+  (if (> n 0) 1
+      (* n (fact (- n 1)))))
+\end{verbatim}
+
+  \pause
+
+  Кое е \textbf{най-малкото решение} на уравнението $f(x) = 1 + f(x-1)$?
+
+  \pause
+
+\begin{verbatim}
+(define (f x) (+ 1 (f (- x 1)))
+\end{verbatim}
+
+  \evalsto{(f 0)}?
+
+  \pause
+
+  $f$ е ``празната функция'', т.е. $\mathrm{dom}(f) = \emptyset$.
+  
+\end{frame}
 \end{document}
