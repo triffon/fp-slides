@@ -38,9 +38,9 @@
     \item \evalstoerr r
     \item \tt{(define r 5)}
     \item \evalsto{(+ r 3)}8
-    \item \tt{(define (sq x) (* x x))}
-    \item \evalsto{(sq 3)}9
-    \item \evalsto{(sq r)}{25}
+    \item \tt{(define (f x) (* x r))}
+    \item \evalsto{(f 3)}{15}
+    \item \evalsto{(f r)}{25}
     \end{itemize}
 
     \column{0.5\textwidth}
@@ -52,7 +52,7 @@
         \\\tt r&:&\tt 5
       }
       \only<4->{
-        \\\tt{sq}&:&\funcenv x{(* x x)}E
+        \\\tt f&:&\funcenv x{(* x r)}E
       }
     \end{envir}
   \end{columns}
@@ -95,15 +95,16 @@
 
     \begin{itemize}[<+->]
     \item \tt{(define r 5)}
-    \item \tt{(define (sq x) (* x x))}
+    \item \tt{(define a 3)}
+    \item \tt{(define (f x) (* x r))}
     \item \begin{tabular}[t]{lc}
-            \inenv E&\tt{(sq r)}\\
+            \inenv E&\tt{(f a)}\\
             \nxt{&\bda\\
-            \inenv E &\tt{(sq 5)}\\
+            \inenv E &\tt{(f 3)}\\
             \nxt{&\bda\\
-            \inenv {E_1} &\tt{(* x x)}\\
+            \inenv {E_1} &\tt{(* x r)}\\
             \nxt{&\bda\\
-            &\tt{25}}}}
+            &\tt{15}}}}
           \end{tabular}
         \end{itemize}
 
@@ -113,19 +114,22 @@
     \begin{tabular}{c}
       \begin{envir}{E}
         \\\firstinenv\tt r&:&\tt 5
-        \only<2->{\\\tt{sq}&:&\funcenv x{(* x x)}E}
+        \only<2->{\\\tt a&:&\tt 3}
+        \only<3->{\\\tt f&:&\funcenv x{(* x r)}E}
       \end{envir}
       \\
-      \only<5->{
+      \only<6->{
       \Bigg\uparrow\\
       \begin{envir}{E_1}
-        \\\firstinenv\tt x&:&5
+        \\\firstinenv\tt x&:&3
       \end{envir}}
     \end{tabular}
   \end{columns}
 \end{frame}
 
 \section{Рекурсия}
+
+\subsection{Рекурсивни функции}
 
 \begin{frame}
   \frametitle{Какво е рекурсия?}
@@ -191,6 +195,8 @@
 
 \end{frame}
 
+\subsection{Рекурсивни процеси}
+
 \begin{frame}
   \frametitle{Оценка на рекурсивна функция}
 
@@ -224,6 +230,7 @@
 \begin{frame}
   \frametitle{Оценка на рекурсивна функция в среда}
 
+  {
   \tiny
   \begin{columns}[t,onlytextwidth]
     \column{0.63\textwidth}
@@ -303,7 +310,177 @@
       \end{envir}}}&
     \end{tabular}
   \end{columns}
+  }
+  \vspace{1em}
+  \pause
+
+  Линеен рекурсивен процес
 \end{frame}
 
+\subsection{Итеративни процеси}
+
+
+\begin{frame}[fragile]
+  \frametitle{Факториел с цикъл}
+
+  \begin{columns}[t,onlytextwidth]
+    \column{0.5\textwidth}
+    Факториел на C++
+    \vspace{0.5em}
+
+\only<3>\fbox{\tt{int fact(int n)}}\tt{ \{}\\
+\verb#  #\only<4>\fbox{\tt{int r = 1;}}\\
+\verb#  #\tt{for(\only<5>\fbox{int i = 1}; \only<6>\fbox{i <= n}; \only<7>\fbox{i++})}\\
+\verb#    #\only<8>\fbox{\tt{r *= i;}}\\
+\verb#  #\only<9>\fbox{\tt{return r;}}\\
+\tt{\}}
+
+  \pause
+
+    \column{0.5\textwidth}
+    Превод на Scheme
+    \vspace{0.5em}
+
+\tt{(define (for n \only<4>\fbox r \only<5>\fbox i)}\\
+\verb#  #\tt{(if \only<6>\fbox{(<= i n)}}\\
+\verb#      #\tt{(for n \only<8>\fbox{(* r i)} \only<7>\fbox{(+ i 1)})}\\
+\verb#      #\tt{\only<9>\fbox r))}\\
+\ \\
+\only<3>\fbox{\tt{(define (fact n)}}\\
+\verb#  #\tt{(for n \only<4>\fbox 1 \only<5>\fbox 1))}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Оценка на итеративен факториел}
+
+  \begin{center}
+    \small
+    \begin{tabular}{c}
+      \tt{(fact 4)}\\
+      \nxt{\bda\\
+      \tt{(for 4 1 1)}\\
+      \nxt{\bda\\
+      \alt<+->{\tt{(for 4 1 2)}}{\tt{(if (<= 1 4) (for 4 (* 1 1) (+ 1 1)) 1)}}\\
+      \nxt{\bda\\
+      \alt<+->{\tt{(for 4 2 3)}}{\tt{(if (<= 2 4) (for 4 (* 1 2) (+ 2 1)) 2)}}\\
+      \nxt{\bda\\
+      \alt<+->{\tt{(for 4 6 4)}}{\tt{(if (<= 3 4) (for 4 (* 2 3) (+ 3 1)) 6)}}\\
+      \nxt{\bda\\
+      \alt<+->{\tt{(for 4 24 5)}}{\tt{(if (<= 4 4) (for 4 (* 6 4) (+ 4 1)) 24)}}\\
+      \nxt{\bda\\
+      \alt<+->{\tt{24}}{\tt{(if (<= 5 4) (for 4 (* 24 5) (+ 5 1)) 24)}}}}}}}}
+    \end{tabular}
+  \end{center}
+  \pause
+  \vspace{1em}
+
+  Линеен итеративен процес
+\end{frame}
+
+\begin{frame}
+  \frametitle{Оценка на итеративен факториел със среди}
+
+  \begin{columns}[t,onlytextwidth]
+    \column{0.6\textwidth}
+    {}
+
+    \scriptsize
+    \begin{tabular}{lc}
+      \nxt{\inenv E&\tt{(fact 4)}\\
+      &\nxt{\bda\\
+      \inenv{E_0}&\alt<+->{\tt{(for 4 1 1)}}{\tt{(for n 1 1)}}\\
+      &\nxt{\bda\\
+      \inenv{E_1}&\alt<+->{\tt{(for 4 1 2)}}{\tt{(if (<= i n) (for n (* r i) (+ i 1)) r)}}\\
+      &\nxt{\bda\\
+      \inenv{E_2}&\alt<+->{\tt{(for 4 2 3)}}{\tt{(if (<= i n) (for n (* r i) (+ i 1)) r)}}\\
+      &\nxt{\bda\\
+      \inenv{E_3}&\alt<+->{\tt{(for 4 6 4)}}{\tt{(if (<= i n) (for n (* r i) (+ i 1)) r)}}\\
+      &\nxt{\bda\\
+      \inenv{E_4}&\alt<+->{\tt{(for 4 24 5)}}{\tt{(if (<= i n) (for n (* r i) (+ i 1)) r)}}\\
+      &\nxt{\bda\\
+      \inenv{E_5}&\alt<+->{\tt{24}}{\tt{(if (<= i n) (for n (* r i) (+ i 1)) r)}}}}}}}}}
+    \end{tabular}
+
+    \column{0.4\textwidth}
+    {}
+
+    \tiny
+    \begin{tabular}{*{8}{c@{}}c}
+      \multicolumn 9c{
+      \visible<2->{
+      \begin{envir}{E_0}
+        \\\firstinenv \tt n&:&4
+      \end{envir}}}
+      \\
+      \multicolumn 9c{\visible<2->{\big\downarrow}}\\
+      \multicolumn 9c{
+      \begin{envir}{E}
+        \\\firstinenv &&\\[1pt]\tt{fact}&:&\funcenv n{(for n 1 1)}E\\
+        \tt{for}&:&\funcenv{n r i}\ldots E
+      \end{envir}}
+      \\
+      \multicolumn 2c{\visible<4->{\big\uparrow}}&
+      \visible<10->{\big\uparrow}&
+      \multicolumn 3c{\visible<6->{\big\uparrow}}&
+      \visible<12->{\big\uparrow}&
+      \multicolumn 2c{\visible<8->{\big\uparrow}}\\
+      \multicolumn 2c{
+      \visible<4->{
+      \begin{envir}{E_1}
+        \\\firstinenv\tt n&:&4\\
+        \tt r&:&1\\
+        \tt i&:&1
+      \end{envir}}}&
+      \visible<10->{
+      \begin{tabular}{@{}c@{}}
+      \!\!\Bigg\vert\\[0pt]
+      \!\!\bigg\vert
+      \end{tabular}}&
+      \multicolumn 3c{
+      \visible<6->{
+      \begin{envir}{E_2}
+        \\\firstinenv\tt n&:&4\\
+        \tt r&:&1\\
+        \tt i&:&2
+      \end{envir}}}&
+      \visible<12->{
+      \begin{tabular}{@{}c@{}}
+      \!\!\Bigg\vert\\[0pt]
+      \!\!\bigg\vert
+      \end{tabular}}&
+      \multicolumn 2c{
+      \visible<8->{
+      \begin{envir}{E_3}
+        \\\firstinenv\tt n&:&4\\
+        \tt r&:&2\\
+        \tt i&:&3
+      \end{envir}}}\\
+      \multicolumn 2c{}&
+      \visible<10->{\big\vert}&
+      \multicolumn 3c{}&
+      \visible<12->{\big\vert}&
+      \multicolumn 2c{}\\
+      &
+      \multicolumn 3c{
+      \visible<10->{
+      \hspace{5ex}
+      \begin{envir}{E_4}
+        \\\firstinenv\tt n&:&4\\
+        \tt r&:&6\\
+        \tt i&:&4
+      \end{envir}}}&&
+      \multicolumn 3c{
+      \visible<12->{
+      \hspace{2ex}
+      \begin{envir}{E_5}
+        \\\firstinenv\tt n&:&4\\
+        \tt r&:&24\\
+        \tt i&:&5
+      \end{envir}}}&
+    \end{tabular}
+
+  \end{columns}
+\end{frame}
 
 \end{document}
