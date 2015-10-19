@@ -483,4 +483,96 @@
   \end{columns}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Рекурсивен и итеративен процес}
+
+  \begin{columns}[t,onlytextwidth]
+
+    \column{0.5\textwidth}
+    {}
+
+    \begin{center}
+
+      \tiny
+      \begin{tabular}{c}
+        \tt{(fact 4)} \\
+        \bda\\
+        \tt{(* 4 (fact 3))}\\
+        \bda\\
+        \tt{(* 4 (* 3 (fact 2)))}\\
+        \bda\\
+        \tt{(* 4 (* 3 (* 2 (fact 1))))}\\
+        \bda\\
+        \tt{(* 4 (* 3 (* 2 (* 1 (fact 0)))))}\\
+        \bda\\
+        \tt{(* 4 (* 3 (* 2 (* 1 1))))}\\
+        \bda\\
+        \tt{(* 4 (* 3 (* 2 1)))}\\
+        \bda\\
+        \tt{(* 4 (* 3 2))}\\
+        \bda\\
+        \tt{(* 4 6)}\\
+        \bda\\
+        24
+      \end{tabular}
+    \end{center}
+
+    \scriptsize
+
+    \verb#(define (fact n)#\\
+    \verb#  (if (= n 0) 1#\\
+    \verb#      #\tt{\only<2->\alert{(* n }(fact (- n 1)))))}
+
+    \column{0.5\textwidth}
+    {}
+
+    \begin{center}
+      \tiny
+      \begin{tabular}{c}
+        \tt{(fact 4)}\\
+        \bda\\
+        \tt{(for 4 1 1)}\\
+        \bda\\
+        \tt{(for 4 1 2)}\\
+        \bda\\
+        \tt{(for 4 2 3)}\\
+        \bda\\
+        \tt{(for 4 6 4)}\\
+        \bda\\
+        \tt{(for 4 24 5)}\\
+        \bda\\
+        \tt{24}
+      \end{tabular}
+    \end{center}
+
+    \scriptsize
+\begin{verbatim}
+(define (for n r i)
+  (if (<= i n)
+      (for n (* r i) (+ i 1))
+      r))
+
+(define (fact n)
+  (for n 1 1))
+\end{verbatim}
+
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Опашкова рекурсия}
+
+  \begin{itemize}[<+->]
+  \item Функциите, в които има отложени операции генерират същински \textbf{рекурсивни процеси}
+  \item Рекурсивно извикване, при което няма отложена операция се нарича \textbf{опашкова рекурсия}
+  \item Функциите, в които всички рекурсивни извиквания са опашкови генерират \textbf{итеративни процеси}
+  \item При итеративните процеси липсва етап на свиването на рекурсията
+  \item Опашковата рекурсия се използва за симулиране на цикли
+  \item В Scheme опашковата рекурсия \alert{по стандарт} се интерпретира като цикъл
+    \begin{itemize}
+    \item т.е. не се заделя памет за всяко рекурсивно извикване
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
 \end{document}
