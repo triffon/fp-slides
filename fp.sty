@@ -39,8 +39,11 @@
 % по-приличен pause (за математика и таблици)
 \newcommand{\nxt}[1]{\visible<+->{#1}}
 
+% среда
+\newcommand{\env}[1]{$\mathbf{#1}$}
+
 % оценка в среда
-\newcommand{\inenv}[1]{\{\textbf{#1}\}}
+\newcommand{\inenv}[1]{\{\env{#1}\}}
 
 %%% макроси
 
@@ -55,15 +58,15 @@
                            \hline
                            Параметри&:&\tt{#1}\\
                            Тяло&:&\tt{#2}\\
-                           Среда&:&\textbf{#3}\\
+                           Среда&:&\env{#3}\\
                            \hline
                          \end{tabular}
                          \\[-0.5\normalbaselineskip] &&}
 
 % среда за среда :)
-\newenvironment{env}[1]{
-  \begin{tabular}{|l*2{@{\hskip 1ex}l}|}
-    \hline\textbf{#1}&&
+\newenvironment{envir}[1]{
+  \begin{tabular}{|r@{\hskip 0.5ex}c@{\hskip 0.5ex}l|}
+    \hline \multicolumn{3}{|c|}{\env{#1}}
 }{
   \\\hline
   \end{tabular}

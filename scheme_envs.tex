@@ -46,14 +46,15 @@
     \column{0.5\textwidth}
     {}
 
-    \begin{env}{E}
+    \begin{envir}{E}
+      \\\firstinenv \tt x&:&8
       \only<2->{
-        \\\firstinenv\tt r&:&\tt 5
+        \\\tt r&:&\tt 5
       }
       \only<4->{
         \\\tt{sq}&:&\funcenv x{(* x x)}E
       }
-    \end{env}
+    \end{envir}
   \end{columns}
 \end{frame}
 
@@ -61,12 +62,12 @@
   \frametitle{Функции и среди}
 
   \begin{itemize}[<+->]
-  \item Всяка функция \tt f пази указател към средата \textbf E, в която е дефинирана.
+  \item Всяка функция \tt f пази указател към средата \env E, в която е дефинирана.
   \item При извикване на \tt f:
     \begin{itemize}
-    \item създава се нова среда \textbf{E$_1$}, която разширява \textbf{E}
-    \item в \textbf{E$_1$} всеки символ означаващ формален параметър се свързва с оценката на фактическия параметър
-    \item тялото на $f$ се изпълнява в \textbf{E$_1$}
+    \item създава се нова среда \env{E_1}, която разширява \env E
+    \item в \env{E_1} всеки символ означаващ формален параметър се свързва с оценката на фактическия параметър
+    \item тялото на $f$ се изпълнява в \env{E_1}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -76,10 +77,10 @@
   \begin{itemize}[<+->]
   \item Всяка среда пази указател към своя ``родителска среда'', която разширява
   \item така се получава дърво от среди
-  \item при оценка на символ в дадена среда \textbf E
+  \item при оценка на символ в дадена среда \env E
     \begin{itemize}
-    \item първо се търси оценката му в \textbf E
-    \item ако символът не е дефиниран в \textbf E, се преминава към родителската среда
+    \item първо се търси оценката му в \env E
+    \item ако символът не е дефиниран в \env E, се преминава към родителската среда
     \item при достигане на най-горната среда, ако символът не е дефиниран и в нея се извежда съобщение за грешка
     \end{itemize}
   \end{itemize}
@@ -100,7 +101,7 @@
             \nxt{&\bda\\
             \inenv E &\tt{(sq 5)}\\
             \nxt{&\bda\\
-            \inenv {E$_1$} &\tt{(* x x)}\\
+            \inenv {E_1} &\tt{(* x x)}\\
             \nxt{&\bda\\
             &\tt{25}}}}
           \end{tabular}
@@ -110,18 +111,18 @@
     {}
 
     \begin{tabular}{c}
-      \begin{env}{E}
+      \begin{envir}{E}
         \\\firstinenv\tt r&:&\tt 5
         \only<2->{\\\tt{sq}&:&\funcenv x{(* x x)}E}
-      \end{env}
+      \end{envir}
       \\
       \only<5->{
       \Bigg\uparrow\\
-      \begin{env}{E$_1$}
+      \begin{envir}{E_1}
         \\\firstinenv\tt x&:&5
-      \end{env}}
+      \end{envir}}
     \end{tabular}
-  \end{columns} 
+  \end{columns}
 \end{frame}
 
 \section{Рекурсия}
@@ -132,7 +133,7 @@
   \pause
   Повторение чрез позоваване на себе си
   \vspace{1em}
-  
+
   \pause
   Рекурсивна функция: дефинира се чрез себе си
 
@@ -187,7 +188,7 @@
   \pause
 
   $f$ е ``празната функция'', т.е. $\mathrm{dom}(f) = \emptyset$.
-  
+
 \end{frame}
 
 \begin{frame}
@@ -219,5 +220,90 @@
     \end{tabular}
   \end{center}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Оценка на рекурсивна функция в среда}
+
+  \tiny
+  \begin{columns}[t,onlytextwidth]
+    \column{0.63\textwidth}
+    {}
+
+    \begin{tabular}{lc}
+      \nxt{
+      \inenv E&\tt{(fact 4)}\\
+      \nxt{&\bda\\
+      \inenv{E_1}&\alt<+->{\tt{(* 4 (fact 3))}}{\tt{(if (= n 0) 1 (* n (fact (- n 1))))}}\\
+      \nxt{&\bda\\
+      \inenv{E_2}&\alt<+->{\tt{(* 4 (* 3 (fact 2)))}}{\tt{(* 4 (if (= n 0) 1 (* n (fact (- n 1)))))}}\\
+      \nxt{&\bda\\
+      \inenv{E_3}&\alt<+->{\tt{(* 4 (* 3 (* 2 (fact 1))))}}{\tt{(* 4 (* 3 (if (= n 0) 1 (* n (fact (- n 1))))))}}\\
+      \nxt{&\bda\\
+      \inenv{E_4}&\alt<+->{\tt{(* 4 (* 3 (* 2 (* 1 (fact 0)))))}}{\tt{(* 4 (* 3 (* 2 (if (= n 0) 1 (* n (fact (- n 1)))))))}}\\
+      \nxt{&\bda\\
+      \alt<+->{\inenv{E_4}&\tt{(* 4 (* 3 (* 2 (* 1 1))))}}{\inenv{E_5}&\tt{(* 4 (* 3 (* 2 (* 1 (if (= n 0) 1 (* n (fact (- n 1))))))))}}\\
+      \nxt{&\bda\\
+      \inenv{E_3}&\tt{(* 4 (* 3 (* 2 1)))}\\
+      \nxt{&\bda\\
+      \inenv{E_2}&\tt{(* 4 (* 3 2))}\\
+      \nxt{&\bda\\
+      \inenv{E_1}&\tt{(* 4 6)}\\
+      \nxt{&\bda\\
+      \inenv E&24}}}}}}}}}}
+    \end{tabular}
+
+    \column{0.37\textwidth}
+    {}
+
+    \begin{tabular}{*{8}{c@{}}c}
+      \multicolumn{9}c{
+      \begin{envir}{E}
+        \\\firstinenv &&\\[1pt]\hspace{6ex}\tt{fact}&:&\funcenv n\ldots E
+      \end{envir}}
+      \\
+      \multicolumn 2c{\visible<2->{\Bigg\uparrow}}&
+      \visible<8->{\Bigg\uparrow}&
+      \multicolumn 3c{\visible<4->{\Bigg\uparrow}}&
+      \visible<10->{\Bigg\uparrow}&
+      \multicolumn 2c{\visible<6->{\Bigg\uparrow}}\\
+      \multicolumn 2c{
+      \visible<2->{
+      \begin{envir}{E_1}
+        \\\firstinenv\tt n&:&4
+      \end{envir}}}&
+      \visible<8->{\Bigg\vert}&
+      \multicolumn 3c{
+      \visible<4->{
+      \begin{envir}{E_2}
+        \\\firstinenv\tt n&:&3
+      \end{envir}}}&
+      \visible<10->{\Bigg\vert}&
+      \multicolumn 2c{
+      \visible<6->{
+      \begin{envir}{E_3}
+        \\\firstinenv\tt n&:&2
+      \end{envir}}}\\
+      \multicolumn 2c{}&
+      \visible<8->{\Bigg\vert}&
+      \multicolumn 3c{}&
+      \visible<10->{\Bigg\vert}&
+      \multicolumn 2c{}\\
+      &
+      \multicolumn 3c{
+      \visible<8->{
+      \hspace{5ex}
+      \begin{envir}{E_4}
+        \\\firstinenv\tt n&:&1
+      \end{envir}}}&&
+      \multicolumn 3c{
+      \visible<10->{
+      \hspace{2ex}
+      \begin{envir}{E_5}
+        \\\firstinenv\tt n&:&0
+      \end{envir}}}&
+    \end{tabular}
+  \end{columns}
+\end{frame}
+
 
 \end{document}
