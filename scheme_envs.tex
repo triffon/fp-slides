@@ -35,6 +35,7 @@
     {}
 
     \begin{itemize}[<+->]
+    \item \tt{(define a 8)}
     \item \evalstoerr r
     \item \tt{(define r 5)}
     \item \evalsto{(+ r 3)}8
@@ -47,11 +48,11 @@
     {}
 
     \begin{envir}{E}
-      \\\firstinenv \tt x&:&8
-      \only<2->{
+      \\\firstinenv \tt a&:&8
+      \only<3->{
         \\\tt r&:&\tt 5
       }
-      \only<4->{
+      \only<5->{
         \\\tt f&:&\funcenv x{(* x r)}E
       }
     \end{envir}
@@ -67,7 +68,7 @@
     \begin{itemize}
     \item създава се нова среда \env{E_1}, която разширява \env E
     \item в \env{E_1} всеки символ означаващ формален параметър се свързва с оценката на фактическия параметър
-    \item тялото на $f$ се изпълнява в \env{E_1}
+    \item тялото на $f$ се оценява в \env{E_1}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -195,6 +196,42 @@
 
 \end{frame}
 
+\begin{frame}
+  \frametitle{Операционна и денотационна семантика}
+
+  Два подхода за описание на смисъла на функциите в Scheme.
+  \pause
+
+  Нека \tt{(define (f x) $\Gamma$[f])} е рекурсивно дефинирана функция.
+  \pause
+
+  \alert{Коя е математическата функция $f$, която се пресмята от \tt f?}
+  \vspace{1em}
+
+  \pause
+  \textbf{Денотационна семантика}
+
+  $f$ е най-малката неподвижна точка на уравнението $F = \Gamma(F)$.
+
+  \vspace{1em}
+
+  \pause
+  \textbf{Операционна семантика}
+
+  Разглеждаме редицата от последователни оценки на комбинацията\\
+  \tt{(f a)} $\rightarrow$ \tt{$\Gamma$[f][x $\mapsto$ a]} $\rightarrow\ldots$.\\
+  Ако редицата завършва с атома \tt b, дефинираме $f(a) := b$.
+  \pause
+  \vspace{1em}
+
+  \alert{Функциите в Scheme имат дуален, но еквивалентен смисъл:}
+  \begin{itemize}
+  \item решения на рекурсивни уравнения
+  \item изчислителни процеси, генериращи се при оценка
+  \end{itemize}
+\end{frame}
+
+
 \subsection{Рекурсивни процеси}
 
 \begin{frame}
@@ -312,9 +349,8 @@
   \end{columns}
   }
   \vspace{1em}
-  \pause
 
-  Линеен рекурсивен процес
+  \nxt{Линеен рекурсивен процес}
 \end{frame}
 
 \subsection{Итеративни процеси}
@@ -326,28 +362,30 @@
   \begin{columns}[t,onlytextwidth]
     \column{0.5\textwidth}
     Факториел на C++
-    \vspace{0.5em}
 
-\only<3>\fbox{\tt{int fact(int n)}}\tt{ \{}\\
-\verb#  #\only<4>\fbox{\tt{int r = 1;}}\\
-\verb#  #\tt{for(\only<5>\fbox{int i = 1}; \only<6>\fbox{i <= n}; \only<7>\fbox{i++})}\\
-\verb#    #\only<8>\fbox{\tt{r *= i;}}\\
-\verb#  #\only<9>\fbox{\tt{return r;}}\\
-\tt{\}}
+\begin{semiverbatim}
+\only<3>\fbox{int fact(int n)} \{
+  \only<4>\fbox{int r = 1;}
+  for(\only<5>\fbox{int i = 1}; \only<6>\fbox{i <= n}; \only<7>\fbox{i++})
+    \only<8>\fbox{r *= i;}
+  \only<9>\fbox{return r;}
+\}
+\end{semiverbatim}
 
   \pause
 
     \column{0.5\textwidth}
     Превод на Scheme
-    \vspace{0.5em}
 
-\tt{(define (for n \only<4>\fbox r \only<5>\fbox i)}\\
-\verb#  #\tt{(if \only<6>\fbox{(<= i n)}}\\
-\verb#      #\tt{(for n \only<8>\fbox{(* r i)} \only<7>\fbox{(+ i 1)})}\\
-\verb#      #\tt{\only<9>\fbox r))}\\
-\ \\
-\only<3>\fbox{\tt{(define (fact n)}}\\
-\verb#  #\tt{(for n \only<4>\fbox 1 \only<5>\fbox 1))}
+\begin{semiverbatim}
+(define (for n \only<4>\fbox{r} \only<5>\fbox{i})
+  (if \only<6>\fbox{(<= i n)}
+      (for n \only<8>\fbox{(* r i)} \only<7>\fbox{(+ i 1)})
+      \only<9>\fbox{r}))
+
+\only<3>\fbox{(define (fact n)}
+  (for n \only<4>\fbox{1} \only<5>\fbox{1}))
+\end{semiverbatim}
   \end{columns}
 \end{frame}
 
@@ -357,7 +395,7 @@
   \begin{center}
     \small
     \begin{tabular}{c}
-      \tt{(fact 4)}\\
+      \nxt{\tt{(fact 4)}\\
       \nxt{\bda\\
       \tt{(for 4 1 1)}\\
       \nxt{\bda\\
@@ -369,16 +407,15 @@
       \nxt{\bda\\
       \alt<+->{\tt{(for 4 24 5)}}{\tt{(if (<= 4 4) (for 4 (* 6 4) (+ 4 1)) 24)}}\\
       \nxt{\bda\\
-      \alt<+->{\tt{24}}{\tt{(if (<= 5 4) (for 4 (* 24 5) (+ 5 1)) 24)}}}}}}}}
+      \alt<+->{\tt{24}}{\tt{(if (<= 5 4) (for 4 (* 24 5) (+ 5 1)) 24)}}}}}}}}}
     \end{tabular}
   \end{center}
-  \pause
   \vspace{1em}
 
-  Линеен итеративен процес
+  \nxt{Линеен итеративен процес}
 \end{frame}
 
-\begin{frame}
+\begin{frame}<1-13>[label=iterenv]
   \frametitle{Оценка на итеративен факториел със среди}
 
   \begin{columns}[t,onlytextwidth]
@@ -389,15 +426,15 @@
     \begin{tabular}{lc}
       \nxt{\inenv E&\tt{(fact 4)}\\
       &\nxt{\bda\\
-      \inenv{E_0}&\alt<+->{\tt{(for 4 1 1)}}{\tt{(for n 1 1)}}\\
+      \inenv{E_0}&\alt<+->{\tt{(for \alert<14>4 1 1)}}{\tt{(for n 1 1)}}\\
       &\nxt{\bda\\
-      \inenv{E_1}&\alt<+->{\tt{(for 4 1 2)}}{\tt{(if (<= i n) (for n (* r i) (+ i 1)) r)}}\\
+      \inenv{E_1}&\alt<+->{\tt{(for \alert<14>4 1 2)}}{\tt{(if (<= i n) (for n (* r i) (+ i 1)) r)}}\\
       &\nxt{\bda\\
-      \inenv{E_2}&\alt<+->{\tt{(for 4 2 3)}}{\tt{(if (<= i n) (for n (* r i) (+ i 1)) r)}}\\
+      \inenv{E_2}&\alt<+->{\tt{(for \alert<14>4 2 3)}}{\tt{(if (<= i n) (for n (* r i) (+ i 1)) r)}}\\
       &\nxt{\bda\\
-      \inenv{E_3}&\alt<+->{\tt{(for 4 6 4)}}{\tt{(if (<= i n) (for n (* r i) (+ i 1)) r)}}\\
+      \inenv{E_3}&\alt<+->{\tt{(for \alert<14>4 6 4)}}{\tt{(if (<= i n) (for n (* r i) (+ i 1)) r)}}\\
       &\nxt{\bda\\
-      \inenv{E_4}&\alt<+->{\tt{(for 4 24 5)}}{\tt{(if (<= i n) (for n (* r i) (+ i 1)) r)}}\\
+      \inenv{E_4}&\alt<+->{\tt{(for \alert<14>4 24 5)}}{\tt{(if (<= i n) (for n (* r i) (+ i 1)) r)}}\\
       &\nxt{\bda\\
       \inenv{E_5}&\alt<+->{\tt{24}}{\tt{(if (<= i n) (for n (* r i) (+ i 1)) r)}}}}}}}}}
     \end{tabular}
@@ -417,7 +454,7 @@
       \multicolumn 9c{
       \begin{envir}{E}
         \\\firstinenv &&\\[1pt]\tt{fact}&:&\funcenv n{(for n 1 1)}E\\
-        \tt{for}&:&\funcenv{n r i}\ldots E
+        \tt{for}&:&\funcenv{\alert<14>n r i}\ldots E
       \end{envir}}
       \\
       \multicolumn 2c{\visible<4->{\big\uparrow}}&
@@ -428,7 +465,7 @@
       \multicolumn 2c{
       \visible<4->{
       \begin{envir}{E_1}
-        \\\firstinenv\tt n&:&4\\
+        \\\firstinenv\alert<14>{\tt n}&\alert<14>:&\alert<14>4\\
         \tt r&:&1\\
         \tt i&:&1
       \end{envir}}}&
@@ -440,7 +477,7 @@
       \multicolumn 3c{
       \visible<6->{
       \begin{envir}{E_2}
-        \\\firstinenv\tt n&:&4\\
+        \\\firstinenv\alert<14>{\tt n}&\alert<14>:&\alert<14>4\\
         \tt r&:&1\\
         \tt i&:&2
       \end{envir}}}&
@@ -452,7 +489,7 @@
       \multicolumn 2c{
       \visible<8->{
       \begin{envir}{E_3}
-        \\\firstinenv\tt n&:&4\\
+        \\\firstinenv\alert<14>{\tt n}&\alert<14>:&\alert<14>4\\
         \tt r&:&2\\
         \tt i&:&3
       \end{envir}}}\\
@@ -466,7 +503,7 @@
       \visible<10->{
       \hspace{5ex}
       \begin{envir}{E_4}
-        \\\firstinenv\tt n&:&4\\
+        \\\firstinenv\alert<14>{\tt n}&\alert<14>:&\alert<14>4\\
         \tt r&:&6\\
         \tt i&:&4
       \end{envir}}}&&
@@ -474,7 +511,7 @@
       \visible<12->{
       \hspace{2ex}
       \begin{envir}{E_5}
-        \\\firstinenv\tt n&:&4\\
+        \\\firstinenv\alert<14>{\tt n}&\alert<14>:&\alert<14>4\\
         \tt r&:&24\\
         \tt i&:&5
       \end{envir}}}&
@@ -483,7 +520,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<1-2>[fragile,label=reciter]
   \frametitle{Рекурсивен и итеративен процес}
 
   \begin{columns}[t,onlytextwidth]
@@ -521,7 +558,7 @@
 
     \verb#(define (fact n)#\\
     \verb#  (if (= n 0) 1#\\
-    \verb#      #\tt{\only<2->\alert{(* n }(fact (- n 1)))))}
+    \verb#      #\tt{\alert<2>{(* n }(fact (- n 1)))))}
 
     \column{0.5\textwidth}
     {}
@@ -531,30 +568,29 @@
       \begin{tabular}{c}
         \tt{(fact 4)}\\
         \bda\\
-        \tt{(for 4 1 1)}\\
+        \tt{(for \alert<3> 4 1 1)}\\
         \bda\\
-        \tt{(for 4 1 2)}\\
+        \tt{(for \alert<3> 4 1 2)}\\
         \bda\\
-        \tt{(for 4 2 3)}\\
+        \tt{(for \alert<3> 4 2 3)}\\
         \bda\\
-        \tt{(for 4 6 4)}\\
+        \tt{(for \alert<3> 4 6 4)}\\
         \bda\\
-        \tt{(for 4 24 5)}\\
+        \tt{(for \alert<3> 4 24 5)}\\
         \bda\\
         \tt{24}
       \end{tabular}
     \end{center}
 
     \scriptsize
-\begin{verbatim}
-(define (for n r i)
-  (if (<= i n)
-      (for n (* r i) (+ i 1))
-      r))
 
-(define (fact n)
-  (for n 1 1))
-\end{verbatim}
+\tt{(define (for \alert<3> n r i)}\\
+\verb#  #\tt{(if (<= i n)}\\
+\verb#       #\tt{(for \alert<3> n (* r i) (+ i 1))}\\
+\verb#       #\tt{r))}\\
+\ \\
+\tt{(define (fact n)}\\
+\verb#  #\tt{(for \alert<3> n 1 1))}
 
   \end{columns}
 \end{frame}
@@ -573,6 +609,460 @@
     \item т.е. не се заделя памет за всяко рекурсивно извикване
     \end{itemize}
   \end{itemize}
+\end{frame}
+
+\section{Вложени дефиниции}
+
+\againframe<3>{reciter}
+
+\againframe<14>{iterenv}
+
+\subsection{Влагане на \tt{define}}
+
+\begin{frame}[fragile]
+  \frametitle{Вложени дефиниции}
+
+  \begin{itemize}
+  \item \tta{(define (}<функция> \{<параметър\}\tta) \{<дефиниция>\} <тяло>\tta)
+  \item При извикване на <функция> първо се оценяват всички <дефиниция> и след това се оценява <тяло>
+  \item Вложените дефиниции се оценяват в средата, която се \textbf{оценява} функцията, а не в средата, в която е \textbf{дефинирана}
+  \item Пример:\\
+\begin{verbatim}
+(define (distance x1 y1 x2 y2)
+  (define dx (- x2 x1))
+  (define dy (- y2 y1))
+  (define (sq x) (* x x))
+  (sqrt (+ (sq dx) (sq dy))))
+\end{verbatim}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Вложена помощна итеративна функция}
+
+  При итеративни функция е удобно помощната функция да е вложена.
+
+\begin{semiverbatim}
+\only<1>{(define (for n r i)
+  (if (<= i n)
+      (for n (* r i) (+ i 1))
+      r))
+}
+(define (fact n)
+\only<2->{  (define (for r i)
+    (if (<= i n)
+        (for (* r i) (+ i 1))
+        r))
+}  (for \only<1>{n }1 1))
+\end{semiverbatim}
+
+\onslide<3->{
+  Вложените дефиниции ``виждат'' символите на обхващащите им дефиниции.
+}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Оценка на итеративен факториел с вложена функция}
+
+  \begin{columns}[t,onlytextwidth]
+    \column{0.6\textwidth}
+    {}
+
+    \scriptsize
+    \begin{tabular}{lc}
+      \nxt{\inenv E&\tt{(fact 4)}\\
+      &\nxt{\bda\\
+      \inenv{E_0}&\alt<+->{\tt{(for 1 1)}}{\tt{(define (for r i) \ldots)}}\\
+      &\nxt{\bda\\
+      \inenv{E_1}&\alt<+->{\tt{(for 1 2)}}{\tt{(if (<= i n) (for (* r i) (+ i 1)) r)}}\\
+      &\nxt{\bda\\
+      \inenv{E_2}&\alt<+->{\tt{(for 2 3)}}{\tt{(if (<= i n) (for (* r i) (+ i 1)) r)}}\\
+      &\nxt{\bda\\
+      \inenv{E_3}&\alt<+->{\tt{(for 6 4)}}{\tt{(if (<= i n) (for (* r i) (+ i 1)) r)}}\\
+      &\nxt{\bda\\
+      \inenv{E_4}&\alt<+->{\tt{(for 24 5)}}{\tt{(if (<= i n) (for (* r i) (+ i 1)) r)}}\\
+      &\nxt{\bda\\
+      \inenv{E_5}&\alt<+->{\tt{24}}{\tt{(if (<= i n) (for (* r i) (+ i 1)) r)}}}}}}}}}
+    \end{tabular}
+
+    \column{0.4\textwidth}
+    {}
+
+    \tiny
+    \begin{tabular}{*{8}{c@{}}c}
+      \multicolumn 9c{
+      \begin{envir}{E}
+        \\\firstinenv &&\\[1pt]\tt{fact}&:&\funcenv n{(for 1 1)}E
+      \end{envir}}
+      \\
+      \multicolumn 9c{\visible<2->{\big\uparrow}}
+      \\
+      \multicolumn 9c{
+      \visible<2->{
+      \begin{envir}{E_0}
+        \\\firstinenv \tt n&:&4\\
+        \hspace{6ex}\tt{for}&:&\funcenv{r i}\ldots {\alert<2>{E_0}}
+      \end{envir}}}
+      \\
+      \multicolumn 2c{\visible<4->{\big\uparrow}}&
+      \visible<10->{\big\uparrow}&
+      \multicolumn 3c{\visible<6->{\big\uparrow}}&
+      \visible<12->{\big\uparrow}&
+      \multicolumn 2c{\visible<8->{\big\uparrow}}\\
+      \multicolumn 2c{
+      \visible<4->{
+      \begin{envir}{E_1}
+        \\\firstinenv\tt r&:&1\\
+        \tt i&:&1
+      \end{envir}}}&
+      \visible<10->{
+      \begin{tabular}{@{}c@{}}
+      \!\!\Bigg\vert\\[0pt]
+      \!\!\big\vert
+      \end{tabular}}&
+      \multicolumn 3c{
+      \visible<6->{
+      \begin{envir}{E_2}
+        \\\firstinenv\tt r&:&1\\
+        \tt i&:&2
+      \end{envir}}}&
+      \visible<12->{
+      \begin{tabular}{@{}c@{}}
+      \!\!\Bigg\vert\\[0pt]
+      \!\!\big\vert
+      \end{tabular}}&
+      \multicolumn 2c{
+      \visible<8->{
+      \begin{envir}{E_3}
+        \\\firstinenv\tt r&:&2\\
+        \tt i&:&3
+      \end{envir}}}\\
+      \multicolumn 2c{}&
+      \visible<10->{\big\vert}&
+      \multicolumn 3c{}&
+      \visible<12->{\big\vert}&
+      \multicolumn 2c{}\\
+      &
+      \multicolumn 3c{
+      \visible<10->{
+      \hspace{5ex}
+      \begin{envir}{E_4}
+        \\\firstinenv\tt r&:&6\\
+        \tt i&:&4
+      \end{envir}}}&&
+      \multicolumn 3c{
+      \visible<12->{
+      \hspace{2ex}
+      \begin{envir}{E_5}
+        \\\firstinenv\tt r&:&24\\
+        \tt i&:&5
+      \end{envir}}}&
+    \end{tabular}
+  \end{columns}
+\end{frame}
+
+\section{Нелинейни изчислителни процеси}
+
+\subsection{Логаритмични процеси}
+
+\begin{frame}[fragile]
+  \frametitle{Степенуване}
+
+  Функцията $x^n$ може да се дефинира по следния начин:
+  \begin{equation*}
+    x^n = \begin{cases}
+      1,&\text{ ако }n = 0,\\
+      x^{-n},&\text{ ако }n < 0,\\
+      x\cdot x^{n-1},&\text{ ако }n > 0.
+    \end{cases}
+  \end{equation*}
+
+  \pause
+
+\begin{verbatim}
+(define (pow x n)
+  (cond ((= n 0) 1)
+        ((< n 0) (pow x (- n)))
+        (else (* x (pow x (- n 1))))))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Оценка на степенуване}
+
+  \begin{center}
+    \tiny
+    \begin{tabular}{c}
+      \tt{(pow 2 6)}\\
+      \nxt{\bda\\
+      \tt{(* 2 (pow 2 5))}\\
+      \nxt{\bda\\
+      \tt{(* 2 (* 2 (pow 2 4)))}\\
+      \nxt{\bda\\
+      \tt{(* 2 (* 2 (* 2 (pow 2 3))))}\\
+      \nxt{\bda\\
+      \tt{(* 2 (* 2 (* 2 (* 2 (pow 2 2)))))}\\
+      \nxt{\bda\\
+      \tt{(* 2 (* 2 (* 2 (* 2 (* 2 (pow 2 1))))))}\\
+      \nxt{\bda\\
+      \tt{(* 2 (* 2 (* 2 (* 2 (* 2 (* 2 (pow 2 0)))))))}\\
+      \nxt{\bda\\
+      \tt{(* 2 (* 2 (* 2 (* 2 (* 2 (* 2 1))))))}\\
+      \nxt{\bda\\
+      \tt{(* 2 (* 2 (* 2 (* 2 (* 2 2)))))}\\
+      \nxt{\bda\\
+      \tt{(* 2 (* 2 (* 2 (* 2 4))))}\\
+      \nxt{\bda\\
+      \tt{(* 2 (* 2 (* 2 8)))}\\
+      \nxt{\bda\\
+      \tt{(* 2 (* 2 16))}\\
+      \nxt{\bda\\
+      \tt{(* 2 32)}\\
+      \nxt{\bda\\
+      \tt{64}}}}}}}}}}}}}}
+    \end{tabular}
+  \end{center}
+
+  \nxt{Линеен рекурсивен процес}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Бързо степенуване}
+
+  Алтернативна дефиниция на $x^n$:
+  \begin{equation*}
+    x^n = \begin{cases}
+      1,&\text{ ако }n = 0,\\
+      x^{-n},&\text{ ако }n < 0,\\
+      (x^{\frac n2})^2,&\text{ ако }n > 0, n\text{ --- четно},\\
+      x\cdot x^{n-1},&\text{ ако }n > 0, n\text{ --- нечетно}.
+    \end{cases}
+  \end{equation*}
+
+  \pause
+
+\begin{verbatim}
+(define (qpow x n)
+  (define (sqr x) (* x x))
+  (cond ((= n 0) 1)
+        ((< n 0) (qpow x (- n)))
+        ((even? n) (sqr (qpow x (quotient n 2))))
+        (else (* x (qpow x (- n 1))))))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Оценка на бързо степенуване}
+
+  \begin{center}
+    \scriptsize
+    \begin{tabular}{c}
+      \tt{(qpow 2 6)}\\
+      \nxt{\bda\\
+      \tt{(sqr (qpow 2 3))}\\
+      \nxt{\bda\\
+      \tt{(sqr (* 2 (qpow 2 2)))}\\
+      \nxt{\bda\\
+      \tt{(sqr (* 2 (sqr (qpow 2 1))))}\\
+      \nxt{\bda\\
+      \tt{(sqr (* 2 (sqr (* 2 (qpow 2 0)))))}\\
+      \nxt{\bda\\
+      \tt{(sqr (* 2 (sqr (* 2 1))))}\\
+      \nxt{\bda\\
+      \tt{(sqr (* 2 (sqr 2)))}\\
+      \nxt{\bda\\
+      \tt{(sqr (* 2 4))}\\
+      \nxt{\bda\\
+      \tt{(sqr 8)}\\
+      \nxt{\bda\\
+      \tt{64}}}}}}}}}}
+    \end{tabular}
+  \end{center}
+
+  \nxt{Логаритмичен рекурсивен процес}
+\end{frame}
+
+\subsection{Дървовидни рекурсивни процеси}
+
+\begin{frame}[fragile]
+  \frametitle{Числа на Фибоначи}
+
+  $0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, \ldots$
+
+  \pause
+  \begin{equation*}
+    f_n =
+    \begin{cases}
+      0, &\text{ за }n = 0,\\
+      1, &\text{ за }n = 1,\\
+      f_{n-1} + f_{n-2}, &\text{ за }n \geq 2.
+    \end{cases}
+  \end{equation*}
+
+  \pause
+
+\begin{verbatim}
+(define (fib n)
+  (cond ((= n 0) 0)
+        ((= n 1) 1)
+        (else (+ (fib (- n 1)) (fib (- n 2))))))
+\end{verbatim}
+
+  \pause
+
+  $f_{40} = ?$
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Дървовидна рекурсия}
+
+  \begin{center}
+    \only<1>{
+      \begin{forest} for tree={edge=->}
+        [\tt{(fib 2)}
+        [\tt{(fib 1)} [\tt 1]] [\tt{(fib 0)}
+        [\tt 0]]]
+      \end{forest}
+    }
+    \only<2>{
+      \begin{forest} for tree={edge=->}
+      [\tt{(fib 3)}
+      [\tt{(fib 2)}
+      [\tt{(fib 1)} [\tt 1]]
+      [\tt{(fib 0)} [\tt 0]]]
+      [\tt{(fib 1)} [\tt 1]]]
+      \end{forest}
+    }
+    \only<3>{
+      \begin{forest} for tree={edge=->}
+      [\tt{(fib 4)}
+      [\tt{(fib 3)}
+      [\tt{(fib 2)}
+      [\tt{(fib 1)} [\tt 1]]
+      [\tt{(fib 0)} [\tt 0]]]
+      [\tt{(fib 1)} [\tt 1]]]
+      [\tt{(fib 2)}
+      [\tt{(fib 1)} [\tt 1]]
+      [\tt{(fib 0)} [\tt 0]]]]
+      \end{forest}
+    }
+    \only<4>{
+      \scriptsize
+      \begin{forest} for tree={edge=->}
+      [\tt{(fib 5)}
+      [\tt{(fib 4)}
+      [\tt{(fib 3)}
+      [\tt{(fib 2)}
+      [\tt{(fib 1)} [\tt 1]]
+      [\tt{(fib 0)} [\tt 0]]]
+      [\tt{(fib 1)} [\tt 1]]]
+      [\tt{(fib 2)}
+      [\tt{(fib 1)} [\tt 1]]
+      [\tt{(fib 0)} [\tt 0]]]]
+      [\tt{(fib 3)}
+      [\tt{(fib 2)}
+      [\tt{(fib 1)} [\tt 1]]
+      [\tt{(fib 0)} [\tt 0]]]
+      [\tt{(fib 1)} [\tt 1]]]]
+      \end{forest}
+    }
+    \only<5->{
+    \tiny
+    \begin{forest} for tree={edge=->,s sep=1pt,inner sep=1pt}
+      [\tt{(fib 6)}
+      [\tt{(fib 5)}
+      [\tt{(fib 4)}
+      [\tt{(fib 3)}
+      [\tt{(fib 2)}
+      [\tt{(fib 1)} [\tt 1]]
+      [\tt{(fib 0)} [\tt 0]]]
+      [\tt{(fib 1)} [\tt 1]]]
+      [\tt{(fib 2)}
+      [\tt{(fib 1)} [\tt 1]]
+      [\tt{(fib 0)} [\tt 0]]]]
+      [\tt{(fib 3)}
+      [\tt{(fib 2)}
+      [\tt{(fib 1)} [\tt 1]]
+      [\tt{(fib 0)} [\tt 0]]]
+      [\tt{(fib 1)} [\tt 1]]]]
+      [\tt{(fib 4)}
+      [\tt{(fib 3)}
+      [\tt{(fib 2)}
+      [\tt{(fib 1)} [\tt 1]]
+      [\tt{(fib 0)} [\tt 0]]]
+      [\tt{(fib 1)} [\tt 1]]]
+      [\tt{(fib 2)}
+      [\tt{(fib 1)} [\tt 1]]
+      [\tt{(fib 0)} [\tt 0]]]
+      [\tt{(fib 3)}
+      [\tt{(fib 2)}
+      [\tt{(fib 1)} [\tt 1]]
+      [\tt{(fib 0)} [\tt 0]]]
+      [\tt{(fib 1)} [\tt 1]]]]]
+    \end{forest}
+    }
+  \end{center}
+
+  \onslide<6>{Дървовиден рекурсивен процес}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Как да оптимизираме?}
+
+  \textbf{Решение №1: мемоизация}
+
+  Да помним вече пресметнатите стойности, вместо да ги смятаме пак.
+
+  \pause
+  \alert{За реализацията са нужни странични ефекти.}
+
+  \pause
+  \vspace{1em}
+
+  \textbf{Решение №2: динамично програмиране}
+
+  Строим последователно всички числа на Фибоначи в нарастващ ред.
+
+  \pause
+  \alert{Нужно е да помним само последните две числа!}
+
+  \pause
+\begin{verbatim}
+(define (fib n)
+  (define (iter i fib_i fib_i-1)
+    (if (= i n) fib_i
+        (iter (+ i 1) (+ fib_i fib_i-1) fib_i)))
+  (if (= n 0) 0
+      (iter 1 1 0)))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Итеративно генериране на числата на Фибоначи}
+
+  \small
+  \begin{center}
+    \begin{tabular}{c}
+      \nxt{\tt{(fib 7)}\\
+      \nxt{\bda\\
+      \tt{(iter 1 1 0)}\\
+      \nxt{\bda\\
+      \tt{(iter 2 1 1)}\\
+      \nxt{\bda\\
+      \tt{(iter 3 2 1)}\\
+      \nxt{\bda\\
+      \tt{(iter 4 3 2)}\\
+      \nxt{\bda\\
+      \tt{(iter 5 5 3)}\\
+      \nxt{\bda\\
+      \tt{(iter 6 8 5)}\\
+      \nxt{\bda\\
+      \tt{(iter 7 13 8)}\\
+      \nxt{\bda\\
+      \tt{13}}}}}}}}}}
+    \end{tabular}
+  \end{center}
 \end{frame}
 
 \end{document}
