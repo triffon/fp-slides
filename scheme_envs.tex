@@ -136,6 +136,24 @@
   \frametitle{Какво е рекурсия?}
 
   \pause
+
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{images/matroska.jpg}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Какво е рекурсия?}
+
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{images/sierpinski.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Какво е рекурсия?}
+
+  \pause
   Повторение чрез позоваване на себе си
   \vspace{1em}
 
@@ -143,28 +161,42 @@
   Рекурсивна функция: дефинира се чрез себе си
 
   \begin{equation*}
-    n! =
-    \begin{cases}
-      1,&\text{ при }n = 0,\\
-      n\cdot (n-1)!,&\text{ при }n > 0.
-    \end{cases}
+    n! = \left\{
+    \begin{array}{l@{}l@{\qquad}l}
+      1,&\text{ при }n = 0,&\textbf{(база)}\\
+      n\cdot (n-1)!,&\text{ при }n > 0.&\textbf{(стъпка)}
+    \end{array}\right.
   \end{equation*}
   \vspace{1em}
 
   \pause
-  По-точно: решение на рекурсивно уравнение
+
+  \begin{itemize}
+  \item Дава се отговор на най-простата задача (база, дъно)
+  \item Показва се как сложна задача се свежда към една или няколко по-прости задачи от същия вид (стъпка)
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Рекурсивни уравнения}
+
+  Какво означава ``да дефинираме функция чрез себе си''?
+
+  \pause
+
+  Да разгледаме \emph{рекурсивното уравнение}, в което $f$ е неизвестно:
   \begin{equation*}
-    \onslide<5->{\Gamma(f)(n) :=} f(n) =
-    \begin{cases}
+    f(n) =
+    \underbrace{\begin{cases}
       1,&\text{ при }n = 0,\\
       n \cdot f(n-1),&\text{ при }n > 0.
-    \end{cases}.
+    \end{cases}}_{\Gamma(f)(n)}
   \end{equation*}
 
   \pause
   \alert{$n!$ е ``най-малкото'' решение на горното уравнение $\Gamma(f) = f$.}
 \end{frame}
-
 
 \begin{frame}[fragile]
   \frametitle{Най-малка неподвижна точка}
