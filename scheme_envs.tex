@@ -661,13 +661,75 @@
   \item Вложените дефиниции се оценяват и записват в средата, която се \textbf{оценява} функцията, а не в средата, в която е \textbf{дефинирана}
   \item Пример:\\
 \begin{verbatim}
-(define (distance x1 y1 x2 y2)
+(define (dist x1 y1 x2 y2)
   (define dx (- x2 x1))
   (define dy (- y2 y1))
   (define (sq x) (* x x))
   (sqrt (+ (sq dx) (sq dy))))
 \end{verbatim}
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Оценка на вложени функции}
+
+  \scriptsize
+  \begin{columns}[t,onlytextwidth]
+    \column{0.5\textwidth}
+    {}
+
+    \begin{tabular}{rc}
+      \nxt{\inenv E&\tt{(dist 2 5 -1 9)}\\
+      &\nxt{\nxt{\bda\\
+      \inenv{E_1}&\tt{(define dx (- x2 x1))}\\
+      \nxt{\inenv{E_1}&\tt{(define dy (- y2 y1))}\\
+      \nxt{\inenv{E_1}&\tt{(define sq (* x x))}\\
+      \nxt{\inenv{E_1}&\tt{(sqrt (+ (sq dx) (sq dy)))}\\
+      &\nxt{\bda\\
+      \inenv{E_2}&\tt{(sqrt (+ (* x x) (sq dy)))}\\
+      &\nxt{\bda\\
+      \inenv{E_3}&\tt{(sqrt (+ 9 (* x x)))}\\
+      &\nxt{\bda\\
+      \inenv{E_1}&\tt{(sqrt (+ 9 16))}\\
+      &\nxt{\bda\\
+      \inenv{E_1}&\tt{(sqrt 25)}\\
+      &\nxt{\bda\\
+      \inenv{E_1}&\tt 5}}}}}}}}}}}
+    \end{tabular}
+
+    \column{0.5\textwidth}
+    {}
+
+    \begin{tabular}{cc}
+      \multicolumn 2c{
+      \begin{envir}E
+        \\\firstinenv \tt{dist}&:&\funcenv{x1 y1 x2 y2}\ldots E
+      \end{envir}}
+      \\
+      \multicolumn 2c{\visible<2->{\Big\uparrow}}
+      \\
+      \multicolumn 2c{\visible<2->{
+      \begin{envir}{E_1}
+        \\\firstinenv \tt{x1}&:&2
+        \\\tt{y1}&:&5
+        \\\tt{x2}&:&-1
+        \\\tt{y2}&:&9
+        \only<3->{\\\tt{dx}&:&3}
+        \only<4->{\\\tt{dy}&:&4}
+        \only<5->{\\\tt{sq}&:&\funcenv x{(* x x)}{E_1}}
+      \end{envir}}}
+      \\
+      \only<7->{\Big\uparrow}&\visible<8->{\Big\uparrow}\\
+      \only<7->{
+      \begin{envir}{E_2}
+        \\\firstinenv \tt x&:&3
+      \end{envir}}&
+      \only<8->{
+      \begin{envir}{E_3}
+        \\\firstinenv \tt x&:&4
+      \end{envir}}
+    \end{tabular}
+  \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]
