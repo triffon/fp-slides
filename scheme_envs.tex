@@ -1102,7 +1102,7 @@
   \begin{equation*}
     x^n = \begin{cases}
       1,&\text{ ако }n = 0,\\
-      x^{-n},&\text{ ако }n < 0,\\
+      \frac 1 {x^{-n}},&\text{ ако }n < 0,\\
       x\cdot x^{n-1},&\text{ ако }n > 0.
     \end{cases}
   \end{equation*}
@@ -1112,7 +1112,7 @@
 \begin{verbatim}
 (define (pow x n)
   (cond ((= n 0) 1)
-        ((< n 0) (pow x (- n)))
+        ((< n 0) (/ 1 (pow x (- n))))
         (else (* x (pow x (- n 1))))))
 \end{verbatim}
 \end{frame}
@@ -1163,7 +1163,7 @@
   \begin{equation*}
     x^n = \begin{cases}
       1,&\text{ ако }n = 0,\\
-      x^{-n},&\text{ ако }n < 0,\\
+      \frac 1 {x^{-n}},&\text{ ако }n < 0,\\
       (x^{\frac n2})^2,&\text{ ако }n > 0, n\text{ --- четно},\\
       x\cdot x^{n-1},&\text{ ако }n > 0, n\text{ --- нечетно}.
     \end{cases}
@@ -1175,7 +1175,7 @@
 (define (qpow x n)
   (define (sqr x) (* x x))
   (cond ((= n 0) 1)
-        ((< n 0) (qpow x (- n)))
+        ((< n 0) (/ 1 (qpow x (- n))))
         ((even? n) (sqr (qpow x (quotient n 2))))
         (else (* x (qpow x (- n 1))))))
 \end{verbatim}
