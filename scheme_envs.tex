@@ -856,6 +856,241 @@
   \end{columns}
 \end{frame}
 
+\subsection{\tt{let} и \tt{let*}}
+
+\begin{frame}
+  \frametitle{Специална форма \tt{let}}
+
+  \begin{itemize}[<+->]
+  \item \tta{(let} \tta(\{\tta({}<символ> <израз>\tta)\}\tta) <тяло>\tt)
+  \item \tta{(let ((}{}<символ$_1$> <израз$_1$>\tta)\\
+    \tta{\hskip 7ex(}{}<символ$_2$> <израз$_2$>\tta)\\
+    \hskip 7ex\ldots\\
+    \tta{\hskip 7ex(}{}<символ$_n$> <израз$_n$>\tta{))}\\
+    \hskip 7ex{}<тяло>\tta)
+  \item При оценка на \tt{let} в среда \env E:
+    \begin{itemize}[<+->]
+    \item Създава се нова среда \env{E_1} разширение на текущата
+      среда \env E
+    \item Оценката на <израз$_1$> в \env E се свързва със <символ$_1$> в \env{E_1}
+    \item Оценката на <израз$_2$> в \env E се свързва със <символ$_2$> в \env{E_1}
+    \item \ldots
+    \item Оценката на <израз$_n$> в \env E се свързва със <символ$_n$> в \env{E_1}
+    \item Връща се оценката на <тяло> в средата \env{E_1}
+    \end{itemize}
+  \item \alert{\tt{let} няма странични ефекти върху средата!}
+    \begin{itemize}
+    \item за разлика от \tt{define}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}<1-3>[fragile]
+  \frametitle{Пример за \tt{let}}
+
+\begin{verbatim}
+(define (dist x1 y1 x2 y2)
+  (let ((dx (- x2 x1))
+        (dy (- y2 y1)))
+   (sqrt (+ (sq dx) (sq dy)))))
+\end{verbatim}
+
+\pause
+\begin{semiverbatim}
+(define (area x1 y1 x2 y2 x3 y3)
+  (let ((a (dist x1 y1 x2 y2))
+        (b (dist x2 y2 x3 y3))
+        (c (dist x3 y3 x1 y1))
+        \alert<3>{(p (/ (+ a b c) 2))})
+   (sqrt (* p (- p a) (- p b) (- p c)))))
+\end{semiverbatim}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Оценка на \tt{let}}
+
+  \scriptsize
+  \begin{columns}[t,onlytextwidth]
+    \column{0.5\textwidth}
+    {}
+
+    \begin{tabular}{rc}
+      \nxt{\inenv E&\tt{(dist 2 5 -1 9)}\\
+      &\nxt{\bda\\
+      \inenv{E_1}&\begin{tabular}{l}
+                    \tt{(let ((dx (- x2 x1))}\\
+                    \tt{\hskip 7ex(dy (- y2 y1)))}\\
+                    \tt{ (sqrt (+ (sq dx) (sq dy))))}
+                  \end{tabular}\\
+      &\nxt{\bda\\
+      \inenv{E_2}&\tt{(sqrt (+ (sq dx) (sq dy)))}\\
+      &\nxt{\bda\\
+      \inenv{E_3}&\tt{(sqrt (+ (* x x) (sq dy)))}\\
+      &\nxt{\bda\\
+      \inenv{E_4}&\tt{(sqrt (+ 9 (* x x)))}\\
+      &\nxt{\bda\\
+      \inenv{E_2}&\tt{(sqrt (+ 9 16))}\\
+      &\nxt{\bda\\
+      \inenv{E_2}&\tt{(sqrt 25)}\\
+      &\nxt{\bda\\
+      \inenv{E_2}&\tt 5}}}}}}}}
+    \end{tabular}
+
+    \column{0.5\textwidth}
+    {}
+
+    \begin{tabular}{ccc}
+      \multicolumn 3c{
+      \begin{envir}E
+        \\\firstinenv \tt{dist}&:&\funcenv{x1 y1 x2 y2}\ldots E
+      \end{envir}}
+      \\
+      \onslide<7->{\Big\uparrow}&\only<2->{\Big\uparrow}&\onslide<8->{\Big\uparrow}\\
+      \onslide<7->{
+      \begin{envir}{E_3}
+        \\\firstinenv \tt x&:&3
+      \end{envir}}&
+      \onslide<2->{
+      \begin{envir}{E_1}
+        \\\firstinenv \tt{x1}&:&2
+        \\\tt{y1}&:&5
+        \\\tt{x2}&:&-1
+        \\\tt{y2}&:&9
+      \end{envir}}&
+      \onslide<8->{
+      \begin{envir}{E_4}
+        \\\firstinenv \tt x&:&4
+      \end{envir}}\\
+      \multicolumn 3c{\visible<3->{\Big\uparrow}}\\
+      \multicolumn 3c{\visible<3->{
+      \begin{envir}{E_2}
+        \\\firstinenv \tt{dx}&:&3
+        \\\tt{dy}&:&4
+      \end{envir}}}
+    \end{tabular}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Специална форма \tt{let*}}
+
+  \begin{itemize}[<+->]
+  \item \tta{(let*} \tta(\{\tta({}<символ> <израз>\tta)\}\tta) <тяло>\tt)
+  \item \tta{(let* ((}{}<символ$_1$> <израз$_1$>\tta)\\
+    \tta{\hskip 8ex(}{}<символ$_2$> <израз$_2$>\tta)\\
+    \hskip 7ex\ldots\\
+    \tta{\hskip 8ex(}{}<символ$_n$> <израз$_n$>\tta{))}\\
+    \tta{\hskip 8ex}{}<тяло>\tta)
+  \item При оценка на \tt{let*} в среда \env E:
+    \begin{itemize}[<+->]
+    \item Създава се нова среда \env{E_1} разширение на текущата
+      среда \env E
+    \item Оценката на <израз$_1$> в \env E се свързва със <символ$_1$> в \env{E_1}
+    \item Създава се нова среда \env{E_2} разширение на текущата
+      среда \env{E_1}
+    \item Оценката на <израз$_2$> в \env{E_1} се свързва със <символ$_2$> в \env{E_2}
+    \item \ldots
+    \item Създава се нова среда \env{E_n} разширение на текущата
+      среда \env{E_{n-1}}
+    \item Оценката на <израз$_n$> в \env{E_{n-1}} се свързва със <символ$_n$> в \env{E_n}
+    \item Връща се оценката на <тяло> в средата \env{E_n}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Пример за \tt{let*}}
+
+\begin{verbatim}
+(define (area x1 y1 x2 y2 x3 y3)
+  (let* ((a (dist x1 y1 x2 y2))
+         (b (dist x2 y2 x3 y3))
+         (c (dist x3 y3 x1 y1))
+         (p (/ (+ a b c) 2)))
+   (sqrt (* p (- p a) (- p b) (- p c)))))
+\end{verbatim}
+
+\pause
+
+\begin{semiverbatim}
+(define (area x1 y1 x2 y2 x3 y3)
+  (let* (\alert{(p (/ (+ a b c) 2))}
+         (a (dist x1 y1 x2 y2))
+         (b (dist x2 y2 x3 y3))
+         (c (dist x3 y3 x1 y1)))
+   (sqrt (* p (- p a) (- p b) (- p c)))))
+\end{semiverbatim}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Оценка на \tt{let*}}
+
+  \scriptsize
+  \begin{columns}[t,onlytextwidth]
+    \column{0.5\textwidth}
+    {}
+
+    \begin{tabular}{rc}
+      \nxt{\inenv E&\tt{(dist 2 5 -1 9)}\\
+      &\nxt{\bda\\
+      \inenv{E_1}&\begin{tabular}{l}
+                    \tt{(let ((dx (- x2 x1))}\\
+                    \tt{\hskip 7ex(dy (- y2 y1)))}\\
+                    \tt{ (sqrt (+ (sq dx) (sq dy))))}
+                  \end{tabular}\\
+      &\nxt{\nxt{\bda\\
+      \inenv{E_3}&\tt{(sqrt (+ (sq dx) (sq dy)))}\\
+      &\nxt{\bda\\
+      \inenv{E_4}&\tt{(sqrt (+ (* x x) (sq dy)))}\\
+      &\nxt{\bda\\
+      \inenv{E_5}&\tt{(sqrt (+ 9 (* x x)))}\\
+      &\nxt{\bda\\
+      \inenv{E_3}&\tt{(sqrt (+ 9 16))}\\
+      &\nxt{\bda\\
+      \inenv{E_3}&\tt{(sqrt 25)}\\
+      &\nxt{\bda\\
+      \inenv{E_3}&\tt 5}}}}}}}}}
+    \end{tabular}
+
+    \column{0.5\textwidth}
+    {}
+
+    \begin{tabular}{ccc}
+      \multicolumn 3c{
+      \begin{envir}E
+        \\\firstinenv \tt{dist}&:&\funcenv{x1 y1 x2 y2}\ldots E
+      \end{envir}}
+      \\
+      \onslide<7->{\Big\uparrow}&\only<2->{\Big\uparrow}&\onslide<8->{\Big\uparrow}\\
+      \onslide<7->{
+      \begin{envir}{E_4}
+        \\\firstinenv \tt x&:&3
+      \end{envir}}&
+      \onslide<2->{
+      \begin{envir}{E_1}
+        \\\firstinenv \tt{x1}&:&2
+        \\\tt{y1}&:&5
+        \\\tt{x2}&:&-1
+        \\\tt{y2}&:&9
+      \end{envir}}&
+      \onslide<8->{
+      \begin{envir}{E_5}
+        \\\firstinenv \tt x&:&4
+      \end{envir}}\\
+      \multicolumn 3c{\visible<3->{\Big\uparrow}}\\
+      \multicolumn 3c{\visible<3->{
+      \begin{envir}{E_2}
+        \\\firstinenv \tt{dx}&:&3
+      \end{envir}}}\\
+      \multicolumn 3c{\visible<4->{\Big\uparrow}}\\
+      \multicolumn 3c{\visible<4->{
+      \begin{envir}{E_3}
+        \\\firstinenv \tt{dy}&:&4
+      \end{envir}}}
+    \end{tabular}
+  \end{columns}
+\end{frame}
+
 \section{Нелинейни изчислителни процеси}
 
 \subsection{Логаритмични процеси}
