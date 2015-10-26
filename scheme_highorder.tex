@@ -1,0 +1,233 @@
+\documentclass{beamer}
+\usepackage{fp}
+
+\title{Функции от по-висок ред}
+
+\date{28 октомври 2015 г.}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Функциите като параметри}
+
+\begin{frame}[fragile]
+  \frametitle{Подаване на функции като параметри}
+
+  В Scheme функциите са ``първокласни'' стойности.
+  \vspace{1em}
+
+  \pause
+
+  Примери:
+  \begin{itemize}[<+->]
+  \item \verb#(define (fixed-point? f x) (= (f x) x))#
+  \item \evalsto{(fixed-point? sin 0)}{\#t}
+  \item \evalsto{(fixed-point? exp 1)}{\#f}
+  \item \evalstoerr{(fixed-point? + 0)}
+  \item \alt<11>{\tt{(define (branch p? f g x) ((if (p? x) f g) x))}}
+    {\tt{(define (branch p? f g x) (if (p? x) (f x) (g x)))}}
+  \item \evalsto{(branch odd? exp fact 4)}{24}
+  \item \verb#(define (id x) x)#
+  \item \evalsto{(branch number? log id "1")}{"1"}
+  \item \evalsto{(branch string? number? procedure? symbol?)}{\#t}
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Функции от по-висок ред}
+
+  \begin{definition}
+    Функция, която приема функция за параметър се нарича \emph{функция от по-висок ред}.
+  \end{definition}
+
+  \pause
+  
+  \begin{itemize}[<+->]
+  \item \tt{fixed-point?} и \tt{branch} са функции от по-висок ред
+  \item \alert{Примери за математически функции от по-висок ред?}
+  \item Всички функции в $\lambda$-смятането са от по-висок ред!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Задачи за сумиране}
+
+  \textbf{Задача:} Да се пресметнат следните суми:
+  \begin{itemize}
+  \item $k^2 + (k+1)^2 + \ldots + 100^2$ за $k \leq 100$
+  \item $\int_a^b f(x) \approx \Delta x\big(f(a) + f(a+\Delta x) + f(a+2\Delta x) + \ldots + f(b)\big)$
+  \item $x + e^x + e^{e^x} + e^{e^x} + \ldots$ докато поредното събираемо е $\leq 10^{10}$
+  \end{itemize}
+
+  \pause
+
+  \newcommand{\upper}{\textcolor<5->{red}}
+  \newcommand{\term}{\textcolor<6->{green}}
+  \newcommand{\next}{\textcolor<7->{blue}}
+
+\begin{semiverbatim}
+(define (sum1 k)
+  (if (> k \upper{100}) 0 (+ \term{(* k k)} (sum1 \next{(+ k 1)}))))
+\end{semiverbatim}
+
+  \pause
+
+\begin{semiverbatim}
+(define (sum2 a b f dx)
+  (if (> a \upper{b}) 0 (+ \term{(* dx (f a))} (sum2 \next{(+ a dx)} b f dx))))
+\end{semiverbatim}
+  
+  \pause
+
+\begin{semiverbatim}
+(define (sum3 x)
+  (if (> x \upper{(expt 10 10)}) 0 (+ \term{x} (sum3 \next{(expt x)}))))
+\end{semiverbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Обобщена функция за сумиране}
+  Да се напише функция от по-висок ред \tt{sum}, която пресмята сумата:
+
+  \begin{equation*}
+    \sum_{\substack{i=a \\i \leftarrow next(i)}}^b term(i).
+  \end{equation*}
+
+\pause
+
+\begin{semiverbatim}
+(define (sum a \textcolor{red}b \textcolor{green}{term} \textcolor{blue}{next})
+  (if (> a \textcolor{red}b) 0 (+ \textcolor{green}{(term a)} (sum \textcolor{blue}{(next a)} \textcolor{red}b \textcolor{green}{term} \textcolor{blue}{next}))))
+\end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Приложения на \tt{sum}}
+
+  Решение на задачата чрез \tt{sum}:
+
+  \pause
+\begin{verbatim}
+(define (square x) (* x x))
+(define (1+ x) (+ x 1))
+(define (sum1 k) (sum k 100 square 1+))
+\end{verbatim}
+\vspace{1em}
+
+  \pause
+
+\begin{semiverbatim}
+(define (sum2 a b f dx)
+\only<3>{  (define (term x) (* dx (f x)))
+}  (define (next x) (+ x dx))
+  \only<4>{(* dx }(sum a b \alt<3>{term}f next))\only<4>)
+\end{semiverbatim}
+\vspace{1em}
+
+  \pause
+
+\begin{verbatim}
+(define (sum3 x) (sum x (expt 10 10) id expt))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Обобщена функция за произведение}
+  Да се напише функция от по-висок ред \tt{product}, която пресмята:
+
+  \begin{equation*}
+    \prod_{\substack{i=a \\i \leftarrow next(i)}}^b term(i).
+  \end{equation*}
+
+\pause
+
+\newcommand{\fb}{\only<4>\fbox}
+
+\begin{semiverbatim}
+(define (product a \textcolor{red}b \textcolor{green}{term} \textcolor{blue}{next})
+  (if (> a \textcolor{red}b) \fb1 (\fb* \textcolor{green}{(term a)} (product \textcolor{blue}{(next a)} \textcolor{red}b \textcolor{green}{term} \textcolor{blue}{next}))))
+\end{semiverbatim}
+
+\pause
+
+\begin{semiverbatim}
+(define (sum a \textcolor{red}b \textcolor{green}{term} \textcolor{blue}{next})
+  (if (> a \textcolor{red}b) \fb0 (\fb+ \textcolor{green}{(term a)} (sum \textcolor{blue}{(next a)} \textcolor{red}b \textcolor{green}{term} \textcolor{blue}{next}))))
+\end{semiverbatim}
+
+\end{frame}
+
+\section{\tt{accumulate}}
+
+\begin{frame}[fragile]
+  \frametitle{Обобщена функция за натрупване}
+
+  Да се напише функция, която пресмята
+
+  \begin{equation*}
+    term(a) \oplus \bigg(term\big(next(a)\big) \oplus \Big(\ldots \oplus \big(term(b) \oplus \bot\big) \ldots\Big)\bigg),
+  \end{equation*}
+
+  където $\oplus$ е бинарна операция,\\
+  а $\bot$ е нейната ``(дясна) нулева стойност'', т.е. $x\oplus\bot = x$.
+
+  \pause
+\small
+\begin{verbatim}
+(define (accumulate op nv a b term next)
+  (if (> a b) nv
+      (op (term a) (accumulate op nv (next a) b term next))))
+\end{verbatim}
+\pause
+\begin{verbatim}
+(define (sum a b term next) (accumulate + 0 a b term next))
+(define (product a b term next) (accumulate * 1 a b term next))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Задача: пресмятане на полином}
+
+  Да се пресметне стойността на полинома
+
+  \begin{equation*}
+  P_n(x) = 1 + 2x + 3x^2 + 4x^3 + 5x^4 + \ldots + (n+1)x^n
+  \end{equation*}
+  \vspace{1em}
+
+  \pause
+
+  \textbf{Решение №1:}
+\begin{verbatim}
+(define (polynome x n)
+  (define (term i) (* (1+ i) (expt x i)))
+  (accumulate + 0 0 n term 1+))
+\end{verbatim}
+
+  \pause
+  
+  \vspace{1em}
+  \alert{Можем ли да решим задачата без да извикваме \tt{expt} на всяка стъпка?}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Правило на Хорнер}
+
+  \begin{equation*}
+    P_n(x) = \Bigg(\bigg(\Big(\ldots\big(((n+1)x + n)x + (n-1)\big)x + \ldots\Big)x + 3\bigg)x + 2\Bigg)x + 1
+  \end{equation*}
+
+  \pause
+
+  \alert{Можем ли да сметнем с \tt{accumulate}?}
+
+  \textbf{Решение №2:}
+  
+\end{frame}
+
+\end{document}
