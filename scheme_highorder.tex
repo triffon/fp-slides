@@ -196,7 +196,7 @@
   Да се пресметне стойността на полинома
 
   \begin{equation*}
-  P_n(x) = 1 + 2x + 3x^2 + 4x^3 + 5x^4 + \ldots + (n+1)x^n
+  P_n(x) = x^n + 2x^{n-1} + \ldots + (n-2)x^3 + (n-1)x^2 + nx + (n+1)
   \end{equation*}
   \vspace{1em}
 
@@ -205,7 +205,7 @@
   \textbf{Решение №1:}
 \begin{verbatim}
 (define (polynome x n)
-  (define (term i) (* (1+ i) (expt x i)))
+  (define (term i) (* (- (1+ n) i) (expt x i)))
   (accumulate + 0 0 n term 1+))
 \end{verbatim}
 
@@ -219,15 +219,77 @@
   \frametitle{Правило на Хорнер}
 
   \begin{equation*}
-    P_n(x) = \Bigg(\bigg(\Big(\ldots\big(((n+1)x + n)x + (n-1)\big)x + \ldots\Big)x + 3\bigg)x + 2\Bigg)x + 1
+    P_n(x) = \Bigg(\bigg(\Big(\ldots\big((x + 2)x + 3\big)x + \ldots\Big)x + (n-1)\bigg)x + n\Bigg)x + (n+1)
   \end{equation*}
 
   \pause
 
   \alert{Можем ли да сметнем с \tt{accumulate}?}
 
-  \textbf{Решение №2:}
+  \pause
+
+  \textbf{Идея:} Да използваме операцията $a \oplus b := ax + b$.
+
+  \pause
+
+  \alert{Коя е ``нулевата стойност''  $\bot$?}
+  \vspace{1em}
   
+  \pause
+
+  \textbf{Решение №2:}
+\begin{verbatim}
+(define (p n x)
+  (define (op a b) (+ (* a x) b))
+  (accumulate op 0 0 n id 1+))
+\end{verbatim}
+
+  \pause
+  
+  \alert{Не смята правилно!}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Правило на Хорнер}
+
+Всъщност пресметнахме:
+\begin{equation*}
+  Q_n(x) = x + 2x + 3x + 4x + \ldots + nx = \frac{n(n+1)}2x.
+\end{equation*}
+  \pause
+  \textbf{Идея:} Да използваме операцията $a \oplus b := a + bx$.
+  \vspace{1em}
+  \pause
+
+  \textbf{Решение №2:}
+\begin{verbatim}
+(define (p n x)
+  (define (op a b) (+ a (* b x)))
+  (accumulate op 0 0 n id 1+))
+\end{verbatim}
+
+  \pause
+  
+  \alert{Пак не смята правилно!!!} 
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Ляво и дясно натрупване}
+
+  Всъщност пресметнахме:
+  \begin{eqnarray*}
+    R_n(x) &=& x\Bigg(1+x\bigg(2+x\Big(\ldots+x\Big((n-1)+x(n+x(n+1))\Big)\ldots\Big)\bigg)\Bigg)\\
+          &=&  (n+1)x^{n+1} + nx^n + (n-1)x^{n-1} + \ldots + 3x^3 + 2x^2 + x
+  \end{eqnarray*}
+  вместо
+  \begin{equation*}
+    P_n(x) = \Bigg(\bigg(\Big(\ldots\big((x + 2)x + 3\big)x + \ldots\Big)x + (n-1)\bigg)x + n\Bigg)x + (n+1)
+  \end{equation*}
+
+  \pause
+
+  \alert{За некомутативни и неасоциативни  операции $\oplus$ има значение в какъв ред са скобите!}
 \end{frame}
 
 \end{document}
