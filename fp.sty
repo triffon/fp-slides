@@ -87,3 +87,25 @@
 
 % откриване на въпрос
 \newcommand{\rvl}[1]{\alt<+->{#1}?}
+
+% син цвят по подразбиране
+\colorlet{diagramblue}{blue!60!green!40}
+
+%% диаграми
+
+% стрелка напред, сочеща следваща клетка
+\newcommand{\nextarrow}{\xrightarrow{\hspace{5ex}}}
+
+% двойна кутия за свързани структури
+\newcommand{\dualcell}[2]{\begin{tabular}{|c|c|}
+                            \hline
+                            \rowcolor{diagramblue}
+                            $#1$&$#2$\\
+                            \hline
+                          \end{tabular}}
+
+% двойна кутия със указател към следващата
+\newcommand{\nextcell}[1]{\dualcell{#1}{\nextarrow\hspace{-4ex}}}
+
+% двойна кутия без указател към следващата
+\newcommand{\nilcell}[1]{\dualcell{#1}{\cellcolor{lightgray}\hspace{2ex}}}
