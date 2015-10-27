@@ -5,6 +5,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english,bulgarian]{babel}
 \deftranslation[to=bulgarian]{Theorem}{Теорема}
+\deftranslation[to=bulgarian]{Definition}{Дефиниция}
 
 % поддръжка на линкове
 \usepackage{hyperref}
@@ -56,6 +57,9 @@
 % оценява се до стойност
 \newcommand{\evalsto}[2]{\tt{#1 $\longrightarrow$ #2}}
 
+% оценява се до стойност с пауза за въпрос
+\newcommand{\evalstop}[2]{\tt{#1 $\longrightarrow$ \rvl{#2}}}
+
 % грешка при оценяване
 \newcommand{\evalstoerr}[1]{\evalsto{#1}{\textsf{\alert{Грешка!}}}}
 
@@ -80,3 +84,6 @@
 
 % двойна разделителна черта: слага се преди първия елемент в средата
 \newcommand{\firstinenv}{\hhline{|*3{=}|}}
+
+% откриване на въпрос
+\newcommand{\rvl}[1]{\alt<+->{#1}?}

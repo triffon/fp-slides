@@ -6,10 +6,7 @@ _region_.tex
 *.log
 *.nav
 *.out
-intro.pdf
-org.pdf
-scheme_basics.pdf
-scheme_envs.pdf
+*.pdf
 *.snm
 *.toc
 *.vrb
