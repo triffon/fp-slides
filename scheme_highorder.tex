@@ -111,31 +111,49 @@
 \begin{frame}[fragile]
   \frametitle{Приложения на \tt{sum}}
 
-  Решение на задачата чрез \tt{sum}:
+  Решение на задачите за суми чрез \tt{sum}:
 
-  \pause
+  \begin{columns}[t,onlytextwidth]
+    \column{0.3\textwidth}
+
+    \begin{equation*}
+      \sum_{i=k}^{100} i^2
+    \end{equation*}
+
+    \only<3->{
+    \begin{equation*}
+      \sum_{\substack{i=a\\i\rightarrow i + \Delta x}}^b \Delta x\,f(i)
+    \end{equation*}}
+
+    \only<6->{
+    \begin{equation*}
+      \sum_{\substack{i=x\\i\rightarrow e^i}}^{10^{1000}} i
+    \end{equation*}}
+
+    \column{0.7\textwidth}
+
+\onslide<2->
 \begin{verbatim}
 (define (square x) (* x x))
 (define (1+ x) (+ x 1))
 (define (sum1 k) (sum k 100 square 1+))
 \end{verbatim}
-\vspace{1em}
 
-  \pause
-
+\onslide<4->
 \begin{semiverbatim}
 (define (sum2 a b f dx)
-\only<3>{  (define (term x) (* dx (f x)))
+\only<4>{  (define (term x) (* dx (f x)))
 }  (define (next x) (+ x dx))
-  \only<4->{(* dx }(sum a b \alt<3>{term}f next))\only<4->)
+  \only<5->{(* dx }(sum a b \alt<4>{term}f next))\only<5->)
 \end{semiverbatim}
-\vspace{1em}
 
-  \pause\pause
-
+\onslide<7->
 \begin{verbatim}
-(define (sum3 x) (sum x (expt 10 10) id expt))
+(define (sum3 x)
+  (sum x (expt 10 1000) id exp))
 \end{verbatim}
+
+  \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -203,19 +221,18 @@
 
   Да се пресметне стойността на полинома
 
-  \begin{equation*}
-  P_n(x) = \pnx
-  \end{equation*}
-  \vspace{1em}
-
+  \begin{eqnarray*}
+  P_n(x) &=& \pnx\\
+\pause   &=& \sum_{i=0}^n (n+1-i)x^i
+  \end{eqnarray*}
   \pause
 
   \textbf{Решение №1:}
-\begin{verbatim}
+\begin{semiverbatim}
 (define (p n x)
-  (define (term i) (* (- (1+ n) i) (expt x i)))
-  (accumulate + 0 0 n term 1+))
-\end{verbatim}
+\only<7->{  (define (term i) (* (- (1+ n) i) (expt x i)))
+}  (accumulate \rvl+ \rvl0 \rvl0 \rvl{n} \rvl{term} \rvl{1+}))
+\end{semiverbatim}
 
   \pause
 
@@ -380,14 +397,14 @@
 
 \begin{verbatim}
 (define (integral a b f dx)
-        (* dx (accumulate + 0 a b f (lambda (x) (+ x dx)))))
+   (* dx (accumulate + 0 a b f (lambda (x) (+ x dx)))))
 \end{verbatim}
 
 \pause
 
 \begin{verbatim}
 (define (p n x)
-        (accumulate-i + 0 0 n (lambda (a b) (+ (* a x) b))
+   (accumulate-i + 0 1 (1+ n) (lambda (a b) (+ (* a x) b))
                               (lambda (i) (+ i 1))))
 \end{verbatim}
 
@@ -525,11 +542,11 @@
   \frametitle{Повторено прилагане}
 
   Да се намери $n$-кратното прилагане на дадена функция.
-  \vspace{1em}
-
+  \begin{equation*}
+    f^n(x) = \underbrace{f(f(f(\ldots(f}_n(x))\ldots)))
+  \end{equation*}
   \pause
-
-  \textbf{Решение №1:}
+  \textbf{Решение №1:} $f^n(x) = f(f^{n-1}(x))$ \pause
 \begin{verbatim}
 (define (repeated f n)
   (lambda (x) (if (= n 0) x (f ((repeated f (- n 1)) x)))))
@@ -537,7 +554,7 @@
 
   \pause
 
-  \textbf{Решение №2:}
+  \textbf{Решение №2:} $f^0 = id, f^n = f\circ f^{n-1}$ \pause
 \begin{verbatim}
 (define (repeated f n)
   (if (= n 0) id (compose f (repeated f (- n 1)))))
@@ -545,7 +562,7 @@
 
   \pause
 
-  \textbf{Решение №3:}
+  \textbf{Решение №3:} $f^n = \underbrace{f \circ f \circ \ldots \circ f}_n \circ  id$ \pause
 \begin{semiverbatim}
 (define (repeated f n)
   (\rvl{accumulate} \rvl{compose} \rvl{id} \rvl1 \rvl{n} \rvl{(lambda (i) f)} \rvl{1+}))
@@ -564,7 +581,7 @@
   \textbf{Решение №1:} $f^{(n)} = (f^{(n-1)})'$\pause
 \begin{verbatim}
 (define (derive-n f n dx)
-  (if (= n 0) f (derive (derive-n f n dx) dx)))
+  (if (= n 0) f (derive (derive-n f (- n 1) dx) dx)))
 \end{verbatim}
 
   \pause
@@ -572,15 +589,15 @@
   \textbf{Решение №2:} $f^{(n)} = f\overbrace{''\ldots'}^n$\pause
 \begin{semiverbatim}
 (define (derive-n f n dx)
-  (\rvl{repeated} \rvl{(lambda (f) (derive f dx))} n))
+  \only<7->((\rvl{repeated} \rvl{(lambda (f) (derive f dx))} n)\only<7->{ f)})
 \end{semiverbatim}
 
   \pause
-  \textbf{Решение №3:}
+  \textbf{Решение №3:} $^{(n)} = \underbrace{'^\circ'^{\circ\ldots\circ}'}_n$
 \begin{semiverbatim}
 (define (derive-n f n dx)
-  (\rvl{accumulate} \rvl{compose} \rvl{id} \rvl1 \rvl{n} \rvl{
-              (lambda (i) (lambda (f) (derive f dx)))} \rvl{1+}))
+  ((\rvl{accumulate} \rvl{compose} \rvl{id} \rvl1 \rvl{n} \rvl{
+              (lambda (i) (lambda (f) (derive f dx)))} \rvl{1+})) f)
 \end{semiverbatim}
 \end{frame}
 
