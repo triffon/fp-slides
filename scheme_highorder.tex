@@ -26,8 +26,8 @@
   \item \verb#(define (fixed-point? f x) (= (f x) x))#
   \item \evalstop{(fixed-point? sin 0)}{\#t}
   \item \evalstop{(fixed-point? exp 1)}{\#f}
-  \item \evalstoerr{(fixed-point? + 0)}
-  \item \alt<16>{\tt{(define (branch p? f g x) ((if (p? x) f g) x))}}
+  \item \evalstoerrp{(fixed-point? + 0)}
+  \item \alt<17>{\tt{(define (branch p? f g x) ((if (p? x) f g) x))}}
     {\tt{(define (branch p? f g x) (if (p? x) (f x) (g x)))}}
   \item \evalstop{(branch odd? exp fact 4)}{24}
   \item \verb#(define (id x) x)#
@@ -59,11 +59,11 @@
   \frametitle{Задачи за сумиране}
 
   \textbf{Задача:} Да се пресметнат следните суми:
-  \begin{itemize}
+  \begin{enumerate}
   \item $k^2 + (k+1)^2 + \ldots + 100^2$ за $k \leq 100$
-  \item $\int_a^b f(x) \approx \Delta x\big(f(a) + f(a+\Delta x) + f(a+2\Delta x) + \ldots + f(b)\big)$
-  \item $x + e^x + e^{e^x} + e^{e^x} + \ldots$ докато поредното събираемо е $\leq 10^{10}$
-  \end{itemize}
+  \item $\int_a^b f(x) \approx \Delta x\big[f(a) + f(a+\Delta x) + f(a+2\Delta x) + \ldots + f(b)\big]$
+  \item $x + e^x + e^{e^x} + e^{e^{e^x}} + \ldots$ докато поредното събираемо е $\leq 10^{1000}$
+  \end{enumerate}
 
   \pause
 
@@ -87,7 +87,7 @@
 
 \begin{semiverbatim}
 (define (sum3 x)
-  (if (> x \upper{(expt 10 10)}) 0 (+ \term{x} (sum3 \next{(expt x)}))))
+  (if (> x \upper{(expt 10 1000)}) 0 (+ \term{x} (sum3 \next{(exp x)}))))
 \end{semiverbatim}
 
 \end{frame}
@@ -251,7 +251,7 @@
 \begin{verbatim}
 (define (p n x)
   (define (op a b) (+ (* a x) b))
-  (accumulate op 0 0 n id 1+))
+  (accumulate op 0 1 (1+ n) id 1+))
 \end{verbatim}
 
   \pause
@@ -264,19 +264,19 @@
 
 Всъщност пресметнахме:
 \begin{equation*}
-  Q_n(x) = x + 2x + 3x + 4x + \ldots + nx = \frac{n(n+1)}2x.
+  Q_n(x) = x + 2x + 3x + \ldots + nx + (n+1)x= \frac{(n+1)(n+2)}2x.
 \end{equation*}
   \pause
   \textbf{Идея:} Да използваме операцията $a \oplus b := a + bx$.
   \vspace{1em}
   \pause
 
-  \textbf{Решение №2:}
-\begin{verbatim}
+  \textbf{Решение №3:}
+\begin{semiverbatim}
 (define (p n x)
   (define (op a b) (+ a (* b x)))
-  (accumulate op 0 0 n id 1+))
-\end{verbatim}
+  (accumulate op 0 1 (1+ n) id 1+))
+\end{semiverbatim}
 
   \pause
 
@@ -289,8 +289,8 @@
 
   Всъщност пресметнахме:
   \begin{eqnarray*}
-    R_n(x) &=& x\Bigg(1+x\bigg(2+x\Big(\ldots+x\Big((n-1)+x(n+x(n+1))\Big)\ldots\Big)\bigg)\Bigg)\\
-          &=&  (n+1)x^{n+1} + nx^n + (n-1)x^{n-1} + \ldots + 3x^3 + 2x^2 + x
+    R_n(x) &=& 1+x\bigg(2+x\Big(\ldots+x\Big((n-1)+x(n+x(n+1))\Big)\ldots\Big)\bigg)\\
+          &=&  (n+1)x^n + nx^{n-1} + (n-1)x^{n-2} + \ldots + 3x^2 + 2x + 1
   \end{eqnarray*}
   вместо
   \begin{eqnarray*}
@@ -341,12 +341,12 @@
   \vspace{1em}
   \pause
 
-  \textbf{Решение №3:}
+  \textbf{Решение №4:}
 
 \begin{verbatim}
 (define (p n x)
   (define (op a b) (+ (* a x) b))
-  (accumulate-i op 0 0 n id 1+))
+  (accumulate-i op 0 1 (1+ n) id 1+))
 \end{verbatim}
 \end{frame}
 
@@ -355,7 +355,7 @@
 \begin{frame}
   \frametitle{Анонимни функции}
 
-  Можем ли да ги конструираме параметрите на функциите от по-висок ред``на място'', без да им даваме имена?
+  Можем ли да ги конструираме параметрите на функциите от по-висок ред ``на място'', без да им даваме имена?
   \vspace{0.5em}
 
   \pause
@@ -413,8 +413,8 @@
   \item \tt{(define (twice f x) (f (f x)))}
   \item \evalstop{(twice square 3)}{81}
   \item \tt{(define (twice f) (lambda (x) (f (f x))))}
-  \item \evalstoerr{(twice square 3)}
-  \item \evalsto{(twice square)}{\#<procedure>}
+  \item \evalstoerrp{(twice square 3)}
+  \item \evalstop{(twice square)}{\#<procedure>}
   \item \evalsto{((twice square) 3)}{81}
   \item \evalstop{((twice (twice square)) 2)}{65536}
   \end{itemize}
@@ -426,6 +426,7 @@
   \begin{itemize}[<+->]
   \item \tt{(define (n+ n) (lambda (i) (+ i n)))}
   \item \tt{(define 1+ (n+ 1))}
+  \item \evalsto{(1+ 7)}8
   \item \tt{(define 5+ (n+ 5))}
   \item \evalsto{(5+ 7)}{12}
   \item \tt{(define (compose f g) (lambda (x) (f (g x))))}
@@ -433,6 +434,68 @@
   \item \evalstop{((compose 1+ square) 3)}{10}
   \item \evalstop{((compose 1+ (compose square (n+ 2))) 3)}{26}
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Оценка на \tt{lambda}}
+
+  \scriptsize
+  \begin{columns}[t,onlytextwidth]
+    \column{0.5\textwidth}
+    {}
+
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{rc}
+      \nxt{\inenv E&\tt{(define (n+ n)}\\
+      &\tt{(lambda (i) (+ i n)))}\\
+      \nxt{\inenv E&\tt{(define 1+ (n+ 1))}\\
+      \nxt{\nxt{\inenv E&\tt{(define 5+ (n+ 5))}\\
+      \nxt{\nxt{\inenv E&\tt{(1+ 7)}\\
+      \nxt{&\bda\\
+      \inenv{E_3}&\tt{(+ i n)}\\
+      \nxt{&\bda\\
+      &\tt 8}\\
+      \nxt{\inenv E&\tt{(5+ 7)}\\
+      \nxt{&\bda\\
+      \inenv{E_4}&\tt{(+ i n)}\\
+      \nxt{&\bda\\
+      &\tt{12}
+      }}}}}}}}}}
+    \end{tabular}
+
+    \column{0.5\textwidth}
+    {}
+
+    \begin{tabular}{cc}
+      \multicolumn 2c{
+      \begin{envir}E
+        \\\firstinenv \tt{n+}&:&\funcenv{n}{($\lambda$(i) (+ i n)))}E
+        \only<3->{\\\tt{1+}&:&\funcenv{i}{(+ i n)}{E_1}}
+        \only<5->{\\\tt{5+}&:&\funcenv{i}{(+ i n)}{E_2}}
+      \end{envir}}\\
+      \only<2->\bua&
+      \only<4->\bua\\
+      \only<2->{
+      \begin{envir}{E_1}
+        \\\firstinenv \tt n&:&1
+      \end{envir}}&
+      \only<4->{
+      \begin{envir}{E_2}
+        \\\firstinenv \tt n&:&5
+      \end{envir}}\\
+      \only<7->\bua&
+      \only<10->\bua\\
+      \only<7->{
+      \begin{envir}{E_3}
+        \\\firstinenv \tt i&:&7
+      \end{envir}}&
+      \only<10->{
+      \begin{envir}{E_4}
+        \\\firstinenv \tt i&:&7
+      \end{envir}}\\
+    \end{tabular}
+  \end{columns}
+
 \end{frame}
 
 \begin{frame}[fragile]
@@ -521,12 +584,10 @@
 \end{semiverbatim}
 \end{frame}
 
-\end{frame}
-
 \section{All you need is $\lambda$}
 
 \begin{frame}
-  \frametitle{All you need is $\lambda$ \only<2>{--- \tt{let}}}
+  \frametitle{All you need is $\lambda$ \only<2->{--- \tt{let}}}
 
   Специалната форма \tt{lambda} е достатъчна за реализацията на всички останали конструкции в Scheme!
   \vspace{1em}
@@ -557,16 +618,16 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{All you need is $\lambda$ --- логика}
+  \frametitle{All you need is $\lambda$ --- булева логика}
 
 Симулация на булеви стойности и \tt{if}:
 
-\begin{verbatim}
+\begin{semiverbatim}
 (define #t (lambda (x y) x))
 (define #f (lambda (x y) y))
-(define (lambda-if b x y) ((b x y)))
-\end{verbatim}
-\pause
+(define (lambda-if b x y) \only<2->((b x y)\only<2->))
+\end{semiverbatim}
+\pause\pause
 Примери:
 
 \small

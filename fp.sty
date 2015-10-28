@@ -61,10 +61,13 @@
 \newcommand{\evalsto}[2]{\tt{#1 $\longrightarrow$ #2}}
 
 % оценява се до стойност с пауза за въпрос
-\newcommand{\evalstop}[2]{\tt{#1 $\longrightarrow$ \rvl{#2}}}
+\newcommand{\evalstop}[2]{\evalsto{#1}{\rvl{#2}}}
 
 % грешка при оценяване
 \newcommand{\evalstoerr}[1]{\evalsto{#1}{\textsf{\alert{Грешка!}}}}
+
+% грешка при оценяване с пауза за въпрос
+\newcommand{\evalstoerrp}[1]{\evalstop{#1}{\textsf{\alert{Грешка!}}}}
 
 % оценка на функция в среда
 \newcommand{\funcenv}[3]{\begin{tabular}{||l@{\hskip 1ex}l@{\hskip 1ex}l||}%
