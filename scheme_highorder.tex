@@ -328,7 +328,7 @@
   Да се напише функция, която пресмята \textbf{ляво натрупване}:
 
   \begin{equation*}
-    (\ldots((\bot \oplus term(a)) \oplus term(next(a))) \oplus \ldots) \oplus term(b)
+    \bigg(\ldots\Big(\big(\bot \oplus term(a)\big) \oplus term(next(a))\Big) \oplus \ldots\bigg) \oplus term(b)
   \end{equation*}
 
   \pause
@@ -586,15 +586,14 @@
 
   \pause
 
-  \textbf{Решение №2:} $f^{(n)} = f\overbrace{''\ldots'}^n$\pause
+  \textbf{Решение №2:} $f^{(n)} = f\overbrace{''''{}^{\ldots}{}''}^n$\pause
 \begin{semiverbatim}
 (define (derive-n f n dx)
   \only<7->((\rvl{repeated} \rvl{(lambda (f) (derive f dx))} n)\only<7->{ f)})
 \end{semiverbatim}
-\end{frame}
-\end{document}
+
 \pause
-  \textbf{Решение №3:} $^{(n)} = \underbrace{'^\circ'^{\circ\ldots\circ}'}_n$
+  \textbf{Решение №3:} $^{(n)} = \underbrace{{}'{}^\circ{}'{}^{\circ\ldots\circ}{}'}_n$
 \begin{semiverbatim}
 (define (derive-n f n dx)
   ((\rvl{accumulate} \rvl{compose} \rvl{id} \rvl1 \rvl{n} \rvl{
