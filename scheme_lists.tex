@@ -3,7 +3,7 @@
 
 \title{Списъци}
 
-\date{28 октомври 2015 г.}
+\date{4 ноември 2015 г.}
 
 \begin{document}
 
@@ -16,14 +16,26 @@
 \begin{frame}
   \frametitle{Точкови двойки}
 
-  \begin{tabular}{cc}
-    \hline
-  \multicolumn 1{|c|}{\hspace{2ex}}&\multicolumn 1{c|}{\hspace{2ex}}\\
-    \hline
-  \bda&\bda\\
-  \fbox3 &\fbox5
-  \end{tabular}
+  \begin{columns}[t,onlytextwidth]
+    \column{0.5\textwidth}
+    \vspace{1em}
+    
+    \centering
+    \tt{(A . B)}
+    
+    \column{0.5\textwidth}
 
+    \centering
+    \begin{tabular}{cc}
+      \hline
+      \pointcell\\
+      \hline
+      \bda&\bda\\
+      \fbox A &\fbox B
+    \end{tabular}
+  \end{columns}
+
+  \pause
   \vspace{1em}
 
   \begin{itemize}[<+->]
@@ -33,17 +45,88 @@
   \item \textbf{Първият} компонент на двойката, която е оценката на <израз>
   \item \tta{(cdr }<израз>\tta)
   \item \textbf{Вторият} компонент на двойката, която е оценката на <израз>
+  \item \tta{(pair? }<израз>\tta)
+  \item Проверява дали оценката на <израз> е точкова двойка
   \end{itemize}
-
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Примери}
+
+  \begin{columns}[t,onlytextwidth]
+
+    \column{0.6\textwidth}
+
+    \begin{tabular}{c}
+      \tt{(cons (cons 2 3) (cons 8 13))}\\
+      \bda\\
+      \tt{((2 . 3) . (8 . 13))}
+    \end{tabular}
+    \vspace{4em}
+
+\onslide<3->{
+  \begin{tabular}{c}
+    \tt{(cons 3 (cons (cons 13 21) 8))}\\
+    \bda\\
+    \tt{(3 . ((13 . 21) . 8))}
+  \end{tabular}
+}
+    \column{0.4\textwidth}
+
+\onslide<2->{
+    \begin{tabular}{cc@{}c@{}cc}
+      \cline{1-2}\cline{4-5}
+      \pointcell&$\nextarrow$&\pointcell\\
+      \cline{1-2}\cline{4-5}
+      \bda&&&\bda&\bda\\
+      \cline{1-2}
+      \pointcell&&\fbox8&\fbox{13}\\
+      \cline{1-2}
+      \bda&\bda\\
+      \fbox2 &\fbox 3
+    \end{tabular}
+    \vspace{1em}
+}
+
+\onslide<4>{
+      \begin{tabular}{ccc@{}c@{}c}
+      \cline{1-2}
+      \pointcell\\
+      \cline{1-2}
+      \bda&\bda\\
+      \cline{2-3}
+      \fbox3&\pointcell&$\nextarrow$&\fbox8\\
+      \cline{2-3}
+      &\bda\\
+      \cline{2-3}
+      &\pointcell\\
+      \cline{2-3}
+      &\bda&\bda\\
+      &\fbox{13}&\fbox{21}
+    \end{tabular}
+}
+  \end{columns}
 \end{frame}
 
 \begin{frame}
   \frametitle{S-изрази}
+
+  \begin{definition}
+    S-израз наричаме:
+    \begin{itemize}
+    \item атоми (булеви, числа, знаци, символи, низове)
+    \item точкови двойки \tt{(S$_1$ . S$_2$)}, където \tt{S$_1$} и \tt{S$_2$} са S-изрази
+    \end{itemize}
+  \end{definition}
+  \vspace{1em}
+
+  \pause
+
+  \alert{S-изразите са най-общия тип данни в Scheme.}
+
+  \vspace{1em}
+  С тяхна помощ могат да се дефинират произволно сложни структури от данни.
 \end{frame}
 
 \begin{frame}
