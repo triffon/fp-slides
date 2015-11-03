@@ -1,5 +1,5 @@
 \documentclass{beamer}
-\usepackage{fp}
+\usepackage{fprog}
 
 \title{Списъци}
 
@@ -19,10 +19,10 @@
   \begin{columns}[t,onlytextwidth]
     \column{0.5\textwidth}
     \vspace{1em}
-    
+
     \centering
     \tt{(A . B)}
-    
+
     \column{0.5\textwidth}
 
     \centering
@@ -129,42 +129,325 @@
   С тяхна помощ могат да се дефинират произволно сложни структури от данни.
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{All you need is $\lambda$ --- точкови двойки}
+
+  Можем да симулираме \tt{cons}, \tt{car} и \tt{cdr} чрез \tt{lambda}!
+  \vspace{1em}
+
+  \pause
+
+  \textbf{Вариант №1:}
+
+\begin{verbatim}
+(define (lcons x y) (lambda (p) (if p x y)))
+(define (lcar z) (z #t))
+(define (lcdr z) (z #f))
+\end{verbatim}
+
+  \pause
+
+  \textbf{Вариант №2:}
+
+\begin{verbatim}
+(define (lcons x y) (lambda (p) (p x y)))
+(define (lcar z) (z (lambda (x y) x)))
+(define (lcdr z) (z (lambda (x y) y)))
+\end{verbatim}
 \end{frame}
 
 \section{Списъци}
 
 \begin{frame}
   \frametitle{Списъци в Scheme}
+
+  \begin{definition}
+    \begin{enumerate}
+    \item Празният списък \tt{()} е списък
+    \item \tt{(h . t)} е списък ако \tt t е списък
+      \begin{itemize}
+      \item \tt h --- глава на списъка
+      \item \tt t --- опашка на списъка
+      \end{itemize}
+    \end{enumerate}
+  \end{definition}
+
+  \pause
+  \vspace{2em}
+
+  \begin{tabular}{*2{cc@{}c@{}}@{\hskip 1ex}cc@{}cc}
+    \cline{1-2}\cline{4-5}\cline{9-10}
+    \nextcell&\nextcell&\ldots&$\nextarrow$&\nilcell\\
+    \cline{1-2}\cline{4-5}\cline{9-10}
+    \bda&&&\bda&&&&&\bda\\
+    \fbox{$a_1$}&&&\fbox{$a_2$}&&&&&\fbox{$a_n$}
+  \end{tabular}
+
+  \pause
+  \vspace{2em}
+
+  \tt{($a_1$ . ($a_2$ . ( \ldots ( $a_n$ . () ) ) ) ) $\longleftrightarrow$ ($a_1$ $a_2$ \ldots\ $a_n$)}
 \end{frame}
 
 \begin{frame}
   \frametitle{Вградени функции за списъци}
-\end{frame}
 
-\begin{frame}
-  \frametitle{Форми на равенство в Scheme}
-\end{frame}
-
-\begin{frame}
-  \frametitle{memq, \ldots}
+  \begin{itemize}[<+->]
+  \item \tta{(null? }<израз>\tta) --- дали <израз> е празният списък \tt{()}
+  \item \tta{(list? }<израз>\tta) --- дали <израз> е списък
+    \begin{itemize}
+    \item \scriptsize \tt{(define (list? l) (or (null? l) (and (pair? l) (list? (cdr l)))))}
+    \end{itemize}
+  \item \tta{(list }\{<израз>\}\tta) --- построява списък с елементи <израз>
+  \item \tt{(list }<израз$_1$> <израз$_2$> \ldots <израз$_n$>\tt) $\longleftrightarrow$\\
+    \tt{(cons }<израз$_1$>\tt{ (cons }<израз$_2$> \ldots\tt{ (cons }<израз$_n$>\tt{ '()))))}
+  \item \tt{(cons }<глава> <опашка>\tt) --- списък с <глава> и <опашка>
+  \item \tt{(car }<списък>\tt) --- главата на <списък>
+  \item \tt{(cdr }<списък>\tt) --- опашката на <списък>
+  \item \alert{\tt{()} не е точкова двойка!}
+  \item \evalstoerr{(car '())}, \evalstoerr{(cdr '())}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Съкратени форми на \tt{car} и \tt{cdr}}
+
+  Нека $l = (a_1\,a_2\,a_3\,\ldots\,a_n)$.
+
+  \begin{itemize}[<+->]
+  \item \evalsto{(car l)}{$a_1$}
+  \item \evalsto{(cdr l)}{$(a_2\,a_3\,\ldots\,a_n)$}
+  \item \evalstwop{(car (cdr l))}{$a_2$}{(cadr l)}
+  \item \evalstwop{(cdr (cdr l))}{$(a_3\,\ldots\,a_n)$}{(cddr l)}
+  \item \evalstwop{(car (cdr (cdr l)))}{$a_3$}{(caddr l)}
+  \item имаме съкратени форми за до 4 последователни прилагания на \tt{car} и \tt{cdr}
+  \end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Форми на равенство в Scheme}
+
+  \begin{itemize}[<+->]
+  \item \tta{(eq? }<израз$_1$> <израз$_2$>\tta) --- връща \tt{\#t} точно тогава, когато оценките на <израз$_1$> <израз$_2$> заемат едно и също място в паметта
+  \item \tta{(eqv? }<израз$_1$> <израз$_2$>\tta) --- връща \tt{\#t} точно тогава, когато оценките на <израз$_1$> и <израз$_2$> заемат едно и също място в паметта или са едни и същи по стойност \textbf{атоми} (дори и да заемат различно място в паметта)
+    \begin{itemize}
+    \item Ако \tt{(eq? }<израз$_1$> <израз$_2$>\tt),\\
+      то със сигурност \tt{(eqv? }<израз$_1$> <израз$_2$>\tt)
+    \end{itemize}
+  \item \tta{(equal? }<израз$_1$> <израз$_2$>\tta) --- връща \tt{\#t} точно тогава, когато оценките на <израз$_1$> и <израз$_2$> са едни и същи по стойност \textbf{атоми или точкови двойки}, чиито компоненти са равни в смисъла на \tt{equal?}
+    \begin{itemize}
+    \item В частност, \tt{equal?} проверява за равенство на списъци
+    \item Ако \tt{(eqv? }<израз$_1$> <израз$_2$>\tt),\\
+      то със сигурност \tt{(equal? }<израз$_1$> <израз$_2$>\tt)
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Вградени функции за списъци}
+  \small
+
+  \begin{itemize}[<+->]
+  \item \tta{(length }<списък>\tta) --- връща дължината на <списък>
+  \item \tta{(append }\{<списък>\}\tta) --- конкатенира всички <списък>
+  \item \tta{(reverse }<списък>\tta) --- елементите на <списък> в обратен ред
+  \item \tta{(list-tail }<списък> n\tta) --- елементите на <списък> без първите n
+  \item \tta{(list-ref }<списък> n\tta) --- n-ти елемент на <списък> (от 0)
+  \item \tta{(member }<елемент> <списък>\tta) --- проверява дали <елемент> се среща в <списък>
+    \begin{itemize}
+    \item По-точно, връща <списък> от <елемент> нататък, ако го има
+    \item Връща \tt{\#f}, ако <елемент> го няма в <списък>
+    \item Сравнението на елементи става с \tt{equal?}
+    \end{itemize}
+  \item \tta{(memqv }<елемент> <списък>\tta) --- като \tt{member}, но сравнява с \tt{eqv?}
+  \item \tta{(memq }<елемент> <списък>\tta) --- като \tt{member}, но сравнява с \tt{eq?}
+  \end{itemize}
+\end{frame}
 
 \subsection{Рекурсия над списъци}
 
 
 \begin{frame}
   \frametitle{Обхождане на списъци}
+
+  При обхождане на \tt l:
+  \begin{itemize}
+  \item Ако \tt l е празен, връщаме базова стойност \textbf{(дъно)}
+  \item Иначе, комбинираме главата \tt{(car l)} с резултата от рекурсивното извикване над опашката \tt{(cdr l)} \textbf{(стъпка)}
+  \end{itemize}
+
+  \pause
+  \vspace{2em}
+  Примери: \tt{length}, \tt{list-tail}, \tt{list-ref}, \tt{member}, \tt{memqv}, \tt{memq}
 \end{frame}
 
 \begin{frame}
   \frametitle{Конструиране на списъци}
+
+  Използваме рекурсия по даден параметър (напр. число, списък...)
+  \begin{itemize}
+  \item На дъното връщаме фиксиран списък (например \tt{()})
+  \item На стъпката построяваме с \tt{cons} списък със съответната глава, а опашката строим чрез рекурсивно извикване на същата функция
+  \end{itemize}
+
+  \pause
+  \vspace{2em}
+  Примери: \tt{from-to}, \tt{append}, \tt{reverse}
+\end{frame}
+
+\section{Функции от по-висок ред за списъци}
+
+\begin{frame}[fragile]
+  \frametitle{Изобразяване на списък (\tt{map})}
+
+  % TODO картинка
+  Да се дефинира функция \tt{(map <функция> <списък>)}, която връща нов списък съставен от елементите на <списък>, върху всеки от които е приложена <функция>.
+
+  \pause
+
+\begin{verbatim}
+(define (map f l)
+        (if (null? l) l
+            (cons (f l) (map f (cdr l)))))
+\end{verbatim}
+
+  \pause
+
+  Примери:
+  \small
+  \begin{itemize}[<+->]
+  \item \evalstop{(map square '(1 2 3))}{(1 4 9)}
+  \item \evalstop{(map cadr '((a b c) (d e f) (g h i)))}{(b e h)}
+  \item \evalstop{(map (lambda (f) (f 2)) (list square 1+ odd?))}{(4 3 \#f)}
+  \item \evalstop{((map twice (list square 1+ boolean?)) 2)}{(16 4 \#t)}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Филтриране на списък (\tt{filter})}
+
+  Да се напише функция \tt{(filter }<условие> <списък>\tt), която връща само тези от елементите на <списък>, които удовлетворяват <условие>.
+
+\pause
+\small
+
+\begin{verbatim}
+(define (filter p? l)
+   (cond ((null? l) l)
+         ((p? (car l)) (cons (car l) (filter p? (cdr l))))
+         (else (filter p? (cdr l)))))
+\end{verbatim}
+
+\pause
+
+  Примери:
+  \begin{itemize}[<+->]
+  \item \evalstop{(filter odd? '(1 2 3 4 5))}{(1 3 5)}
+  \item \evalstop{(filter pair? '((a b) c () d (e)))}{((a b) (e))}
+  \item \evalstop{(map (lambda (x) (filter even? x)) '((1 2 3) (4 5 6) (7 8 9)))}{((2) (4 6) (8))}
+  \item \evalstop{(map (lambda (x) (map (lambda (f) (filter f x)) (list negative? zero? positive?))) '((-2 1 0) (1 4 -1) (0 0 1)))}{(((-2) (0) (1)) ((-1) () (1 4)) (() (0 0) (1)))}
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Дясно свиване (\tt{foldr})}
+
+  Да се напише функция, която по даден списък $l = (a_1\,a_2\,a_3\,\ldots\,a_n)$ пресмята:
+  \begin{equation*}
+    a_1 \oplus \Big(a_2 \oplus \big(\ldots \oplus (a_n \oplus \bot) \ldots\big)\Big),
+  \end{equation*}
+
+  \pause
+
+\begin{verbatim}
+(define (foldr op nv l)
+        (if (null? l) nv
+            (op (car l) (foldr op nv (cdr l)))))
+\end{verbatim}
+
+  \pause
+  Примери:
+  \small
+  \begin{itemize}[<+->]
+  \item \evalstop{(foldr * 1 (from-to 1 5)}{120}
+  \item \evalstop{(foldr + 0 (map square (filter odd? (from-to 1 5))))}{35}
+  \item \evalstop{(foldr cons '() '(1 5 10))}{(1 5 10)}
+  \item \evalstop{(foldr list '() '(1 5 10))}{(1 (5 (10 ()))}
+  \item \evalstop{(foldr append '() '((a b) (c d) (e f)))}{(a b c d e f)}
+  \item \tt{map} и \tt{filter} могат да се реализират чрез \tt{foldr}
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Ляво свиване (\tt{foldl})}
+
+  Да се напише функция, която по даден списък $l = (a_1\,a_2\,a_3\,\ldots\,a_n)$ пресмята:
+  \begin{equation*}
+    \Big(\ldots\big((\bot \oplus a_1) \oplus a_2\big) \oplus \ldots\Big) \oplus a_n
+  \end{equation*}
+
+  \pause
+
+\begin{verbatim}
+(define (foldl op nv l)
+  (if (null? l) nv
+      (foldl op (op nv (car l)) (cdr l))))
+\end{verbatim}
+
+  \pause
+
+  Примери:
+  \small
+  \begin{itemize}[<+->]
+  \item \evalstop{(foldl * 1 (from-to 1 5)}{120}
+  \item \evalstop{(foldl cons '() '(1 5 10))}{(10 5 1)}
+  \item \evalstop{(foldl list '() '(1 5 10))}{(10 (5 (1 ()))}
+  \item \evalstop{(foldl append '() '((a b) (c d) (e f)))}{(e f c d a b)}
+  \item \tt{foldr} генерира линеен рекурсивен процес, а \tt{foldl} --- линеен итеративен
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Свиване на непразен списък (\tt{foldr1, foldl1})}
+
+  \textbf{Задача.} Да се намери максималният елемент на списък.
+  \pause
+
+  \tt{(define (maximum l) (foldr max \alt<2>?{(car l)} l))}
+  \pause\pause
+
+  \vspace{1em}
+  Можем ли да пропуснем нулевата стойност за непразен списък?
+
+  \begin{columns}[t,onlytextwidth]
+    \column{0.5\textwidth}
+
+    \onslide<5->{
+    \begin{equation*}
+      a_1 \oplus \big(\ldots \oplus (a_{n-1} \oplus a_n) \ldots\big)
+    \end{equation*}}
+
+    \onslide<7->{
+    \begin{equation*}
+      \big(\ldots\big((a_1 \oplus a_2) \oplus \ldots\big) \oplus a_n
+    \end{equation*}}
+
+    \column{0.5\textwidth}
+
+    \vspace{1em}
+    \onslide<6->{
+      \tt{(define (foldr1 op l)}\\
+      \tt{\hspace{2ex}(if (null? (cdr l)) (car l)}\\
+      \tt{\hspace{7ex}(foldr1 op (cdr l))))}}
+
+    \vspace{2em}
+
+    \onslide<8->{
+      \tt{(define (foldl1 op l)}\\
+      \tt{\hspace{2ex}(foldl op (car l) (cdr l)))}}
+  \end{columns}
 \end{frame}
 
 \section{Вложени списъци}
@@ -176,29 +459,6 @@
 \begin{frame}
   \frametitle{Примери}
 \end{frame}
-
-\section{Функции от по-висок ред за списъци}
-
-\begin{frame}
-  \frametitle{\tt{map}}
-\end{frame}
-
-\begin{frame}
-  \frametitle{\tt{filter}}
-\end{frame}
-
-\begin{frame}
-  \frametitle{\tt{accumulate}}
-\end{frame}
-
-\begin{frame}
-  \frametitle{\tt{accumulate-i}}
-\end{frame}
-
-\begin{frame}
-  \frametitle{\tt{accumulate1}}
-\end{frame}
-
 
 \section{Функции с произволен брой аргументи}
 

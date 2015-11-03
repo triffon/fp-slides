@@ -22,6 +22,9 @@
 % цветни таблици
 \usepackage{colortbl}
 
+% клетки с диагонална черта
+\usepackage{diagbox}
+
 %%% настройки общи за всички слайдове
 \mode<presentation>
 {
@@ -72,6 +75,12 @@
 % грешка при оценяване с пауза за въпрос
 \newcommand{\evalstoerrp}[1]{\evalstop{#1}{\textsf{\alert{Грешка!}}}}
 
+% два израза се оценяват до една и съща стойност
+\newcommand{\evalstwo}[3]{\tt{#1 $\longrightarrow$ #2 $\longleftarrow$ #3}}
+
+% два израза се оценяват до една и съща стойност с пауза за въпрос
+\newcommand{\evalstwop}[3]{\tt{#1 $\longrightarrow$ \rvl{#2} $\longleftarrow$ #3}}
+
 % оценка на функция в среда
 \newcommand{\funcenv}[3]{\begin{tabular}{||l@{\hskip 1ex}l@{\hskip 1ex}l||}%
                            \hline
@@ -106,18 +115,13 @@
 \newcommand{\nextarrow}{\xrightarrow{\hspace{5ex}}}
 
 % двойна кутия за точкова двойка
-\newcommand{\pointcell}{\multicolumn 1{|c|}{\hspace{2ex}}&\multicolumn 1{c|}{\hspace{2ex}}}
+\newcommand{\pointcell}{\dualcell{\hspace*{2ex}}{\hspace*{2ex}}}
 
 % двойна кутия за свързани структури
-\newcommand{\dualcell}[2]{\begin{tabular}{|c|c|}
-                            \hline
-                            \rowcolor{diagramblue}
-                            $#1$&$#2$\\
-                            \hline
-                          \end{tabular}}
+\newcommand{\dualcell}[2]{\multicolumn 1{|c|}{#1}&\multicolumn 1{c|}{#2}}
 
 % двойна кутия със указател към следващата
-\newcommand{\nextcell}[1]{\dualcell{#1}{\nextarrow\hspace{-4ex}}}
+\newcommand{\nextcell}{\pointcell&$\nextarrow$}
 
 % двойна кутия без указател към следващата
-\newcommand{\nilcell}[1]{\dualcell{#1}{\cellcolor{lightgray}\hspace{2ex}}}
+\newcommand{\nilcell}{\dualcell{\hspace*{2ex}}{\scriptsize\diagbox[dir=SW]{\phantom a}{\phantom a}}}
