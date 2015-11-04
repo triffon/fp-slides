@@ -578,14 +578,52 @@
 \begin{frame}
   \frametitle{Приемане на произволен брой аргументи}
 
+  \begin{itemize}[<+->]
+  \item \tta{(lambda }<списък> <тяло>\tta)
+  \item създава функция с <тяло>, която получава <списък> от параметри
+  \item \tta{(lambda (}\{<параметри>\} \tta. <списък>\tta) <тяло>\tta)
+  \item създава функция с <тяло>, която получава задължителните <параметри> и <списък> от опционални параметри
+  \item \tta{(define (}<функция> \{<параметри>\} \tta. <списък>\tta) <тяло>\tta)
+  \item еквивалентно на \\
+    \tt{(define }<функция>\\
+    \hspace{10ex}\tt{(lambda (}\{<параметри>\} \tt. <списък>\tt) <тяло>\tt{))}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{\tt{apply}}
+  \frametitle{Примери}
+
+  \begin{itemize}
+  \item \tt{(define (f x y . l) (append (append x l) (append y l)))}
+  \item \evalstop{(f '(1 2 3) '(4 5 6)))}{(1 2 3 4 5 6)}
+  \item \evalstop{(f '(1 2 3) '(4 5 6) 7 8))}{(1 2 3 7 8 4 5 6 7 8)}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{\tt{eval}}
+  \frametitle{Прилагане на функция над списък от параметри (\tt{apply})}
+
+  \begin{itemize}[<+->]
+  \item \tta{(apply <функция> <списък>)}
+  \item прилага <функция> над <списък> от параметри
+  \item Примери:
+  \item \evalsto{(apply + '(1 2 3 4 5))}{15}
+  \item \evalstop{(apply append '((1 2 3) (4 5 6) (7 8 9)))}{(1 2 3 4 5 6 7 8 9)}
+  \item \evalstop{(apply list '(1 2 3 4))}{(1 2 3 4)}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Оценяване на списък като комбинация (\tt{eval})}
+
+  \begin{itemize}[<+->]
+  \item \tta{(eval <списък>)}
+  \item прилага основното правило за оценяване над оценката на <списък>
+  \item Примери:
+  \item \tt{(define (apply f l) (eval (cons f l)))}
+  \end{itemize}
+
+  \alert{Програмите на Scheme могат да се разглеждат като данни!}
 \end{frame}
 
 \end{document}
