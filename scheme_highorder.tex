@@ -597,7 +597,7 @@
 \begin{semiverbatim}
 (define (derive-n f n dx)
   ((\rvl{accumulate} \rvl{compose} \rvl{id} \rvl1 \rvl{n} \rvl{
-              (lambda (i) (lambda (f) (derive f dx)))} \rvl{1+})) f)
+              (lambda (i) (lambda (f) (derive f dx)))} \rvl{1+}) f))
 \end{semiverbatim}
 \end{frame}
 
