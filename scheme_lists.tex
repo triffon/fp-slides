@@ -402,9 +402,10 @@
   \small
   \begin{itemize}[<+->]
   \item \evalstop{(foldl * 1 (from-to 1 5)}{120}
-  \item \evalstop{(foldl cons '() '(1 5 10))}{(10 5 1)}
-  \item \evalstop{(foldl list '() '(1 5 10))}{(10 (5 (1 ()))}
-  \item \evalstop{(foldl append '() '((a b) (c d) (e f)))}{(e f c d a b)}
+  \item \evalstop{(foldl cons '() '(1 5 10))}{(((() . 1) . 5) . 10)}
+  \item \evalsto{(foldl \rvl{(lambda (x y) (cons y x))} '() '(1 5 10))}{(10 5 1)}
+  \item \evalstop{(foldl list '() '(1 5 10))}{(((() 1) 5) 10)}
+  \item \evalstop{(foldl append '() '((a b) (c d) (e f)))}{(a b c d e f)}
   \item \tt{foldr} генерира линеен рекурсивен процес, а \tt{foldl} --- линеен итеративен
   \end{itemize}
 \end{frame}
@@ -452,18 +453,131 @@
 
 \section{Вложени списъци}
 
-\begin{frame}
+\newcommand{\hzero}{\textcolor{red}}
+\newcommand{\vzero}{\textcolor{orange}}
+\newcommand{\hstep}{\textcolor{green}}
+\newcommand{\vstep}{\textcolor{cyan}}
+
+\begin{frame}[fragile]
   \frametitle{Работа с вложени списъци}
+
+\begin{verbatim}
+((1 (2)) (((3) 4) (5 (6)) () (7)) 8)
+\end{verbatim}
+
+  \textbf{Задача.} Да се преброят в атомите във вложен списък.
+
+  \pause
+
+  \textbf{Подход:} Обхождане в две посоки: хоризонтално и вертикално
+  \begin{itemize}[<+->]
+  \item \hzero{Хоризонтално дъно:} \rvl{достигане до празен списък \tt{()}}
+  \item \vzero{Вертикално дъно:} \rvl{достигане до друг атом}
+  \item \hstep{Хоризонтална стъпка:} \rvl{обхождане опашката \tt{(cdr l)}}
+  \item \vstep{Вертикална стъпка:} \rvl{обхождане на главата \tt{(car l)}}
+  \end{itemize}
+  \vspace{1em}
+
+  \nxt{
+  За удобство можем да дефинираме функцията \tt{atom?}:
+\begin{semiverbatim}
+(define (atom? x) (not (pair? x)))
+\end{semiverbatim}}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Примери}
+  \small
+
+  \textbf{Задача.} Да се преброят в атомите във вложен списък.
+
+  \evalsto{(count-atoms '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}8
+
+  \pause
+
+\begin{semiverbatim}
+(define (count-atoms l)
+  (cond ((null? l) \hzero0)
+        ((atom? l) \vzero1)
+        (else (+ \vstep{(count-atoms (car l))} \hstep{(count-atoms (cdr l))}))))
+\end{semiverbatim}
+  \vspace{1em}
+
+  \pause
+
+  \textbf{Задача.} Да се съберат всички атоми от вложен списък.
+
+  \evalsto{(flatten '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}{(1 2 3 4 5 6 7 8)}
+
+  \pause
+
+\begin{semiverbatim}
+(define (flatten l)
+  (cond ((null? l) \hzero{'()})
+        ((atom? l) \vzero{(list l)})
+        (else (append \vstep{(flatten (car l))} \hstep{(flatten (cdr l))}))))
+\end{semiverbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Примери}
+
+  \pause
+
+  \textbf{Задача.} Да се обърне реда на атомите във вложен списък.
+  \evalsto{(deep-reverse '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}{\\
+(8 ((7) () ((6) 5) (4 (3))) ((2) 1))}
+
+  \pause
+
+\begin{semiverbatim}
+(define (deep-reverse l)
+  (cond ((null? l) \hzero{'()})
+        ((atom? l) \vzero{l})
+        (else (append \hstep{(deep-reverse (cdr l))}
+                \vstep{(list (deep-reverse (car l)))}))))
+\end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Свиване на вложени списъци}
+
+  \tt{(deep-fold }<х-дъно> <в-дъно> <операция>\tt)
+
+\pause
+
+\begin{semiverbatim}
+(define (deep-fold nv term op l)
+  (cond ((null? l) \hzero{nv})
+        ((atom? l) \vzero{(term l)})
+        (else (op \vstep{(deep-fold nv term op (car l))}
+                  \hstep{(deep-fold nv term op (cdr l))}))))
+\end{semiverbatim}
+
+\pause
+\nxt{
+\begin{semiverbatim}
+(define (count-atoms l) (deep-fold \rvl0 \rvl{(lambda (x) 1)} \rvl+ l))
+\end{semiverbatim}
+\nxt{
+\begin{semiverbatim}
+(define (flatten l) (deep-fold \rvl{'()} \rvl{list} \rvl{append} l))
+\end{semiverbatim}
+\nxt{
+\begin{semiverbatim}
+\onslide<14>{(define (rcons x l) (append l (list x)))}
+
+(define (deep-reverse l) (deep-fold \rvl{'()} \rvl{id} \rvl{rcons} l))
+\end{semiverbatim}
+}}}
 \end{frame}
 
 \section{Функции с произволен брой аргументи}
 
 \begin{frame}
-  \frametitle{Дефиниция}
+  \frametitle{Приемане на произволен брой аргументи}
+
 \end{frame}
 
 \begin{frame}
