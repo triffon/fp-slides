@@ -292,7 +292,7 @@
 
   \pause
   \vspace{2em}
-  Примери: \tt{from-to}, \tt{append}, \tt{reverse}
+  Примери: \tt{from-to}, \tt{collect}, \tt{append}, \tt{reverse}
 \end{frame}
 
 \section{Функции от по-висок ред за списъци}
@@ -307,8 +307,8 @@
 
 \begin{verbatim}
 (define (map f l)
-        (if (null? l) l
-            (cons (f l) (map f (cdr l)))))
+        (if (null? l) '()
+            (cons (f (car l)) (map f (cdr l)))))
 \end{verbatim}
 
   \pause
@@ -319,7 +319,7 @@
   \item \evalstop{(map square '(1 2 3))}{(1 4 9)}
   \item \evalstop{(map cadr '((a b c) (d e f) (g h i)))}{(b e h)}
   \item \evalstop{(map (lambda (f) (f 2)) (list square 1+ odd?))}{(4 3 \#f)}
-  \item \evalstop{((map twice (list square 1+ boolean?)) 2)}{(16 4 \#t)}
+  \item \evalstop{(map (lambda (f) (f 2)) (map twice (list square 1+ boolean?)))}{(16 4 \#t)}
   \end{itemize}
 \end{frame}
 
@@ -370,12 +370,12 @@
   Примери:
   \small
   \begin{itemize}[<+->]
-  \item \evalstop{(foldr * 1 (from-to 1 5)}{120}
+  \item \evalstop{(foldr * 1 (from-to 1 5))}{120}
   \item \evalstop{(foldr + 0 (map square (filter odd? (from-to 1 5))))}{35}
   \item \evalstop{(foldr cons '() '(1 5 10))}{(1 5 10)}
   \item \evalstop{(foldr list '() '(1 5 10))}{(1 (5 (10 ()))}
   \item \evalstop{(foldr append '() '((a b) (c d) (e f)))}{(a b c d e f)}
-  \item \tt{map} и \tt{filter} могат да се реализират чрез \tt{foldr}
+  \item \tt{map}, \tt{filter} и \tt{accumulate} могат да се реализират чрез \tt{foldr}
   \end{itemize}
 
 \end{frame}
@@ -423,7 +423,7 @@
   Можем ли да пропуснем нулевата стойност за непразен списък?
 
   \begin{columns}[t,onlytextwidth]
-    \column{0.5\textwidth}
+    \column{0.45\textwidth}
 
     \onslide<5->{
     \begin{equation*}
@@ -435,13 +435,14 @@
       \big(\ldots\big((a_1 \oplus a_2) \oplus \ldots\big) \oplus a_n
     \end{equation*}}
 
-    \column{0.5\textwidth}
+    \column{0.55\textwidth}
 
     \vspace{1em}
     \onslide<6->{
       \tt{(define (foldr1 op l)}\\
       \tt{\hspace{2ex}(if (null? (cdr l)) (car l)}\\
-      \tt{\hspace{7ex}(foldr1 op (cdr l))))}}
+      \tt{\hspace{7ex}(op (car l)}\\
+      \tt{\hspace{12ex}(foldr1 op (cdr l)))))}}
 
     \vspace{2em}
 
@@ -523,8 +524,6 @@
 \begin{frame}[fragile]
   \frametitle{Примери}
 
-  \pause
-
   \textbf{Задача.} Да се обърне реда на атомите във вложен списък.
   \evalsto{(deep-reverse '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}{\\
 (8 ((7) () ((6) 5) (4 (3))) ((2) 1))}
@@ -581,48 +580,76 @@
   \begin{itemize}[<+->]
   \item \tta{(lambda }<списък> <тяло>\tta)
   \item създава функция с <тяло>, която получава <списък> от параметри
-  \item \tta{(lambda (}\{<параметри>\} \tta. <списък>\tta) <тяло>\tta)
-  \item създава функция с <тяло>, която получава задължителните <параметри> и <списък> от опционални параметри
-  \item \tta{(define (}<функция> \{<параметри>\} \tta. <списък>\tta) <тяло>\tta)
+  \item \tta{(lambda (}\{<параметър>\}$^+$ \tta. <списък>\tta) <тяло>\tta)
+  \item създава функция с <тяло>, която получава няколко задължителни <параметър> и <списък> от опционални параметри
+  \item \tta{(define (}<функция> \tta. <списък>\tta) <тяло>\tta)
+  \item еквивалентно на \\
+    \tt{(define }<функция> \tt{(lambda }<списък> <тяло>\tt{))}
+  \item \tta{(define (}<функция> \{<параметър>\}$^+$ \tta. <списък>\tta) <тяло>\tta)
   \item еквивалентно на \\
     \tt{(define }<функция>\\
-    \hspace{10ex}\tt{(lambda (}\{<параметри>\} \tt. <списък>\tt) <тяло>\tt{))}
+    \hspace{10ex}\tt{(lambda (}\{<параметър>\}$^+$ \tt. <списък>\tt) <тяло>\tt{))}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Примери}
 
-  \begin{itemize}
-  \item \tt{(define (f x y . l) (append (append x l) (append y l)))}
-  \item \evalstop{(f '(1 2 3) '(4 5 6)))}{(1 2 3 4 5 6)}
-  \item \evalstop{(f '(1 2 3) '(4 5 6) 7 8))}{(1 2 3 7 8 4 5 6 7 8)}
+  \begin{itemize}[<+->]
+  \item \tt{(define (maximum x . l) (foldl1 max (cons x l)))}
+  \item \evalstop{(maximum 7 3 10 2)}{10}
+  \item \evalstop{(maximum 100)}{100}
+  \item \evalstoerrp{(maximum)}
+  \item \tt{(define (g x y . l) (append (append x l) (append y l)))}
+  \item \evalstop{(g '(1 2 3) '(4 5 6)))}{(1 2 3 4 5 6)}
+  \item \evalstop{(g '(1 2 3) '(4 5 6) 7 8))}{(1 2 3 7 8 4 5 6 7 8)}
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Прилагане на функция над списък от параметри (\tt{apply})}
 
   \begin{itemize}[<+->]
-  \item \tta{(apply <функция> <списък>)}
+  \item \tta{(apply }<функция> <списък>\tta)
   \item прилага <функция> над <списък> от параметри
   \item Примери:
   \item \evalsto{(apply + '(1 2 3 4 5))}{15}
-  \item \evalstop{(apply append '((1 2 3) (4 5 6) (7 8 9)))}{(1 2 3 4 5 6 7 8 9)}
+  \item \evalstop{(apply append '((1 2) (3 4) (5 6)))}{(1 2 3 4 5 6)}
   \item \evalstop{(apply list '(1 2 3 4))}{(1 2 3 4)}
   \end{itemize}
+
+  \pause
+\small
+\begin{verbatim}
+(define (append . l)
+   (cond ((null? l) '())
+         ((null? (car l)) (apply append (cdr l)))
+         (else (cons (caar l)
+                     (apply append (cons (cdar l) (cdr l)))))))
+\end{verbatim}
 \end{frame}
 
 \begin{frame}
   \frametitle{Оценяване на списък като комбинация (\tt{eval})}
 
   \begin{itemize}[<+->]
-  \item \tta{(eval <списък>)}
-  \item прилага основното правило за оценяване над оценката на <списък>
+  \item \tta{(eval }<списък>\tta)
+  \item връща оценката на \textbf{оценката на <списък>}
   \item Примери:
+  \item \tt{(define a 2)}
+  \item \evalsto a2
+  \item \evalsto{(eval a)}2
+  \item \evalstop{(eval 'a)}2
+  \item \evalstop{(eval ''a)}a
+  \item \evalstop{(eval (eval ''a))}2
+  \item \evalstop{(eval (list '+ 5 7 a))}{14}
+  \item \evalstoerrp{(eval (list 'define 'b 5))}
+  \item \tt{(eval (list 'define ''b 5))} $\longleftrightarrow$ \tt{(define b 5)}
+  \item {\small \evalstop{(eval (list 'if (list '< 2 5) (list 'quote 'a) 'b))}a}
   \item \tt{(define (apply f l) (eval (cons f l)))}
   \end{itemize}
 
+  \pause
   \alert{Програмите на Scheme могат да се разглеждат като данни!}
 \end{frame}
 
