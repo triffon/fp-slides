@@ -410,6 +410,55 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Функции от по-висок ред в Racket}
+
+  В R$^5$RS е дефинирана само функцията \tt{map}.
+
+  В Racket са дефинирани функциите \tt{map}, \tt{filter}, \tt{foldr}, \tt{foldl}
+
+  \pause
+  \vspace{1em}
+
+  \alert{Внимание: \tt{foldl} в Racket е дефинирана по-различен начин!}
+
+  \pause
+
+  \begin{columns}[t,onlytextwidth]
+    \small
+    \column{0.5\textwidth}
+
+    \tt{foldl} от лекции
+
+\begin{semiverbatim}
+(define (foldl op nv l)
+  (if (null? l) nv
+      (foldl op \alert{(op nv (car l))}
+             (cdr l))))
+\end{semiverbatim}
+
+    \begin{equation*}
+      \Big(\ldots\big((\bot \oplus a_1) \oplus a_2\big) \oplus \ldots\Big) \oplus a_n
+    \end{equation*}
+
+    \column{0.5\textwidth}
+
+    \tt{foldl} в Racket
+
+\begin{semiverbatim}
+(define (foldl op nv l)
+  (if (null? l) nv
+      (foldl op \alert{(op (car l) nv)}
+             (cdr l))))
+\end{semiverbatim}
+
+    \begin{equation*}
+      a_n \oplus \Big(\ldots \big(a_2 \oplus (a_1 \oplus \bot)\big)\ldots\Big),
+    \end{equation*}
+
+  \end{columns}
+\end{frame}
+
 \begin{frame}
   \frametitle{Свиване на непразен списък (\tt{foldr1, foldl1})}
 
