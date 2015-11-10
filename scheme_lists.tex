@@ -500,7 +500,7 @@
       \tt{\hspace{2ex}(foldl op (car l) (cdr l)))}}
   \end{columns}
 \end{frame}
-\end{document}
+
 \section{Вложени списъци}
 
 \newcommand{\hzero}{\textcolor{red}}
@@ -667,7 +667,7 @@
   \item \evalstop{(apply list '(1 2 3 4))}{(1 2 3 4)}
   \end{itemize}
 
-  \pause
+  \onslide<+->
 \small
 \begin{verbatim}
 (define (append . l)
@@ -691,6 +691,13 @@
   \item \evalstop{(eval 'a)}2
   \item \evalstop{(eval ''a)}a
   \item \evalstop{(eval (eval ''a))}2
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Примери за \tt{eval}}
+
+  \begin{itemize}[<+->]
   \item \evalstop{(eval (list '+ 5 7 a))}{14}
   \item \evalstoerrp{(eval (list 'define 'b 5))}
   \item \tt{(eval (list 'define ''b 5))} $\longleftrightarrow$ \tt{(define b 5)}
@@ -698,7 +705,7 @@
   \item \tt{(define (apply f l) (eval (cons f l)))}
   \end{itemize}
 
-  \pause
+  \onslide<+->
   \alert{Програмите на Scheme могат да се разглеждат като данни!}
 \end{frame}
 
