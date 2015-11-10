@@ -1,0 +1,287 @@
+\documentclass{beamer}
+\usepackage{fprog}
+
+\title{Структури от данни в Scheme}
+\subtitle{асоциативни списъи, матрици, дървета, графи}
+
+\date{11 ноември 2015 г.}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Абстракция със структури от данни}
+
+\subsection{Нива на абстракция}
+
+\begin{frame}[<+->]
+  \frametitle{Абстракция със структури от данни}
+  
+  \begin{definition}[Абстракция]
+    Принцип за разделянето (``абстрахирането'') на \emph{представянето} на дадена структура от данни(СД) от нейното \emph{използване}. 
+  \end{definition}
+  \begin{itemize}
+  \item основен принцип на обектно-ориентираното програмиране
+  \item позволява използването на СД преди представянето ѝ да е уточнено
+  \item Предимства:
+    \begin{itemize}
+    \item програмите работят на по-високо концептуално ниво със СД
+    \item позволява алтернативни имплементации на дадена СД, подходящи за различен вид задача
+    \item влиянието на промени по представянето е ограничено до операциите, които ``знаят'' за него
+    \item подобрения при представянето автоматично се разпространяват до по-горните нива на абстракция
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[<+->]
+  \frametitle{Пример: рационално число}
+
+  \begin{itemize}
+  \item Логическо описание: обикновена дроб
+  \item Физическо представяне: точкова двойка от цели числа
+  \item Базови операции:
+    \begin{itemize}[<.->]
+    \item конструиране на рационално число
+    \item получаване на числител
+    \item получаване на знаменател
+    \end{itemize}
+  \item Аритметични операции:
+    \begin{itemize}[<.->]
+    \item събиране
+    \item изваждане
+    \item умножение
+    \item деление
+    \end{itemize}
+  \item Приложни програми
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Нива на абстракция}
+
+  \renewcommand{\bua}{\bigg\uparrow}
+
+  \begin{center}
+    \begin{tabular}{|c|}
+      \hline
+      приложни програми\\
+      \\
+      \hline
+      \multicolumn 1c\bua\\
+      \hline
+      аритметични операции\\
+      (+, -, *, /, =, <, >, <=, >=)\\
+      \hline
+      \multicolumn 1c\bua\\
+      \hline
+      базови операции\\
+      (конструктор, селектори за числител и знаменател)\\
+      \hline
+      \multicolumn 1c\bua\\
+      \hline
+      физическо представяне\\
+      (точкова двойка от цели числа)\\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\subsection{Абстракция с точкови двойки}
+
+\begin{frame}[fragile]
+  \frametitle{Рационални числа}
+  
+  Физическо представяне\\[1em]
+  \begin{center}
+    \begin{tabular}{cc}
+      \hline
+      \pointcell\\
+      \hline
+      \bda&\bda\\
+      \fbox{числител} &\fbox{знаменател}
+    \end{tabular}\\[1em]
+  \end{center}
+  \pause
+  Базови операции
+  \begin{itemize}[<+->]
+  \item \alt<+->{\tt{(define make-rat cons)}}{\tt{(define (make-rat n d) (cons n d))}}
+  \item \alt<+->{\tt{(define get-numer car)}}{\tt{(define (get-numer r) (car r))}}
+  \item \alt<+->{\tt{(define get-denom cdr)}}{\tt{(define (get-denom r) (cdr r))}}
+  \end{itemize}
+  \onslide<+->
+  \vspace{1em}
+  По-добре:
+\begin{verbatim}
+(define (make-rat n d)
+   (if (= d 0) (cons n 1) (cons n d)))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Аритметични операции}
+  \small
+  \begin{columns}[t,onlytextwidth]
+    \begin{column}{0.33\textwidth}
+      \vspace{2em}
+      \begin{equation*}
+        \frac{n_1}{d_1}\frac{n_2}{d_2} = \frac{n_1n_2}{d_1d_2}
+      \end{equation*}
+      \vspace{4em}
+      \begin{uncoverenv}<2->
+        \begin{equation*}
+          \frac{n_1}{d_1} + \frac{n_2}{d_2} = \frac{n_1d_2 + n_2d_1}{d_1d_2}
+        \end{equation*}
+      \end{uncoverenv}
+      \vspace{4em}
+      \begin{uncoverenv}<3->
+        \begin{equation*}
+          \frac{n_1}{d_1} < \frac{n_2}{d_2} \leftrightarrow n_1d_2 < n_2d_1
+        \end{equation*}
+      \end{uncoverenv}
+    \end{column}
+
+    \begin{column}{0.67\textwidth}
+\begin{verbatim}
+(define (*rat p q)
+  (make-rat (* (get-numer p) (get-numer q))
+            (* (get-denom p) (get-denom q))))
+\end{verbatim}
+      \begin{uncoverenv}<2->
+\begin{verbatim}
+(define (+rat p q)
+  (make-rat (+ (* (get-numer p)
+                  (get-denom q))
+               (* (get-denom p)
+                  (get-numer q)))
+            (* (get-denom p) (get-denom q))
+\end{verbatim}
+      \end{uncoverenv}
+      \begin{uncoverenv}<3->
+\begin{verbatim}
+(define (<rat p q)
+  (< (* (get-numer p) (get-denom q))
+     (* (get-numer q) (get-denom p))))
+\end{verbatim}
+      \end{uncoverenv}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Програми с рационални числа}
+  
+  \begin{equation*}
+    \sum_{i=0}^n \frac{i^n}{i!}
+  \end{equation*}
+
+  \onslide<+->
+
+  \begin{overprint}
+\begin{semiverbatim}
+(define (my-exp x n)
+  (accumulate \rvl{+rat} \rvl{(make-rat 0 1)} 0 n
+              \rvl{(lambda (i) (make-rat (expt x i) (fact i)))} 1+))
+\end{semiverbatim}
+  \end{overprint}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Нормализация}
+  
+  \textbf{Проблем:} Числата стават много големи!\\[1em]
+  \textbf{Проблем:} \evalsto{(=rat (make-rat 1 2) (make-rat -1 -2))}{\#f}\\[1em]
+  \pause
+  \textbf{Идея:} Да работим с \emph{нормализирани} дроби
+  \pause
+\begin{verbatim}
+(define (make-rat n d)
+  (if (or (= d 0) (= n 0)) (cons 0 1)
+    (let* ((g (gcd n d))
+           (ng (quotient n g))
+           (dg (quotient d g)))
+       (if (> dg 0) (cons ng dg)
+                    (cons (- ng) (- dg))))))
+\end{verbatim}
+  \pause
+  \alert{Не е нужно да правим каквито и да е други промени!}
+\end{frame}
+
+\subsection{Абстракция със сигнатура}
+
+\begin{frame}[fragile]
+  \frametitle{Сигнатура}
+  
+  \textbf{Проблем:} Не можем да различим СД с еднакви представяния (рационално число, комплексно число, точка в равнината)\\[1em]
+  \pause
+  \textbf{Идея:} Да добавим ``етикет'' на обекта
+  \pause
+\begin{semiverbatim}
+(define (make-rat n d)
+  \alert{(cons 'rat}
+    (if (or (= d 0) (= n 0)) (cons 0 1)
+      (let* ((g (gcd n d))
+             (ng (quotient n g))
+             (dg (quotient d g)))
+         (if (> dg 0) (cons ng dg)
+                      (cons (- ng) (- dg)))))))
+
+(define get-numer cadr)
+(define get-denom cddr)
+\end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile,fragile]
+  \frametitle{Проверка за коректност}
+  
+  Вече можем да проверим дали даден обект е рационално число:
+\begin{verbatim}
+(define (rat? p)
+  (and (pair? p) (eq? (car p) 'rat)
+       (pair? (cdr p)) (number? (cadr p)) (number? (cddr p))))
+\end{verbatim}
+
+  \pause
+
+  Можем да добавим проверка за коретност:
+\begin{verbatim}
+(define (check-rat f)
+  (lambda (p)
+    (if (rat? p) (f p) 'error)))
+
+(define get-numer (guard-rat cadr))
+(define get-denom (guard-rat cddr))
+\end{verbatim}
+\end{frame}
+
+\section{Матрици}
+
+\subsection{Представяне}
+
+\subsection{Операции}
+
+\section{Двоични дървета}
+
+\subsection{Представяне}
+
+\subsection{Операции}
+
+\section{Асоциативни списъци}
+
+\subsection{Дефиниция}
+
+\subsection{Операции}
+
+\section{Графи}
+
+\subsection{Представяне}
+
+\subsection{Операции}
+
+\subsection{Търсене в дълбочина}
+
+\subsection{Търсене в ширина}
+
+\end{document}
