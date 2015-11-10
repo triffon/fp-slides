@@ -214,9 +214,19 @@
 \begin{frame}[fragile]
   \frametitle{Сигнатура}
   
-  \textbf{Проблем:} Не можем да различим СД с еднакви представяния (рационално число, комплексно число, точка в равнината)\\[1em]
+  \textbf{Проблем:} Не можем да различим СД с еднакви представяния! (рационално число, комплексно число, точка в равнината)\\
   \pause
   \textbf{Идея:} Да добавим ``етикет'' на обекта
+  \small
+  \begin{center}
+    \begin{tabular}{cc@{}c@{}cc}
+      \cline{1-2}\cline{4-5}
+      \pointcell&$\nextarrow$&\pointcell\\
+      \cline{1-2}\cline{4-5}
+      \bda&&&\bda&\bda\\
+      \fbox{\tt{rat}}&&&\fbox{числител}&\fbox{знаменател}
+    \end{tabular}
+  \end{center}
   \pause
 \begin{semiverbatim}
 (define (make-rat n d)
@@ -227,9 +237,8 @@
              (dg (quotient d g)))
          (if (> dg 0) (cons ng dg)
                       (cons (- ng) (- dg)))))))
-
-(define get-numer cadr)
-(define get-denom cddr)
+(define get-numer \alert{cadr})
+(define get-denom \alert{cddr})
 \end{semiverbatim}
 \end{frame}
 
@@ -251,8 +260,8 @@
   (lambda (p)
     (if (rat? p) (f p) 'error)))
 
-(define get-numer (guard-rat cadr))
-(define get-denom (guard-rat cddr))
+(define get-numer (check-rat cadr))
+(define get-denom (check-rat cddr))
 \end{verbatim}
 \end{frame}
 
