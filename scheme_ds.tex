@@ -269,7 +269,97 @@
 
 \subsection{Представяне}
 
+\begin{frame}[fragile]
+  Можем да представим матрица като списък от списък от елементи:
+
+  \begin{columns}[t,onlytextwidth]
+    \begin{column}{0.5\textwidth}
+      \begin{equation*}
+        \left(
+          \begin{array}{ccc}
+            1 & 2 & 3\\
+            4 & 5 & 6
+          \end{array}
+        \right)
+      \end{equation*}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      
+      \tt{((1 2 3) (4 5 6))}
+    \end{column}
+  \end{columns}
+  \vspace{1em}
+  Проверка за коректност:
+  \pause
+\begin{verbatim}
+(define (all p? l) (foldr1 (lambda (x y) (and x y)) #f l))
+
+(define (matrix? m)
+  (and (list? m)
+       (not (null? (car m)))
+       (all list? m)
+       (all (lambda (row) (= (length row)
+                             (length (car m)))) m)))
+\end{verbatim}
+\end{frame}
+
 \subsection{Операции}
+
+\begin{frame}[fragile,fragile]
+  \frametitle{Базови операции}
+  
+  Брой редове и стълбове
+  \pause
+  \onslide<+->
+\begin{semiverbatim}
+\alt<+->{(define get-rows length)}{(define (get-rows m) (length m))}
+(define (get-columns m) (length (car m)))
+\end{semiverbatim}
+  \onslide<+->
+  Намиране на първи ред и стълб
+  \onslide<+->
+\begin{semiverbatim}
+\alt<+->{(define get-first-row car)}{(define (get-first-row m) (car m))}
+(define (get-first-column m) (map car m))
+\end{semiverbatim}
+  \onslide<+->
+  Изтриване на първи ред и стълб
+  \onslide<+->
+\begin{semiverbatim}
+\alt<+->{(define del-first-row cdr)}{(define (del-first-row m) (cdr m))}
+(define (del-first-column m) (map cdr m))
+\end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile,fragile,fragile]
+  \frametitle{Разширени операции}
+  
+  Намиране на ред и стълб по индекс
+  \pause
+\begin{verbatim}
+(define (get-row i m) (list-ref m i))
+(define (get-column i m)
+  (map (lambda (row) (list-ref row i)) m))
+\end{verbatim}
+  \pause
+  Транспониране
+  \pause
+\begin{verbatim}
+(define (transpose m)
+  (accumulate cons '() 0 (- (get-columns m) 1)
+              (lambda (i) (get-column i m)) 1+))
+\end{verbatim}
+  \pause
+  Умножение на матрици ($c_{i,j} = \sum_{k=0}^n A_{i,k}B_{k,j}$)
+  \pause
+\begin{verbatim}
+(define (mult-vectors r1 r2) (apply + (map * r1 r2)))
+(define (mult-matrices m1 m2)
+  (map (lambda (row)
+         (map (lambda (column) (mult-vectors row column))
+              (transpose m2))) m1))
+\end{verbatim}
+\end{frame}
 
 \section{Двоични дървета}
 
