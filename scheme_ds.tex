@@ -242,7 +242,7 @@
 \end{semiverbatim}
 \end{frame}
 
-\begin{frame}[fragile,fragile]
+\begin{frame}[fragile]
   \frametitle{Проверка за коректност}
   
   Вече можем да проверим дали даден обект е рационално число:
@@ -305,7 +305,7 @@
 
 \subsection{Операции}
 
-\begin{frame}[fragile,fragile]
+\begin{frame}[fragile]
   \frametitle{Базови операции}
   
   Брой редове и стълбове
@@ -331,7 +331,7 @@
 \end{semiverbatim}
 \end{frame}
 
-\begin{frame}[fragile,fragile,fragile]
+\begin{frame}[fragile]
   \frametitle{Разширени операции}
   
   Намиране на ред и стълб по индекс
@@ -349,8 +349,20 @@
   (accumulate cons '() 0 (- (get-columns m) 1)
               (lambda (i) (get-column i m)) 1+))
 \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Аритметични операции}
+
+  Събиране на матрици
   \pause
-  Умножение на матрици ($c_{i,j} = \sum_{k=0}^n A_{i,k}B_{k,j}$)
+\begin{verbatim}
+(define (sum-vectors r1 r2) (map + r1 r2))
+(define (sum-matrices m1 m2) (map sum-vectors m1 m2))
+\end{verbatim}
+  \pause
+  \vspace{1em}
+  Умножение на матрици ($c_{i,j} = \vec a_i\cdot \vec b^T_j = \sum_{k=0}^n A_{i,k}B_{k,j}$)
   \pause
 \begin{verbatim}
 (define (mult-vectors r1 r2) (apply + (map * r1 r2)))
@@ -365,7 +377,111 @@
 
 \subsection{Представяне}
 
+\begin{frame}[fragile]
+  \frametitle{Представяне на двоични дървета}
+  Представяме двоични дървета като вложени списъци от три елемента:\\[1em]
+  \begin{columns}[t,onlytextwidth]
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{forest} baseline
+        [корен [ляво] [дясно]]
+      \end{forest}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \tt(<корен> <ляво> <дясно>\tt)
+    \end{column}
+  \end{columns}
+  \pause
+  \vspace{1em}
+  Пример:
+  \begin{columns}[t,onlytextwidth]
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{forest} baseline, for tree={circle,draw}
+        [1 [2] [3 [4] [5]]]
+      \end{forest}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+\begin{verbatim}
+(1 (2 () ())
+   (3 (4 () ())
+      (5 () ())))
+\end{verbatim}
+    \end{column}
+  \end{columns}
+\end{frame}
+
 \subsection{Операции}
+
+\begin{frame}[fragile]
+  \frametitle{Базови операции}
+  
+  Проверка за коректност:
+  \pause
+\begin{verbatim}
+(define (tree? t)
+  (or (null? t)
+      (and (list t) (= (length t) 3))
+           (tree? (cadr t))
+           (tree? (caddr t))))
+\end{verbatim}
+  \pause
+  Конструктори:
+  \pause
+\begin{verbatim}
+(define empty-tree '())
+(define (make-tree root left right) (list root left right))
+\end{verbatim}
+  \pause
+  Селектори:
+  \pause
+\begin{verbatim}
+(define root-tree car)
+(define left-tree cadr)
+(define right-tree caddr)
+(define empty-tree? null?)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile,fragile,fragile]
+  \frametitle{Разширени операции}
+  
+  Дълбочина на дърво:
+  \pause
+\begin{verbatim}
+(define (depth-tree t)
+  (if (empty-tree? t) 0
+      (1+ (max (depth (left-tree t))
+               (depth (right-tree t))))))
+\end{verbatim}
+  \pause
+  Намиране на поддърво:
+  \pause
+\begin{verbatim}
+(define (member-tree x t)
+  (cond ((empty-tree? t) #f)
+        ((eq? x (root-tree t)) t)
+        (else (or (member-tree x (left-tree t))
+                  (member-tree x (right-tree t))))))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Търсене на път в двоично дърво}
+  
+  \textbf{Задача:} Да се намери в дървото път от корена до даден възел \tt x.
+  \pause
+\begin{verbatim}
+(define (path-tree x t)
+  (cond ((empty-tree? t) #f)
+        ((eq? x (root-tree t)) (list x))
+        (else (cons#f (root-tree t)
+                      (or (path-tree x (left-tree t))
+                          (path-tree x (right-tree t)))))))
+
+(define (cons#f h t) (and t (cons h t)))
+\end{verbatim}
+\end{frame}
 
 \section{Асоциативни списъци}
 
