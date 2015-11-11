@@ -401,7 +401,7 @@
   Примери:
   \small
   \begin{itemize}[<+->]
-  \item \evalstop{(foldl * 1 (from-to 1 5)}{120}
+  \item \evalstop{(foldl * 1 (from-to 1 5))}{120}
   \item \evalstop{(foldl cons '() '(1 5 10))}{(((() . 1) . 5) . 10)}
   \item \evalsto{(foldl \rvl{(lambda (x y) (cons y x))} '() '(1 5 10))}{(10 5 1)}
   \item \evalstop{(foldl list '() '(1 5 10))}{(((() 1) 5) 10)}
@@ -593,7 +593,8 @@
 
   \tt{(deep-fold }<х-дъно> <в-дъно> <операция>\tt)
 
-\pause
+  \pause
+  \onslide<+->
 
 \begin{semiverbatim}
 (define (deep-fold nv term op l)
@@ -603,22 +604,44 @@
                   \hstep{(deep-fold nv term op (cdr l))}))))
 \end{semiverbatim}
 
-\pause
-\nxt{
+  \onslide<+->
 \begin{semiverbatim}
 (define (count-atoms l) (deep-fold \rvl0 \rvl{(lambda (x) 1)} \rvl+ l))
 \end{semiverbatim}
-\nxt{
+  \onslide<+->
 \begin{semiverbatim}
 (define (flatten l) (deep-fold \rvl{'()} \rvl{list} \rvl{append} l))
 \end{semiverbatim}
-\nxt{
+  \onslide<+->
 \begin{semiverbatim}
 \onslide<14>{(define (rcons x l) (append l (list x)))}
 
 (define (deep-reverse l) (deep-fold \rvl{'()} \rvl{id} \rvl{rcons} l))
 \end{semiverbatim}
-}}}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Директна реализация на \tt{deep-fold}}
+
+  Как работи \tt{deep-fold}?
+  \pause
+  \begin{itemize}[<+->]
+  \item пуска себе си рекурсивно за всеки елемент на вложения списък
+  \item при достигане на вертикално дъно (атоми) прилага \tt{term}
+  \item и събира резултатите с \tt{op}
+  \end{itemize}
+  \onslide<+->
+  Можем да реализираме \tt{deep-fold} чрез \tt{map} и \tt{foldr}!
+  \onslide<+->
+\begin{semiverbatim}
+(define (branch p? f g) (lambda (x) (p? x) (f x) (g x)))
+(define (deep-fold nv term op l)
+  (foldr \hstep{op} \hzero{nv}
+   (map (branch atom?
+                \vzero{term}
+                \vstep{(lambda (l) (deep-fold nv term op l))})
+        l)))
+\end{semiverbatim}
 \end{frame}
 
 \section{Функции с произволен брой аргументи}
@@ -699,8 +722,9 @@
 
   \begin{itemize}[<+->]
   \item \evalstop{(eval (list '+ 5 7 a))}{14}
-  \item \evalstoerrp{(eval (list 'define 'b 5))}
-  \item \tt{(eval (list 'define ''b 5))} $\longleftrightarrow$ \tt{(define b 5)}
+  \item \evalstoerrp{(eval (list 'define b 5))}
+  \item \tt{(eval (list 'define 'b 5))} $\longleftrightarrow$ \tt{(define b 5)}
+  \item \evalsto{b}5
   \item {\small \evalstop{(eval (list 'if (list '< 2 5) (list 'quote 'a) 'b))}a}
   \item \tt{(define (apply f l) (eval (cons f l)))}
   \end{itemize}
