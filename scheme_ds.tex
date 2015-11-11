@@ -2,7 +2,7 @@
 \usepackage{fprog}
 
 \title{Структури от данни в Scheme}
-\subtitle{асоциативни списъци, матрици, дървета, графи}
+\subtitle{матрици, дървета, асоциативни списъци, графи}
 
 \date{11 ноември 2015 г.}
 
@@ -11,6 +11,122 @@
 \begin{frame}
   \titlepage
 \end{frame}
+
+\section{Матрици}
+
+\subsection{Представяне}
+
+\begin{frame}[fragile]
+  \frametitle{Представяне на матрици}
+  Можем да представим матрица като списък от списък от елементи:
+
+  \begin{columns}[t,onlytextwidth]
+    \begin{column}{0.5\textwidth}
+      \begin{equation*}
+        \left(
+          \begin{array}{ccc}
+            1 & 2 & 3\\
+            4 & 5 & 6
+          \end{array}
+        \right)
+      \end{equation*}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+
+      \tt{((1 2 3) (4 5 6))}
+    \end{column}
+  \end{columns}
+  \vspace{1em}
+  Проверка за коректност:
+  \pause
+\begin{verbatim}
+(define (all p? l) (foldr (lambda (x y) (and x y)) #t l))
+
+(define (matrix? m)
+  (and (list? m)
+       (not (null? (car m)))
+       (all list? m)
+       (all (lambda (row) (= (length row)
+                             (length (car m)))) m)))
+\end{verbatim}
+\end{frame}
+
+\subsection{Операции}
+
+\begin{frame}[fragile]
+  \frametitle{Базови операции}
+
+  Брой редове и стълбове
+  \pause
+  \onslide<+->
+\begin{semiverbatim}
+\alt<+->{(define get-rows length)}{(define (get-rows m) (length m))}
+(define (get-columns m) (length (car m)))
+\end{semiverbatim}
+  \onslide<+->
+  Намиране на първи ред и стълб
+  \onslide<+->
+\begin{semiverbatim}
+\alt<+->{(define get-first-row car)}{(define (get-first-row m) (car m))}
+(define (get-first-column m) (map car m))
+\end{semiverbatim}
+  \onslide<+->
+  Изтриване на първи ред и стълб
+  \onslide<+->
+\begin{semiverbatim}
+\alt<+->{(define del-first-row cdr)}{(define (del-first-row m) (cdr m))}
+(define (del-first-column m) (map cdr m))
+\end{semiverbatim}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Разширени операции}
+
+  Намиране на ред и стълб по индекс
+  \pause
+\begin{verbatim}
+(define (get-row i m) (list-ref m i))
+(define (get-column i m)
+  (map (lambda (row) (list-ref row i)) m))
+\end{verbatim}
+  \pause
+  Транспониране
+  \pause
+  \onslide<+->
+  \begin{overprint}
+\begin{semiverbatim}
+(define (transpose m)
+  (accumulate \rvl{cons} \rvl{'()} \rvl0 \rvl{(- (get-columns m) 1)}
+              \rvl{(lambda (i) (get-column i m))} \rvl{1+}))
+\end{semiverbatim}
+  \end{overprint}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Аритметични операции}
+
+  Събиране на матрици
+  \pause
+\begin{verbatim}
+(define (sum-vectors v1 v2) (map + v1 v2))
+(define (sum-matrices m1 m2) (map sum-vectors m1 m2))
+\end{verbatim}
+  \pause
+  \vspace{1em}
+  Умножение на матрици ($c_{i,j} = \vec a_i\cdot \vec b^T_j = \sum_{k=0}^n A_{i,k}B_{k,j}$)
+  \pause
+\begin{verbatim}
+(define (mult-vectors v1 v2) (apply + (map * v1 v2)))
+(define (mult-matrices m1 m2)
+  (let ((m2t (transpose m2)))
+       (map (lambda (row)
+              (map (lambda (column) (mult-vectors row column))
+                   m2t))
+            m1)))
+\end{verbatim}
+\end{frame}
+
 
 \section{Абстракция със структури от данни}
 
@@ -49,10 +165,9 @@
     \end{itemize}
   \item Аритметични операции:
     \begin{itemize}[<.->]
-    \item събиране
-    \item изваждане
-    \item умножение
-    \item деление
+    \item събиране, изваждане
+    \item умножение, деление
+    \item сравнение
     \end{itemize}
   \item Приложни програми
   \end{itemize}
@@ -174,7 +289,7 @@
   \frametitle{Програми с рационални числа}
 
   \begin{equation*}
-    \sum_{i=0}^n \frac{i^n}{i!}
+    \sum_{i=0}^n \frac{x^i}{i!}
   \end{equation*}
 
   \onslide<+->
@@ -183,7 +298,7 @@
 \begin{semiverbatim}
 (define (my-exp x n)
   (accumulate \rvl{+rat} \rvl{(make-rat 0 1)} 0 n
-              \rvl{(lambda (i) (make-rat (expt x i) (fact i)))} 1+))
+              \rvl{(lambda (i) (make-rat (pow x i) (fact i)))} 1+))
 \end{semiverbatim}
   \end{overprint}
 \end{frame}
@@ -191,10 +306,10 @@
 \begin{frame}[fragile]
   \frametitle{Нормализация}
 
-  \textbf{Проблем:} Числата стават много големи!\\[1em]
-  \textbf{Проблем:} \evalsto{(=rat (make-rat 1 2) (make-rat -1 -2))}{\#f}\\[1em]
+  \textbf{Проблем:} Числителят и знаменателят стават много големи!\\[1em]
+  \textbf{Проблем:} \evalsto{(<rat (make-rat 1 2) (make-rat 1 -2))}{\#t}\\[1em]
   \pause
-  \textbf{Идея:} Да работим с \emph{нормализирани} дроби
+  \textbf{Идея:} Да работим с \emph{нормализирани} дроби $\frac p q$, където $p \in \mathbb Z, q \in \mathbb N^+$ и $gcd(p,q) = 1$.
   \pause
 \begin{verbatim}
 (define (make-rat n d)
@@ -265,115 +380,94 @@
 \end{verbatim}
 \end{frame}
 
-\section{Матрици}
-
-\subsection{Представяне}
+\subsection{Капсулация}
 
 \begin{frame}[fragile]
-  \frametitle{Представяне на матрици}
-  Можем да представим матрица като списък от списък от елементи:
-
-  \begin{columns}[t,onlytextwidth]
-    \begin{column}{0.5\textwidth}
-      \begin{equation*}
-        \left(
-          \begin{array}{ccc}
-            1 & 2 & 3\\
-            4 & 5 & 6
-          \end{array}
-        \right)
-      \end{equation*}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-
-      \tt{((1 2 3) (4 5 6))}
-    \end{column}
-  \end{columns}
-  \vspace{1em}
-  Проверка за коректност:
+  \frametitle{Капсулация на базови операции}
+  \textbf{Проблем:} операциите над СД са видими глобално\\[1em]
   \pause
-\begin{verbatim}
-(define (all p? l) (foldr (lambda (x y) (and x y)) #t l))
-
-(define (matrix? m)
-  (and (list? m)
-       (not (null? (car m)))
-       (all list? m)
-       (all (lambda (row) (= (length row)
-                             (length (car m)))) m)))
-\end{verbatim}
-\end{frame}
-
-\subsection{Операции}
-
-\begin{frame}[fragile]
-  \frametitle{Базови операции}
-
-  Брой редове и стълбове
+  \textbf{Идея:} да ги направим ``private''
   \pause
-  \onslide<+->
 \begin{semiverbatim}
-\alt<+->{(define get-rows length)}{(define (get-rows m) (length m))}
-(define (get-columns m) (length (car m)))
+(define (make-rat n d)
+  (lambda (prop)
+    (case prop
+      ('get-numer n)
+      ('get-denom d)
+      ('print (cons n d)))))
 \end{semiverbatim}
-  \onslide<+->
-  Намиране на първи ред и стълб
-  \onslide<+->
-\begin{semiverbatim}
-\alt<+->{(define get-first-row car)}{(define (get-first-row m) (car m))}
-(define (get-first-column m) (map car m))
-\end{semiverbatim}
-  \onslide<+->
-  Изтриване на първи ред и стълб
-  \onslide<+->
-\begin{semiverbatim}
-\alt<+->{(define del-first-row cdr)}{(define (del-first-row m) (cdr m))}
-(define (del-first-column m) (map cdr m))
-\end{semiverbatim}
+  \pause
+  \begin{itemize}
+  \item \tt{(define r (make-rat 3 5))}
+  \item \evalsto{(r 'get-numer)}3
+  \item \evalsto{(r 'get-denom)}5
+  \item \evalsto{(r 'print)}{(3 . 5)}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Разширени операции}
-
-  Намиране на ред и стълб по индекс
+  \frametitle{Нормализация при капсулация}
+\begin{semiverbatim}
+(define (make-rat n d)
+  \alert{(let* ((g (gcd n d))
+         (numer (quotient n g))
+         (denom (quotient d g)))}
+   (lambda (prop)
+    (case prop
+      ('get-numer numer)
+      ('get-denom denom)
+      ('print (cons numer denom))))))
+\end{semiverbatim}
   \pause
-\begin{verbatim}
-(define (get-row i m) (list-ref m i))
-(define (get-column i m)
-  (map (lambda (row) (list-ref row i)) m))
-\end{verbatim}
-  \pause
-  Транспониране
-  \pause
-\begin{verbatim}
-(define (transpose m)
-  (accumulate cons '() 0 (- (get-columns m) 1)
-              (lambda (i) (get-column i m)) 1+))
-\end{verbatim}
+  \begin{itemize}
+  \item \tt{(define r (make-rat 4 6))}
+  \item \evalsto{(r 'print)}{(2 . 3)}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Аритметични операции}
+  \frametitle{Капсулация на операции с аргументи}
+\small
+\begin{semiverbatim}
+(define (make-rat n d)
+  (let* ((g (gcd n d))
+         (numer (quotient n g))
+         (denom (quotient d g)))
+   (lambda (prop . params)
+     (case prop
+       ('get-numer numer)
+       ('get-denom denom)
+       ('print (cons numer denom))
+       \alert{('* (let ((r (car params)))
+            (make-rat (* numer (r 'get-numer))
+                      (* denom (r 'get-denom)))))}))))
+\end{semiverbatim}
+  \pause
+  \begin{itemize}
+  \item \tt{(define r1 (make-rat 3 5))}
+  \item \tt{(define r2 (make-rat 5 2))}
+  \item \evalsto{((r1 '* r2) 'print)}{(3 . 2)}
+  \end{itemize}
+\end{frame}
 
-  Събиране на матрици
-  \pause
-\begin{verbatim}
-(define (sum-vectors v1 v2) (map + v1 v2))
-(define (sum-matrices m1 m2) (map sum-vectors m1 m2))
-\end{verbatim}
-  \pause
-  \vspace{1em}
-  Умножение на матрици ($c_{i,j} = \vec a_i\cdot \vec b^T_j = \sum_{k=0}^n A_{i,k}B_{k,j}$)
-  \pause
-\begin{verbatim}
-(define (mult-vectors v1 v2) (apply + (map * v1 v2)))
-(define (mult-matrices m1 m2)
-  (let ((m2t (transpose m2)))
-       (map (lambda (row)
-              (map (lambda (column) (mult-vectors row column))
-                   m2t)
-            m1))))
-\end{verbatim}
+\begin{frame}[fragile]
+  \frametitle{Извикване на собствени операции}
+\small
+\begin{semiverbatim}
+(define (make-rat n d)
+  (let* ((g (gcd n d))
+         (numer (quotient n g))
+         (denom (quotient d g)))
+   \alert{(define (self prop . params)}
+     (case prop
+       ('get-numer numer)
+       ('get-denom denom)
+       ('print (cons numer denom))
+       ('* (let ((r (car params)))
+            (make-rat (* \alert{(self 'get-numer)} (r 'get-numer))
+                      (* \alert{(self 'get-denom)} (r 'get-denom)))))))
+   \alert{self}))
+\end{semiverbatim}
 \end{frame}
 
 \section{Двоични дървета}
