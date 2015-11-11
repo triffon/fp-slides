@@ -2,7 +2,7 @@
 \usepackage{fprog}
 
 \title{Структури от данни в Scheme}
-\subtitle{асоциативни списъи, матрици, дървета, графи}
+\subtitle{асоциативни списъци, матрици, дървета, графи}
 
 \date{11 ноември 2015 г.}
 
@@ -18,9 +18,9 @@
 
 \begin{frame}[<+->]
   \frametitle{Абстракция със структури от данни}
-  
+
   \begin{definition}[Абстракция]
-    Принцип за разделянето (``абстрахирането'') на \emph{представянето} на дадена структура от данни(СД) от нейното \emph{използване}. 
+    Принцип за разделянето (``абстрахирането'') на \emph{представянето} на дадена структура от данни(СД) от нейното \emph{използване}.
   \end{definition}
   \begin{itemize}
   \item основен принцип на обектно-ориентираното програмиране
@@ -93,7 +93,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Рационални числа}
-  
+
   Физическо представяне\\[1em]
   \begin{center}
     \begin{tabular}{cc}
@@ -172,7 +172,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Програми с рационални числа}
-  
+
   \begin{equation*}
     \sum_{i=0}^n \frac{i^n}{i!}
   \end{equation*}
@@ -190,7 +190,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Нормализация}
-  
+
   \textbf{Проблем:} Числата стават много големи!\\[1em]
   \textbf{Проблем:} \evalsto{(=rat (make-rat 1 2) (make-rat -1 -2))}{\#f}\\[1em]
   \pause
@@ -213,7 +213,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Сигнатура}
-  
+
   \textbf{Проблем:} Не можем да различим СД с еднакви представяния! (рационално число, комплексно число, точка в равнината)\\
   \pause
   \textbf{Идея:} Да добавим ``етикет'' на обекта
@@ -244,7 +244,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Проверка за коректност}
-  
+
   Вече можем да проверим дали даден обект е рационално число:
 \begin{verbatim}
 (define (rat? p)
@@ -284,7 +284,7 @@
       \end{equation*}
     \end{column}
     \begin{column}{0.5\textwidth}
-      
+
       \tt{((1 2 3) (4 5 6))}
     \end{column}
   \end{columns}
@@ -307,7 +307,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Базови операции}
-  
+
   Брой редове и стълбове
   \pause
   \onslide<+->
@@ -333,7 +333,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Разширени операции}
-  
+
   Намиране на ред и стълб по индекс
   \pause
 \begin{verbatim}
@@ -415,7 +415,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Базови операции}
-  
+
   Проверка за коректност:
   \pause
 \begin{verbatim}
@@ -445,7 +445,7 @@
 
 \begin{frame}[fragile,fragile,fragile]
   \frametitle{Разширени операции}
-  
+
   Дълбочина на дърво:
   \pause
 \begin{verbatim}
@@ -468,7 +468,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Търсене на път в двоично дърво}
-  
+
   \textbf{Задача:} Да се намери в дървото път от корена до даден възел \tt x.
   \pause
 \begin{verbatim}
@@ -487,7 +487,100 @@
 
 \subsection{Дефиниция}
 
+\begin{frame}
+  \frametitle{Асоциативни списъци}
+  \begin{definition}
+    Асоциативните списъци (още: речник, хеш, map) са списъци от точкови двойки \tt(<ключ> \tt. <стойност>\tt). <ключ> и <стойност> може да са произволни S-изрази.
+  \end{definition}
+  \vspace{1em}
+  \tt{((}$K_1$ \tt. $V_1$\tt) \tt($K_1$ \tt. $V_2$\tt) \ldots \tt($K_n$ \tt. $V_n$\tt{))}\\[1em]
+  \begin{tabular}{*2{cc@{}c@{}}@{\hskip 1ex}cc@{}cc}
+    \cline{1-2}\cline{4-5}\cline{9-10}
+    \nextcell&\nextcell&\ldots&$\nextarrow$&\nilcell\\
+    \cline{1-2}\cline{4-5}\cline{9-10}
+    \bda&&&\bda&&&&&\bda\\
+    \cline{1-2}\cline{4-5}\cline{9-10}
+    \pointcell&&\pointcell&&&&\pointcell\\
+    \cline{1-2}\cline{4-5}\cline{9-10}
+    \bda&\bda&&\bda&\bda&&&&\bda&\bda\\
+    \fbox{$K_1$}&\fbox{$V_1$}&&\fbox{$K_2$}&\fbox{$V_2$}&&&&\fbox{$K_n$}&\fbox{$V_n$}
+  \end{tabular}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Примери за асоциативни списъци}
+
+  \begin{itemize}[<+->]
+  \item \tt{((1 . 2) (2 . 3) (3 . 4))}
+  \item \tt{((a . 10) (b . 12) (c . 18))}
+  \item \tt{((l1 1 8) (l2 10 1 2) (l3))}
+  \item \tt{((al1 (1 . 2) (2 . 3)) (al2 (b)) (al3 (a . b) (c . d)))}
+  \end{itemize}
+  \vspace{1em}
+  \onslide<+->
+  Създаване на асоциатвен списък по списък от ключове и функция:
+\begin{verbatim}
+(define (make-alist f keys)
+  (map (lambda (x) (cons x (f x))) l))
+\end{verbatim}
+\end{frame}
+
 \subsection{Операции}
+
+\begin{frame}[fragile]
+  \frametitle{Операции над асоциативни списъци}
+
+  \begin{itemize}[<+->]
+  \item \tt{(define (keys alist) (map car alist))}
+  \item \tt{(define (values alist) (map cdr alist))}
+  \item \tta{(assoc }<ключ> <асоциативен-списък>\tta)
+    \begin{itemize}
+    \item Ако <ключ> се среща сред ключовете на <асоциативен-списък>,
+      връща първата двойка \tt(<ключ> \tt. <стойност>\tt)
+    \item Ако <ключ> не се среща сред ключовете, връща \tt{\#f}
+    \item Сравнението се извършва с \tt{equal?}
+    \end{itemize}
+  \item \tta{(assqv }<ключ> <асоциативен-списък>\tta)
+    \begin{itemize}
+    \item също като \tt{assoc}, но сравнява с \tt{eqv?}
+    \end{itemize}
+  \item \tta{(assq }<ключ> <асоциативен-списък>\tta)
+    \begin{itemize}
+    \item също като \tt{assoc}, но сравнява с \tt{eq?}
+    \end{itemize}
+  \item Изтриване на ключ и съответната му стойност:\\
+    \onslide<+->
+\begin{verbatim}
+(define (del-key-value key alist)
+  (filter (lambda (kv) (not (eq? (car kv) key))) alist))
+\end{verbatim}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,fragile,fragile]
+  \frametitle{Задаване на стойност за ключ}
+\small
+  \textbf{Вариант №1 (грозен и бърз):}
+\begin{verbatim}
+(define (add-key-value key value alist)
+   (let ((new-kv (cons key value)))
+        (cond ((null? alist) (list new-kv))
+              ((eq? (caar alist) key)
+               (cons new-kv (cdr alist)))
+              (else (cons (car alist)
+                    (add-key-value key value (cdr alist))))))
+\end{verbatim}
+  \pause
+  \textbf{Вариант №2 (красив и бавен):}
+\begin{verbatim}
+(define (add-key-value key value alist)
+  (let ((new-kv (cons key value)))
+       (if (assq key alist)
+           (map (lambda (kv) (if (eq? (car kv) key)
+                                 new-kv kv)) alist)
+           (cons new-kv alist))))
+\end{verbatim}
+\end{frame}
 
 \section{Графи}
 
