@@ -562,7 +562,6 @@
                   (member-tree x (right-tree t))))))
 \end{verbatim}
 \end{frame}
-\end{document}
 
 \begin{frame}[fragile]
   \frametitle{Търсене на път в двоично дърво}
@@ -616,6 +615,7 @@
   \end{itemize}
   \vspace{1em}
   \onslide<+->
+  \textbf{Пример. }
   Създаване на асоциатвен списък по списък от ключове и функция:
 \begin{verbatim}
 (define (make-alist f keys)
@@ -661,7 +661,7 @@
 \begin{frame}[fragile,fragile,fragile]
   \frametitle{Задаване на стойност за ключ}
 \small
-  \textbf{Вариант №1 (грозен и бърз):}
+  \textbf{Вариант №1 (грозен и по-бърз):}
 \begin{verbatim}
 (define (add-key-value key value alist)
    (let ((new-kv (cons key value)))
@@ -672,7 +672,7 @@
                     (add-key-value key value (cdr alist))))))
 \end{verbatim}
   \pause
-  \textbf{Вариант №2 (красив и бавен):}
+  \textbf{Вариант №2 (красив и по-бавен):}
 \begin{verbatim}
 (define (add-key-value key value alist)
   (let ((new-kv (cons key value)))
@@ -685,9 +685,119 @@
 
 \section{Графи}
 
+\usetikzlibrary{graphs,arrows.meta}
+
 \subsection{Представяне}
 
-\subsection{Операции}
+\begin{frame}[fragile]
+  \frametitle{Представяне на графи чрез асоциативни списъци}
+  \begin{columns}[t,onlytextwidth]
+    \begin{column}{0.7\textwidth}
+      \begin{center}
+        \begin{tikzpicture}[>=LaTeX,every node/.style={draw,circle,fill=diagramblue},scale=1.2]
+          \node (1) at (1,2)     {1};
+          \node (2) at (3,2.2)   {2};
+          \node (3) at (2,1)     {3};
+          \node (4) at (0.8,0.2) {4};
+          \node (5) at (2.5,0)   {5};
+          \node (6) at (3.5,1.2)   {6};
+          \graph {
+            (1) -> {(2), (3)};
+            (2) -> {(3), (6)};
+            (3) -> {(4), (6)};
+            (4) -> {(1), (5)};
+            (5) -> (3);
+            (6) -> (5);
+          };
+        \end{tikzpicture}
+      \end{center}
+    \end{column}
+    \begin{column}{0.3\textwidth}
+\begin{semiverbatim}
+\alt<2>{((1 2 3))
+ (2 3 6))
+ (3 4 6))
+ (4 1 5))
+ (5 3))
+ (6 5)))}{((1 . (2 3))
+ (2 . (3 6))
+ (3 . (4 6))
+ (4 . (1 5))
+ (5 . (3))
+ (6 . (5)))}
+ \end{semiverbatim}
+    \end{column}
+  \end{columns}
+  \vspace{1em}
+  Асоциативен списък, в който \alert{ключовете} са върховете, а \alert{стойностите} са списъци от техните наследници.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Абстракция за граф}
+  Абстракция чрез капсулация
+  \small
+\begin{semiverbatim}
+(define (make-graph g)
+  (define (self prop . params)
+    (case prop
+      ('print g)
+      ('vertices (map car g))
+      ('successors (let ((v (car params)))
+                     (cdr (assq v g))))             ;; \alert{\([s|s\leftarrow{}n]\)}
+      ('edge? (let ((u (car params)) (v (cadr params)))
+                (memq v (self 'successors u))))     ;; \alert{\(u\stackrel?\rightarrow{}v\)}
+      ('map-successors (let ((v (car params))
+                             (f (cadr params)))     ;; \alert{\(\forall{}s\leftarrow{}n\)}
+                         (map f (self 'successors v))))
+      ('exists-successor (let ((v (car params))
+                               (f (cadr params)))  ;; \alert{\(\exists{}s\leftarrow{}n\)}
+                           (exists f (self 'successors v))))))
+  self)
+\end{semiverbatim}
+\end{frame}
+
+\subsection{Задачи}
+
+\begin{frame}[fragile]
+  \frametitle{Локални задачи}
+  \small
+  \textbf{Задача. }Да се намерят върховете, които нямат наследници.\\
+  \pause
+  \textbf{Решение. }\tt{childless(g)} $ = \{v | \nexists u \leftarrow v \}$
+  \pause
+\begin{verbatim}
+(define (childless g)
+  (filter (lambda (v) (null? (g 'successors v))) (g 'vertices)))
+\end{verbatim}
+  \pause
+  \vspace{1em}
+  \textbf{Задача. }Да се намерят предшествениците на даден връх.\\
+  \pause
+  \textbf{Решение. }\tt{predecessors(v,g)} $ = \{u | u \leftarrow v \}$
+  \pause
+\begin{verbatim}
+(define (predecessors v g)
+  (filter (lambda (u) (g 'edge? u v)) (g 'vertices)))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Проверка за симетричност}
+  \textbf{Задача. }Да се провери дали граф е симетричен.\\
+  \pause
+  \textbf{Решение. }\tt{symmetric?(g)} $ = \forall u\forall v\leftarrow u: v\rightarrow u$
+  \pause
+\begin{semiverbatim}
+(define (forall f l)
+  (not (exists (lambda (x) (not (f x))) l)))\pause
+
+(define (symmetric? g)
+  (forall (lambda (u)
+            (forall (lambda (v) (g 'edge? v u))
+                    (g 'successors u)))
+            (g 'vertices)))
+\end{semiverbatim}
+\end{frame}
 
 \subsection{Търсене в дълбочина}
 
