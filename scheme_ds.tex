@@ -687,6 +687,24 @@
 
 \usetikzlibrary{graphs,arrows.meta}
 
+\newcommand{\samplegraph}{%
+\begin{tikzpicture}[>=LaTeX,every node/.style={draw,circle,fill=diagramblue},scale=1.2]
+  \node (1) at (1,2)     {1};
+  \node (2) at (3,2.2)   {2};
+  \node (3) at (2,1)     {3};
+  \node (4) at (0.8,0.2) {4};
+  \node (5) at (2.5,0)   {5};
+  \node (6) at (3.5,1.2)   {6};
+  \graph {
+    (1) -> {(2), (3)};
+    (2) -> {(3), (6)};
+    (3) -> {(4), (6)};
+    (4) -> {(1), (5)};
+    (5) -> (3);
+    (6) -> (5);
+  };
+\end{tikzpicture}}
+
 \subsection{Представяне}
 
 \begin{frame}[fragile]
@@ -694,22 +712,7 @@
   \begin{columns}[t,onlytextwidth]
     \begin{column}{0.7\textwidth}
       \begin{center}
-        \begin{tikzpicture}[>=LaTeX,every node/.style={draw,circle,fill=diagramblue},scale=1.2]
-          \node (1) at (1,2)     {1};
-          \node (2) at (3,2.2)   {2};
-          \node (3) at (2,1)     {3};
-          \node (4) at (0.8,0.2) {4};
-          \node (5) at (2.5,0)   {5};
-          \node (6) at (3.5,1.2)   {6};
-          \graph {
-            (1) -> {(2), (3)};
-            (2) -> {(3), (6)};
-            (3) -> {(4), (6)};
-            (4) -> {(1), (5)};
-            (5) -> (3);
-            (6) -> (5);
-          };
-        \end{tikzpicture}
+        \samplegraph
       \end{center}
     \end{column}
     \begin{column}{0.3\textwidth}
@@ -742,16 +745,16 @@
     (case prop
       ('print g)
       ('vertices (map car g))
-      ('successors (let ((v (car params)))
-                     (cdr (assq v g))))             ;; \alert{\([s|s\leftarrow{}n]\)}
+      ('children (let ((v (car params)))
+                   (cdr (assq v g))))             ;; \alert{\([s|s\leftarrow{}n]\)}
       ('edge? (let ((u (car params)) (v (cadr params)))
-                (memq v (self 'successors u))))     ;; \alert{\(u\stackrel?\rightarrow{}v\)}
-      ('map-successors (let ((v (car params))
-                             (f (cadr params)))     ;; \alert{\(\forall{}s\leftarrow{}n\)}
-                         (map f (self 'successors v))))
-      ('exists-successor (let ((v (car params))
-                               (f (cadr params)))  ;; \alert{\(\exists{}s\leftarrow{}n\)}
-                           (exists f (self 'successors v))))))
+                (memq v (self 'children u))))     ;; \alert{\(u\stackrel?\rightarrow{}v\)}
+      ('map-children (let ((v (car params))
+                           (f (cadr params)))     ;; \alert{\(\forall{}s\leftarrow{}n\)}
+                       (map f (self 'children v))))
+      ('search-child (let ((v (car params))
+                           (f (cadr params)))     ;; \alert{\(\exists{}s\leftarrow{}n\)}
+                       (search f (self 'children v))))))
   self)
 \end{semiverbatim}
 \end{frame}
@@ -767,16 +770,16 @@
   \pause
 \begin{verbatim}
 (define (childless g)
-  (filter (lambda (v) (null? (g 'successors v))) (g 'vertices)))
+  (filter (lambda (v) (null? (g 'children v))) (g 'vertices)))
 \end{verbatim}
   \pause
   \vspace{1em}
   \textbf{Задача. }Да се намерят предшествениците на даден връх.\\
   \pause
-  \textbf{Решение. }\tt{predecessors(v,g)} $ = \{u | u \leftarrow v \}$
+  \textbf{Решение. }\tt{parents(v,g)} $ = \{u | u \leftarrow v \}$
   \pause
 \begin{verbatim}
-(define (predecessors v g)
+(define (parents v g)
   (filter (lambda (u) (g 'edge? u v)) (g 'vertices)))
 \end{verbatim}
 \end{frame}
@@ -789,17 +792,80 @@
   \pause
 \begin{semiverbatim}
 (define (forall f l)
-  (not (exists (lambda (x) (not (f x))) l)))\pause
+  (not (search (lambda (x) (not (f x))) l)))\pause
 
 (define (symmetric? g)
   (forall (lambda (u)
             (forall (lambda (v) (g 'edge? v u))
-                    (g 'successors u)))
+                    (g 'children u)))
             (g 'vertices)))
 \end{semiverbatim}
 \end{frame}
 
-\subsection{Търсене в дълбочина}
+\subsection{Обхождане в дълбочина}
+
+\begin{frame}[fragile]
+\frametitle{Схема на обхождане в дълбочина}  
+  Обхождане на връх \tt v:
+  \begin{itemize}
+  \item Обходи последователно всички наследници на \tt v
+  \end{itemize}
+  \pause
+\begin{verbatim}
+(define (dfs u g)
+  (<функция-за-обработка> (lambda (v) (<действие> (dfs v g)))
+                          (g 'children u)))
+\end{verbatim}
+  \pause
+  \begin{itemize}[<+->]
+  \item \alert{Имаме ли дъно?}
+    \begin{itemize}
+    \item Да:  при празен списък от наследници няма рекурсивно извикване!
+    \end{itemize}
+  \item \alert{Какво се случва ако графът е цикличен?}
+    \begin{itemize}
+    \item Програмата също зацикля!
+    \item Как да се справим с този проблем?
+    \item Трябва да помним през кои върхове сме минали!
+    \item Два варианта:
+      \begin{enumerate}
+      \item да помним всички обходени до момента върхове
+      \item<+- | alert@+(1)> да помним текущия път
+      \end{enumerate}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[t,fragile]
+  \frametitle{Търсене на път в дълбочина}
+  \textbf{Задача.} Да се намери път от \tt u до \tt v, ако такъв има.\\
+  \pause\onslide<+->
+  \textbf{Решение.} Има път от \tt u до \tt v, ако:
+  \begin{itemize}
+  \item \tt u = \tt v, или
+  \item има път от някое от децата на \tt u до \tt v
+  \end{itemize}
+  \onslide<+->
+    \small
+    \begin{overlayarea}{\textwidth}{10em}
+\begin{semiverbatim}
+\alt<6->{(define (dfs-path u v g)
+  (define (dfs-path-search path)
+    (cond ((eq? (car path) to) (reverse path))
+          ((memq (car path) (cdr path)) #f)
+          (else (g 'search-child (car path)
+                  (lambda (c) (dfs-path-search (cons c path)))))))
+  (dfs-path-search (list from)))}{(define (dfs-path u v g)
+  (if (eq? u v) (list u)
+      (g 'search-child u (lambda (c)
+                           (cons#f u (dfs-path c v g))))))}
+\end{semiverbatim}
+    \end{overlayarea}
+    \onslide<+->
+    \alert{Рекурсивно решение, работи само за ацикличен граф!}\\
+    \onslide<+->
+    Итеративното решение ни позволява да запазим пътя намерен до момента.
+\end{frame}
 
 \subsection{Търсене в ширина}
 
