@@ -75,6 +75,7 @@
   \frametitle{Потоци в Scheme}
   \begin{definition}[Поток]
     Списък, чиито елементи се изчисляват отложено. \\
+    \pause
     По-точно: Поток е празен списък \tt{()} или точкова двойка \tt{(h . t)}, където
       \begin{itemize}
       \item \tt h --- е S-израз (глава на потока)
@@ -117,14 +118,14 @@
   \item \tt{define-syntax} има и други, по-сложни форми
   \item Повечето специални форми на Scheme могат да се дефинират с \tt{define-syntax}
   \end{itemize}
-  \pause
+  \onslide<+->
   Примери:
-  \pause
+  \onslide<+->
 \begin{verbatim}
 (define-syntax delay
   (syntax-rules () ((delay x) (lambda () x))))
 \end{verbatim}
-  \pause
+  \onslide<+->
 \begin{verbatim}
 (define-syntax cons-stream
   (syntax-rules () ((cons-stream h t) (cons h (delay t)))))
@@ -157,6 +158,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Приложение на потоци}
+  \small
   \textbf{Задача.} Да се намери първият елемент на поток с дадено свойство.\\
   \pause
   \textbf{Решение.}
@@ -173,9 +175,10 @@
 \begin{verbatim}
 (define (prime-5? n) (and (prime? n)
                           (= (remainder (sum-digits n) 5) 0)))
-(define second-prime-5 (search-stream prime-5?
-                         (tail (search-stream prime-5?
-                           (enum 10000 100000)))))
+(define second-prime-5
+  (head (search-stream prime-5?
+          (tail (search-stream prime-5?
+                  (enum 10000 100000)))))
 \end{verbatim}
 \end{frame}
 
@@ -274,7 +277,7 @@
   \item Започваме със списък от последователни цели числа
   \item Докато не стигнем до края на списъка, повтаряме:
     \begin{itemize}
-    \item Намираме първото незадраскано число $p$, то е просто
+    \item Намираме следващото незадраскано число $p$, то е просто
     \item Задраскваме всички следващи числа, които се делят на $p$
     \end{itemize}
   \end{itemize}
