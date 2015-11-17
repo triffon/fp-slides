@@ -1,0 +1,296 @@
+\documentclass{beamer}
+\usepackage{fprog}
+
+\title{Потоци}
+
+\date{18 ноември 2015 г.}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Отложени операции}
+
+\begin{frame}
+  \frametitle{Отложени операции}
+  \begin{itemize}[<+->]
+  \item Има случаи на тежки операции, които могат да отнемат много време за изпълнение
+  \item Удобно е да имаме механизъм да \alert{подготвяме} операциите и да ги \alert{изпълняваме} само при нужда
+  \end{itemize}
+  \onslide<+->
+  \begin{definition}[Обещание]
+    Функция, която ще изчисли и върне някаква стойност в бъдещ момент от изпълнението на програмата.
+    \onslide<+->
+    Нарича се още \emph{promise} и \emph{отложена операция}.
+  \end{definition}
+  \onslide<+->
+  Изчислението на дадено обещание може да стане
+  \begin{itemize}[<+->]
+  \item паралелно с изпълнението на основната програма \textbf{(асинхронно)}
+  \item при поискване от основната програма \textbf{(синхронно)}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Примитивни операции \tt{force} и \tt{delay}}
+  \begin{itemize}[<+->]
+  \item \tta{(delay }<израз>\tta)
+  \item връща \alert{обещание} за оценяването на <израз> \visible<5->{\alert{(специална форма)}}
+  \item \tta{(force }<обещание>\tta)
+  \item форсира изчислението на <обещание> и връща оценката на <израз> \visible<5->{\alert{(примитивна функция)}}
+    \pause
+  \item Примери:
+    \begin{itemize}
+    \item \tt{(define bigpromise (delay (fact 30000)))}
+    \item \tt{(force bigpromise)}$\;\xrightarrow{\hspace*{3cm}}\;$\tt{2759537246...}
+    \item \tt{(define error (delay (car '())))}
+    \item \evalstoerr{(force error)}
+    \item \tt{(define undefined (delay (+ a 3)))}
+    \item \tt{(define a 5)}
+    \item \evalstop{(force undefined)}8
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{All you need is $\lambda$ --- \tt{force} и \tt{delay}}
+  \begin{itemize}
+  \item \tt{(delay }<израз>\tt) $\leftrightarrow$ \tt{(lambda () <израз>)}
+  \item \tt{(force }<обещание>\tt) $\leftrightarrow$ \tt{(<обещание>)}\pause
+  \item \alert{Не съвсем!} \pause
+    \begin{itemize}[<.->]
+    \item \tt{(define bigpromise (delay (fact 30000)))}
+    \item \tt{(force bigpromise)}$\;\xrightarrow{\hspace*{3cm}}\;$\tt{2759537246...}
+    \item \tt{(force bigpromise)}$\;\rightarrow\;$\tt{2759537246...} \pause
+    \item Обещанията в Scheme имат страничен ефект: ``мемоизират'' вече изчислената стойност
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section{Потоци}
+
+\begin{frame}
+  \frametitle{Потоци в Scheme}
+  \begin{definition}[Поток]
+    Списък, чиито елементи се изчисляват отложено. \\
+    По-точно: Поток е празен списък \tt{()} или точкова двойка \tt{(h . t)}, където
+      \begin{itemize}
+      \item \tt h --- е S-израз (глава на потока)
+      \item \tt t --- е \emph{обещание} за поток (опашка на потока)
+      \end{itemize}
+  \end{definition}
+  \pause
+  В R$^5$RS няма вградени примитиви за работа с поток, но можем да си ги дефинираме.
+  \pause
+  \begin{itemize}[<+->]
+  \item \tt{(define the-empty-stream '())}
+  \item \tt{(define (cons-stream h t) (cons h (delay t)))}
+  \item \tt{(define head car)}
+  \item \tt{(define (tail s) (force (cdr s)))}
+  \item \tt{(define empty-stream? null?)}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Примери}
+  \begin{itemize}[<+->]
+  \item \tt{(define s (cons-stream 1 (cons-stream 2 (cons-stream 3 the-empty-stream))))}
+  \item \evalsto{(head s)}1
+  \item \evalsto{(tail s)}{\#<promise>}
+  \item \evalsto{(head (tail s))}2
+  \item \evalsto{(head (tail (tail s)))}3
+  \item \evalstoerr{(define s2 (cons-stream 3 (cons-stream b the-empty-stream)))}
+  \item<+-| alert@+>Защо?
+  \item \tt{cons-stream} трябва да оценява \alert<.>{само първия си аргумент}!
+  \item \tt{cons-stream} трябва да е \alert<.>{специална форма}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Дефиниране на специални форми}
+  \begin{itemize}[<+->]
+  \item \tta{(define-syntax} <символ>\\
+    \hspace{5ex}\tta{(syntax-rules () }\{\tta(<шаблон> <тяло>\tta)\}\tta{))}
+  \item дефинира специална форма <символ> така, че всяко срещане на <шаблон> се замества с <тяло>
+  \item \tt{define-syntax} има и други, по-сложни форми
+  \item Повечето специални форми на Scheme могат да се дефинират с \tt{define-syntax}
+  \end{itemize}
+  \pause
+  Примери:
+  \pause
+\begin{verbatim}
+(define-syntax delay
+  (syntax-rules () ((delay x) (lambda () x))))
+\end{verbatim}
+  \pause
+\begin{verbatim}
+(define-syntax cons-stream
+  (syntax-rules () ((cons-stream h t) (cons h (delay t)))))
+\end{verbatim}
+\end{frame}
+
+\section{Операции над потоци}
+
+\begin{frame}[fragile]
+  \frametitle{Конструиране и деконструиране на потоци}
+
+  \textbf{Задача.} Да се построи поток от целите числа в интервала $[a; b]$.\\
+  \pause
+  \textbf{Решение:}
+\begin{verbatim}
+(define (enum a b)
+  (if (> a b) the-empty-stream
+      (cons-stream a (enum (+ a 1) b))))
+\end{verbatim}
+  \pause
+  \textbf{Задача.} Да се намерят първите n елемента на даден поток.\\
+  \pause
+  \textbf{Решение:}
+\begin{verbatim}
+(define (first n s)
+  (if (or (empty-stream? s) (= n 0)) '()
+      (cons (head s) (first (- n 1) (tail s)))))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Приложение на потоци}
+  \textbf{Задача.} Да се намери първият елемент на поток с дадено свойство.\\
+  \pause
+  \textbf{Решение.}
+\begin{verbatim}
+(define (search-stream p? s)
+  (cond ((empty-stream? s) #f)
+        ((p? (head s)) s)
+        (else (search-stream p? (tail s)))))
+\end{verbatim}
+  \pause
+  \textbf{Задача.} Да се намери второто по големина просто число след 10000 със сума на цифрите кратна на 5.\\
+  \pause
+  \textbf{Решение.}
+\begin{verbatim}
+(define (prime-5? n) (and (prime? n)
+                          (= (remainder (sum-digits n) 5) 0)))
+(define second-prime-5 (search-stream prime-5?
+                         (tail (search-stream prime-5?
+                           (enum 10000 100000)))))
+\end{verbatim}
+\end{frame}
+
+\section{Безкрайни потоци}
+
+\begin{frame}[fragile]
+  \frametitle{Безкрайни потоци}
+  Отлагането на операции позволява създаването на \alert{безкрайни потоци}!\\[1em]
+  \pause
+  Примери:
+\begin{verbatim}
+(define (from n) (cons-stream n (from (+ n 1))))
+(define nats (from 0))
+\end{verbatim}
+  \pause
+  \textbf{Задача.} Да се генерира потока от числата на Фибоначи.\\
+  \pause
+  \textbf{Решение:}
+\begin{verbatim}
+(define (generate-fibs a b)
+  (cons-stream a (generate-fibs b (+ a b))))
+(define fibs (generate-fibs 0 1))
+\end{verbatim}
+  \pause
+  \begin{itemize}
+  \item Функциите \tt{from} и \tt{generate-fibs} наричаме \alert{генератори}
+  \item Казваме, че потоците \tt{nats} и \tt{fibs} са \alert{индиректно дефинирани}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,fragile,fragile]
+  \frametitle{Функции от по-висок ред за потоци}
+  \textbf{Трансформиране (\tt{map})}
+\begin{verbatim}
+(define (map-stream f s) (cons-stream (f (head s))
+                           (map-stream f (tail s))))
+\end{verbatim}
+  \pause
+  \textbf{Филтриране (\tt{filter})}
+\begin{verbatim}
+(define (filter-stream p? s)
+  (if (p? (head s))
+    (cons-stream (head s) (filter-stream p? (tail s)))
+    (filter-stream p? (tail s))))
+\end{verbatim}
+  \pause
+  \textbf{Комбиниране (\tt{zip})}
+\begin{verbatim}
+(define (zip-streams op s1 s2)
+  (cons (op (head s1) (head s2))
+        (zip-streams (tail s1) (tail s2))))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile,fragile]
+  \frametitle{Директна дефиниция на потоци}
+  Можем да дефиниране на потоци с \alert{директна рекурсия}!
+  \pause
+\begin{verbatim}
+(define ones (cons-stream 1 ones))
+\end{verbatim}
+  \pause
+  Построяване на \tt{nats}:\hspace{4ex}
+  \begin{tabular}{*8c}
+    \multirow2*+ & 0 & 1 & 2 & 3 & 4 & 5 & \ldots\\
+                 & 1 & 1 & 1 & 1 & 1 & 1 & \ldots\\
+    \hline
+                 & 1 & 2 & 3 & 4 & 5 & 6 & \ldots
+  \end{tabular}\\
+  \pause
+\begin{semiverbatim}
+(define nats (cons-stream 0 \alt<5->{(zip-streams + ones nats)}{(map-stream 1+ nats)}))
+\end{semiverbatim}
+  \pause\pause
+  Построяване на \tt{fibs}:\hspace{4ex}
+  \begin{tabular}{*8c}
+    \multirow2*+ & 0 & 1 & 1 & 2 & 3 & 5 & \ldots\\
+                 & 1 & 1 & 2 & 3 & 5 & 8 & \ldots\\
+    \hline
+                 & 1 & 2 & 3 & 5 & 8 & 13 & \ldots
+  \end{tabular}
+  \pause
+\begin{semiverbatim}
+(define fibs (cons-stream 0
+               (cons-stream 1
+                 (zip-streams + fibs (tail fibs)))))
+\end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Решето на Ератостен}
+  \pause
+  Алгоритъм за намиране на прости числа
+  \pause
+  \begin{itemize}
+  \item Започваме със списък от последователни цели числа
+  \item Докато не стигнем до края на списъка, повтаряме:
+    \begin{itemize}
+    \item Намираме първото незадраскано число $p$, то е просто
+    \item Задраскваме всички следващи числа, които се делят на $p$
+    \end{itemize}
+  \end{itemize}
+  \pause
+  Ще реализираме решетото над потенциално безкраен поток от числа:
+  \pause
+\begin{semiverbatim}
+(define (notdivides d) (lambda (n) (> (remainder n d) 0)))\pause
+
+(define (sieve stream)
+  (cons-stream (head stream)
+               (sieve (filter-stream?
+                        (notdivides (head stream))
+                        (tail stream)))))\pause
+
+(define primes (sieve (from 2)))
+\end{semiverbatim}
+\end{frame}
+\end{document}
