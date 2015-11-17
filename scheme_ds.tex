@@ -824,8 +824,7 @@
     \end{itemize}
   \item \alert{Какво се случва ако графът е цикличен?}
     \begin{itemize}
-    \item Програмата също зацикля!
-    \item Как да се справим с този проблем?
+    \item Програмата също зацикля! Как да се справим с този проблем?
     \item Трябва да помним през кои върхове сме минали!
     \item Два варианта:
       \begin{enumerate}
@@ -868,5 +867,97 @@
 \end{frame}
 
 \subsection{Търсене в ширина}
+
+\begin{frame}[fragile]
+  \frametitle{Схема на обхождане в ширина}
+  
+  \begin{onlyenv}<1-2>
+    Обхождане, започващо от връх \tt u:
+    \begin{itemize}
+    \item Маркира се \tt u за обхождане на ниво 1
+    \item За всеки връх \tt v избран за обхождане на ниво $n$:
+      \begin{itemize}
+      \item Маркират се всички деца \tt s на \tt v за обхождане на
+        ниво $n+1$
+      \end{itemize}
+    \end{itemize}
+  \end{onlyenv}
+  \begin{visibleenv}<2->
+\begin{verbatim}
+(define (bfs u g)
+  (define (bfs-level l)
+    (if (null? l) <дъно>
+      (<действиe>
+        (bfs-level
+          (<функция-за-обработка> (lambda (v) (g 'children v))
+                                  l)))))
+  (bfs-level (list u)))
+\end{verbatim}
+  \end{visibleenv}
+  \begin{itemize}[<+(3)->]
+  \item \alert{Какво се случва ако графът е цикличен?}
+    \begin{itemize}
+    \item Програмата също зацикля! Как да се справим с този проблем?
+    \item Трябва да помним през кои върхове сме минали!
+    \item Нивото трябва да е \alert{списък от пътища}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Разширяване на пътища}
+  Удобно е пътищата да са представени като \alert{стек}
+  \begin{itemize}
+  \item последно посетеният възел е най-лесно достъпен
+  \end{itemize}
+  \pause
+  \begin{columns}[T]
+    \begin{column}{0.65\textwidth}
+      \evalsto{(extend '(2 1))}{((3 2 1) (6 2 1))}
+      \pause
+\begin{verbatim}
+(define (extend path)
+  (g 'map-children (car path)
+    (lambda (u) (cons u path))))
+\end{verbatim}
+      \pause
+      Трябва да филтрираме циклите:
+      \pause
+\begin{verbatim}
+(define (acyclic? path)
+  (not (memq (car path) (cdr path))))
+
+(define (extend-acyclic path)
+  (filter acyclic? (extend path))
+\end{verbatim}
+    \end{column}
+    \begin{column}{0.35\textwidth}
+      \onslide<2->
+      \samplegraph
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Търсене на път в ширина}
+  \textbf{Задача.} Да се намери \alert{най-краткия} път от \tt u до \tt v, ако такъв има.\\
+  \pause
+  \textbf{Решение.} Обхождаме в ширина от \tt u докато намерим ниво, което стига до \tt v.
+  \pause
+\begin{semiverbatim}
+(define (bfs-path u v g)
+  \textcolor{black!20}{(define (extend path) ...)
+  (define (extend-acyclic path) ...)}
+  (define (target-path path)
+    (and (eq? (car path) v) path))
+
+  (define (bfs-path-search paths)
+    (or (search target-path paths)
+        (bfs-path-search (apply append
+                           (map extend-acyclic paths)))))
+
+  (bfs-path-search (list (list u))))
+\end{semiverbatim}
+\end{frame}
 
 \end{document}
