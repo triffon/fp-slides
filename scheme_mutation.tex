@@ -42,8 +42,6 @@
     \item \evalsto{(sum 10)}{25}
     \end{itemize}
   \end{itemize}
-  \small
-  \onslide<+->
 \end{frame}
 
 \begin{frame}[fragile]
@@ -53,7 +51,7 @@
 (define (make-account sum)
   (lambda (amount)
     (if (< (+ amount sum) 0) "Insufficient funds"
-        (begin (set! sum (+ sum x)) sum))))
+        (begin (set! sum (+ sum amount)) sum))))
 \end{verbatim}
   \onslide<+->
   \begin{itemize}[<+->]
