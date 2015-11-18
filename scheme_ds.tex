@@ -658,7 +658,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile,fragile,fragile]
+\begin{frame}[fragile]
   \frametitle{Задаване на стойност за ключ}
 \small
   \textbf{Вариант №1 (грозен и по-бърз):}
@@ -680,6 +680,55 @@
            (map (lambda (kv) (if (eq? (car kv) key)
                                  new-kv kv)) alist)
            (cons new-kv alist))))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Задачи за съществуване}
+
+  \textbf{Задача.} Да се намери има ли елемент на l, който удовлетворява p.\\
+  \pause
+  \textbf{Формула:} $\exists x\in l: p(x)$\\
+  \pause
+  \textbf{Решение:}
+\begin{verbatim}
+(define (search p l)
+  (and (not (null? l))
+       (or (p (car l)) (search p (cdr l)))))
+\end{verbatim}
+  \pause
+  \alert{Важно свойство:} Ако \tt p връща ``свидетел'' на истинността на свойството $p$ (както например \tt{memq} или \tt{assq}), то \tt{search} също връща този ``свидетел''.\\
+  \pause
+  \textbf{Пример:}
+\begin{verbatim}
+(define (assq key al)
+  (search (lambda (kv) (and (eq? (car kv) key) kv)) al))
+\end{verbatim}
+  \pause
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Задачи за всяко}
+  \textbf{Задача.} Всеки елемент на l да се трансформира по дадено правило f.\\
+  \pause
+  \textbf{Формула:} $\{f(x)\,|\,x \in l \}$\\
+  \pause
+  \textbf{Решение:} \tt{(map f l)}\\[1em]
+  \pause
+  \textbf{Задача.} Да се изберат тези елементи от l, които удовлетворяват p.\\
+  \pause
+  \textbf{Формула:} $\{x\,|\,x \in l \wedge p(x) \}$\\
+  \pause
+  \textbf{Решение:} \tt{(filter p l)}\\[1em]
+  \pause
+  \textbf{Задача.} Да се провери дали всички елементи на l удовлетворяват p.\\
+  \pause
+  \textbf{Формула:} $\forall x\in l:\,p(x)$ \pause $\leftrightarrow \neg \exists x\in l:\,\neg p(x)$\\
+  \pause
+  \textbf{Решение:}
+\begin{verbatim}
+(define (forall p l)
+  (not (search (lambda (x) (not (p x))) l)))
 \end{verbatim}
 \end{frame}
 
@@ -717,12 +766,12 @@
     \end{column}
     \begin{column}{0.3\textwidth}
 \begin{semiverbatim}
-\alt<2>{((1 2 3))
- (2 3 6))
- (3 4 6))
- (4 1 5))
- (5 3))
- (6 5)))}{((1 . (2 3))
+\alt<2>{((1 2 3)
+ (2 3 6)
+ (3 4 6)
+ (4 1 5)
+ (5 3)
+ (6 5))}{((1 . (2 3))
  (2 . (3 6))
  (3 . (4 6))
  (4 . (1 5))
@@ -732,10 +781,10 @@
     \end{column}
   \end{columns}
   \vspace{1em}
-  Асоциативен списък, в който \alert{ключовете} са върховете, а \alert{стойностите} са списъци от техните наследници.
+  Асоциативен списък, в който \alert{ключовете} са върховете, а \alert{стойностите} са списъци от техните деца.
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<0>[fragile]
   \frametitle{Абстракция за граф}
   Абстракция чрез капсулация
   \small
@@ -759,28 +808,47 @@
 \end{semiverbatim}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Абстракция за граф}
+\begin{semiverbatim}
+(define (vertices g) (map car g))
+
+(define (children v g)             ;; \alert{\([u|u\leftarrow{}v]\)}
+  (cdr (assq v g))))
+
+(define (edge? u v g)              ;; \alert{\(u\stackrel?\rightarrow{}v\)}
+  (memq v (children u g)))
+
+(define (map-children v f g)       ;; \alert{\(\forall{}u\leftarrow{}v\)}
+  (map f (children v g)))
+
+(define (search-child v f g)       ;; \alert{\(\exists{}u\leftarrow{}v\)}
+  (search f (children v g)))
+\end{semiverbatim}
+\end{frame}
+
 \subsection{Задачи}
 
 \begin{frame}[fragile]
   \frametitle{Локални задачи}
   \small
-  \textbf{Задача. }Да се намерят върховете, които нямат наследници.\\
+  \textbf{Задача. }Да се намерят върховете, които нямат деца.\\
   \pause
   \textbf{Решение. }\tt{childless(g)} $ = \{v | \nexists u \leftarrow v \}$
   \pause
 \begin{verbatim}
 (define (childless g)
-  (filter (lambda (v) (null? (g 'children v))) (g 'vertices)))
+  (filter (lambda (v) (null? (children v g))) (vertices g)))
 \end{verbatim}
   \pause
   \vspace{1em}
-  \textbf{Задача. }Да се намерят предшествениците на даден връх.\\
+  \textbf{Задача. }Да се намерят родителите на даден връх.\\
   \pause
-  \textbf{Решение. }\tt{parents(v,g)} $ = \{u | u \leftarrow v \}$
+  \textbf{Решение. }\tt{parents(v, g)} $ = \{u | u \rightarrow v \}$
   \pause
 \begin{verbatim}
 (define (parents v g)
-  (filter (lambda (u) (g 'edge? u v)) (g 'vertices)))
+  (filter (lambda (u) (edge? u v g)) (vertices g)))
 \end{verbatim}
 \end{frame}
 
@@ -791,21 +859,18 @@
   \textbf{Решение. }\tt{symmetric?(g)} $ = \forall u\forall v\leftarrow u: v\rightarrow u$
   \pause
 \begin{semiverbatim}
-(define (forall f l)
-  (not (search (lambda (x) (not (f x))) l)))\pause
-
 (define (symmetric? g)
   (forall (lambda (u)
-            (forall (lambda (v) (g 'edge? v u))
-                    (g 'children u)))
-            (g 'vertices)))
+            (forall (lambda (v) (edge? v u g))
+                    (children u g)))
+            (vertices g)))
 \end{semiverbatim}
 \end{frame}
 
 \subsection{Обхождане в дълбочина}
 
 \begin{frame}[fragile]
-\frametitle{Схема на обхождане в дълбочина}  
+\frametitle{Схема на обхождане в дълбочина}
   Обхождане на връх \tt v:
   \begin{itemize}
   \item Обходи последователно всички наследници на \tt v
@@ -814,7 +879,7 @@
 \begin{verbatim}
 (define (dfs u g)
   (<функция-за-обработка> (lambda (v) (<действие> (dfs v g)))
-                          (g 'children u)))
+                          (children u g)))
 \end{verbatim}
   \pause
   \begin{itemize}[<+->]
@@ -842,35 +907,36 @@
   \textbf{Решение.} Има път от \tt u до \tt v, ако:
   \begin{itemize}
   \item \tt u = \tt v, или
-  \item има път от някое от децата на \tt u до \tt v
+  \item има дете \tt w $\leftarrow$ \tt u, така че има път от \tt w до \tt v
   \end{itemize}
   \onslide<+->
     \small
     \begin{overlayarea}{\textwidth}{10em}
 \begin{semiverbatim}
 \alt<6->{(define (dfs-path u v g)
-  (define (dfs-path-search path)
-    (cond ((eq? (car path) to) (reverse path))
-          ((memq (car path) (cdr path)) #f)
-          (else (g 'search-child (car path)
-                  (lambda (c) (dfs-path-search (cons c path)))))))
-  (dfs-path-search (list from)))}{(define (dfs-path u v g)
+  (define (dfs-search path)
+    (let ((current (car path)))
+      (cond ((eq? current v) (reverse path))
+            ((memq current (cdr path)) #f)
+            (else (search-child current
+                    (lambda (w) (dfs-search (cons w path)))))))
+  (dfs-search (list u)))}{(define (dfs-path u v g)
   (if (eq? u v) (list u)
-      (g 'search-child u (lambda (c)
-                           (cons#f u (dfs-path c v g))))))}
+      (search-child u (lambda (c)
+                         (cons#f u (dfs-path c v g))) g)))}
 \end{semiverbatim}
     \end{overlayarea}
     \onslide<+->
-    \alert{Рекурсивно решение, работи само за ацикличен граф!}\\
+    \alert{Директно рекурсивно решение, работи само за ацикличен граф!}\\
     \onslide<+->
-    Итеративното решение ни позволява да запазим пътя намерен до момента.
+    Итеративното натрупване на пътя позволява да правим проверки за цикъл.
 \end{frame}
 
 \subsection{Търсене в ширина}
 
 \begin{frame}[fragile]
   \frametitle{Схема на обхождане в ширина}
-  
+
   \begin{onlyenv}<1-2>
     Обхождане, започващо от връх \tt u:
     \begin{itemize}
@@ -887,19 +953,19 @@
 (define (bfs u g)
   (define (bfs-level l)
     (if (null? l) <дъно>
-      (<действиe>
         (bfs-level
-          (<функция-за-обработка> (lambda (v) (g 'children v))
-                                  l)))))
+          (<функция-за-обработка> (lambda (v) (children v g))
+                                  l))))
   (bfs-level (list u)))
 \end{verbatim}
   \end{visibleenv}
   \begin{itemize}[<+(3)->]
   \item \alert{Какво се случва ако графът е цикличен?}
     \begin{itemize}
-    \item Програмата също зацикля! Как да се справим с този проблем?
+    \item Ако има път: намира го.
+    \item Ако няма път: програмата зацикля! Как да се справим с този проблем?
     \item Трябва да помним през кои върхове сме минали!
-    \item Нивото трябва да е \alert{списък от пътища}
+    \item Нивото трябва да представлява \alert{списък от пътища}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -917,8 +983,8 @@
       \pause
 \begin{verbatim}
 (define (extend path)
-  (g 'map-children (car path)
-    (lambda (u) (cons u path))))
+  (map-children (car path)
+    (lambda (u) (cons u path)) g))
 \end{verbatim}
       \pause
       Трябва да филтрираме циклите:
@@ -942,21 +1008,24 @@
   \frametitle{Търсене на път в ширина}
   \textbf{Задача.} Да се намери \alert{най-краткия} път от \tt u до \tt v, ако такъв има.\\
   \pause
-  \textbf{Решение.} Обхождаме в ширина от \tt u докато намерим ниво, което стига до \tt v.
+  \textbf{Решение.} Обхождаме в ширина от \tt u докато намерим ниво, в което има път, завършващ във върха  \tt v.
   \pause
+  \small
 \begin{semiverbatim}
 (define (bfs-path u v g)
   \textcolor{black!20}{(define (extend path) ...)
   (define (extend-acyclic path) ...)}
+  (define (extend-level level)
+    (apply append (map extend-acyclic level)))
+
   (define (target-path path)
     (and (eq? (car path) v) path))
 
-  (define (bfs-path-search paths)
-    (or (search target-path paths)
-        (bfs-path-search (apply append
-                           (map extend-acyclic paths)))))
+  (define (bfs-level level)
+    (or (search target-path level)
+        (bfs-level (extend-level level))))
 
-  (bfs-path-search (list (list u))))
+  (bfs-level (list (list u))))
 \end{semiverbatim}
 \end{frame}
 
