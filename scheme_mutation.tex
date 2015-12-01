@@ -3,7 +3,7 @@
 
 \title{Мутиращи операции}
 
-\date{18 ноември 2015 г.}
+\date{2 декември 2015 г.}
 
 \begin{document}
 
@@ -15,7 +15,7 @@
   \frametitle{Мутиращи операции в Scheme}
   Мутиращите операции в Scheme позволяват въвеждането на \alert{странични ефекти}.\\[2em]
   Преглед:
-  \begin{itemize}
+  \begin{itemize}[<+->]
   \item \tt{set!} --- промяна на оценка, свързана със символ
   \item \tt{set-car!}, \tt{set-cdr!} --- промяна на компоненти на точкови двойки
   \item \tt{begin} --- последователност от действия
@@ -37,9 +37,10 @@
     \begin{itemize}
     \item \tt{(define a 2)\hspace{5ex}}\evalsto{a}2
     \item \tt{(set! a 5)\hspace{7ex}}\evalsto{a}5
-    \item \tt{(define (sum x) (set! a (+ a x)) a)}
+    \item \tt{(define (sum x) \only<-.>{(begin }(set! a (+ a x)) a\only<-.>))}\pause
     \item \evalsto{(sum 10)}{15}
     \item \evalsto{(sum 10)}{25}
+    \item \alert{губи се референциалната прозрачност!}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -50,15 +51,21 @@
 \begin{verbatim}
 (define (make-account sum)
   (lambda (amount)
-    (if (< (+ amount sum) 0) "Insufficient funds"
-        (begin (set! sum (+ sum amount)) sum))))
+    (if (< (+ amount sum) 0)
+        (display "Insufficient funds!\n")
+        (set! sum (+ sum amount)))
+    sum))
 \end{verbatim}
   \onslide<+->
   \begin{itemize}[<+->]
   \item \tt{(define account (make-account 100))}
   \item \evalsto{(account 20)}{120}
   \item \evalsto{(account -50)}{70}
-  \item \evalsto{(account -150)}{"Insufficient funds"}
+  \item \evalsto{(account -150)}{
+      \begin{tabular}l
+        "Insufficient funds"\\
+        70
+      \end{tabular}}
   \end{itemize}
 \end{frame}
 
