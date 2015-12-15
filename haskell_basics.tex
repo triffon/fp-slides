@@ -95,13 +95,239 @@ quickSort (x:xs) = filter (<=x) xs ++ [x] ++ filter (>x) xs
 \end{frame}
 
 \begin{frame}
-  \frametitle{Декларации}
-  
+  \frametitle{Декларации и дефиниции}
+  \begin{itemize}[<+->]
+  \item {}<име> \tta{::} <тип> (типова декларация)
+  \item декларира се, че <име> ще се свързва със стойности от <тип>
+  \item \alert{типовите декларации са незадължителни: в повечето случаи Haskell може сам да се ориентира за правилния тип}
+    \begin{itemize}[<.->]
+    \item \tt{x :: Int}
+    \item \tt{y :: Double}
+    \item \tt{z :: String}
+    \end{itemize}
+  \item {}<име> \tta= <израз> (дефиниция)
+  \item {}<име> се свърза с <израз>
+    \begin{itemize}[<.->]
+    \item \tt{x = 2}
+    \item \tt{y = x\^{}2 + 7.5}
+    \item \tta{z = x + y}
+    \item \tt{z = "Hello"}
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Типове}
-  
+  Типовете в Haskell обикновено се задават с конструктори. \pause
+  \begin{itemize}[<+->]
+  \item \tt{Bool} --- булев тип с константи \tt{True} и \tt{False}
+  \item \tt{Char} --- Unicode знаци
+  \item Целочислени
+    \begin{itemize}
+    \item \tt{Int} --- цели числа с фиксирана големина $[-2^{63}; 2^{63}-1]$
+    \item \tt{Integer} --- цели числа с произволна големина
+    \end{itemize}
+  \item С плаваща запетая
+    \begin{itemize}
+    \item \tt{Float} --- дробни числа с единична точност
+    \item \tt{Double} --- дробни числа с двойна точност
+    \end{itemize}
+  \item Съставни
+    \begin{itemize}
+    \item \tt{[a]} --- тип списък с \textbf{произволна} дължина и
+      елементи от \textbf{фиксиран} тип \tt a
+    \item \tt{String = [Char]} --- низ (списък от знаци)
+    \item \tt{(a,b,c)} --- тип кортеж (наредена $n$-торка) с
+      \textbf{фиксирана} дължина и \textbf{произволни} типове на
+      компонентите
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section{Вградени функции и операции}
+
+\begin{frame}
+  \frametitle{Стандартен модул \tt{Prelude}}
+  \begin{itemize}[<+->]
+  \item програмите в Haskell се разделят на модули
+  \item \tta{module} <име> \tta{where}
+  \item дефинира модул с <име>
+  \item \tta{import} <модул>[\tta.<име>]
+  \item внася дефиницията <име> от <модул>
+  \item ако <име> не е указана, внася всички дефиниции
+  \item стандартната библиотека в Haskell се съдържа в модула \tt{Prelude}
+  \item всички дефиниции от \tt{Prelude} се внасят автоматично във всяко програма
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Стандартни числови функции}
+
+  Аритметични операци
+
+  \tt{+}, \tt{-}, \tt{*}, \tt{/}, \tt{\^{}}, \tt{\^{}\^{}}
+
+  \vspace{1em}
+  Други числови функции
+
+  \tt{div}, \tt{mod}, \tt{max}, \tt{min}, \tt{gcd}, \tt{lcm}
+
+  \vspace{1em}
+  Функции за преобразуване
+
+  \tt{fromInteger}, \tt{fromRational}, \tt{round}, \tt{ceiling}, \tt{floor}
+
+  \vspace{1em}
+  Функции над дробни числа
+
+  \tt{exp}, \tt{log}, \tt{sin}, \tt{cos}, \tt{tan}, \tt{asin}, \tt{acos}, \tt{atan}, \tt{sqrt}, \tt{**}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Стандартни предикати}
+
+  Числови предикати
+
+  \tt{<}, \tt{>}, \tt{=}, \tt{/=}, \tt{<=}, \tt{>=}, \tt{odd}, \tt{even}
+
+  \vspace{1em}
+  Булеви операции
+
+  \tt{\&\&}, \tt{||}, \tt{not}
+\end{frame}
+
+\section{Функции}
+
+\begin{frame}
+  \frametitle{Функции в Haskell}
+  \begin{itemize}[<+->]
+  \item \tt{t1 -> t2} --- тип на функция, която получава параметър от тип \tt{t1} и връща резултат от тип \tt{t2}
+  \item {}<име> <параметър> \tta= <тяло>
+  \item дефиниция на функция с <име>, един <параметър> и <тяло>
+  \item {}<функция> <израз>
+  \item прилагане на <функция> над <израз>
+    \begin{itemize}[<.->]
+    \item \tt{square :: Int -> Int}
+    \item \tt{square x = x * x}
+    \item \evalsto{square x}4
+    \item \evalstoerr{square 2.7}
+    \end{itemize}
+  \item \alert{Прилагането е с по-висок приоритет от другите операции!}
+  \item \evalsto{square 2 + 3}7
+  \item \evalsto{square (2 + 3)}{25}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Функции на повече параметри}
+  \begin{itemize}[<+->]
+  \item Как можем да изразим функция $f(x,y)$ на два параметъра чрез функции с един параметър?
+  \item Разглеждаме функция $F$ на един параметър $x$,...
+  \item ...която връща като резултат функцията на един параметър $f_x$,...
+  \item ...така че $f_x(y) = f(x,y)$.
+  \item Така имаме $f(x,y) = F(x)(y)$.
+  \end{itemize}
+  \pause
+  \begin{block}{Основна идея}
+    Можем да разглеждаме функции с $n$ параметъра, като функции с един параметър, които връщат функции с $n-1$ параметъра.
+  \end{block}
+  \pause
+  \alert{Това преобразува над функциите с повече параметри се нарича ``къринг'' (``currying'').}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Currying в Haskell}
+  \begin{itemize}[<+->]
+  \item \tt{t1 \alert{->} (t2 \alert{->} t3)}
+    \begin{itemize}
+    \item функция с параметър от тип \tt{t1}, която връща функция, която приема параметър от тип \tt{t2} и връща резултат от тип \tt{t3}; или
+    \item функция на два параметъра от типове \tt{t1} и \tt{t2}, която връща резултат от тип \tt{t3}
+    \end{itemize}
+  \item В общия случай: <функция> \tt{\alert{::} t1 \alert{->} (t2 \alert{->}} \ldots \tt{(tn \alert{->} t)}\ldots\tt)
+  \item{} <функция> ще очаква $n$ параметъра от типове \tt{t1}, \tt{t2}, \ldots, \tt{tn} и ще връща резултат от тип \tt{t}
+  \item{} <функция> <параметър$_1$> \ldots <параметър$_n$> \tt= <тяло>
+  \item дефинира <функция> с $n$ параметъра и <тяло>
+    \begin{itemize}
+    \item \tt{hypothenuse :: Double -> Double -> Double}
+    \item \tt{hypothenuse a b = sqrt (square a + square b)}
+    \item \evalsto{\alt<+->{hypothenuse 3 4}{(hypothenuse 3) 4}}5
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}<1-6>
+  \frametitle{Частично прилагане на функции}
+  Кърингът позволява удобно прилагане на функция към само част от параметрите.
+  \begin{itemize}[<+->]
+  \item \tt{div50 :: Int -> Int}
+  \item \tt{div50\temporal<4>{ x}{ $\not{\tt x}$}{} = div 50\temporal<4>{ x}{ $\not{\tt x}$}{}}
+  \item \evalsto{div50 4}{12}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Функции от по-висок ред}
+  \alert{Внимание:} \tt{t1 -> (t2 -> t3)} $\neq$ \tt{(t1 -> t2) -> t3}!\pause
+  \begin{itemize}[<+->]
+  \item операцията \tt{->} е \textbf{дясноасоциативна}
+  \item \tt{t1 -> (t2 -> t3)} $\equiv$ \tt{t1 -> t2 -> t3}
+  \item \tt{(t1 -> t2) -> t3} --- функция, която връща резултат от тип \tt{t3}, а приема като единствен параметър функция, която приема един параметър от тип \tt{t1} и връща резултат от тип \tt{t2}
+  \item \alert{функция от втори ред}
+    \begin{itemize}
+    \item \tt{twice :: (Int -> Int) -> Int -> Int}
+    \item \tt{twice f x = f (f x)}
+    \item \evalstop{twice square 3}{81}
+    \item \evalstop{twice (mod 13) 5}1
+    \item \tt{diag f x = f x x}
+    \item \tt{diag :: (Int -> Int -> Int) -> Int -> Int}
+    \item \evalstop{diag div 5}1
+    \item \evalstop{diag hypothenuse 1}{1.4142135623730951}
+    \item \tt{diag :: (t1 -> t1 -> t) -> t1 -> t}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Функции и операции}
+  \begin{itemize}[<+->]
+  \item Функциите в Haskell са винаги с \textbf{префиксен} запис
+  \item Операциите в Haskell са винаги \textbf{бинарни с инфиксен}
+    запис.
+    \begin{itemize}
+    \item \alert{Изключение:} унарен минус: \tt{-a}
+    \item \evalstoerr{square -x}
+    \item \evalsto{square (-x)}4
+    \end{itemize}
+  \item Преобразуване на бинарни функции към операции: \tta`<функция>\tta`
+    \begin{itemize}
+    \item \evalsto{13 `div` 5}3
+    \item \evalstoerr{2 `square`}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Операции и функции}
+  \begin{itemize}[<+->]
+  \item Преобразуване на операции към бинарни функции: \tta(<операция>\tta)
+    \begin{itemize}
+    \item \evalsto{(+) 2 3}5
+    \item \tt{plus1 = (+) 1}
+    \item \tt{square = diag (*)}
+    \end{itemize}
+  \item Преобразуване на операции към унарни функции (секция на операции)
+    \begin{itemize}
+    \item \tta(<израз> <операция>\tta) --- лява секция
+    \item \tta(<операция> <израз>\tta) --- дясна секция
+    \item \evalstop{(2\^{}) 3}8
+    \item \evalstop{(\^{}2) 3}9
+    \item \tt{square = (\^{}2)}
+    \item \evalstoerrp{(-5) 8}
+    \item \evalstop{twice (*2) 5}{20}
+    \item \tt{positive = (>0)}
+    \item \tt{lastDigit = (`mod` 10)}
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \end{document}
