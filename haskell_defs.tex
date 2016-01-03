@@ -13,38 +13,46 @@
 
 %\includeonlyframes{current}
 
-\section{Пазачи}
+\section{Разглеждане на случаи}
 
 \begin{frame}[fragile]
   \frametitle{Разглеждане на случаи}
-  Дефинниране на функции с разглеждане на случаи.
+  Можем да дефинниране на функции с разглеждане на случаи по параметрите.\\
+  Условието на всеки случай се нарича \textbf{пазач}.
   \begin{itemize}
     \item{} <име> \{<параметър>\}\\
-      \hspace{3ex} \{ \tta| <пазач> \tta= <израз> \}
+      \hspace{3ex} \{ \tta| <пазач> \tta= <израз> \}$^+$
       \pause
     \item{} <име> <параметър$_1$> <параметър$_2$> ... <параметър$_k$>\\
       \hspace{3ex} \tta| <пазач$_1$> \tta= <израз$_1$>\\
-      \ldots\\
+      \hspace{3ex} \ldots\\
       \hspace{3ex} \tta| <пазач$_n$> \tta= <израз$_n$>\\
       \pause
-  \item ако <пазач$_1$> е \tt{True} връща <израз$_1$>, а ако е \tt{False}:
-  \item \ldots
-  \item ако <пазач$_n$> е \tt{True} връща <израз$_n$>, а ако е \tt{False}:
-  \item \alert{грешка!}
-    \pause
-  \item За удобство \tt{Prelude} дефинира \tt{otherwise = True}
+    \item ако <пазач$_1$> е \tt{True} връща <израз$_1$>, а ако е \tt{False}:
+    \item \ldots
+    \item ако <пазач$_n$> е \tt{True} връща <израз$_n$>, а ако е \tt{False}:
+    \item \alert{грешка!}
+      \pause
+    \item За удобство \tt{Prelude} дефинира \tt{otherwise = True}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Разглеждане на случаи --- примери}
-\begin{verbatim}
+\begin{semiverbatim}
 fact n
   | n == 0    = 1
   | n > 0     = n * fact (n - 1)
-  | n < 0     = 0
-\end{verbatim}
-\pause\vspace{1em}
+\onslide<6->{  | n < 0     = error "подадено отрицателно число"}
+\end{semiverbatim}
+\onslide<+->
+\begin{itemize}[<+->]
+\item \evalstoerrp{fact (-5)}
+\item добра практика е да имаме изчерпателни случаи
+\item можем да използваме стандартната функция \tt{error}
+\end{itemize}
+\onslide<+->
+\onslide<+->
 \begin{verbatim}
 grade x
   | x >= 5.5    = "Отличен"
@@ -55,59 +63,84 @@ grade x
 \end{verbatim}
 \end{frame}
 
-
 \section{Локални дефиниции}
 
 \begin{frame}
   \frametitle{Локални дефиниции с \tt{let}}
   \begin{itemize}
-  \item \tta{let} \{ <име> \tta= <израз> \}\\
+  \item \tta{let} \{ <дефиниция> \}$^+$\\
     \tta{in} <тяло>
     \pause
-  \item \tta{let} <име$_1$> \tta= <израз$_1$>\\
-    \hspace{5ex}<име$_2$> \tta= <израз$_2$>\\
-    \hspace{5ex}\ldots\\
-    \hspace{5ex}<име$_n$> \tta= <израз$_n$>\\
+  \item \tta{let} <дефиниция$_1$>\\
+    \hspace{4.5ex}<дефиниция$_2$>\\
+    \hspace{4.5ex}\ldots\\
+    \hspace{4.5ex}<дефиниция$_n$>\\
     \tta{in} <тяло>
     \pause
-  \item дефинициите <име$_i$> = <израз$_i$> се въвеждат едновременно само за оценката на <тяло>
-  \item дефинициите може да са взаимно рекурсивни
-  \item редът на дефинициите е без значение
+  \item{} <дефиниция$_i$> се въвеждат едновременно
+  \item областта на действие на дефинициите е само в рамките на \tt{let} конструкцията
+  \item може да са взаимно рекурсивни
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Примери за \tt{let}}
-  
-  \begin{itemize}
-  \item \evalsto{
+  \begin{itemize}[<+->]
+  \item \evalsto{let x = 5 in x + 3}8
+  \item \evalsto{%
+      \begin{tabular}[t]{@{}l@{ }l@{}}
+        let&f x = y + x\\
+           &y = 7\\
+         in&f 2 * y
+      \end{tabular}}{63}
+  \item \tt{%
+    \begin{tabular}[t]{@{}l@{ }l@{ }l@{}}
+      fact2 n = &let fact n = &if n == 0 then 1\\
+                &             &else n * fact (n-1)\\
+                &in (fact n)\^{}2&
+    \end{tabular}}
+  \item В интерактивен режим (GHCi) \tt{let} може да се използва без \tt{in} за въвеждане на нови дефиниции
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Локални дефиниции с \tt{where}}
   \begin{itemize}
-  \item{} <функция> \{ <параметри> \} = <тяло>\\
-        \hspace{5ex} \tta{where} \{ <име> \tta= <израз> \}
+  \item{} <дефиниция-на-функция>\\
+        \hspace{5ex} \tta{where} \{ <дефиниция> \}$^+$
         \pause
-  \item{} <функция> <параметър$_1$> \ldots <параметър$_k$> = <тяло>\\
-        \hspace{5ex} \tta{where} <име$_1$> \tta= <израз$_1$>\\
-        \hspace{11ex} <име$_2$> \tta= <израз$_2$>\\
+  \item{} <дефиниция-на-функция>\\
+        \hspace{5ex} \tta{where} <дефиниция$_1$>\\
+        \hspace{11ex} <дефиниция$_2$>\\
         \hspace{11ex}\ldots\\
-        \hspace{11ex} <име$_n$> \tta= <израз$_n$>\\
+        \hspace{11ex} <дефиниция$_n$>\\
         \pause
-  \item дефинициите <име$_i$> = <израз$_i$> се въвеждат едновременно само за оценката на <тяло>
-  \item дефинициите може да са взаимно рекурсивни, редът е без значение
+  \item{} <дефиниция$_i$> се въвеждат едновременно
+  \item областта на действие на дефинициите е само в рамките на дефиницията на <функция>
+  \item може да са взаимно рекурсивни
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile,fragile]
   \frametitle{Примери за \tt{where}}
-  
+\begin{verbatim}
+sumLastDigits n = lastDigit n + lastDigit (stripDigit n)
+ where lastDigit  = (`mod` 10)
+       stripDigit = (`div` 10)
+\end{verbatim}
+\pause
+\begin{verbatim}
+quadratic a b c
+ | a == 0     = "линейно уравнение"
+ | d > 0      = "две реални решения"
+ | d == 0     = "едно реално решение"
+ | otherwise  = "няма реални решения"
+ where d = b^2 - 4*a*c
+\end{verbatim}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Локални дефиниции --- пример}
+  \frametitle{Пример за комбиниране на \tt{let} и \tt{where}}
 \begin{verbatim}
 area x1 y1 x2 y2 x3 y3 =
    let a = dist x1 y1 x2 y2
@@ -122,15 +155,25 @@ area x1 y1 x2 y2 x3 y3 =
 \end{frame}
 
 \begin{frame}
-  \frametitle{Сравнения на \tt{let} и \tt{where}}
-  
+  \frametitle{Сравнение на \tt{let} и \tt{where}}
+  \begin{itemize}[<+->]
+  \item \tt{let} е израз, който може да участва във всеки израз
+  \item \tt{where} може да се използва само в рамките на дефиниция
+  \item \tt{where} дефинициите са видими при всички разгледани случаи с пазачи
+  \item \tt{let} са удобни когато има само едно <тяло>
+  \item стилистична разлика:
+    \begin{itemize}
+    \item с \tt{let} помощните дефиниции се дават първи
+    \item с \tt{where} акцентът пада върху основната дефиниция
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \section{Двумерен синтаксис}
 
 \begin{frame}
   \frametitle{Подравняване на дефинициите}
-
+  
 \end{frame}
 
 \begin{frame}
