@@ -1,0 +1,85 @@
+- вложени оценявания
+  + where
+  + let
+  + разлика между двете
+  + индентация
+- образци (лайтмотив)
+  + константи
+  + кортежи
+  + списъци
+  + еднакви променливи!
+  + case
+  + @
+- кортежи
+  + вложени двойки vs тройки
+  + ()
+  + fst, snd
+  + type
+- списъци
+  + дефиниция
+  + рекурсия
+    * с пазачи
+    * с образци
+    * доказване на свойства на рекурсивни програми
+  + генератори
+    * enumFromTo, enumFromThenTo
+  + стандартни функции
+    * head, tail
+    * init, last
+    * null, length
+    * (++), (!!)
+    * take, drop, splitAt
+    * takeWhile, dropWhile
+    * reverse
+    * elem, notElem
+    * maximum, minimum
+    * product, sum
+    * and, or
+    * concat
+  + list comprehension
+  + функции от по-висок ред
+    * foldl, foldr, foldl1, foldr1
+    * map, concatMap
+    * filter
+    * scanl, scanr, scanl1, scanr1
+    * break, span
+    * all, any
+    * zip, unzip, zipWith
+- лениво оценяване
+  + стриктна и нормална стратегия за оценяване
+  + call by name
+  + Dv ⊆ Dn
+  + теорема за нормализацията
+  + call by need
+  + кога става реално оценяването?
+- потоци
+  + enumFrom, enumFromThen
+  + repeat, replicate, cycle
+  + iterate
+- програмиране от по-висок ред
+  + lambda функции
+  + (.), ($)
+  + id, const
+  + seq, ($!)
+  + curry, uncurry, flip
+  + until
+- полиморфизъм
+  + полиморфни типове
+  + контексти, генерични функции
+  + класове, методи и инстанции
+  + дефиниция на класове
+  + дефиниция на инстанция
+  + генерични инстанции
+  + наследяване
+  + множествени ограничения
+  + дефинции по подразбиране
+  + Eq, Ord, Show, Enum, Read
+- алгебрични типове
+  + симулация на запис
+  + дефиниция на функции
+  + deriving
+  + record syntax
+  + Bool
+  + Maybe
+  + Either
+  + рекурсивни типове (списъци, дървета)
