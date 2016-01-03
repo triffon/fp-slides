@@ -331,8 +331,6 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
   \end{itemize}
 \end{frame}
 
-\section{Условни операции}
-
 \begin{frame}
   \frametitle{\tt{if} \ldots \tt{then} \ldots \tt{else}}
   \begin{itemize}[<+->]
@@ -349,43 +347,4 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Разглеждане на случаи}
-  Дефинниране на функции с разглеждане на случаи.
-  \begin{itemize}
-    \item{} <име> \{<параметър>\}\\
-      \hspace{3ex} \{ \tta| <пазач> \tta= <израз> \}
-      \pause
-    \item{} <име> <параметър$_1$> <параметър$_2$> ... <параметър$_k$>\\
-      \hspace{3ex} \tta| <пазач$_1$> \tta= <израз$_1$>\\
-      \ldots\\
-      \hspace{3ex} \tta| <пазач$_n$> \tta= <израз$_n$>\\
-      \pause
-  \item ако <пазач$_1$> е \tt{True} връща <израз$_1$>, а ако е \tt{False}:
-  \item \ldots
-  \item ако <пазач$_n$> е \tt{True} връща <израз$_n$>, а ако е \tt{False}:
-  \item \alert{грешка!}
-    \pause
-  \item За удобство \tt{Prelude} дефинира \tt{otherwise = True}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Разглеждане на случаи --- примери}
-\begin{verbatim}
-fact n
-  | n == 0    = 1
-  | n > 0     = n * fact (n - 1)
-  | n < 0     = 0
-\end{verbatim}
-\pause\vspace{1em}
-\begin{verbatim}
-grade x
-  | x >= 5.5    = "Отличен"
-  | x >= 4.5    = "Много добър"
-  | x >= 3.5    = "Добър"
-  | x >= 3      = "Среден"
-  | otherwise   = "Слаб"
-\end{verbatim}
-\end{frame}
 \end{document}
