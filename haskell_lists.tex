@@ -16,33 +16,99 @@
 \section{Кортежи}
 
 \begin{frame}
-  \frametitle{Кортежи --- дефиниция}
-  
-\end{frame}
-
-\begin{frame}
-  \frametitle{Кортежи --- примери}
-  
+  \frametitle{Кортежи (tuples)}
+  Кортежите са наредени $n$-торки от данни от произволен тип.
+  \begin{itemize}[<+->]
+  \item Примери: \tt{(1, 2)}, \tt{(3.5,'A', False)}, \tt{(("square"{}, (\^{}2)), 1.0)}
+  \item Тип кортеж от $n$ елемента: \tt{(t$_1$, t$_2$, \ldots, t$_n$)}
+  \item Допустими стойности: наредени $n$-торки от вида \tt{(x$_1$, x$_2$, \ldots, x$_n$)}, където \tt{x$_i$} е от тип \tt{t$_i$}
+  \item Позволяват ``пакетиране"' на няколко стойности в една
+  \item Операции за наредени двойки:
+    \begin{itemize}
+    \item \tt{(,) :: a -> b -> (a,b)} --- конструиране на наредена двойка
+    \item \tt{fst :: (a,b) -> a} --- първа компонента на наредена двойка
+    \item \tt{snd :: (a,b) -> b} --- втора компонента на наредена двойка
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Потребителски типове}
-  
+  \begin{itemize}[<+->]
+  \item Типът \tt{(String, Int)} може да означава:
+    \begin{itemize}
+    \item име и ЕГН на човек
+    \item продукт с описание и количество
+    \item сонет на Шекспир и поредния му номер 
+    \end{itemize}
+  \item Удобно е да именуваме типовете, за да означаваме смисъла им
+  \item \tta{type }<конструктор> \tta= <тип>
+    \begin{itemize}
+    \item конструкторите са идентификатори, започващи с главна буква
+    \end{itemize}
+  \item Примери:
+    \begin{itemize}
+    \item \tt{type Student = (String, Int, Double)}
+    \item \tt{type Point = (Double, Double)}
+    \item \tt{type Triangle = (Point, Point, Point)}
+    \item \tt{type Translation = Point -> Point}
+    \item \tt{type Vector = Point}
+    \item \tt{addVectors :: Vector -> Vector -> Vector}
+    \item<.-> \tt{addVectors v1 v2 = (fst v1 + fst v2, snd v1 + snd v2)}
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Особености на кортежите}
-  
+  \begin{itemize}[<+->]
+  \item \evalstoerrp{fst (1,2,3)}
+    \begin{itemize}
+    \item \tt{fst} и \tt{snd} работят само над наредени двойки!
+    \end{itemize}
+  \item \tt{((a,b),c)} $\neq$ \tt{(a,(b,c))} $\neq$ \tt{(a,b,c)}
+  \item Няма специален тип кортеж от един елемент\ldots
+  \item \ldots но има тип ``празен кортеж'' \tt{()} с единствен елемент \tt{()}
+    \begin{itemize}
+    \item в други езици такъв тип се нарича \tt{unit}
+    \item използва се за означаване на липса на информация
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Кортежи и образци}
-  
+\begin{frame}[fragile]
+  \frametitle{Образци на кортежи}
+  Образец на кортеж е конструкция от вида \tt{(p$_1$, p$_2$, \ldots, p$_n$)}, където \tt{p$_i$} са образци.
+  \begin{itemize}[<+->]
+  \item \verb#addVectors (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)#
+  \item \verb#fst (x,_) = x#
+  \item<.-> \verb#snd (_,y) = y#
+  \item \verb#getFN :: Student -> Int#
+  \item<.-> \verb#getFN (_, fn, _) = fn#
+  \item образците на кортежи могат да се използват за ``разглобяване'' на кортежи при дефиниция
+  \item \verb#(x,y) = (3.5, 7.8)#
+  \item \verb#let (_, fn, grade) = student in (fn, min (grade + 1) 6)#
+  \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Именувани образци}
-  
+  \begin{itemize}[<+->]
+  \item намиране на студент с по-висока оценка
+\begin{semiverbatim}
+betterStudent (name1, fn1, grade1) (name2, fn2, grade2)
+ | grade1 > grade2 = (name1, fn1, grade1)
+ | otherwise       = (name2, fn2, grade2)
+\end{semiverbatim}
+  \item ами ако имахме 10 полета?
+  \item удобно е да използваме \alert{именувани образци}
+  \item{} <име>\tta@<образец> \onslide<+->
+\begin{semiverbatim}
+betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
+ | grade1 > grade2 = s1
+ | otherwise       = s2
+\end{semiverbatim}
+  \end{itemize}
 \end{frame}
 
 \section{Списъци}
@@ -159,7 +225,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Разбиване на списъци (\tt{break}, \tt{span}, \tt{takeWhile}, \tt{dropWhile}) 
+  \frametitle{Разбиване на списъци (\tt{break}, \tt{span}, \tt{takeWhile}, \tt{dropWhile})} 
   
 \end{frame}
 
@@ -169,4 +235,3 @@
 \end{frame}
 
 \end{document}
-

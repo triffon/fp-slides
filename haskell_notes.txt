@@ -29,7 +29,6 @@
     * null, length
     * (++), (!!)
     * take, drop, splitAt
-    * takeWhile, dropWhile
     * reverse
     * elem, notElem
     * maximum, minimum
@@ -42,6 +41,7 @@
     * map, concatMap
     * filter
     * scanl, scanr, scanl1, scanr1
+    * takeWhile, dropWhile
     * break, span
     * all, any
     * zip, unzip, zipWith
