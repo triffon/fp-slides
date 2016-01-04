@@ -171,14 +171,76 @@ area x1 y1 x2 y2 x3 y3 =
 
 \section{Двумерен синтаксис}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Подравняване на дефинициите}
-  
+  \begin{columns}[onlytextwidth]
+    \begin{column}{0.35\textwidth}
+\begin{verbatim}
+let h = f + g
+    b x = 2
+in  b h
+\end{verbatim}
+    \end{column}
+    \pause
+    \begin{column}{0.3\textwidth}
+      а защо не:
+    \end{column}
+    \begin{column}{0.35\textwidth}
+\begin{verbatim}
+let h = f + g b
+    x = 2
+in  b h
+\end{verbatim}
+    \end{column}
+  \end{columns}
+  \vspace{1em}
+\onslide<+->
+\begin{itemize}[<+->]
+\item \alert{Подравняването в Haskell има значение!}
+\item Обхватът на блок от дефиниции се определя от това как са подравнени.
+\item Дефинициите \textbf{вдясно и надолу} от първата са в същия блок
+\item Дефинициите \textbf{вляво} са във външния блок
+\end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Алтернативен синтаксис}
-  
+  \frametitle{Двумерен синтаксис --- пример}
+{\ttfamily
+\begin{tabular}{|lllll|}
+\hline
+\multicolumn 5{|l|}{area x1 y1 x2 y2 x3 y3 =}\\[0.5em]
+\cline{3-4}
+   &let &\multicolumn 2{|l|}{a = dist x1 y1 x2 y2}&\\
+      &&\multicolumn 2{|l|}{b = dist x2 y2 x3 y3}&\\
+      &&\multicolumn 2{|l|}{c = dist x3 y3 x1 y1}&\\
+      &&\multicolumn 2{|l|}{p = (a + b + c) / 2}&\\
+\cline{3-4}&&&&\\
+   &\multicolumn 4{l|}{in sqrt (p * (p - a) * (p - b) * (p - c))}\\[0.5em]
+\cline{3-5}
+   &where &\multicolumn 3{|l|}{dist u1 v1 u2 v2 = sqrt (du\^{}2 + dv\^{}2)}\\
+\cline{4-4}
+          &&\multicolumn 1{|l}{where} &\multicolumn 1{|l|}{du = u2 - u1}&\\
+          &&\multicolumn 1{|l}{}&\multicolumn 1{|l|}{dv = v2 - v1}&\\
+\cline{4-4}
+&&\multicolumn 3{|l|}{}\\
+\cline{3-5}&&&&\\
+\hline
+\end{tabular}}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Алтернативен синтаксис за блокове}
+  \begin{itemize}[<+->]
+  \item Всъщност подравняването е синтактична захар за блоко в Haskell
+  \item \tta\{ \{ <дефиниция> \tta; \} \tta\}
+  \item \tta\{ <дефиниция$_1$> \tta; \ldots <дефиниция$_n$> [\tta;] \tta\}
+  \item Интуитивни правила:
+    \begin{itemize}
+    \item при първия символ на дефиниция --- запомни позицията и сложи \tta\{
+    \item начало на дефиниция по-надясно или по-надолу --- сложи \tta;
+    \item начало на дефиниция по-наляво --- сложи \tta\}
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \section{Образци}
