@@ -240,29 +240,80 @@ in  b h
     \item начало на дефиниция по-надясно или по-надолу --- сложи \tta;
     \item начало на дефиниция по-наляво --- сложи \tta\}
     \end{itemize}
+  \item Пазачите не използват синтаксис за блокове, можем безопасно да ги пишем и на един ред:
+  \item \tt{fact n | n == 0 = 1 | otherwise = n * fact (n-1)}
   \end{itemize}
 \end{frame}
 
 \section{Образци}
 
-\begin{frame}
-  \frametitle{Дефиниране с поредица от равенства}
-  
+\begin{frame}[fragile]
+  \frametitle{Поредица от равенства}
+  Можем да дефинираме функция с поредица от равенства:
+\begin{verbatim}
+fact 0 = 1
+fact n = n * fact (n-1)
+\end{verbatim}
+  \pause
+  Можем да имаме произволен брой равенства...
+\begin{verbatim}
+fib 0 = 0
+fib 1 = 1
+fib n = fib (n-1) + fib (n-2)
+\end{verbatim}
+  \pause
+  \ldots или варианти за различните параметри
+\begin{verbatim}
+gcd 0 0 = error "няма най-голям общ делител"
+gcd x 0 = x
+gcd 0 y = y
+gcd x y
+ | x > y     = gcd (x-y) y
+ | otherwise = gcd x (y-x)
+\end{verbatim}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Образци}
-  
+  \begin{itemize}[<+->]
+  \item Как се разбира кое равенство да се използва?
+  \item Видът на формалните параметри наричаме \alert{образец}
+  \item Търси се на кой образец пасва фактическия параметър
+  \item Избира се първия образец \alert{отгоре надолу}
+  \item Видове образци:
+    \begin{itemize}
+    \item \textbf{литерали} --- пасват при точно съвпадение
+    \item \textbf{променливи} --- пасват винаги
+    \item \textbf{анонимен образец \tt\_} ---  пасва винаги без да свързва фактическата стойност с име
+    \end{itemize}
+  \item Пример:
+\begin{verbatim}
+(&&) False _ = False
+(&&) _     b = b
+\end{verbatim}
+  \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Примери}
-  
-\end{frame}
-
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Повторение на променливи}
-  
+  \begin{itemize}[<+->]
+  \item Можем ли да напишем
+\begin{semiverbatim}
+gcd 0 0 = error "няма най-голям общ делител"
+gcd x 0 = x
+gcd 0 y = y
+\alert{gcd x x = x}
+gcd x y
+ | x > y     = gcd (x-y) y
+ | otherwise = gcd x (y-x)
+\end{semiverbatim}
+  \item \alert{Не!}
+  \item Всички променливи използвани в образците трябва да са уникални
+  \item Няма унификация, както в Пролог
+    \begin{itemize}
+    \item Има езици за функционално и логическо програмиране, в които това е позволено (напр. Curry)
+    \end{itemize}
+\end{itemize}
 \end{frame}
 
 \end{document}
