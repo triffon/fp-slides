@@ -39,7 +39,7 @@
     \begin{itemize}
     \item име и ЕГН на човек
     \item продукт с описание и количество
-    \item сонет на Шекспир и поредния му номер 
+    \item сонет на Шекспир и поредния му номер
     \end{itemize}
   \item Удобно е да именуваме типовете, за да означаваме смисъла им
   \item \tta{type }<конструктор> \tta= <тип>
@@ -78,7 +78,9 @@
 
 \begin{frame}[fragile]
   \frametitle{Образци на кортежи}
-  Образец на кортеж е конструкция от вида \tt{(p$_1$, p$_2$, \ldots, p$_n$)}, където \tt{p$_i$} са образци.
+  Образец на кортеж е конструкция от вида \tt{(p$_1$, p$_2$, \ldots, p$_n$)}.\\\pause
+  Пасва на всеки кортеж от точно $n$ елемента \tt{(x$_1$, x$_2$, \ldots, x$_n$)}, за който образецът \tt{p$_i$} пасва на елемента \tt{x$_i$}.
+  \onslide<+->
   \begin{itemize}[<+->]
   \item \verb#addVectors (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)#
   \item \verb#fst (x,_) = x#
@@ -118,120 +120,345 @@ betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
 
 \begin{frame}
   \frametitle{Списъци}
-  
+
+  \begin{definition}
+    \begin{enumerate}
+    \item Празният списък \tt{[]} е списък от тип \tt{[a]}
+    \item Ако \tt h е елемент от тип \tt a и \tt t е списък от тип \tt{[a]} то \tt{(h : t)} е списък от тип \tt{[a]}
+      \begin{itemize}
+      \item \tt h --- глава на списъка
+      \item \tt t --- опашка на списъка
+      \end{itemize}
+    \end{enumerate}
+  \end{definition}
+  \onslide<+->
+  \begin{itemize}[<+->]
+  \item списъкът е последователност с \alert{произволна дължина} от елементи от \alert{еднакъв тип}
+  \item \tt{(:) :: a -> [a] -> [a]}  е \alert{дясноасоциативна} бинарна операция
+  \item \tt{(1:(2:(3:(4:[]))))} $=$ \tt{1:2:3:4:[]} $\neq$ \tta{((((1:2):3):4):[])}
+  \item \tt{[a$_1$, a$_2$, \ldots, a$_n$]} e по-удобен запис за \tt{a$_1$:(a$_2$:\ldots(a$_n$:[])\ldots)}
+  \item \tt{[1,2,3,4]} $=$ \tt{1:[2,3,4]} $=$ \tt{1:2:[3,4]} $=$ \tt{1:2:3:[4]} $=$ \tt{1:2:3:4:[]}\
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Синтаксис за списъци}
-  
+  \frametitle{Примери}
+  \begin{itemize}[<+->]
+  \item \typestop{[False]}{[Bool]}
+  \item \ntypesp{["Иван"{}, 4.5]}
+  \item \ntypesp{[1]:2}
+  \item \typestop{[[]]}{[[a]]}
+  \item \typestop{[[1,2],[3],[4,5,6]]}{[[Int]]}
+  \item \typestop{([1,2],[3],[4,5,6])}{([Int],[Int],[Int])}
+  \item \ntypesp{[(1,2),(3),(4,5,6)]}
+  \item \typestop{((1,2),(3),(4,5,6))}{((Int,Int),Int,(Int,Int,Int))}
+  \item \typestop{[[]]}{[[a]]}
+  \item \typestop{[]:[]}{[[a]]}
+  \item \ntypesp{[]:[1]}
+  \item \typestop{[[1,2,3],[]]}{[[Int]]}
+  \item \ntypesp{[[1,2,3],[[]]]}
+  \item \typestop{[1,2,3]:[4,5,6]:[[]]}{[[Int]]}
+  \end{itemize}
 \end{frame}
 
+
 \begin{frame}
-  \frametitle{Генератори на списъци}
-  
+  \frametitle{Низове}
+
+  \begin{itemize}[<+->]
+  \item В Haskell низовете са представени като списъци от символи
+  \item \tt{type String = [Char]}
+  \item Всички операции над списъци важат и над списъци
+  \item Примери
+    \begin{itemize}
+    \item \tt{['H', 'e', 'l', 'l', 'o' ]} = \tt{"Hello"}
+    \item \tt{'H':'e':'l':'l':'o':[]} = \tt{"Hello"}
+    \item \tt{'H':'e':"llo"} = \tt{"Hello"}
+    \item \tt{"{}"} = \tt{[] :: [Char]}
+    \item \ntypesp{[[1,2,3],""]}
+    \item \typestop{["12"{},['3'],[]]}{String}
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Основни функции за списъци}
   % head, tail, null, length
+  \begin{itemize}[<+->]
+  \item \tt{head :: [a] -> a} --- връща главата на (непразен) списък
+    \begin{itemize}
+    \item \evalstop{head [[1,2],[3,4]]}{[1,2]}
+    \item \evalstoerr{head []}
+    \end{itemize}
+  \item \tt{tail :: [a] -> [a]} --- връща опашката на (непразен) списък
+    \begin{itemize}
+    \item \evalstop{tail [[1,2],[3,4]]}{[[3,4]]}
+    \item \evalstoerr{tail []}
+    \end{itemize}
+  \item \tt{null :: [a] -> Bool} --- проверява дали списък е празен
+  \item \tt{length :: [a] -> Int} --- дължина на списък
+  \end{itemize}
 \end{frame}
 
+
 \begin{frame}
-  \frametitle{Низове}
-  
+  \frametitle{Генератори на списъци}
+  Можем да генерираме списъци от последователни елементи
+  \begin{itemize}
+  \item \tta[from\tta{..}to\tta] $\rightarrow$ \tta[from\tta, from+1\tta, from+2\tta,\ldots to\tta]
+  \item Пример: \evalsto{[1..5]}{[1,2,3,4,5]}
+  \item Пример: \evalsto{['a'..'e']}{"abcde"}
+  \item Синтактична захар за \tt{enumFromTo from to}
+    \pause
+  \item \tta[from\tta,from+inc\tta{..}to\tta] $\rightarrow$ \tta[from\tta, from+inc\tta, from+2.inc\tta,\ldots to'\tta], където to' е най-голямото число $\leq$ to, за което to' = from+k.inc
+  \item Пример: \evalsto{[1,4..15]}{[1,4,7,10,13]}
+  \item Пример: \evalsto{['a','e'..'z']}{"aeimquy"}
+  \item Синтактична захар за \tt{enumFromThenTo from then to}
+  \end{itemize}
 \end{frame}
 
 \subsection{Работа със списъци}
 
-\begin{frame}
-  \frametitle{Рекурсия над списъци}
-  %++, !!, reverse, elem, notElem
+\begin{frame}[fragile]
+  \frametitle{Рекурсивни функции над списъци}
+  \begin{itemize}[<+->]
+  \item \tt{(++) :: a -> [a] -> [a]} --- слепва два списъка
+    \begin{itemize}[<.->]
+    \item  \evalsto{[1..3] ++ [5..7]}{[1,2,3,5,6,7]}
+    \end{itemize}
+  \item \verb#a ++ b = if null a then b else head a : tail a ++ b#
+  \item \tt{reverse :: [a] -> [a]} ---  обръща списък
+    \begin{itemize}[<.->]
+    \item \evalsto{reverse [1..5]}{[5,4,3,2,1]}
+    \end{itemize}
+    \onslide<+->
+\begin{semiverbatim}
+reverse a
+ | null a    = a
+ | otherwise = reverse (tail a) ++ [head a]
+\end{semiverbatim}
+  \item \tt{(!!) :: [a] -> Int -> a} --- елемент с пореден номер (от 0)
+    \begin{itemize}[<.->]
+    \item \evalsto{"Haskell"{} !! 2}{'s'}
+    \end{itemize}
+  \item \tt{elem :: \alert{Eq a => }a -> [a] -> Bool} --- проверка за принадлежност на елемент към списък
+    \begin{itemize}[<.->]
+    \item \evalsto{3 `elem` [1..5]}{True}
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Образци и списъци}
-  
+
+  Много удобно е да използваме образци на списъци:
+  \begin{itemize}[<+->]
+  \item \tt{p$_h$:p$_t$} --- пасва на всеки непразен списък \tt l, за който:
+    \begin{itemize}
+    \item образецът \tt{p$_h$} пасва на главата на \tt l
+    \item образецът  \tt{p$_t$} пасва на опашката на \tt l
+    \end{itemize}
+  \item \alert{Внимание:} обикновено слагаме скоби \tt{(h:t)}, понеже операцията \tt: е с много нисък приоритет
+  \item \tt{[p$_1$, p$_2$, \ldots, p$_n$]} --- пасва на всеки списък от точно $n$ елемента \tt{[x$_1$, x$_2$, \ldots, x$_n$]}, за който образецът \tt{p$_i$} пасва на елемента \tt{x$_i$}
+  \item Примери:
+    \begin{itemize}
+    \item     \verb#head (h:_) = h#
+    \item     \verb#tail (_:t) = t#
+    \item     \verb#null [] = True#
+    \item<.-> \verb#null _  = False#
+    \item     \verb#length []    = 0#
+    \item<.-> \verb#length (_:t) = 1 + length t#
+    \end{itemize}
+  \end{itemize}
 \end{frame}
+
+\subsection{Полиморфизъм}
 
 \begin{frame}
   \frametitle{Полиморфни функции}
+  %++, !!, reverse, elem, notElem
+  Функциите \tt{head}, \tt{tail}, \tt{null}, \tt{length}, \tt{reverse} и операцията \tt{++} са \textbf{полиморфни}, понеже работят над списъци от произволни елементи
+  \begin{itemize}[<+->]
+  \item работят над списъци с елементи от произволен тип \tt{[a]}
+  \item \tt a се нарича \textbf{типова променлива}
+  \item свойството се нарича \textbf{параметричен типов полиморфизъм}
+  \item подобно на шаблоните в C++
+  \item \alert{да не се бърка с \textbf{подтипов полиморфизъм}, реализиран с виртуални функции!}
+  \item \tt{[]} е \textbf{полиморфна константа}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Класове от типове (typeclasses)}
-  
+  Функцията \tt{elem} има специални изисквания към типа на елементите на списъка: трябва да могат да бъдат сравнявани с \tt{==} или \tt{/=}
+  \begin{itemize}[<+->]
+  \item \tt{elem :: \alert{Eq a => }a -> [a] -> Bool}
+  \item \tt{Eq} е \alert{клас от типове}
+  \item \tt{Eq} е класа на тези типове, за които има операции \tt{==} и \tt{/=}
+    \begin{itemize}
+    \item можем да си мислим за класовете от типове като за ``интерфейси'', т.е. класове на C++ без член-данни
+    \end{itemize}
+  \item \tt{Eq a} наричаме \alert{класово ограничение} за типа \tt a (class constraint)
+  \item множеството от всички класови ограничения наричаме \alert{контекст}
+  \item \alert{инстанция} на клас от типове наричаме всеки тип, за който са реализирани операциите зададени в класа
+  \item инстанции на \tt{Eq} са:
+    \begin{itemize}
+    \item \tt{Bool}, \tt{Char}, всички числови типове (\tt{Int}, \tt{Integer}, \tt{Float}, \tt{Double})
+    \item списъчните типове \tt{[a]}, за които \tt a е инстанция на \tt{Eq}
+    \item кортежните типове \tt{(t$_1$,\ldots t$_n$)}, за които \tt{t$_i$} са инстанции на \tt{Eq}
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Стандартни класове}
-  
+  Някои от по-често използваните класове на Haskell:
+  \begin{itemize}[<+->]
+  \item \tt{Eq} --- типове с равенство
+  \item \tt{Ord} --- типове с (линейна) наредба
+    \begin{itemize}[<.->]
+    \item операциите \tt{==}, \tt{/=}, \tt{>=}, \tt{<=}, \tt{<}, \tt{>}
+    \item специалната функция \tt{compare}, която сравнява два елемента и връща \tt{LT}, \tt{GT} или \tt{EQ}
+    \item функциите \tt{min} и \tt{max}
+    \end{itemize}
+  \item \tt{Show} --- типове, чиито елементи могат да бъдат извеждани в низ
+    \begin{itemize}[<.->]
+    \item функция \tt{show :: a -> String}
+    \end{itemize}
+  \item \tt{Read} --- типове, чиито елементи могат да бъдат въвеждани от низ
+    \begin{itemize}[<.->]
+    \item функция \tt{read :: String -> a}
+    \end{itemize}
+  \item \tt{Num} --- числови типове
+  \item<.-> \tt{Integral} --- целочислени типове
+  \item<.-> \tt{Floating} --- типове с плаваща запетая
+  \item \alert{числата в Haskell са полиморфни константи!}
+  \end{itemize}
 \end{frame}
 
 \subsection{Отделяне на списъци}
 
 \begin{frame}
   \frametitle{Отделяне на списъци (list comprehension)}
-  
+  Отделянето на списъци е удобен начин за дефиниране на нови списъци чрез използване на дадени такива
+  \begin{itemize}[<+->]
+  \item \tta[ <израз> \tta| <генератор> \{\tta, <генератор>\} \{\tta, <условие>\} \tta]
+  \item{} <генератор> е от вида <образец> \tta{<-} <израз>, където
+    \begin{itemize}
+    \item{} <израз> е от тип списък \tt{[a]}
+    \item{} <образец> пасва на елементи от тип \tt a
+    \end{itemize}
+  \item{} <условие> е произволен израз от тип \tt{Bool}
+  \item За всеки от елементите генериран от <генератор>, които удовлетворяват \alert{всички} <условие>, пресмята <израз> и натрупва резултатите в списък
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Отделяне от повече списъци}
-  
+  \frametitle{Примери за отделяне на списъци}
+
+  \begin{itemize}[<+->]
+  \item \evalstop{[ 2 * x | x <- [1..5] ]}{[2,4,6,8,10]}
+  \item \evalstop{[ x\^{}2 | x <- [1..10], isOdd x]}{[1,9,25,49,81]}
+  \item \tt{[ fn | (\_, fn, grade) <- students, grade >= 2 ]}
+  \item \tt{[ x\^{}2 + y\^{}2 | (x, y) <- vectors, x >= 0, y >= 0]}
+  \item Ако имаме повече от един генератор, се генерират всички възможни комбинации от елементи (декартово произведение)
+  \item \evalstop{[ x++' ':y | x <- ["green"{},"blue"],y <- ["sky"{},"grass"]]}{["green sky"{},"green grass"{},"blue sky"{},"blue grass"]}
+  \item \evalstop{[ (x,y) | x <- [1,2,3], y <- [5,6,7], x + y <= 8 ]}{[(1,5),(1,6),(1,7),(2,5),(2,6),(3,5)]}
+  \item \textbf{Задача.} Да се генерират всички Питагорови тройки в даден интервал.
+  \end{itemize}
+
 \end{frame}
 
 \section{Функции над списъци}
 
 \begin{frame}
   \frametitle{Отрязване на списъци}
-  % take, drop, splitAt
+  \begin{itemize}
+  \item \tt{init :: [a] -> [a]} --- списъка без последния му елемент
+    \begin{itemize}
+    \item \evalsto{init [1..5]}{[1,2,3,4]}
+    \end{itemize}
+  \item \tt{last :: [a] -> a} --- последния елемент на списъка
+    \begin{itemize}
+    \item \evalsto{last "Haskell"{}}l
+    \end{itemize}
+  \item \tt{take :: Int -> [a] -> [a]} --- първите $n$ елемента на списък
+    \begin{itemize}
+    \item \evalsto{take 4 "Hello, world!"{}}{"Hell"}
+    \end{itemize}
+  \item \tt{drop :: Int -> [a] -> [a]} --- списъка без първите $n$ елемента
+    \begin{itemize}
+    \item \evalsto{drop 2 [1,3..10]}{[5,7,9]}
+    \end{itemize}
+  \item \tt{splitAt :: Int -> [a] -> ([a],[a])}
+    \begin{itemize}
+    \item \tt{splitAt n l = (take n l, drop n l)}
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fraglie]
   \frametitle{Агрегиращи функции}
   % maximum, minimum, product, sum, and, or, concat
+  \small
+  \begin{itemize}
+  \item \tt{maximum :: Ord a => [a] -> a} --- максимален елемент
+  \item \tt{minimum :: Ord a => [a] -> a} --- минимален елемент
+  \item \tt{sum :: Num a => [a] -> a} --- сума на списък от числа
+  \item \tt{product :: Num a => [a] -> a} --- произведение на списък от числа
+  \item \tt{and :: [Bool] -> Bool} --- конюнкция на булеви стойности
+  \item \tt{or :: [Bool] -> Bool} --- дизюнкция на булеви стойности
+  \item \tt{concat :: [[a]] -> [a]} --- конкатенация на списък от списъци
+  \pause
+  \item Примери:
+    \begin{itemize}[<+->]
+    \item \verb#[(sum l, product l)| l <- ll, maximum l == 2*minimum l]#
+    \item \verb#and [ or [ mod x k == 0 | x <- row] | row <- matrix]#
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
-\section{Функции от по-висок ред над списъци}
+\subsection{Функции от по-висок ред над списъци}
 
 \begin{frame}
   \frametitle{Трансформация (\tt{map})}
-  
+
 \end{frame}
 
 \begin{frame}
   \frametitle{Филтриране (\tt{filter})}
-  
+
 \end{frame}
 
 \begin{frame}
   \frametitle{Дясно и ляво свиване (\tt{foldr} и \tt{foldl})}
-  
+
 \end{frame}
 
 \begin{frame}
   \frametitle{Свиване на непразни списъци (\tt{foldr1} и \tt{foldl1})}
-  
+
 \end{frame}
 
 \begin{frame}
   \frametitle{Сканиране на списъци (\tt{scanl}, \tt{scanr})}
-  
+
 \end{frame}
 
 
 \begin{frame}
   \frametitle{Съшиване на списъци (\tt{zip}, \tt{zipWith})}
-  
+
 \end{frame}
 
 \begin{frame}
-  \frametitle{Разбиване на списъци (\tt{break}, \tt{span}, \tt{takeWhile}, \tt{dropWhile})} 
-  
+  \frametitle{Разбиване на списъци (\tt{break}, \tt{span}, \tt{takeWhile}, \tt{dropWhile})}
+
 \end{frame}
 
 \begin{frame}
   \frametitle{Логически квантори (\tt{all}, \tt{any})}
-  
+
 \end{frame}
 
 \end{document}

@@ -84,6 +84,19 @@
 % два израза се оценяват до една и съща стойност с пауза за въпрос
 \newcommand{\evalstwop}[3]{\tt{#1 $\longrightarrow$ \rvl{#2} $\longleftarrow$ #3}}
 
+% има тип
+\newcommand{\typesto}[2]{\tt{#1 :{}: #2}}
+
+% има тип с пауза за въпрос
+\newcommand{\typestop}[2]{\tt{#1 :{}: \rvl{#2}}}
+
+% няма тип
+\newcommand{\ntypes}[1]{\tta{#1 :{}: $\bot$}}
+
+% няма тип с пауза за въпрос
+\newcommand{\ntypesp}[1]{\alt<.(1)->\tta\tt{#1 :{}: \rvl{$\bot$}}}
+
+
 % оценка на функция в среда
 \newcommand{\funcenv}[3]{\begin{tabular}{||l@{\hskip 1ex}l@{\hskip 1ex}l||}%
                            \hline
