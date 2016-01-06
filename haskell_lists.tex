@@ -273,6 +273,24 @@ reverse a
   \end{itemize}
 \end{frame}
 
+\begin{frame}[label=current]
+  \frametitle{Случаи по образци (\tt{case})}
+  \begin{itemize}[<+->]
+  \item \tta{case} <израз> \tta{of} \{ <образец> \tta{->} <израз> \}$^+$
+  \item \begin{tabular}[t]{@{}ll}
+          \tta{case} <израз> \tta{of} &<образец$_1$> \tta{->} <израз$_1$>\\
+                                      &\ldots\\
+                                      &<образец$_n$> \tta{->} <израз$_n$>
+        \end{tabular}
+      \item ако <израз> пасва на <образец$_1$> връща <израз$_1$>, иначе:
+    \item \ldots
+    \item ако <израз> пасва на <образец$_n$> връща <израз$_n$>, иначе:
+    \item \alert{Грешка!}
+    \item Използването на образци в дефиниции всъщност е синтактична захар за конструкцията \tt{case}!
+    \item \tt{case} може да се използва навсякъде, където се очаква израз
+  \end{itemize}
+\end{frame}
+
 \subsection{Полиморфизъм}
 
 \begin{frame}
