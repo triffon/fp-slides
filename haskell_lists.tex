@@ -21,7 +21,7 @@
   \begin{itemize}[<+->]
   \item Примери: \tt{(1, 2)}, \tt{(3.5,'A', False)}, \tt{(("square"{}, (\^{}2)), 1.0)}
   \item Тип кортеж от $n$ елемента: \tt{(t$_1$, t$_2$, \ldots, t$_n$)}
-  \item Допустими стойности: наредени $n$-торки от вида \tt{(x$_1$, x$_2$, \ldots, x$_n$)}, където \tt{x$_i$} е от тип \tt{t$_i$}
+  \item Стойности: наредени $n$-торки от вида \tt{(x$_1$, x$_2$, \ldots, x$_n$)}, където \tt{x$_i$} е от тип \tt{t$_i$}
   \item Позволяват ``пакетиране"' на няколко стойности в една
   \item Операции за наредени двойки:
     \begin{itemize}
@@ -153,7 +153,6 @@ betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
   \item \typestop{((1,2),(3),(4,5,6))}{((Int,Int),Int,(Int,Int,Int))}
   \item \typestop{[[]]}{[[a]]}
   \item \typestop{[]:[]}{[[a]]}
-  \item \ntypesp{[[1]]:[[]]}
   \item \typestop{[1]:[[]]}{[[Int]]}
   \item \ntypesp{[]:[1]}
   \item \typestop{[[1,2,3],[]]}{[[Int]]}
@@ -169,7 +168,7 @@ betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
   \begin{itemize}[<+->]
   \item В Haskell низовете са представени като списъци от символи
   \item \tt{type String = [Char]}
-  \item Всички операции над списъци важат и над списъци
+  \item Всички операции над списъци важат и над низове
   \item Примери
     \begin{itemize}
     \item \tt{['H', 'e', 'l', 'l', 'o' ]} = \tt{"Hello"}
@@ -177,7 +176,7 @@ betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
     \item \tt{'H':'e':"llo"} = \tt{"Hello"}
     \item \tt{"{}"} = \tt{[] :: [Char]}
     \item \ntypesp{[[1,2,3],{}"{}"]}
-    \item \typestop{["12"{},['3'],[]]}{String}
+    \item \typestop{["12"{},['3'],[]]}{[String]}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -223,7 +222,7 @@ betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
 \begin{frame}[fragile]
   \frametitle{Рекурсивни функции над списъци}
   \begin{itemize}[<+->]
-  \item \tt{(++) :: a -> [a] -> [a]} --- слепва два списъка
+  \item \tt{(++) :: [a] -> [a] -> [a]} --- слепва два списъка
     \begin{itemize}[<.->]
     \item  \evalsto{[1..3] ++ [5..7]}{[1,2,3,5,6,7]}
     \end{itemize}
@@ -277,17 +276,17 @@ reverse a
   \frametitle{Случаи по образци (\tt{case})}
   \begin{itemize}[<+->]
   \item \tta{case} <израз> \tta{of} \{ <образец> \tta{->} <израз> \}$^+$
-  \item \begin{tabular}[t]{@{}ll}
-          \tta{case} <израз> \tta{of} &<образец$_1$> \tta{->} <израз$_1$>\\
-                                      &\ldots\\
-                                      &<образец$_n$> \tta{->} <израз$_n$>
+  \item \begin{tabular}[t]{@{}l@{ }l}
+          \tta{case} <израз> \tta{of}&<образец$_1$> \tta{->} <израз$_1$>\\
+                                     &\ldots\\
+                                     &<образец$_n$> \tta{->} <израз$_n$>
         \end{tabular}
-      \item ако <израз> пасва на <образец$_1$> връща <израз$_1$>, иначе:
-    \item \ldots
-    \item ако <израз> пасва на <образец$_n$> връща <израз$_n$>, иначе:
-    \item \alert{Грешка!}
-    \item Използването на образци в дефиниции всъщност е синтактична захар за конструкцията \tt{case}!
-    \item \tt{case} може да се използва навсякъде, където се очаква израз
+  \item ако <израз> пасва на <образец$_1$>, връща <израз$_1$>, иначе:
+  \item<.-> \ldots
+  \item<.-> ако <израз> пасва на <образец$_n$>, връща <израз$_n$>, иначе:
+  \item<.-> \alert{Грешка!}
+  \item Използването на образци в дефиниции всъщност е синтактична захар за конструкцията \tt{case}!
+  \item \tt{case} може да се използва навсякъде, където се очаква израз
   \end{itemize}
 \end{frame}
 
