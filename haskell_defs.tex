@@ -87,7 +87,7 @@ grade x
   \frametitle{Примери за \tt{let}}
   \begin{itemize}[<+->]
   \item \evalsto{let x = 5 in x + 3}8
-  \item \evalsto{%
+  \item \evalstop{%
       \begin{tabular}[t]{@{}l@{ }l@{}}
         let&f x = y + x\\
            &y = 7\\
@@ -231,7 +231,7 @@ in  b h
 \begin{frame}
   \frametitle{Алтернативен синтаксис за блокове}
   \begin{itemize}[<+->]
-  \item Всъщност подравняването е синтактична захар за блоко в Haskell
+  \item Всъщност подравняването е синтактична захар за блок в Haskell
   \item \tta\{ \{ <дефиниция> \tta; \} \tta\}
   \item \tta\{ <дефиниция$_1$> \tta; \ldots <дефиниция$_n$> [\tta;] \tta\}
   \item Интуитивни правила:
@@ -279,7 +279,7 @@ gcd x y
   \item Как се разбира кое равенство да се използва?
   \item Видът на формалните параметри наричаме \alert{образец}
   \item Търси се на кой образец пасва фактическия параметър
-  \item Избира се първия образец \alert{отгоре надолу}
+  \item Избира се първият образец \alert{отгоре надолу}
   \item Видове образци:
     \begin{itemize}
     \item \textbf{литерали} --- пасват при точно съвпадение
@@ -287,10 +287,11 @@ gcd x y
     \item \textbf{анонимен образец \tt\_} ---  пасва винаги без да свързва фактическата стойност с име
     \end{itemize}
   \item Пример:
-\begin{verbatim}
-(&&) False _ = False
-(&&) _     b = b
-\end{verbatim}
+\begin{semiverbatim}
+\alt<+->{False && _ = False
+_     && b = b}{(&&) False _ = False
+(&&) _     b = b}
+\end{semiverbatim}
   \end{itemize}
 \end{frame}
 

@@ -147,13 +147,14 @@ betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
   \item \typestop{[False]}{[Bool]}
   \item \ntypesp{["Иван"{}, 4.5]}
   \item \ntypesp{[1]:2}
-  \item \typestop{[[]]}{[[a]]}
   \item \typestop{[[1,2],[3],[4,5,6]]}{[[Int]]}
   \item \typestop{([1,2],[3],[4,5,6])}{([Int],[Int],[Int])}
   \item \ntypesp{[(1,2),(3),(4,5,6)]}
   \item \typestop{((1,2),(3),(4,5,6))}{((Int,Int),Int,(Int,Int,Int))}
   \item \typestop{[[]]}{[[a]]}
   \item \typestop{[]:[]}{[[a]]}
+  \item \ntypesp{[[1]]:[[]]}
+  \item \typestop{[1]:[[]]}{[[Int]]}
   \item \ntypesp{[]:[1]}
   \item \typestop{[[1,2,3],[]]}{[[Int]]}
   \item \ntypesp{[[1,2,3],[[]]]}
@@ -175,7 +176,7 @@ betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
     \item \tt{'H':'e':'l':'l':'o':[]} = \tt{"Hello"}
     \item \tt{'H':'e':"llo"} = \tt{"Hello"}
     \item \tt{"{}"} = \tt{[] :: [Char]}
-    \item \ntypesp{[[1,2,3],""]}
+    \item \ntypesp{[[1,2,3],{}"{}"]}
     \item \typestop{["12"{},['3'],[]]}{String}
     \end{itemize}
   \end{itemize}
@@ -397,7 +398,7 @@ reverse a
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fraglie]
+\begin{frame}[fragile]
   \frametitle{Агрегиращи функции}
   % maximum, minimum, product, sum, and, or, concat
   \small
