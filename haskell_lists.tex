@@ -374,7 +374,7 @@ reverse a
 
   \begin{itemize}[<+->]
   \item \evalstop{[ 2 * x | x <- [1..5] ]}{[2,4,6,8,10]}
-  \item \evalstop{[ x\^{}2 | x <- [1..10], isOdd x]}{[1,9,25,49,81]}
+  \item \evalstop{[ x\^{}2 | x <- [1..10], odd x]}{[1,9,25,49,81]}
   \item \tt{[ fn | (\_, fn, grade) <- students, grade >= 2 ]}
   \item \tt{[ x\^{}2 + y\^{}2 | (x, y) <- vectors, x >= 0, y >= 0]}
   \item Ако имаме повече от един генератор, се генерират всички възможни комбинации от елементи (декартово произведение)
@@ -510,7 +510,6 @@ reverse a
     \item \evalstop{map sum [[1,2,3],[4,5,6],[7,8,9]]}{[6,15,24]}
     \item \evalstop{map ("a "++) ["cat"{},"dog"{},"pig"]}{["a cat"{},"a dog"{},"a pig"]}
     \item \evalstop{map (\textbackslash f -> f 2) [(\^{}2),(1+),(*3)]}{[4,3,6]}
-    \item 
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -530,9 +529,9 @@ filter p (x:xs)
 \end{verbatim}
   \item Примери
     \begin{itemize}
-    \item \evalstop{filter isOdd [1..5]}{[1,3,5]}
+    \item \evalstop{filter odd [1..5]}{[1,3,5]}
     \item \evalstop{filter (\textbackslash f -> f 2 > 3) [(\^{}2),(+1),(*3)]}{[(\^{}2),(*3)]}
-    \item \evalstop{map (filter isEven) [[1,2,3],[4,5,6],[7,8,9]]}{[[2],[4,6],[8]]}
+    \item \evalstop{map (filter even) [[1,2,3],[4,5,6],[7,8,9]]}{[[2],[4,6],[8]]}
     \item \evalstop{map (\textbackslash x -> map (\textbackslash f -> filter f x) [(<0),(==0),(>0)]) [[-2,1,0],[1,4,-1],[0,0,1]]}{[[[-2],[0],[1]],[[-1],[],[1,4]],[[],[0,0],[1]]]}
     \end{itemize}
   \end{itemize}
@@ -583,9 +582,9 @@ foldr op nv (x:xs) = x `op` foldr op nv xs
     \item \tt{concat = foldr (++) []}
     \item \tt{and = foldr (\&\&) True}
     \item \tt{or = foldr (||) False}
-    \item \tt{map f = foldr (\textbackslash x\only<-10>{ r} -> \alt<10>{f x : r}{(f x:)})}
+    \item \tt{map f = foldr (\textbackslash x\only<-10>{ r} -> \alt<10>{f x : r}{(f x:)}) []}
       \onslide<+->
-    \item \tt{filter p = foldr (\textbackslash x\only<-13>{ r} -> \temporal<13>{if p x then x : r else r}{(if p x then (x:) else id) r}{if p x then (x:) else id})}
+    \item \tt{filter p = foldr (\textbackslash x\only<-13>{ r} -> \temporal<13>{if p x then x : r else r}{(if p x then (x:) else id) r}{if p x then (x:) else id}) []}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -601,7 +600,7 @@ foldr op nv (x:xs) = x `op` foldr op nv xs
 foldl _  nv [] = nv
 foldl op nv (x:xs) = foldl op (nv `op` x) xs
 \end{verbatim}
-  \item Примери
+  \item Пример
     \begin{itemize}[<.->]
     \item \tt{flip f x y = f y x}
     \item \tt{reverse = foldl (flip (:)) []}
@@ -683,7 +682,7 @@ foldr1 op (x:xs) = x `op` foldr1 op xs
     \item \evalsto{zip [1..3] [5..10]}{[(1,5),(2,6),(3,7)]}
     \item \evalsto{zipWith (*) [1..3] [5..10]}{[5,12,21]}
     \item \tt{zip = zipWith (,)}
-    \item \tt{unzip = foldr (\textbackslash(x,y) (l1,l2) -> (x:l1,x:l2)) ([],[])}
+    \item \tt{unzip = foldr (\textbackslash(x,y) (l1,l2) -> (x:l1,y:l2)) ([],[])}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -717,19 +716,19 @@ foldr1 op (x:xs) = x `op` foldr1 op xs
 \end{frame}
 
 \begin{frame}
-  \frametitle{Логически квантори (\tt{all}, \tt{any})}
+  \frametitle{Логически квантори (\tt{any}, \tt{all})}
   \begin{itemize}[<+->]
-  \item \tt{all :: (a -> Bool) -> [a] -> Bool}
-    \begin{itemize}
-    \item проверява дали предикатът е изпълнен за \textbf{всички елементи} на списъка
-    \item \tt{all p l = and (map p l)}
-    \item \tt{sorted l = all (\textbackslash(x,y) -> x <= y) (zip l (tail l))}
-    \end{itemize}
   \item \tt{any :: (a -> Bool) -> [a] -> Bool}
     \begin{itemize}
     \item проверява дали предикатът е изпълнен за \textbf{някой елемент} от списъка
     \item \tt{any p l = or (map p l)}
     \item \tt{elem x = any (==x)}
+    \end{itemize}
+  \item \tt{all :: (a -> Bool) -> [a] -> Bool}
+    \begin{itemize}
+    \item проверява дали предикатът е изпълнен за \textbf{всички елементи} на списъка
+    \item \tt{all p l = and (map p l)}
+    \item \tt{sorted l = all (\textbackslash(x,y) -> x <= y) (zip l (tail l))}
     \end{itemize}
   \end{itemize}
 \end{frame}
