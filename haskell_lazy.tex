@@ -34,7 +34,7 @@
     \onslide<+->
     \lra 600$
     \begin{itemize}
-    \item<16-> оценяваме \alert{отвътре навън}
+    \item<16-> оценява се \alert{отвътре навън}
     \item<17-> \alert{стриктно} (апликативно, лакомо) оценяване
     \end{itemize}
   \item $\underline{g(f(4))}
@@ -47,7 +47,7 @@
     \onslide<+->
     \lra 600$
     \begin{itemize}
-    \item<16-> оценяваме \alert{отвън навътре}
+    \item<16-> оценява се \alert{отвън навътре}
     \item<17-> \alert{нестриктно} (нормално, лениво) оценяване
     \end{itemize}
   \end{itemize}
@@ -175,14 +175,14 @@ g l   = f (head l) (head (tail l))
     \end{itemize}
   \item ако \tt{s = f e$_1$ e$_2$ \ldots\ e$_n$}, за \tt f $n$-местна примитивна функция:
     \begin{itemize}
-    \item оценяваме последователно \tt{e$_1$}, \ldots\ \tt{e$_n$}
-    \item прилагаме примитивната операция над оценките им
+    \item оценяват се последователно \tt{e$_1$}, \ldots\ \tt{e$_n$}
+    \item прилага се примитивната операция над оценките им
     \end{itemize}
   \item нека сега да допуснем, че \tt{s = f e}
   \item първо се оценява \tt f, за да разберем как да продължим
   \item ако \tt{f x$_1$ \ldots\ x$_n$ | g$_1$ = t$_1$ \ldots\ | g$_k$ = t$_k$} е дефинирана чрез пазачи:
     \begin{itemize}
-    \item тогава заместваме \tt f със израза: \tt{\textbackslash x$_1$ \ldots\ x$_n$ -> if g$_1$ then t$_1$ else \ldots\ if g$_k$ then t$_k$ else error "..."}
+    \item тогава \tt f се замества с израза: \tt{\textbackslash x$_1$ \ldots\ x$_n$ -> if g$_1$ then t$_1$ else \ldots\ if g$_k$ then t$_k$ else error "..."}
 
     \end{itemize}
   \item ако \tt f е конструктор (константа), \alert{оценката остава \tt{f e}}
@@ -257,18 +257,18 @@ sumFirst (x:xs) (y:ys) = x + y
 \newcommand{\lra}{\onslide<+->$\longrightarrow$}
 \begin{tabular}{r@{ }l@{ }l}
   &\multicolumn 2l{\tt{(filter isPrime [4..1000]) \underline{!!} 1}}\\\pause
-  \lra&\multicolumn 2l{\tt{(\textbackslash(x:xs) n -> xs !! (n-1)) \underline{(filter isPrime [4..1000]) 1}}}\\
+  \lra&\multicolumn 2l{\tt{(\textbackslash(x:xs) n -> xs !! (n-1)) \underline{(filter isPrime [4..1000])} 1}}\\
   \lra&\multicolumn 2l{\tt{(\textbackslash(x:xs) n -> xs !! (n-1)) (\underline{filter} isPrime [4..1000]) 1}}\\
-  \lra&\tt{\ldots \underline{(\textbackslash p (z:zs) ->}}&\underline{\tt{if p z then z:filter p zs}}\\
-  &&\tt{\underline{else filter p zs) isPrime} [4..1000] \ldots}\\
-  \lra&\tt{\ldots \lett{p=isPrime}{}}&\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}\\
-  &&\tt{else filter p zs) \underline{[4..1000]} \ldots}\\
-  \lra&\tt{\ldots \lett{p=isPrime}{}}&\underline{\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}}\\
-  &&\underline{\tt{else filter p zs) (4:[5..1000])} \ldots}\\
-  \lra&\multicolumn 2{@{}l}{\tt{\ldots \lett{p=isPrime; z=4; zs=[5..1000]}{}}}\\
-  &\multicolumn 2{@{}l}{\tt{if \underline{p z} then z:filter p zs else filter p zs \ldots}}\\
-  \lra&\multicolumn 2{@{}l}{\tt{\ldots \lett{p=isPrime; z=4; zs=[5..1000]}{}}}\\
-  &\multicolumn 2{@{}l}{\tt{if False then z:filter p zs else \underline{filter p zs} \ldots}}\\
+  \lra&\ldots\tt{\underline{(\textbackslash p (z:zs) ->}}&\underline{\tt{if p z then z:filter p zs}}\\
+  &&\tt{\underline{else filter p zs) isPrime} [4..1000]}\ldots\\
+  \lra&\ldots\tt{\lett{p=isPrime}{}}&\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}\\
+  &&\tt{else filter p zs) \underline{[4..1000]}}\ldots\\
+  \lra&\ldots\tt{\lett{p=isPrime}{}}&\underline{\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}}\\
+  &&\underline{\tt{else filter p zs) (4:[5..1000]))}}\ldots\\
+  \lra&\multicolumn 2{@{}l}{\ldots\tt{\lett{p=isPrime; z=4; zs=[5..1000]}{}}}\\
+  &\multicolumn 2{@{}l}{\tt{if \underline{p z} then z:filter p zs else filter p zs}\ldots}\\
+  \lra&\multicolumn 2{@{}l}{\ldots\tt{\lett{p=isPrime; z=4; zs=[5..1000]}{}}}\\
+  &\multicolumn 2{@{}l}{\tt{if False then z:filter p zs else \underline{filter p zs}}\ldots}\\
 \end{tabular}
 \end{frame}
 
@@ -276,14 +276,14 @@ sumFirst (x:xs) (y:ys) = x + y
   \frametitle{Оценяване в Haskell: пример 2}
 \newcommand{\lra}{\onslide<+->$\longrightarrow$}
 \begin{tabular}{r@{ }l@{ }l}
-  \lra&\tt{\ldots \underline{(\textbackslash p (z:zs) ->}}&\underline{\tt{if p z then z:filter p zs}}\\
-  &&\tt{\underline{else filter p zs) isPrime} [5..1000] \ldots}\\
-  \lra&\tt{\ldots \lett{p=isPrime}{}}&\underline{\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}}\\
-  &&\underline{\tt{else filter p zs) (5:[6..1000])} \ldots}\\
+  \lra&\ldots\tt{\underline{(\textbackslash p (z:zs) ->}}&\underline{\tt{if p z then z:filter p zs}}\\
+  &&\tt{\underline{else filter p zs) isPrime} [5..1000]}\ldots\\
+  \lra&\ldots\tt{\lett{p=isPrime}{}}&\underline{\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}}\\
+  &&\underline{\tt{else filter p zs) (5:[6..1000])}}\ldots\\
   \lra&\multicolumn 2{@{}l}{\tt{\ldots \lett{p=isPrime; z=5; zs=[6..1000]}{}}}\\
-  &\multicolumn 2{@{}l}{\tt{if \underline{p z} then z:filter p zs else filter p zs \ldots}}\\
+  &\multicolumn 2{@{}l}{\tt{if \underline{p z} then z:filter p zs else filter p zs}\ldots}\\
   \lra&\multicolumn 2{@{}l}{\tt{\ldots \lett{p=isPrime; z=5; zs=[6..1000]}{}}}\\
-  &\multicolumn 2{@{}l}{\tt{\underline{if True then z:filter p zs else filter p zs}} \ldots}\\
+  &\multicolumn 2{@{}l}{\tt{if True then \underline{z:filter p zs} else filter p zs}\ldots}\\
   \lra&\multicolumn 2{@{}l}{\tt{\underline{(\textbackslash(x:xs) n -> xs !! (n-1)) (5:filter isPrime [6..1000])} 1}}\\
   \lra&\multicolumn 2{@{}l}{\tt{\lett{xs=filter isPrime [6..1000]}{}}\underline{\tt{(\textbackslash n -> xs !! (n-1)) 1}}}\\
   \lra&\multicolumn 2{@{}l}{\tt{\lett{xs=filter isPrime [6..1000]; n=1}{xs \underline{!!} (n-1)}}}\\
@@ -295,20 +295,20 @@ sumFirst (x:xs) (y:ys) = x + y
   \frametitle{Оценяване в Haskell: пример 2}
 \newcommand{\lra}{\onslide<+->$\longrightarrow$}
 \begin{tabular}{r@{ }l@{ }l}
-  \lra&\tt{\ldots \underline{(\textbackslash p (z:zs) ->}}&\underline{\tt{if p z then z:filter p zs}}\\
-  &&\tt{\underline{else filter p zs) isPrime} [6..1000] \ldots}\\
-  \lra&\tt{\ldots \lett{p=isPrime}{}}&\underline{\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}}\\
-  &&\underline{\tt{else filter p zs) (6:[7..1000])} \ldots}\\
-  \lra&\multicolumn 2{@{}l}{\tt{\ldots \lett{p=isPrime; z=6; zs=[7..1000]}{}}}\\
-  &\multicolumn 2{@{}l}{\tt{if \underline{p z} then z:filter p zs else filter p zs \ldots}}\\
-  \lra&\multicolumn 2{@{}l}{\tt{\ldots \lett{p=isPrime; z=6; zs=[7..1000]}{}}}\\
-  &\multicolumn 2{@{}l}{\tt{if False then z:filter p zs else \underline{filter p zs}} \ldots}\\
-  \lra&\tt{\ldots \underline{(\textbackslash p (z:zs) ->}}&\underline{\tt{if p z then z:filter p zs}}\\
-  &&\tt{\underline{else filter p zs) isPrime} [7..1000] \ldots}\\
-  \lra&\tt{\ldots \lett{p=isPrime}{}}&\underline{\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}}\\
-  &&\underline{\tt{else filter p zs) (7:[8..1000])} \ldots}\\
-  \lra&\multicolumn 2{@{}l}{\tt{\ldots \lett{p=isPrime; z=7; zs=[8..1000]}{}}}\\
-  &\multicolumn 2{@{}l}{\tt{if \underline{p z} then z:filter p zs else filter p zs \ldots}}
+  \lra&\ldots\tt{\underline{(\textbackslash p (z:zs) ->}}&\underline{\tt{if p z then z:filter p zs}}\\
+  &&\tt{\underline{else filter p zs) isPrime} [6..1000]}\ldots\\
+  \lra&\ldots\tt{\lett{p=isPrime}{}}&\underline{\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}}\\
+  &&\underline{\tt{else filter p zs) (6:[7..1000])}}\ldots\\
+  \lra&\multicolumn 2{@{}l}{\ldots\tt{\lett{p=isPrime; z=6; zs=[7..1000]}{}}}\\
+  &\multicolumn 2{@{}l}{\tt{if \underline{p z} then z:filter p zs else filter p zs}\ldots}\\
+  \lra&\multicolumn 2{@{}l}{\ldots\tt{\lett{p=isPrime; z=6; zs=[7..1000]}{}}}\\
+  &\multicolumn 2{@{}l}{\tt{if False then z:filter p zs else \underline{filter p zs}}\ldots}\\
+  \lra&\ldots\tt{\underline{(\textbackslash p (z:zs) ->}}&\underline{\tt{if p z then z:filter p zs}}\\
+  &&\tt{\underline{else filter p zs) isPrime} [7..1000]}\ldots\\
+  \lra&\ldots\tt{\lett{p=isPrime}{}}&\underline{\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}}\\
+  &&\underline{\tt{else filter p zs) (7:[8..1000])}}\ldots\\
+  \lra&\multicolumn 2{@{}l}{\ldots\tt{\lett{p=isPrime; z=7; zs=[8..1000]}{}}}\\
+  &\multicolumn 2{@{}l}{\tt{if \underline{p z} then z:filter p zs else filter p zs}\ldots}
 \end{tabular}
 \end{frame}
 
@@ -316,8 +316,8 @@ sumFirst (x:xs) (y:ys) = x + y
   \frametitle{Оценяване в Haskell: пример 2}
 \newcommand{\lra}{\onslide<+->$\longrightarrow$}
 \begin{tabular}{r@{ }l@{ }l}
-  \lra&\multicolumn 2{@{}l}{\tt{\ldots \lett{p=isPrime; z=7; zs=[8..1000]}{}}}\\
-  &\multicolumn 2{@{}l}{\tt{if True then z:filter p zs else filter p zs} \ldots}\\
+  \lra&\multicolumn 2{@{}l}{\ldots\tt{\lett{p=isPrime; z=7; zs=[8..1000]}{}}}\\
+  &\multicolumn 2{@{}l}{\tt{if True then \underline{z:filter p} zs else filter p zs} \ldots}\\
   \lra&\multicolumn 2{@{}l}{\underline{\tt{(\textbackslash (y:\_) 0 -> y) (7:filter isPrime [8..1000]) 0}}}\\
   \lra&\multicolumn 2{@{}l}{\tt{\lett{y=7}y}}\\
   \lra&\tt 7
@@ -351,8 +351,8 @@ sumFirst (x:xs) (y:ys) = x + y
   \item \tta[from\tta{..}\tta] $\rightarrow$ \tta[from\tta, from+1\tta, \ldots\tta]
   \item Примери:
     \begin{itemize}
-    \item \tt{nats = [1..]}
-    \item \evalsto{take 5 [1..]}{[1,2,3,4,5]}
+    \item \tt{nats = [0..]}
+    \item \evalsto{take 5 [0..]}{[0,1,2,3,4]}
     \item \evalsto{take 26 ['a'..]}{abcdefghijklmnopqrstuvwxyz"}
     \end{itemize}
   \item Синтактична захар за \tt{enumFrom from}
@@ -375,7 +375,7 @@ sumFirst (x:xs) (y:ys) = x + y
     \begin{itemize}
     \item създава безкрайния списък \tt{[x,x,\ldots]}
     \item \tt{repeat x = x:repeat x}
-    \item \tt{replicate x n = take n (repeat x)}
+    \item \tt{replicate n x = take n (repeat x)}
     \end{itemize}
   \item \tt{cycle :: [a] -> [a]}
     \begin{itemize}
@@ -397,7 +397,7 @@ sumFirst (x:xs) (y:ys) = x + y
   \item \tt{oddSquares = \rvl{[ x\^{}2 | x <- [1,3..] ]}}
   \item \tt{twins = \rvl{[ (x,x+2) | x <- [1..], prime x, prime
         (x+2) ]}}
-  \item \tt{pairs = \rvl{[ (x,y) | x <- [1..], y <- [1..x - 1] ]}}
+  \item \tt{pairs = \rvl{[ (x,y) | x <- [0..], y <- [0..x - 1] ]}}
   \item \tt{pythagoreanTriples = \rvl{
         \begin{tabular}[t]{ll}
           [ (a,b,c) | &c <- [1..],\\
@@ -413,7 +413,7 @@ sumFirst (x:xs) (y:ys) = x + y
   Повечето функции от по-висок ред работят и над безкрайни списъци!
   \begin{itemize}[<+->]
   \item \tt{powers2 = 1 : map (*2) powers2}
-  \item \tt{notdiv k = filter (\textbackslash x -> x `mod` k == 0) [1..]}
+  \item \tt{notdiv k = filter (\textbackslash x -> x `mod` k > 0) [1..]}
   \item \tt{fibs = 0:1:zipWith (+) fibs (tail fibs)}
   \item \evalstop{foldr (+) 0 [1..]}{\ldots}
     \begin{itemize}
@@ -463,9 +463,10 @@ sumFirst (x:xs) (y:ys) = x + y
     \item \tt{\alt<+->{sumOddSquares = sum . map (\^{}2) . filter odd}{sumOddSquares l = sum (map (\^{}2) (filter odd l))}}
     \item \tt{repeated n f x = foldr (\$) x (replicate n f)}
     \item \tt{repeated n f = foldr (.) id (replicate n f)}
-    \item \tt{repeated n f = foldr (.) id \$ replicate n f}
-    \item \tt{repeated n f = foldr (.) id . replicate n \$ f}
+    \item \tt{repeated n f = foldr (.) id ((replicate n) f)}
     \item \tt{repeated n = foldr (.) id . replicate n}
+    \item \tt{repeated n = (foldr (.) id .) (replicate n)}
+    \item \tt{repeated = (foldr (.) id .) . replicate}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -567,6 +568,7 @@ sumFirst (x:xs) (y:ys) = x + y
   \newcommand{\lra}{\onslide<+->$\longrightarrow$}
   \begin{tabular}{rl}
     &\tt{foldl (+) 0 [1..4]}\\
+    \pause
    \lra&\tt{foldl (+) (0 + 1) [2..4]}\\
    \lra&\tt{foldl (+) ((0 + 1) + 2) [3..4]}\\
    \lra&\tt{foldl (+) (((0 + 1) + 2) + 3) [4..4]}\\
