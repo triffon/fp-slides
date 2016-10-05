@@ -3,7 +3,7 @@
 
 \title{Какво е функционално програмиране?}
 
-\date{7 октомври 2015 г.}
+\date{6 октомври 2016 г.}
 
 \begin{document}
 
@@ -16,38 +16,34 @@
 \begin{frame}
   \frametitle{Императивен стил}
 
-  Описваме последователно изчислителните стъпки.
-
+  Описваме последователно изчислителните стъпки.\\[1em]
   \begin{columns}[t,onlytextwidth]
+
     \column{0.5\textwidth}
-
-    \textbf{Неструктурирано програмиране}
-
+    \textbf{Неструктурирано\\програмиране}\\[1em]
     \begin{enumerate}
     \item Въведи \tt a, \tt b
-    \item Ако \tt{a = b}, към 6.
-    \item Ако \tt{a > b}, към 5.
-    \item \tt{b $\leftarrow$ b - a}; към 2.
-    \item \tt{a $\leftarrow$ b - a}; към 2.
+    \item Ако \tt{a $=$ b}, към 6.
+    \item Ако \tt{a $>$ b}, към 5.
+    \item \tt{b $\leftarrow$ b $-$ a}; към 2.
+    \item \tt{a $\leftarrow$ b $-$ a}; към 2.
     \item Изведи a
     \item Край
     \end{enumerate}
 
     \column{0.5\textwidth}
-
-    \textbf{Структурирано програмиране}
-
+    \textbf{Структурирано\\програмиране}\\[1em]
     \begin{itemize}
     \item Въведи \tt a, \tt b
-    \item Докато \tt{a != b}
+    \item Докато \tt{a $\neq$ b}
       \begin{itemize}
-      \item Ако \tt{a > b}
+      \item Ако \tt{a $>$ b}
         \begin{itemize}
-        \item \tt{a $\leftarrow$ b - a}
+        \item \tt{a $\leftarrow$ b $-$ a}
         \end{itemize}
       \item В противен случай
         \begin{itemize}
-        \item \tt{b $\leftarrow$ b - a}
+        \item \tt{b $\leftarrow$ b $-$ a}
         \end{itemize}
       \end{itemize}
     \item Изведи \tt a
@@ -59,11 +55,8 @@
 \begin{frame}
   \frametitle{Декларативен стил}
 
-  Описваме свойствата на желания резултат.
-  \vspace{1em}
-
+  Описваме свойствата на желания резултат.\\[1em]
   \textbf{Програмиране с ограничения}
-
   \begin{itemize}
   \item Дадени са \tt a и \tt b.
   \item Търсим \tt d, такова че:
@@ -71,10 +64,11 @@
     \item \tt{1 $\leq$ d $\leq$ a,b}
     \item ``\tt d е делител на \tt a''
     \item ``\tt d е делител на \tt b''
-    \item \tt d е възможно най-голямо, където
-    \item за дадени \tt x и \tt y казваме, че ``\tt x е делител на \tt y'', ако
-    \item намерим такова естествено число \tt k, че
+    \item \tt d е възможно най-голямо,
+    \item където за дадени \tt x и \tt y:
       \begin{itemize}
+      \item ``\tt x е делител на \tt y'', ако
+      \item намерим такова естествено число \tt k, че
       \item \tt{1 $\leq$ k $\leq$ y}
       \item \tt k * \tt x = \tt y
       \end{itemize}
@@ -85,27 +79,20 @@
 \begin{frame}
   \frametitle{Декларативен стил (2)}
 
-  Описваме свойствата на желания резултат.
-  \vspace{1em}
-
+  Описваме свойствата на желания резултат.\\[1em]
   \textbf{Логическо програмиране}
-
   \begin{itemize}
   \item Описваме релацията над естествени числа $gcd(a,b,c)$
   \item $\forall a \, gcd(a,a,a)$ \textbf{[факт]}
 
-  \item $\forall a\forall b ( a > b \land \forall c (gcd(a-b,b,c) \rightarrow gcd(a,b,c)))$ \textbf{[правило]}
-  \item $\forall a\forall b ( a < b \land \forall c (gcd(a,b-a,c) \rightarrow gcd(a,b,c)))$ \textbf{[правило]}
+  \item $\forall a\forall b ( a > b \land \forall c (gcd(a-b,b,c) \rightarrow gcd(a,b,c)))$ \textbf{[правило 1]}
+  \item $\forall a\forall b ( a < b \land \forall c (gcd(a,b-a,c) \rightarrow gcd(a,b,c)))$ \textbf{[правило 2]}
   \item Дадени са $a, b$
   \item Намери такова $c$, за което $gcd(a,b,c)$
   \end{itemize}
-
-  \pause
-
   \textbf{Пример:}
-  Нека $a = 8, b = 12$. Тогава:
-
-  $gcd(4,4,4) \rightarrow gcd(8,4,4) \rightarrow gcd(8,12,4)$
+  Нека $a = 8, b = 12$. Тогава:\\
+  $\xrightarrow{\text{факт}} gcd(4,4,4) \xrightarrow{\text{правило 1}} gcd(8,4,4) \xrightarrow{\text{правило 2}} gcd(8,12,\mathbf4)$
 \end{frame}
 
 
@@ -119,9 +106,9 @@
 
   \begin{itemize}
   \item Функцията над естествени числа $gcd(a,b)$ притежава следните свойства:
-  \item $gcd(a,a) = a$
-  \item $gcd(a-b,b) = gcd(a,b)$, ако $a > b$
-  \item $gcd(a,b-a) = gcd(a,b)$, ако $b > a$
+  \item $gcd(a,a) = a$ \textbf{(свойство 1)}
+  \item $gcd(a-b,b) = gcd(a,b)$, ако $a > b$ \textbf{(свойство 2)}
+  \item $gcd(a,b-a) = gcd(a,b)$, ако $b > a$ \textbf{(свойство 3)}
   \item Дадени са $a, b$
   \item Да се пресметне $gcd(a,b)$.
   \end{itemize}
@@ -131,7 +118,7 @@
   \textbf{Пример:}
   Нека $a = 8, b = 12$.
 
-  $gcd(8,12) = gcd(8,4) = gcd(4,4) = 4$.
+  $gcd(8,12) \stackrel{\text{свойство 3}}= gcd(8,4) \stackrel{\text{свойство 2}}= gcd(4,4) \stackrel{\text{свойство 1}}= 4$.
 \end{frame}
 
 \begin{frame}
@@ -178,13 +165,14 @@ for(int i = 0; i < sizeof(l); i++)
     s += l[i] * l[i];
 cout << s;
 \end{verbatim}
-
   \pause
-  \textbf{Scheme:} \tt{(apply + (map square (filter odd? l)))}
-  \vspace{1em}
-
+  \textbf{Scheme:} \tt{(apply + (map square (filter odd? l)))}\\[1em]
   \pause
-  \textbf{Haskell:} \tt{foldr1 (+) [x * x | x <- l, odd x]}
+  \textbf{Haskell:} \tt{foldr1 (+) [x * x | x <- l, odd x]}\\[1em]
+  \pause
+  \textbf{Haskell:} \tt{sum . map (\^{}2) . filter odd}
+
+
 \end{frame}
 
 \section*{Изчислителни модели}
@@ -211,12 +199,14 @@ cout << s;
 \end{frame}
 
 \begin{frame}
-  \frametitle{Машина на Тюринг}
+  \frametitle{Машина на Turing}
 
   \includegraphics[width=0.9\textwidth]{images/turing.pdf}
 
-  Казваме, че машината \textbf{$M$ изчислява функцията $f_M$}, ако за лента, в която е записано (в двоичен вид) числото $n$, $M$ завършва и записва върху лентата числото $f_M(n)$.
+  \pause
+  \textbf{$M$ изчислява функцията $f_M$}, ако при лента с числото $n$ машината $M$ завършва и записва върху лентата числото $f_M(n)$.
 
+  \pause
   Ако $M$ не завърши, казваме, че \textbf{$f_M(n)$ не е дефинирана}.
 \end{frame}
 
@@ -224,7 +214,7 @@ cout << s;
   \frametitle{Има неизчислими функции!}
 
   \begin{itemize}[<+->]
-  \item Всяка машина на Тюринг може да се кодира като дълго естествено число.
+  \item Всяка машина на Turing може да се кодира като дълго естествено число.
   \item Всяка изчислима функция се изчислява от (поне една) машина.
   \item Следователно, изчислимите функции са не повече от естествените числа (изброимо много).
   \item Но функциите от вида $\mathbb N \to \mathbb N$ са колкото редиците от естествени числа
@@ -238,7 +228,7 @@ cout << s;
 \begin{frame}
   \frametitle{Стоп проблем}
 
-  Нека с $\mt n$ означаваме машината на Тюринг с код $n$.
+  Нека с $\mt n$ означаваме машината на Turing с код $n$.
 
   Разглеждаме функцията:
   \begin{equation*}
@@ -251,9 +241,9 @@ cout << s;
 
   \pause
 
-  Да допуснем, че $halts$ се изчислява от машина на Тюринг $H$.
+  Да допуснем, че $halts$ се изчислява от машина на Turing $H$.
 
-  Дефинираме нова машина на Тюринг $D$:
+  Дефинираме нова машина на Turing $D$:
 
   \setlength{\leftmargini}{30pt}
   \begin{enumerate}
@@ -312,10 +302,10 @@ cout << s;
 \end{frame}
 
 \begin{frame}
-  \frametitle{Машини на Тюринг = $\lambda$-смятане}
+  \frametitle{Машини на Turing = $\lambda$-смятане}
 
   \begin{theorem}[Alan Turing, 1937]
-  Функциите, които могат да се изчислят с машина на Тюринг са точно тези, които могат да се напишат с $\lambda$-израз.
+  Функциите, които могат да се изчислят с машина на Turing са точно тези, които могат да се напишат с $\lambda$-израз.
   \end{theorem}
 
   \pause
@@ -323,7 +313,7 @@ cout << s;
   \begin{center}
     \begin{tabular}{|rcl|}
       \hline
-      Машини на Тюринг & = & императивен стил за програмиране\\
+      Машини на Turing & = & императивен стил за програмиране\\
       $\lambda$-смятане & = & функционален стил за програмиране\\
       \hline
     \end{tabular}
@@ -331,12 +321,12 @@ cout << s;
 
   \pause
 
-  \textbf{Факт: }Почти всички съвременни езици за програмиране са със същата изчислителна сила като на машините на Тюринг.
+  \textbf{Факт: }Практически всички съвременни езици за програмиране са със същата изчислителна сила като на машините на Turing.
   \vspace{1em}
 
   \pause
 
-  \textbf{Тезис на Church-Turing:} Всяка функция, чието изчисление може да се автоматизира, може да бъде пресметната с машина на Тюринг.
+  \textbf{Тезис на Church-Turing:} Всяка функция, чието изчисление може да се автоматизира, може да бъде пресметната с машина на Turing.
 
 \end{frame}
 
@@ -352,8 +342,7 @@ cout << s;
   \item които могат да са други функции (функции от висок ред)
   \item и могат да се дефинират чрез себе си, (рекурсия)
   \end{itemize}
-  \vspace{1 em}
-  \pause
+  \onslide<+->
   ... но няма:
   \begin{itemize}[<+->]
   \item памет
@@ -369,7 +358,7 @@ cout << s;
   \begin{itemize}[<+->]
   \item Кратки и ясни програми (изразителност)
   \item Лесна проверка за коректност
-  \item При еднакви входни данни връщат един и същ резултат (референциална прозрачност), \pause което позволява...
+  \item При еднакви входни данни връщат един и същ резултат (референциална прозрачност), \onslide<+-> което позволява...
   \item Избягване на повторно пресмятане на резултати чрез запомняне (мемоизация)
   \item Премахване на части от програмата, които не участват в крайния резултат (мъртъв код)
   \item Пренареждане на програмата за по-ефективно изпълнение (стратегия за оценяване)
@@ -412,6 +401,7 @@ cout << s;
   \item[(1977)] Backus (авторът на FORTRAN) популяризира функционалния стил
   \item[(1985)] Turner създава Miranda, първият комерсиален чист функционален език
   \item[(1990)] Публикувана е първата версия на \textbf{Haskell}
+  \item[(1998)] Отваряне на кода на реализацията на Erlang  
   \item[(1990--2000)] Функционални елементи започват да се появяват в императивни езици: Python (1991), JavaScript (1995), Ruby (1995), ActionScript (1998)
   \item[(2000--)] Функционалният стил на програмиране превзема света: Scala (2003), F\# (2005), C\# (2007), Clojure (2007), C++11 (2011), Java 8 (2014)
   \end{itemize}
