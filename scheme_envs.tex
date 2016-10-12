@@ -3,7 +3,7 @@
 
 \title[Среди и процеси]{Модел на средите и изчислителни процеси}
 
-\date{21 октомври 2015 г.}
+\date{13 октомври 2016 г.}
 
 \begin{document}
 
@@ -411,7 +411,7 @@
     Превод на Scheme
 
 \begin{semiverbatim}
-(define (for n \only<4>\fbox{r} \only<5>\fbox{i})
+(define (for n \only<4,8>\fbox{r} \only<5,7>\fbox{i})
   (if \only<6>\fbox{(<= i n)}
       (for n \only<8>\fbox{(* r i)} \only<7>\fbox{(+ i 1)})
       \only<9>\fbox{r}))
@@ -588,10 +588,12 @@
     \end{center}
 
     \scriptsize
-
-    \verb#(define (fact n)#\\
-    \verb#  (if (= n 0) 1#\\
-    \verb#      #\tt{\alert<2>{(* n }(fact (- n 1)))))}
+    
+\begin{semiverbatim}
+    (define (fact n)
+      (if (= n 0) 1
+          \alert<2>{(* n }(fact (- n 1)))))
+\end{semiverbatim}
 
     \column{0.5\textwidth}
     {}
@@ -617,13 +619,15 @@
 
     \scriptsize
 
-\tt{(define (for \alert<3> n r i)}\\
-\verb#  #\tt{(if (<= i n)}\\
-\verb#       #\tt{(for \alert<3> n (* r i) (+ i 1))}\\
-\verb#       #\tt{r))}\\
-\ \\
-\tt{(define (fact n)}\\
-\verb#  #\tt{(for \alert<3> n 1 1))}
+\begin{semiverbatim}
+(define (for \alert<3>n r i)
+  (if (<= i n)
+      (for \alert<3>n (* r i) (+ i 1))
+      r))
+
+(define (fact n)
+  (for \alert<3>n 1 1))
+\end{semiverbatim}
 
   \end{columns}
 \end{frame}
