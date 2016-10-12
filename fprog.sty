@@ -11,6 +11,19 @@
 % поддръжка на линкове
 \usepackage{hyperref}
 
+% използване на специални апострофи и кавички
+\usepackage{textcomp}
+
+% форматиране на код на Scheme
+\usepackage{listings}
+\lstset{
+  language=Scheme,
+  showstringspaces=false,
+  columns=fullflexible,
+  keepspaces=true,
+  extendedchars=false,
+  basicstyle=\ttfamily}
+
 % двойни разделителни черти в таблици
 \usepackage{hhline}
 
@@ -44,6 +57,9 @@
 % код
 \renewcommand{\tt}{\texttt}
 
+% код с форматиране
+\newcommand{\lst}{\lstinline}
+
 % код в червено
 \newcommand{\tta}[1]{\tt{\alert{#1}}}
 
@@ -67,26 +83,29 @@
 
 %%% макроси
 
+% оценява се до...
+\newcommand{\evalstox}[1]{\lst!#1! $\longrightarrow$}
+
 % оценява се до стойност
-\newcommand{\evalsto}[2]{\tt{#1 $\longrightarrow$ #2}}
+\newcommand{\evalsto}[2]{\evalstox{#1} \lst!#2!}
 
 % не завършва
-\newcommand{\evalstoinf}[1]{\evalsto{#1}{\ldots}}
+\newcommand{\evalstoinf}[1]{\evalsto{#1}{...}}
 
 % оценява се до стойност с пауза за въпрос
-\newcommand{\evalstop}[2]{\evalsto{#1}{\rvl{#2}}}
+\newcommand{\evalstop}[2]{\evalstox{#1} \rvl{\lst!#2!}}
 
 % грешка при оценяване
-\newcommand{\evalstoerr}[1]{\evalsto{#1}{\textsf{\alert{Грешка!}}}}
+\newcommand{\evalstoerr}[1]{\evalstox{#1} \textsf{\alert{Грешка!}}}
 
 % грешка при оценяване с пауза за въпрос
-\newcommand{\evalstoerrp}[1]{\evalstop{#1}{\textsf{\alert{Грешка!}}}}
+\newcommand{\evalstoerrp}[1]{\evalstox{#1} \rvl{\textsf{\alert{Грешка!}}}}
 
 % два израза се оценяват до една и съща стойност
-\newcommand{\evalstwo}[3]{\tt{#1 $\longrightarrow$ #2 $\longleftarrow$ #3}}
+\newcommand{\evalstwo}[3]{\lst!#1! $\longrightarrow$ \lst!#2! $\longleftarrow$ \lst!#3!}
 
 % два израза се оценяват до една и съща стойност с пауза за въпрос
-\newcommand{\evalstwop}[3]{\tt{#1 $\longrightarrow$ \rvl{#2} $\longleftarrow$ #3}}
+\newcommand{\evalstwop}[3]{\lst!#1! $\longrightarrow$ \rvl{\lst!#2!} $\longleftarrow$ \lst!#3!}
 
 % има тип
 \newcommand{\typesto}[2]{\tt{#1 :{}: #2}}

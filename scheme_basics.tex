@@ -68,8 +68,8 @@
     \begin{itemize}
     \item \evalsto 5 5
     \item \evalsto{\#t}{\#t}
-    \item \evalsto{\#\textbackslash a}{\#\textbackslash a}
-    \item \evalsto{"scheme"}{"scheme"}
+    \item \evalsto{\#\\a}{\#\\a}
+    \item \evalsto{\"scheme\"}{\"scheme\"}
     \end{itemize}
   \item Оценката на символ е стойността, свързана с него
     \begin{itemize}
@@ -139,7 +139,7 @@
   \item Примери:
     \begin{itemize}
     \item \lst{(define s "Scheme is cool")}
-    \item \evalsto s{"Scheme is cool"}
+    \item \evalsto s{\"Scheme is cool\"}
     \item \lst{(define x 2.5)}
     \item \evalsto x{2.5}
     \item \evalsto{(+ x 3.2)}{5.7}
@@ -205,7 +205,7 @@
   \item \lst{(define (f x y) (+ (square (1+ x)) (square y) 5))}
   \item \evalstop{(f 2 4)}{30}
   \item \lst{(define (g x) (- (g (+ x 1)) 1))}
-  \item \evalstop{(g 0)}\ldots
+  \item \evalstop{(g 0)}{...}
   \item \lst{(define (h) (+ 2 3))}
   \item \evalsto{h}{\#<procedure:h>}
   \item \evalsto{(h)}5
@@ -284,7 +284,7 @@
   \item \lst{(define (abs x) (if (< x 0) (- x) x))}
   \item \evalsto{(abs -5)}5, \evalsto{(abs (+ 1 2))}3
   \item \lst{(define (f x) (if (< x 5) (+ x 2) "Error"))}
-  \item \evalsto{(f 3)}5, \evalsto{(f 5)}{"Error"}
+  \item \evalsto{(f 3)}5, \evalsto{(f 5)}{\"Error\"}
   \item \lst{(define (g x y) (if (< x y) (+ x y) (* x y)))}
   \item \lst{(define (g x y) ((if (< x y) + *) x y))}
   \item \evalsto{(g 2 3)}5, \evalsto{(g 3 2)}6
