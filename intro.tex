@@ -84,7 +84,6 @@
   \begin{itemize}
   \item Описваме релацията над естествени числа $gcd(a,b,c)$
   \item $\forall a \, gcd(a,a,a)$ \textbf{[факт]}
-
   \item $\forall a\forall b ( a > b \land \forall c (gcd(a-b,b,c) \rightarrow gcd(a,b,c)))$ \textbf{[правило 1]}
   \item $\forall a\forall b ( a < b \land \forall c (gcd(a,b-a,c) \rightarrow gcd(a,b,c)))$ \textbf{[правило 2]}
   \item Дадени са $a, b$
@@ -98,12 +97,8 @@
 
 \begin{frame}
   \frametitle{Декларативен стил (3)}
-
-  Описваме свойствата на желания резултат.
-  \vspace{1em}
-
+  Описваме свойствата на желания резултат.\\[1em]
   \textbf{Функционално програмиране}
-
   \begin{itemize}
   \item Функцията над естествени числа $gcd(a,b)$ притежава следните свойства:
   \item $gcd(a,a) = a$ \textbf{(свойство 1)}
@@ -112,23 +107,18 @@
   \item Дадени са $a, b$
   \item Да се пресметне $gcd(a,b)$.
   \end{itemize}
-
   \pause
-
   \textbf{Пример:}
-  Нека $a = 8, b = 12$.
-
+  Нека $a = 8, b = 12$.\\
   $gcd(8,12) \stackrel{\text{свойство 3}}= gcd(8,4) \stackrel{\text{свойство 2}}= gcd(4,4) \stackrel{\text{свойство 1}}= 4$.
 \end{frame}
 
 \begin{frame}
   \frametitle{Още един пример}
 
-  Да се намери сумата на квадратите на нечетните числа в списъка \tt l.
-
+  Да се намери сумата на квадратите на нечетните числа в списъка \tt l.\\[1em]
   \begin{columns}[t,onlytextwidth]
     \column{0.5\textwidth}
-
     \textbf{Императивен стил}
     \begin{itemize}
     \item Нека \tt{s = 0}.
@@ -143,9 +133,7 @@
     \end{itemize}
 
     \column{0.5\textwidth}
-
     \textbf{Функционален стил}
-
     \begin{itemize}
     \item От елементите на \tt l:
     \item Избери нечетните
@@ -171,8 +159,6 @@ cout << s;
   \textbf{Haskell:} \tt{foldr1 (+) [x * x | x <- l, odd x]}\\[1em]
   \pause
   \textbf{Haskell:} \tt{sum . map (\^{}2) . filter odd}
-
-
 \end{frame}
 
 \section*{Изчислителни модели}
@@ -180,32 +166,23 @@ cout << s;
 \begin{frame}
   \frametitle{Какво може да се сметне с компютър?}
 
-  Нека $f:\mathbb N\to\mathbb N$ е функция над естествени числа.
+  Нека $f:\mathbb N\to\mathbb N$ е функция над естествени числа.\\[1em]
 
-  Примери: $f(x) = x^2$, $f(x) = x$-тото число на Фибоначи.
-  \vspace{2em}
+  \textbf{Примери:} $f(x) = x^2$, $f(x) = x$-тото число на Фибоначи.\\[2em]
   \pause
-
-  \textbf{Въпрос 1:} Какво означава да изчислим $f$ с компютър?
-  \vspace{2em}
+  \textbf{Въпрос 1:} Какво означава да изчислим $f$ с компютър?\\[2em]
   \pause
-
-  \textbf{Въпрос 2:} Какво означава ``алгоритъм'' или ``програма''?
-  \vspace{2em}
-
+  \textbf{Въпрос 2:} Какво означава ``алгоритъм'' или ``програма''?\\[2em]
   \pause
-
   \textbf{Въпрос 3:} Има ли функции, които не могат да бъдат изчислени с компютър?
 \end{frame}
 
 \begin{frame}
   \frametitle{Машина на Turing}
 
-  \includegraphics[width=0.9\textwidth]{images/turing.pdf}
-
+  \includegraphics[width=0.9\textwidth]{images/turing.pdf}\\
   \pause
-  \textbf{$M$ изчислява функцията $f_M$}, ако при лента с числото $n$ машината $M$ завършва и записва върху лентата числото $f_M(n)$.
-
+  \textbf{$M$ изчислява функцията $f_M$}, ако при лента с числото $n$ машината $M$ завършва и записва върху лентата числото $f_M(n)$.\\
   \pause
   Ако $M$ не завърши, казваме, че \textbf{$f_M(n)$ не е дефинирана}.
 \end{frame}
@@ -228,33 +205,27 @@ cout << s;
 \begin{frame}
   \frametitle{Стоп проблем}
 
-  Нека с $\mt n$ означаваме машината на Turing с код $n$.
-
+  Нека с $\mt n$ означаваме машината на Turing с код $n$.\\
   Разглеждаме функцията:
   \begin{equation*}
     halts(n) = \mt n\text{ завършва над лента с числото }n.
   \end{equation*}
-
   \pause
-
-  $halts$ не е изчислима!
-
+  $halts$ не е изчислима!\\
   \pause
-
-  Да допуснем, че $halts$ се изчислява от машина на Turing $H$.
-
-  Дефинираме нова машина на Turing $D$:
-
-  \setlength{\leftmargini}{30pt}
-  \begin{enumerate}
-    \setbeamertemplate{enumerate items}[default]
-  \item (тук слагаме всички инструкции на $H$)
-  \item[$k+1$.] \tt{IFZERO} $k+3$
-  \item[$k+2$.] \tt{JUMP} $k+1$
-  \item[$k+3$.] \tt{STOP}
-  \end{enumerate}
-
-  Нека $D = \mt d$. Завършва ли $D$ над $d$? \qed
+  \begin{proof}
+    Да допуснем, че $halts$ се изчислява от машина на Turing $H$.\\
+    Дефинираме нова машина на Turing $D$:\\
+    \setlength{\leftmargini}{30pt}
+    \begin{enumerate}
+      \setbeamertemplate{enumerate items}[default]
+    \item (тук слагаме всички инструкции на $H$)
+    \item[$k+1$.] \tt{IFZERO} $k+3$
+    \item[$k+2$.] \tt{JUMP} $k+1$
+    \item[$k+3$.] \tt{STOP}
+    \end{enumerate}
+    Нека $D = \mt d$. Завършва ли $D$ над $d$?
+  \end{proof}
 \end{frame}
 
 \begin{frame}
@@ -266,7 +237,7 @@ cout << s;
   \item $f_2(n) = n$-тото поред просто число
   \item $f_3(n) = n$-тата цифра на числото $\pi$
   \item $f_4(n) = $ има $n$ последователни седмици в числото $\pi$
-  \item $f_5(n) = n$ е код на множество от матрици 3x3, които могат да се умножат в някакъв ред, така че да се получи O
+  \item $f_5(n) = n$ е код на множество от матрици $3 \times 3$, които могат да се умножат в някакъв ред, така че да се получи O
   \item $f_6(n) = n$ е код на вярна съждителна формула
   \item $f_7(n) = n$ е код на вярна предикатна формула
   \item $f_8(n) = m$, където $\mt m$ пресмята $f_8$
@@ -277,24 +248,15 @@ cout << s;
 \begin{frame}
   \frametitle{$\lambda$-смятане}
 
-  Нека разполагаме с изброимо много променливи $x,y,z,\ldots$
-  \vspace{1em}
-
+  Нека разполагаме с изброимо много променливи $x,y,z,\ldots$\\[1em]
   Три вида $\lambda$-изрази ($E$)
   \begin{itemize}
   \item $x$ (променлива)
   \item $E_1(E_2)$ (апликация, прилагане на функция)
   \item $\lambda x \, E$ (абстракция, конструиране на функция)
-  \end{itemize}
-  \vspace{1em}
-
+  \end{itemize}\\[1em]
+  \textbf{Примери:} $\lambda x\, x, \quad (\lambda x\, x)(z), \quad \lambda f\lambda x\, f(f(f(x)))$\\[1em]
   \pause
-
-  Примери: $\lambda x\, x, \quad (\lambda x\, x)(z), \quad \lambda f\lambda x\, f(f(f(x)))$
-  \vspace{1em}
-
-  \pause
-
   Едно изчислително правило:
   \begin{equation*}
     (\lambda x\,E_1)(E_2) \mapsto E_1[x := E_2].
@@ -307,9 +269,7 @@ cout << s;
   \begin{theorem}[Alan Turing, 1937]
   Функциите, които могат да се изчислят с машина на Turing са точно тези, които могат да се напишат с $\lambda$-израз.
   \end{theorem}
-
   \pause
-
   \begin{center}
     \begin{tabular}{|rcl|}
       \hline
@@ -318,16 +278,10 @@ cout << s;
       \hline
     \end{tabular}
   \end{center}
-
   \pause
-
-  \textbf{Факт: }Практически всички съвременни езици за програмиране са със същата изчислителна сила като на машините на Turing.
-  \vspace{1em}
-
+  \textbf{Факт: }Практически всички съвременни езици за програмиране са със същата изчислителна сила като на машините на Turing.\\[1em]
   \pause
-
   \textbf{Тезис на Church-Turing:} Всяка функция, чието изчисление може да се автоматизира, може да бъде пресметната с машина на Turing.
-
 \end{frame}
 
 \section*{Особености на функционалното програмиране}
@@ -386,8 +340,6 @@ cout << s;
     \item мързеливо (първо предай, после смятай) \onslide<2->{[\textbf{Haskell}]}
     \end{itemize}
   \end{itemize}
-
-  \pause
 \end{frame}
 
 \begin{frame}
@@ -401,7 +353,7 @@ cout << s;
   \item[(1977)] Backus (авторът на FORTRAN) популяризира функционалния стил
   \item[(1985)] Turner създава Miranda, първият комерсиален чист функционален език
   \item[(1990)] Публикувана е първата версия на \textbf{Haskell}
-  \item[(1998)] Отваряне на кода на реализацията на Erlang  
+  \item[(1998)] Отваряне на кода на реализацията на Erlang
   \item[(1990--2000)] Функционални елементи започват да се появяват в императивни езици: Python (1991), JavaScript (1995), Ruby (1995), ActionScript (1998)
   \item[(2000--)] Функционалният стил на програмиране превзема света: Scala (2003), F\# (2005), C\# (2007), Clojure (2007), C++11 (2011), Java 8 (2014)
   \end{itemize}
