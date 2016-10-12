@@ -3,7 +3,7 @@
 
 \title{Основни понятия в Scheme}
 
-\date{14 октомври 2015 г.}
+\date{13 октомври 2016 г.}
 
 \begin{document}
 
@@ -42,20 +42,19 @@
 
 \section{Синтаксис и семантика}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Синтаксис в Scheme}
 
   \begin{itemize}
   \item Атоми
     \begin{itemize}
-    \item Булеви константи (\tt{\#f}, \tt{\#t})
-    \item Числа (\tt{15}, \tt{2/3}, \tt{-1.532})
-    \item Знаци (\tt{\#\textbackslash a}, \tt{\#\textbackslash newline})
-    \item Низове (\tt{"Scheme"}, \tt{"hi "})
-    \item Символи (\tt f, \tt{square}, \tt +, \tt{find-min})
+    \item Булеви константи (\lst{#f}, \lst{#t})
+    \item Числа (\lst{15}, \lst{2/3}, \lst{-1.532})
+    \item Знаци (\lst{#\a}, \lst{#\newline})
+    \item Низове (\lst{"Scheme"}, \lst{"hi "})
+    \item Символи (\lst{f}, \lst{square}, \lst{+}, \lst{find-min})
     \end{itemize}
-  \item Комбинации\\
-    \vspace{1em}
+  \item Комбинации\\[1em]
     \alert({}<израз$_1$> <израз$_2$> \ldots <израз$_n$>\alert)
   \end{itemize}
 \end{frame}
@@ -76,7 +75,7 @@
     \begin{itemize}
     \item \evalsto +{\#<procedure:+>}
     \item \evalstoerr a
-    \item \tt{(define a 5)}
+    \item \lst{(define a 5)}
     \item \evalsto a5
     \end{itemize}
   \end{itemize}
@@ -85,9 +84,7 @@
 \begin{frame}
   \frametitle{Основно правило за оценяване}
 
-  Оценка на комбинация \textbf{(основно правило за оценяване)}
-
-  \vspace{1em}
+  Оценка на комбинация \textbf{(основно правило за оценяване)}\\[1em]
   \begin{equation*}
     \newcommand{\evals}{\text{\small се оценява до}}
     \underbrace{%
@@ -105,10 +102,8 @@
         \bda\\
         f(v_1,\ldots,v_n)
       \end{array}}
-  \end{equation*}
-
+  \end{equation*}\\[1em]
   \pause
-
   Ако $f$ не е функция --- \alert{грешка!}
 \end{frame}
 
@@ -119,16 +114,15 @@
       \begin{tabular}{cccc}
         \tt{(+}&$\underbrace{\tt{(* 2 3)}}_{}$&$\underbrace{\tt{(- 14 6 5)}}_{}$&\tt)\\
                &\bda&\bda&\\
-        \tt{(+}&\tt{6}&\tt{3}&\tt)
+        \tt{(+}&\tt6&\tt3&\tt)
       \end{tabular}
     }_{%
       \begin{tabular}{c}
         \bda\\
         \tt 9
       \end{tabular}}
-  \end{equation*}
-
-  \vspace{2em}
+  \end{equation*}\\[2em]
+  \pause
   \begin{center}
     \evalstoerr {(1 2 3)}
   \end{center}
@@ -144,12 +138,12 @@
   \item Оценява <израз> и свързва <символ> с оценката му.
   \item Примери:
     \begin{itemize}
-    \item \tt{(define s "Scheme is cool")}
+    \item \lst{(define s "Scheme is cool")}
     \item \evalsto s{"Scheme is cool"}
-    \item \tt{(define x 2.5)}
+    \item \lst{(define x 2.5)}
     \item \evalsto x{2.5}
     \item \evalsto{(+ x 3.2)}{5.7}
-    \item \tt{(define y (+ x 3.2))}
+    \item \lst{(define y (+ x 3.2))}
     \item \evalsto{(> y 3)}{\#t}
     \item \evalstoerr{(define z (+ y z))}
     \end{itemize}
@@ -160,7 +154,7 @@
   \frametitle{Специални форми}
 
   \begin{itemize}[<+->]
-  \item По основното правило ли се оценява \tt{(define x 2.5)}?
+  \item По основното правило ли се оценява \lst{(define x 2.5)}?
   \item \alert{Не!}
   \item В синтаксиса на Scheme има конструкции, които са изключение от стандартното правило
   \item Такива конструкции се наричат \textbf{специални форми}
@@ -204,15 +198,15 @@
   \frametitle{Примери за дефиниция на функции}
 
   \begin{itemize}[<+->]
-  \item \tt{(define (square x) (* x x))}
+  \item \lst{(define (square x) (* x x))}
   \item \evalsto{(square 5)}{25}
-  \item \tt{(define (1+ k) (+ k 1))}
+  \item \lst{(define (1+ k) (+ k 1))}
   \item \evalsto{(square (1+ (square 3)))}{100}
-  \item \tt{(define (f x y) (+ (square (1+ x)) (square y) 5))}
-  \item \evalsto{(f 2 4)}{30}
-  \item \tt{(define (g x) (- (g (+ x 1)) 1))}
-  \item \evalsto{(g 0)}{\ldots}
-  \item \tt{(define (h) (+ 2 3))}
+  \item \lst{(define (f x y) (+ (square (1+ x)) (square y) 5))}
+  \item \evalstop{(f 2 4)}{30}
+  \item \lst{(define (g x) (- (g (+ x 1)) 1))}
+  \item \evalstop{(g 0)}\ldots
+  \item \lst{(define (h) (+ 2 3))}
   \item \evalsto{h}{\#<procedure:h>}
   \item \evalsto{(h)}5
   \end{itemize}
@@ -223,19 +217,19 @@
   \frametitle{Оценяване на комбинации с дефинирани функции}
   \begin{center}
     \begin{tabular}{c}
-      \tt{(f 2 4)}\\
+      \lst{(f 2 4)}\\
       \pause\nxt{\bda\\
-      \tt{(+ (square (1+ 2)) (square 4) 5)}\\
+      \lst{(+ (square (1+ 2)) (square 4) 5)}\\
       \nxt{\bda\\
-      \tt{(+ (square (+ 2 1)) (square 4) 5)}\\
+      \lst{(+ (square (+ 2 1)) (square 4) 5)}\\
       \nxt{\bda\\
-      \tt{(+ (square 3) (square 4) 5)}\\
+      \lst{(+ (square 3) (square 4) 5)}\\
       \nxt{\bda\\
-      \tt{(+ (* 3 3) (* 4 4) 5)}\\
+      \lst{(+ (* 3 3) (* 4 4) 5)}\\
       \nxt{\bda\\
-      \tt{(+ 9 16 5)}\\
+      \lst{(+ 9 16 5)}\\
       \nxt{\bda\\
-      \tt{30}}}}}}}
+      \lst{30}}}}}}}
     \end{tabular}
   \end{center}
 \end{frame}
@@ -245,41 +239,24 @@
 \begin{frame}
   \frametitle{Стандартни числови функции}
 
-  Аритметични операци
-
-  \tt{+}, \tt{-}, \tt{*}, \tt{/}
-
-  \vspace{1em}
-  Други числови функции
-
-  \tt{remainder}, \tt{quotient}, \tt{max}, \tt{min}, \tt{gcd}, \tt{lcm}
-
-  \vspace{1em}
-  Функции за закръгляне
-
-  \tt{floor}, \tt{ceiling}, \tt{round}
-
-  \vspace{1em}
-  Функции над дробни числа
-
+  Аритметични операци\\
+  \tt{+}, \tt{-}, \tt{*}, \tt{/}\\[1em]
+  Други числови функции\\
+  \tt{remainder}, \tt{quotient}, \tt{max}, \tt{min}, \tt{gcd}, \tt{lcm}\\[1em]
+  Функции за закръгляне\\
+  \tt{floor}, \tt{ceiling}, \tt{round}\\[1em]
+  Функции над дробни числа\\
   \tt{exp}, \tt{log}, \tt{sin}, \tt{cos}, \tt{tan}, \tt{asin}, \tt{acos}, \tt{atan}, \tt{expt}, \tt{sqrt}
 \end{frame}
 
 \begin{frame}
   \frametitle{Стандартни предикати}
 
-  Предикати за сравнение на числа
-
-  \tt{<}, \tt{>}, \tt{=}, \tt{<=}, \tt{>=}
-
-  \vspace{1em}
-  Числови предикати
-
-  \tt{zero?}, \tt{negative?}, \tt{positive?}, \tt{odd?}, \tt{even?}
-
-  \vspace{1em}
-  Предикати за проверка на тип
-
+  Предикати за сравнение на числа\\
+  \tt{<}, \tt{>}, \tt{=}, \tt{<=}, \tt{>=}\\[1em]
+  Числови предикати\\
+  \tt{zero?}, \tt{negative?}, \tt{positive?}, \tt{odd?}, \tt{even?}\\[1em]
+  Предикати за проверка на тип\\
   \tt{boolean?}, \tt{number?}, \tt{char?}, \tt{string?}, \tt{symbol?}, \tt{procedure?}
 \end{frame}
 
@@ -304,12 +281,12 @@
 
   \begin{itemize}[<+->]
   \item \evalsto{(if (< 3 5) (+ 7 3) (- 4 2))}{10}
-  \item \tt{(define (abs x) (if (< x 0) (- x) x))}
+  \item \lst{(define (abs x) (if (< x 0) (- x) x))}
   \item \evalsto{(abs -5)}5, \evalsto{(abs (+ 1 2))}3
-  \item \tt{(define (f x) (if (< x 5) (+ x 2) "Error"))}
+  \item \lst{(define (f x) (if (< x 5) (+ x 2) "Error"))}
   \item \evalsto{(f 3)}5, \evalsto{(f 5)}{"Error"}
-  \item \tt{(define (g x y) (if (< x y) (+ x y) (* x y)))}
-  \item \tt{(define (g x y) ((if (< x y) + *) x y))}
+  \item \lst{(define (g x y) (if (< x y) (+ x y) (* x y)))}
+  \item \lst{(define (g x y) ((if (< x y) + *) x y))}
   \item \evalsto{(g 2 3)}5, \evalsto{(g 3 2)}6
   \end{itemize}
 \end{frame}
@@ -335,14 +312,14 @@
 \begin{frame}[fragile]
   \frametitle{Пример с формата \tt{cond}}
 
-\begin{verbatim}
+\begin{lstlisting}
 (define (grade x)
   (cond ((>= x 5.5) "Отличен")
         ((>= x 4.5) "Много добър")
         ((>= x 3.5) "Добър")
         ((>= x 3)   "Среден")
         (else       "Слаб")))
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}
@@ -367,13 +344,13 @@
 \begin{frame}[fragile]
   \frametitle{Пример с формата cond}
 
-\begin{verbatim}
+\begin{lstlisting}
 (define (days-in-month m y)
   (case m
     ((1 3 5 7 8 10 12) 31)
     ((4 6 9 11) 30)
     (else (if (leap? y) 29 28))))
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}
@@ -408,13 +385,12 @@
   \frametitle{Примери с логически операции}
 
   \begin{tabular}{lcl}
-    \tt{(not x)} &$\longleftrightarrow$& \tt{(if x \#f \#t)}\\
-    \tt{(and x y)} &$\longleftrightarrow$& \tt{(if x y \#f)}\\
-    \tt{(or x y)} &$\longleftrightarrow$& \tt{(if x \#t y)}
+    \lstinline!(not x)! &$\longleftrightarrow$& \lstinline!(if x #f #t)!\\
+    \lstinline!(and x y)! &$\longleftrightarrow$& \lstinline!(if x y #f)!\\
+    \lstinline!(or x y)! &$\longleftrightarrow$& \lstinline!(if x #t y)!
   \end{tabular}
-
-
-\begin{verbatim}
+\pause
+\begin{lstlisting}
 (define (divisible? a b)
   (= (remainder a b) 0))
 
@@ -422,6 +398,6 @@
   (and (divisible? y 4)
        (or (not (divisible? y 100))
            (divisible? y 400))))
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 \end{document}
