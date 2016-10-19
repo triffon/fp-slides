@@ -3,7 +3,7 @@
 
 \title{Функции от по-висок ред}
 
-\date{28 октомври 2015 г.}
+\date{20 октомври 2016 г.}
 
 \begin{document}
 
@@ -23,15 +23,15 @@
 
   Примери:
   \begin{itemize}[<+->]
-  \item \verb#(define (fixed-point? f x) (= (f x) x))#
+  \item \lst{(define (fixed-point? f x) (= (f x) x))}
   \item \evalstop{(fixed-point? sin 0)}{\#t}
   \item \evalstop{(fixed-point? exp 1)}{\#f}
   \item \evalstoerrp{(fixed-point? + 0)}
-  \item \alt<17>{\tt{(define (branch p? f g x) ((if (p? x) f g) x))}}
-    {\tt{(define (branch p? f g x) (if (p? x) (f x) (g x)))}}
+  \item \alt<17>{\lst{(define (branch p? f g x) ((if (p? x) f g) x))}}
+    {\lst{(define (branch p? f g x) (if (p? x) (f x) (g x)))}}
   \item \evalstop{(branch odd? exp fact 4)}{24}
   \item \verb#(define (id x) x)#
-  \item \evalstop{(branch number? log id "1")}{"1"}
+  \item \evalstop{(branch number? log id \"1\")}{\"1\"}
   \item \evalstop{(branch string? number? procedure? symbol?)}{\#t}
   \end{itemize}
 
@@ -43,17 +43,13 @@
   \begin{definition}
     Функция, която приема функция за параметър се нарича \emph{функция от по-висок ред}.
   \end{definition}
-
   \pause
-
   \begin{itemize}[<+->]
   \item \tt{fixed-point?} и \tt{branch} са функции от по-висок ред
   \item \alert{Примери за математически функции от по-висок ред?}
   \item Всички функции в $\lambda$-смятането са от по-висок ред!
   \end{itemize}
 \end{frame}
-
-
 
 \begin{frame}[fragile]
   \frametitle{Задачи за сумиране}
@@ -64,122 +60,104 @@
   \item $\int_a^b f(x) \approx \Delta x\big[f(a) + f(a+\Delta x) + f(a+2\Delta x) + \ldots + f(b)\big]$
   \item $x + e^x + e^{e^x} + e^{e^{e^x}} + \ldots$ докато поредното събираемо е $\leq 10^{1000}$
   \end{enumerate}
-
   \pause
-
   \newcommand{\upper}{\textcolor<5->{red}}
   \newcommand{\term}{\textcolor<6->{green}}
   \newcommand{\next}{\textcolor<7->{blue}}
-
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (sum1 k)
-  (if (> k \upper{100}) 0 (+ \term{(* k k)} (sum1 \next{(+ k 1)}))))
-\end{semiverbatim}
-
+  (if (> k @\upper{100}@) 0 (+ @\term{(* k k)}@ (sum1 @\next{(+ k 1)}@))))
+\end{lstlisting}
   \pause
-
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (sum2 a b f dx)
-  (if (> a \upper{b}) 0 (+ \term{(* dx (f a))} (sum2 \next{(+ a dx)} b f dx))))
-\end{semiverbatim}
-
+  (if (> a @\upper{b}@) 0 (+ @\term{(* dx (f a))}@ (sum2 @\next{(+ a dx)}@ b f dx))))
+\end{lstlisting}
   \pause
-
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (sum3 x)
-  (if (> x \upper{(expt 10 1000)}) 0 (+ \term{x} (sum3 \next{(exp x)}))))
-\end{semiverbatim}
+  (if (> x @\upper{(expt 10 1000)}@) 0 (+ @\term{x}@ (sum3 @\next{(exp x)}@))))
+\end{lstlisting}
 
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Обобщена функция за сумиране}
   Да се напише функция от по-висок ред \tt{sum}, която пресмята сумата:
-
   \begin{equation*}
     \sum_{\substack{i=a \\i \leftarrow next(i)}}^b term(i).
   \end{equation*}
-
-\pause
-
-\begin{semiverbatim}
-(define (sum a \textcolor{red}b \textcolor{green}{term} \textcolor{blue}{next})
-  (if (> a \textcolor{red}b) 0 (+ \textcolor{green}{(term a)} (sum \textcolor{blue}{(next a)} \textcolor{red}b \textcolor{green}{term} \textcolor{blue}{next}))))
-\end{semiverbatim}
+  \pause
+  \newcommand{\upper}{\textcolor{red}}
+  \newcommand{\term}{\textcolor{green}}
+  \newcommand{\next}{\textcolor{blue}}
+\begin{lstlisting}
+(define (sum a @\upper{b} \term{term} \next{next}@)
+  (if (> a @\upper{b}@) 0 (+ @\term{(term a)}@ (sum @\next{(next a)} \upper{b} \term{term} \next{next}@))))
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Приложения на \tt{sum}}
 
   Решение на задачите за суми чрез \tt{sum}:
-
   \begin{columns}[t,onlytextwidth]
-    \column{0.3\textwidth}
-
-    \begin{equation*}
-      \sum_{i=k}^{100} i^2
-    \end{equation*}
-
-    \only<3->{
-    \begin{equation*}
-      \sum_{\substack{i=a\\i\rightarrow i + \Delta x}}^b \Delta x\,f(i)
-    \end{equation*}}
-
-    \only<6->{
-    \begin{equation*}
-      \sum_{\substack{i=x\\i\rightarrow e^i}}^{10^{1000}} i
-    \end{equation*}}
-
-    \column{0.7\textwidth}
-
-\onslide<2->
-\begin{verbatim}
+    \begin{column}{.3\textwidth}
+      \begin{equation*}
+        \sum_{i=k}^{100} i^2
+      \end{equation*}\\[1em]
+      \only<3->{
+        \begin{equation*}
+          \sum_{\substack{i=a\\i\rightarrow i + \Delta x}}^b \Delta x\,f(i)
+        \end{equation*}}
+      \only<6->{
+        \begin{equation*}
+          \sum_{\substack{i=x\\i\rightarrow e^i}}^{10^{1000}} i
+        \end{equation*}}
+    \end{column}
+    \begin{column}{.7\textwidth}
+      \onslide<2->
+\begin{lstlisting}
 (define (square x) (* x x))
 (define (1+ x) (+ x 1))
 (define (sum1 k) (sum k 100 square 1+))
-\end{verbatim}
-
-\onslide<4->
-\begin{semiverbatim}
+\end{lstlisting}
+      \onslide<4->
+\begin{lstlisting}
 (define (sum2 a b f dx)
-\only<4>{  (define (term x) (* dx (f x)))
-}  (define (next x) (+ x dx))
-  \only<5->{(* dx }(sum a b \alt<4>{term}f next))\only<5->)
-\end{semiverbatim}
-
-\onslide<7->
-\begin{verbatim}
+  @\only<4>{(define (term x) (* dx (f x)))}@
+  (define (next x) (+ x dx))
+  @\only<5->{(* dx }@(sum a b @\alt<4>{term}f@ next))@\only<5->)@
+\end{lstlisting}
+      \onslide<7->
+\begin{lstlisting}
 (define (sum3 x)
   (sum x (expt 10 1000) id exp))
-\end{verbatim}
-
+\end{lstlisting}
+    \end{column}
   \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Обобщена функция за произведение}
   Да се напише функция от по-висок ред \tt{product}, която пресмята:
-
   \begin{equation*}
     \prod_{\substack{i=a \\i \leftarrow next(i)}}^b term(i).
   \end{equation*}
-
+  \pause
+  \newcommand{\fb}{\only<4>\fbox}
+  \newcommand{\upper}{\textcolor{red}}
+  \newcommand{\term}{\textcolor{green}}
+  \newcommand{\next}{\textcolor{blue}}
+\begin{lstlisting}
+(define (prod a @\upper{b}@ @\term{term}@ @\next{next}@)
+  (if (> a @\upper{b}@) @\fb1@ (@\fb*@ @\term{(term a)}@ (prod @\next{(next a)}@ @\upper{b}@ @\term{term}@ @\next{next}@))))
+\end{lstlisting}
 \pause
-
-\newcommand{\fb}{\only<4>\fbox}
-
-\begin{semiverbatim}
-(define (product a \textcolor{red}b \textcolor{green}{term} \textcolor{blue}{next})
-  (if (> a \textcolor{red}b) \fb1 (\fb* \textcolor{green}{(term a)} (product \textcolor{blue}{(next a)} \textcolor{red}b \textcolor{green}{term} \textcolor{blue}{next}))))
-\end{semiverbatim}
-
-\pause
-
-\begin{semiverbatim}
-(define (sum a \textcolor{red}b \textcolor{green}{term} \textcolor{blue}{next})
-  (if (> a \textcolor{red}b) \fb0 (\fb+ \textcolor{green}{(term a)} (sum \textcolor{blue}{(next a)} \textcolor{red}b \textcolor{green}{term} \textcolor{blue}{next}))))
-\end{semiverbatim}
-
+\begin{lstlisting}
+(define (sum a @\upper{b}@ @\term{term}@ @\next{next}@)
+  (if (> a @\upper{b}@) @\fb0@ (@\fb+@ @\term{(term a)}@ (sum @\next{(next a)}@ @\upper{b}@ @\term{term}@ @\next{next}@))))
+\end{lstlisting}
 \end{frame}
 
 \section{\tt{accumulate}}
@@ -190,26 +168,23 @@
   \frametitle{Обобщена функция за натрупване}
 
   Да се напише функция, която пресмята
-
   \begin{equation*}
     term(a) \oplus \bigg(term\big(next(a)\big) \oplus \Big(\ldots \oplus \big(term(b) \oplus \bot\big) \ldots\Big)\bigg),
   \end{equation*}
-
   където $\oplus$ е бинарна операция,\\
   а $\bot$ е нейната ``нулева стойност'', т.е. $x\oplus\bot = x$.
-
   \pause
-\small
-\begin{verbatim}
+  \small
+\begin{lstlisting}
 (define (accumulate op nv a b term next)
   (if (> a b) nv
       (op (term a) (accumulate op nv (next a) b term next))))
-\end{verbatim}
-\pause
-\begin{verbatim}
+\end{lstlisting}
+  \pause
+\begin{lstlisting}
 (define (sum a b term next) (accumulate + 0 a b term next))
 (define (product a b term next) (accumulate * 1 a b term next))
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \subsection{Пример: правило на Хорнер}
@@ -650,7 +625,7 @@
 \small
 \begin{itemize}[<+->]
 \item \evalsto{(lambda-if \#t (lambda () (+ 3 5)) (lambda () (/ 4 0)))}8
-\item \evalsto{(lambda-if \#f (lambda () +) (lambda () "abc"))}{"abc"}
+\item \evalsto{(lambda-if \#f (lambda () +) (lambda () \"abc\"))}{\"abc\"}
 \item \tt{(define (not b) (lambda (x y) (b y x)))}
 \end{itemize}
 \end{frame}
