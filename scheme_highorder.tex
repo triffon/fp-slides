@@ -26,7 +26,7 @@
   \item \lst{(define (fixed-point? f x) (= (f x) x))}
   \item \evalstop{(fixed-point? sin 0)}{\#t}
   \item \evalstop{(fixed-point? exp 1)}{\#f}
-  \item \evalstoerrp{(fixed-point? + 0)}
+  \item \evalstoerrp{(fixed-point? expt 0)}
   \item \alt<17>{\lst{(define (branch p? f g x) ((if (p? x) f g) x))}}
     {\lst{(define (branch p? f g x) (if (p? x) (f x) (g x)))}}
   \item \evalstop{(branch odd? exp fact 4)}{24}
@@ -186,7 +186,7 @@
 (define (product a b term next) (accumulate * 1 a b term next))
 \end{lstlisting}
 \end{frame}
-
+\end{document}
 \subsection{Пример: правило на Хорнер}
 
 \newcommand{\pnx}{x^n + 2x^{n-1} + \ldots + (n-2)x^3 + (n-1)x^2 + nx + (n+1)}
