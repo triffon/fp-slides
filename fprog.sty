@@ -77,6 +77,9 @@
 % по-приличен pause (за математика и таблици)
 \newcommand{\nxt}[1]{\visible<+->{#1}}
 
+% \pause за таблици
+\newcommand{\tpause}{\noalign{\pause}}
+
 % среда
 \newcommand{\env}[1]{$\mathbf{#1}$}
 
@@ -110,7 +113,7 @@
 \newcommand{\evalstwo}[3]{\lst!#1! $\longrightarrow$ \lst!#2! $\longleftarrow$ \lst!#3!}
 
 % два израза се оценяват до една и съща стойност с пауза за въпрос
-\newcommand{\evalstwop}[3]{\lst!#1! $\longrightarrow$ \rvl{\lst!#2!} $\longleftarrow$ \lst!#3!}
+\newcommand{\evalstwop}[3]{\lst!#1! $\longrightarrow$ \rvl{#2} $\longleftarrow$ \lst!#3!}
 
 % има тип
 \newcommand{\typesto}[2]{\tt{#1 :{}: #2}}
