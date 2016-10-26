@@ -385,9 +385,9 @@
   \frametitle{Примери с логически операции}
 
   \begin{tabular}{lcl}
-    \lstinline!(not x)! &$\longleftrightarrow$& \lstinline!(if x #f #t)!\\
-    \lstinline!(and x y)! &$\longleftrightarrow$& \lstinline!(if x y #f)!\\
-    \lstinline!(or x y)! &$\longleftrightarrow$& \lstinline!(if x #t y)!
+    \lstinline!(not x)! &\eqv& \lstinline!(if x #f #t)!\\
+    \lstinline!(and x y)! &\eqv& \lstinline!(if x y #f)!\\
+    \lstinline!(or x y)! &\eqv& \lstinline!(if x #t y)!
   \end{tabular}
 \pause
 \begin{lstlisting}

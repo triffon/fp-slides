@@ -91,6 +91,9 @@
 % оценява се до стойност
 \newcommand{\evalsto}[2]{\evalstox{#1} \lst!#2!}
 
+% оценява се до стойност без \lstlisting
+\newcommand{\evalstos}[2]{#1 $\longrightarrow$ #2}
+
 % не завършва
 \newcommand{\evalstoinf}[1]{\evalsto{#1}{...}}
 
@@ -149,6 +152,9 @@
 
 % син цвят по подразбиране
 \colorlet{diagramblue}{blue!60!green!40}
+
+% еквивалентно на
+\newcommand{\eqv}{$\Longleftrightarrow$}
 
 %% диаграми
 

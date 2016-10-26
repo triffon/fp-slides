@@ -330,7 +330,7 @@
     \item \evalsto{((lambda (x) (+ x 3)) 5)}8
     \item
         \tt{(define (}<име> <параметри>\tt) <тяло>\tt)\\
-        $\Longleftrightarrow$\\
+        \eqv\\
         \tt{(define }<име> \tt{(lambda (}<параметри>\tt) <тяло>\tt{))}
     \end{itemize}
   \end{itemize}
@@ -535,7 +535,7 @@
   Симулация на \tt{let}:
   \begin{tabular}{c}
     \lst{(let ((}<символ> <израз>\tt{))} <тяло>\tt)\\
-    $\Longleftrightarrow$\\
+    \eqv\\
     \lst{((lambda (}<символ>\tt) <тяло>\tt{) <израз>)}
   \end{tabular}\\[1em]
   \pause
@@ -546,7 +546,7 @@
                  &\ldots\\
                  &\tt(<символ$_n$> <израз$_n$>\tt)\\
                  &<тяло>\tt)\\
-      \multicolumn 2c{$\Longleftrightarrow$}\\
+      \multicolumn 2c{\eqv}\\
       \lst{((lambda (}&<символ$_1$> \ldots <символ$_n$>\tt) <тяло>\tt)\\
                  &<израз$_1$> \ldots <израз$_n$>\tt)
     \end{tabular}
