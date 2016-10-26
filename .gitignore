@@ -1,5 +1,6 @@
 *~
 .*
+!.gitignore
 \#*
 _region_.tex
 *.aux
@@ -11,4 +12,5 @@ _region_.tex
 *.snm
 *.toc
 *.vrb
+*.xoj
 auto
