@@ -3,7 +3,7 @@
 
 \title{Списъци}
 
-\date{4 ноември 2015 г.}
+\date{27 октомври 2016 г.}
 
 \begin{document}
 
@@ -17,27 +17,26 @@
   \frametitle{Точкови двойки}
 
   \begin{columns}[t,onlytextwidth]
-    \column{0.5\textwidth}
-    \vspace{1em}
-
-    \centering
-    \tt{(A . B)}
-
-    \column{0.5\textwidth}
-
-    \centering
-    \begin{tabular}{cc}
-      \hline
-      \pointcell\\
-      \hline
-      \bda&\bda\\
-      \fbox A &\fbox B
-    \end{tabular}
+    \begin{column}{.5\textwidth}
+      \vspace{1em}
+      \begin{center}
+        \tt{(A . B)}
+      \end{center}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \begin{center}
+        \begin{tabular}{cc}
+          \hline
+          \pointcell\\
+          \hline
+          \bda&\bda\\
+          \fbox A &\fbox B
+        \end{tabular}
+      \end{center}
+    \end{column}
   \end{columns}
-
   \pause
   \vspace{1em}
-
   \begin{itemize}[<+->]
   \item \tta{(cons }<израз$_1$> <израз$_2$>\tta)
   \item Точкова двойка от оценките на <израз$_1$> и <израз$_2$>
@@ -48,64 +47,56 @@
   \item \tta{(pair? }<израз>\tta)
   \item Проверява дали оценката на <израз> е точкова двойка
   \end{itemize}
-
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Примери}
 
-  \begin{columns}[t,onlytextwidth]
-
-    \column{0.6\textwidth}
-
-    \begin{tabular}{c}
-      \tt{(cons (cons 2 3) (cons 8 13))}\\
-      \bda\\
-      \tt{((2 . 3) . (8 . 13))}
-    \end{tabular}
-    \vspace{4em}
-
-\onslide<3->{
-  \begin{tabular}{c}
-    \tt{(cons 3 (cons (cons 13 21) 8))}\\
-    \bda\\
-    \tt{(3 . ((13 . 21) . 8))}
-  \end{tabular}
-}
-    \column{0.4\textwidth}
-
-\onslide<2->{
-    \begin{tabular}{cc@{}c@{}cc}
-      \cline{1-2}\cline{4-5}
-      \pointcell&$\nextarrow$&\pointcell\\
-      \cline{1-2}\cline{4-5}
-      \bda&&&\bda&\bda\\
-      \cline{1-2}
-      \pointcell&&\fbox8&\fbox{13}\\
-      \cline{1-2}
-      \bda&\bda\\
-      \fbox2 &\fbox 3
-    \end{tabular}
-    \vspace{1em}
-}
-
-\onslide<4>{
-      \begin{tabular}{ccc@{}c@{}c}
-      \cline{1-2}
-      \pointcell\\
-      \cline{1-2}
-      \bda&\bda\\
-      \cline{2-3}
-      \fbox3&\pointcell&$\nextarrow$&\fbox8\\
-      \cline{2-3}
-      &\bda\\
-      \cline{2-3}
-      &\pointcell\\
-      \cline{2-3}
-      &\bda&\bda\\
-      &\fbox{13}&\fbox{21}
-    \end{tabular}
-}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{.6\textwidth}
+      \begin{tabular}{c}
+        \tt{(cons (cons 2 3) (cons 8 13))}\\
+        \bda\\
+        \tt{((2 . 3) . (8 . 13))}
+      \end{tabular}\\[4em]
+      \onslide<3->{
+        \begin{tabular}{c}
+          \tt{(cons 3 (cons (cons 13 21) 8))}\\
+          \bda\\
+          \tt{(3 . ((13 . 21) . 8))}
+        \end{tabular}
+      }
+    \end{column}
+    \begin{column}{.4\textwidth}
+      \onslide<2->{
+        \begin{tabular}{cc@{}c@{}cc}
+          \cline{1-2}\cline{4-5}
+          \pointcell&$\nextarrow$&\pointcell\\
+          \cline{1-2}\cline{4-5}
+          \bda&&&\bda&\bda\\
+          \cline{1-2}
+          \pointcell&&\fbox8&\fbox{13}\\
+          \cline{1-2}
+          \bda&\bda\\
+          \fbox2 &\fbox 3
+        \end{tabular}\\[1em]}
+      \onslide<4>{
+        \begin{tabular}{ccc@{}c@{}c}
+          \cline{1-2}
+          \pointcell\\
+          \cline{1-2}
+          \bda&\bda\\
+          \cline{2-3}
+          \fbox3&\pointcell&$\nextarrow$&\fbox8\\
+          \cline{2-3}
+              &\bda\\
+          \cline{2-3}
+              &\pointcell\\
+          \cline{2-3}
+              &\bda&\bda\\
+              &\fbox{13}&\fbox{21}
+        \end{tabular}}
+    \end{column}
   \end{columns}
 \end{frame}
 
@@ -120,40 +111,29 @@
     \end{itemize}
   \end{definition}
   \vspace{1em}
-
   \pause
-
-  \alert{S-изразите са най-общия тип данни в Scheme.}
-
-  \vspace{1em}
+  \alert{S-изразите са най-общият тип данни в Scheme.}\\[1em]
   С тяхна помощ могат да се дефинират произволно сложни структури от данни.
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{All you need is $\lambda$ --- точкови двойки}
 
-  Можем да симулираме \tt{cons}, \tt{car} и \tt{cdr} чрез \tt{lambda}!
-  \vspace{1em}
-
+  Можем да симулираме \tt{cons}, \tt{car} и \tt{cdr} чрез \tt{lambda}!\\[1em]
   \pause
-
   \textbf{Вариант №1:}
-
-\begin{verbatim}
+\begin{lstlisting}
 (define (lcons x y) (lambda (p) (if p x y)))
 (define (lcar z) (z #t))
 (define (lcdr z) (z #f))
-\end{verbatim}
-
+\end{lstlisting}
   \pause
-
   \textbf{Вариант №2:}
-
-\begin{verbatim}
+\begin{lstlisting}
 (define (lcons x y) (lambda (p) (p x y)))
 (define (lcar z) (z (lambda (x y) x)))
 (define (lcdr z) (z (lambda (x y) y)))
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \section{Списъци}
@@ -171,22 +151,16 @@
       \end{itemize}
     \end{enumerate}
   \end{definition}
-
-  \pause
   \vspace{2em}
-
+  \pause
   \begin{tabular}{*2{cc@{}c@{}}@{\hskip 1ex}cc@{}cc}
     \cline{1-2}\cline{4-5}\cline{9-10}
     \nextcell&\nextcell&\ldots&$\nextarrow$&\nilcell\\
     \cline{1-2}\cline{4-5}\cline{9-10}
     \bda&&&\bda&&&&&\bda\\
     \fbox{$a_1$}&&&\fbox{$a_2$}&&&&&\fbox{$a_n$}
-  \end{tabular}
-
-  \pause
-  \vspace{2em}
-
-  \tt{($a_1$ . ($a_2$ . ( \ldots ( $a_n$ . () ) ) ) ) $\longleftrightarrow$ ($a_1$ $a_2$ \ldots\ $a_n$)}
+  \end{tabular}\\[2em]
+  \tt{($a_1$ . ($a_2$ . ( \ldots ( $a_n$ . () ) ) ) ) \eqv\ ($a_1$ $a_2$ \ldots\ $a_n$)}
 \end{frame}
 
 \begin{frame}
@@ -196,16 +170,16 @@
   \item \tta{(null? }<израз>\tta) --- дали <израз> е празният списък \tt{()}
   \item \tta{(list? }<израз>\tta) --- дали <израз> е списък
     \begin{itemize}
-    \item \scriptsize \tt{(define (list? l) (or (null? l) (and (pair? l) (list? (cdr l)))))}
+    \item \scriptsize \lst{(define (list? l) (or (null? l) (and (pair? l) (list? (cdr l)))))}
     \end{itemize}
   \item \tta{(list }\{<израз>\}\tta) --- построява списък с елементи <израз>
-  \item \tt{(list }<израз$_1$> <израз$_2$> \ldots <израз$_n$>\tt) $\longleftrightarrow$\\
+  \item \tt{(list }<израз$_1$> <израз$_2$> \ldots <израз$_n$>\tt) \eqv\\
     \tt{(cons }<израз$_1$>\tt{ (cons }<израз$_2$> \ldots\tt{ (cons }<израз$_n$>\tt{ '()))))}
   \item \tt{(cons }<глава> <опашка>\tt) --- списък с <глава> и <опашка>
   \item \tt{(car }<списък>\tt) --- главата на <списък>
   \item \tt{(cdr }<списък>\tt) --- опашката на <списък>
   \item \alert{\tt{()} не е точкова двойка!}
-  \item \evalstoerr{(car '())}, \evalstoerr{(cdr '())}
+  \item \evalstoerr{(car '())},\hskip 2ex \evalstoerr{(cdr '())}
   \end{itemize}
 \end{frame}
 
@@ -213,12 +187,11 @@
   \frametitle{Съкратени форми на \tt{car} и \tt{cdr}}
 
   Нека $l = (a_1\,a_2\,a_3\,\ldots\,a_n)$.
-
   \begin{itemize}[<+->]
-  \item \evalsto{(car l)}{$a_1$}
-  \item \evalsto{(cdr l)}{$(a_2\,a_3\,\ldots\,a_n)$}
+  \item \evalstos{(car l)}{$a_1$}
+  \item \evalstos{(cdr l)}{$(a_2\,a_3\,...\,a_n)$}
   \item \evalstwop{(car (cdr l))}{$a_2$}{(cadr l)}
-  \item \evalstwop{(cdr (cdr l))}{$(a_3\,\ldots\,a_n)$}{(cddr l)}
+  \item \evalstwop{(cdr (cdr l))}{$(a_3\,...\,a_n)$}{(cddr l)}
   \item \evalstwop{(car (cdr (cdr l)))}{$a_3$}{(caddr l)}
   \item имаме съкратени форми за до 4 последователни прилагания на \tt{car} и \tt{cdr}
   \end{itemize}
@@ -246,7 +219,6 @@
 \begin{frame}
   \frametitle{Вградени функции за списъци}
   \small
-
   \begin{itemize}[<+->]
   \item \tta{(length }<списък>\tta) --- връща дължината на <списък>
   \item \tta{(append }\{<списък>\}\tta) --- конкатенира всички <списък>
@@ -266,7 +238,6 @@
 
 \subsection{Рекурсия над списъци}
 
-
 \begin{frame}
   \frametitle{Обхождане на списъци}
 
@@ -275,10 +246,9 @@
   \item Ако \tt l е празен, връщаме базова стойност \textbf{(дъно)}
   \item Иначе, комбинираме главата \tt{(car l)} с резултата от рекурсивното извикване над опашката \tt{(cdr l)} \textbf{(стъпка)}
   \end{itemize}
-
   \pause
   \vspace{2em}
-  Примери: \tt{length}, \tt{list-tail}, \tt{list-ref}, \tt{member}, \tt{memqv}, \tt{memq}
+  \textbf{Примери:} \tt{length}, \tt{list-tail}, \tt{list-ref}, \tt{member}, \tt{memqv}, \tt{memq}
 \end{frame}
 
 \begin{frame}
@@ -289,10 +259,9 @@
   \item На дъното връщаме фиксиран списък (например \tt{()})
   \item На стъпката построяваме с \tt{cons} списък със съответната глава, а опашката строим чрез рекурсивно извикване на същата функция
   \end{itemize}
-
   \pause
   \vspace{2em}
-  Примери: \tt{from-to}, \tt{collect}, \tt{append}, \tt{reverse}
+  \textbf{Примери:} \tt{from-to}, \tt{collect}, \tt{append}, \tt{reverse}
 \end{frame}
 
 \section{Функции от по-висок ред за списъци}
@@ -301,25 +270,20 @@
   \frametitle{Изобразяване на списък (\tt{map})}
 
   % TODO картинка
-  Да се дефинира функция \tt{(map <функция> <списък>)}, която връща нов списък съставен от елементите на <списък>, върху всеки от които е приложена <функция>.
-
-  \pause
-
-\begin{verbatim}
+  Да се дефинира функция \tt{(map <функция> <списък>)}, която връща нов списък съставен от елементите на <списък>, върху всеки от които е приложена <функция>.\\
+\begin{lstlisting}
 (define (map f l)
         (if (null? l) '()
             (cons (f (car l)) (map f (cdr l)))))
-\end{verbatim}
-
+\end{lstlisting}
   \pause
-
-  Примери:
+  \textbf{Примери:}
   \small
   \begin{itemize}[<+->]
   \item \evalstop{(map square '(1 2 3))}{(1 4 9)}
   \item \evalstop{(map cadr '((a b c) (d e f) (g h i)))}{(b e h)}
   \item \evalstop{(map (lambda (f) (f 2)) (list square 1+ odd?))}{(4 3 \#f)}
-  \item \evalstop{(map (lambda (f) (f 2)) (map twice (list square 1+ boolean?)))}{(16 4 \#t)}
+  \item \scriptsize\evalstop{(map (lambda (f) (f 2)) (map twice (list square 1+ boolean?)))}{(16 4 \#t)}
   \end{itemize}
 \end{frame}
 
@@ -327,24 +291,20 @@
   \frametitle{Филтриране на списък (\tt{filter})}
 
   Да се напише функция \tt{(filter }<условие> <списък>\tt), която връща само тези от елементите на <списък>, които удовлетворяват <условие>.
-
 \pause
 \small
-
-\begin{verbatim}
+\begin{lstlisting}
 (define (filter p? l)
    (cond ((null? l) l)
          ((p? (car l)) (cons (car l) (filter p? (cdr l))))
          (else (filter p? (cdr l)))))
-\end{verbatim}
-
+\end{lstlisting}
 \pause
-
-  Примери:
+  \textbf{Примери:}
   \begin{itemize}[<+->]
   \item \evalstop{(filter odd? '(1 2 3 4 5))}{(1 3 5)}
   \item \evalstop{(filter pair? '((a b) c () d (e)))}{((a b) (e))}
-  \item \evalstop{(map (lambda (x) (filter even? x)) '((1 2 3) (4 5 6) (7 8 9)))}{((2) (4 6) (8))}
+  \item \scriptsize\evalstop{(map (lambda (x) (filter even? x)) '((1 2 3) (4 5 6) (7 8 9)))}{((2) (4 6) (8))}
   \item \evalstop{(map (lambda (x) (map (lambda (f) (filter f x)) (list negative? zero? positive?))) '((-2 1 0) (1 4 -1) (0 0 1)))}{(((-2) (0) (1)) ((-1) () (1 4)) (() (0 0) (1)))}
   \end{itemize}
 
@@ -356,18 +316,15 @@
   Да се напише функция, която по даден списък $l = (a_1\,a_2\,a_3\,\ldots\,a_n)$ пресмята:
   \begin{equation*}
     a_1 \oplus \Big(a_2 \oplus \big(\ldots \oplus (a_n \oplus \bot) \ldots\big)\Big),
-  \end{equation*}
-
+  \end{equation*}\\[-0.5em]
   \pause
-
-\begin{verbatim}
+\begin{lstlisting}
 (define (foldr op nv l)
         (if (null? l) nv
             (op (car l) (foldr op nv (cdr l)))))
-\end{verbatim}
-
+\end{lstlisting}
   \pause
-  Примери:
+  \textbf{Примери:}
   \small
   \begin{itemize}[<+->]
   \item \evalstop{(foldr * 1 (from-to 1 5))}{120}
@@ -386,24 +343,20 @@
   Да се напише функция, която по даден списък $l = (a_1\,a_2\,a_3\,\ldots\,a_n)$ пресмята:
   \begin{equation*}
     \Big(\ldots\big((\bot \oplus a_1) \oplus a_2\big) \oplus \ldots\Big) \oplus a_n
-  \end{equation*}
-
+  \end{equation*}\\[-0.5em]
   \pause
-
-\begin{verbatim}
+\begin{lstlisting}
 (define (foldl op nv l)
   (if (null? l) nv
       (foldl op (op nv (car l)) (cdr l))))
-\end{verbatim}
-
+\end{lstlisting}
   \pause
-
-  Примери:
+  \textbf{Примери:}
   \small
   \begin{itemize}[<+->]
   \item \evalstop{(foldl * 1 (from-to 1 5))}{120}
   \item \evalstop{(foldl cons '() '(1 5 10))}{(((() . 1) . 5) . 10)}
-  \item \evalsto{(foldl \rvl{(lambda (x y) (cons y x))} '() '(1 5 10))}{(10 5 1)}
+  \item \evalstos{\tt{(foldl }\rvl{\lst{(lambda (x y) (cons y x))}}\lst{ '() '(1 5 10))}}{\tt{(10 5 1)}}
   \item \evalstop{(foldl list '() '(1 5 10))}{(((() 1) 5) 10)}
   \item \evalstop{(foldl append '() '((a b) (c d) (e f)))}{(a b c d e f)}
   \item \tt{foldr} генерира линеен рекурсивен процес, а \tt{foldl} --- линеен итеративен
@@ -413,92 +366,65 @@
 \begin{frame}[fragile]
   \frametitle{Функции от по-висок ред в Racket}
 
-  В R$^5$RS е дефинирана само функцията \tt{map}.
-
-  В Racket са дефинирани функциите \tt{map}, \tt{filter}, \tt{foldr}, \tt{foldl}
-
+  В R$^5$RS е дефинирана само функцията \tt{map}.\\
+  В Racket са дефинирани функциите \tt{map}, \tt{filter}, \tt{foldr}, \tt{foldl}\\[1em]
   \pause
-  \vspace{1em}
-
-  \alert{Внимание: \tt{foldl} в Racket е дефинирана по-различен начин!}
-
-  \pause
-
-  \begin{columns}[t,onlytextwidth]
+  \alert{Внимание: \tt{foldl} в Racket е дефинирана по-различен начин!}\\[1em]
+  \begin{columns}[T,onlytextwidth]
     \small
-    \column{0.5\textwidth}
-
-    \tt{foldl} от лекции
-
-\begin{semiverbatim}
+    \begin{column}{.5\textwidth}
+      \tt{foldl} от лекции\\[1em]
+\begin{lstlisting}
 (define (foldl op nv l)
   (if (null? l) nv
-      (foldl op \alert{(op nv (car l))}
+      (foldl op @\alert{(op nv (car l))}@
              (cdr l))))
-\end{semiverbatim}
-
-    \begin{equation*}
-      \Big(\ldots\big((\bot \oplus a_1) \oplus a_2\big) \oplus \ldots\Big) \oplus a_n
-    \end{equation*}
-
-    \column{0.5\textwidth}
-
-    \tt{foldl} в Racket
-
-\begin{semiverbatim}
+\end{lstlisting}
+      \begin{equation*}
+        \Big(\ldots\big((\bot \oplus a_1) \oplus a_2\big) \oplus \ldots\Big) \oplus a_n
+      \end{equation*}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \tt{foldl} в Racket\\[1em]
+\begin{lstlisting}
 (define (foldl op nv l)
   (if (null? l) nv
-      (foldl op \alert{(op (car l) nv)}
+      (foldl op @\alert{(op (car l) nv)}@
              (cdr l))))
-\end{semiverbatim}
-
-    \begin{equation*}
-      a_n \oplus \Big(\ldots \big(a_2 \oplus (a_1 \oplus \bot)\big)\ldots\Big),
-    \end{equation*}
-
+\end{lstlisting}
+      \begin{equation*}
+        a_n \oplus \Big(\ldots \big(a_2 \oplus (a_1 \oplus \bot)\big)\ldots\Big),
+      \end{equation*}
+    \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Свиване на непразен списък (\tt{foldr1, foldl1})}
 
-  \textbf{Задача.} Да се намери максималният елемент на списък.
+  \textbf{Задача.} Да се намери максималният елемент на списък.\\
   \pause
-
-  \tt{(define (maximum l) (foldr max \alt<2>?{(car l)} l))}
+  \lst{(define (maximum l) (foldr max}\tt{ \alt<2>?{(car l)} l))}\\[1em]
   \pause\pause
-
-  \vspace{1em}
-  Можем ли да пропуснем нулевата стойност за непразен списък?
-
-  \begin{columns}[t,onlytextwidth]
-    \column{0.45\textwidth}
-
-    \onslide<5->{
-    \begin{equation*}
-      a_1 \oplus \big(\ldots \oplus (a_{n-1} \oplus a_n) \ldots\big)
-    \end{equation*}}
-
-    \onslide<7->{
-    \begin{equation*}
-      \big(\ldots\big((a_1 \oplus a_2) \oplus \ldots\big) \oplus a_n
-    \end{equation*}}
-
-    \column{0.55\textwidth}
-
-    \vspace{1em}
-    \onslide<6->{
-      \tt{(define (foldr1 op l)}\\
-      \tt{\hspace{2ex}(if (null? (cdr l)) (car l)}\\
-      \tt{\hspace{7ex}(op (car l)}\\
-      \tt{\hspace{12ex}(foldr1 op (cdr l)))))}}
-
-    \vspace{2em}
-
-    \onslide<8->{
-      \tt{(define (foldl1 op l)}\\
-      \tt{\hspace{2ex}(foldl op (car l) (cdr l)))}}
-  \end{columns}
+  Можем ли да пропуснем нулевата стойност за непразен списък?\\[1em]
+  \begin{tabular}{ll}
+    \pause
+      $a_1 \oplus \big(\ldots \oplus (a_{n-1} \oplus a_n) \ldots\big)$
+    & \pause
+\begin{lstlisting}
+(define (foldr1 op l)
+  (if (null? (cdr l)) (car l)
+      (op (car l)
+          (foldr1 op (cdr l)))))
+\end{lstlisting}\\[3em]
+    \pause
+    $\big(\ldots\big((a_1 \oplus a_2) \oplus \ldots\big) \oplus a_n$
+    & \pause
+\begin{lstlisting}
+(define (foldl1 op l)
+  (foldl op (car l) (cdr l)))
+\end{lstlisting}
+  \end{tabular}
 \end{frame}
 
 \section{Вложени списъци}
@@ -514,12 +440,9 @@
 \begin{verbatim}
 ((1 (2)) (((3) 4) (5 (6)) () (7)) 8)
 \end{verbatim}
-
-  \textbf{Задача.} Да се преброят в атомите във вложен списък.
-
-  \pause
-
+  \textbf{Задача.} Да се преброят в атомите във вложен списък.\\
   \textbf{Подход:} Обхождане в две посоки: хоризонтално и вертикално
+  \pause
   \begin{itemize}[<+->]
   \item \hzero{Хоризонтално дъно:} \rvl{достигане до празен списък \tt{()}}
   \item \vzero{Вертикално дъно:} \rvl{достигане до друг атом}
@@ -527,97 +450,79 @@
   \item \vstep{Вертикална стъпка:} \rvl{обхождане на главата \tt{(car l)}}
   \end{itemize}
   \vspace{1em}
-
-  \nxt{
+  \onslide<+->
   За удобство можем да дефинираме функцията \tt{atom?}:
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (atom? x) (not (pair? x)))
-\end{semiverbatim}}
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Примери}
   \small
-
-  \textbf{Задача.} Да се преброят в атомите във вложен списък.
-
+  \textbf{Задача.} Да се преброят в атомите във вложен списък.\\
   \evalsto{(count-atoms '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}8
-
   \pause
-
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (count-atoms l)
-  (cond ((null? l) \hzero0)
-        ((atom? l) \vzero1)
-        (else (+ \vstep{(count-atoms (car l))} \hstep{(count-atoms (cdr l))}))))
-\end{semiverbatim}
+  (cond ((null? l) @\hzero0@)
+        ((atom? l) @\vzero1@)
+        (else (+ @\vstep{(count-atoms (car l))} \hstep{(count-atoms (cdr l))}@))))
+\end{lstlisting}
   \vspace{1em}
-
   \pause
-
-  \textbf{Задача.} Да се съберат всички атоми от вложен списък.
-
+  \textbf{Задача.} Да се съберат всички атоми от вложен списък.\\
   \evalsto{(flatten '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}{(1 2 3 4 5 6 7 8)}
-
   \pause
-
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (flatten l)
-  (cond ((null? l) \hzero{'()})
-        ((atom? l) \vzero{(list l)})
-        (else (append \vstep{(flatten (car l))} \hstep{(flatten (cdr l))}))))
-\end{semiverbatim}
-
+  (cond ((null? l) @\hzero{'()}@)
+        ((atom? l) @\vzero{(list l)}@)
+        (else (append @\vstep{(flatten (car l))} \hstep{(flatten (cdr l))}@))))
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Примери}
 
-  \textbf{Задача.} Да се обърне реда на атомите във вложен списък.
-  \evalsto{(deep-reverse '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}{\\
-(8 ((7) () ((6) 5) (4 (3))) ((2) 1))}
-
+  \textbf{Задача.} Да се обърне реда на атомите във вложен списък.\\
+  \evalsto{(deep-reverse '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}{(8 ((7) () ((6) 5) (4 (3))) ((2) 1))}
   \pause
-
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (deep-reverse l)
-  (cond ((null? l) \hzero{'()})
-        ((atom? l) \vzero{l})
-        (else (append \hstep{(deep-reverse (cdr l))}
-                \vstep{(list (deep-reverse (car l)))}))))
-\end{semiverbatim}
+  (cond ((null? l) @\hzero{'()}@)
+        ((atom? l) @\vzero{l}@)
+        (else (append @\hstep{(deep-reverse (cdr l))}@
+                @\vstep{(list (deep-reverse (car l)))}@))))
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Свиване на вложени списъци}
 
-  \tt{(deep-fold }<х-дъно> <в-дъно> <операция>\tt)
-
+  \tt{(deep-fold }<х-дъно> <в-дъно> <операция>\tt)\\
   \pause
   \onslide<+->
-
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (deep-fold nv term op l)
-  (cond ((null? l) \hzero{nv})
-        ((atom? l) \vzero{(term l)})
-        (else (op \vstep{(deep-fold nv term op (car l))}
-                  \hstep{(deep-fold nv term op (cdr l))}))))
-\end{semiverbatim}
-
+  (cond ((null? l) @\hzero{nv}@)
+        ((atom? l) @\vzero{(term l)}@)
+        (else (op @\vstep{(deep-fold nv term op (car l))}@
+                  @\hstep{(deep-fold nv term op (cdr l))}@))))
+\end{lstlisting}
   \onslide<+->
-\begin{semiverbatim}
-(define (count-atoms l) (deep-fold \rvl0 \rvl{(lambda (x) 1)} \rvl+ l))
-\end{semiverbatim}
+\begin{lstlisting}
+(define (count-atoms l) (deep-fold @\rvl0 \rvl{(lambda (x) 1)} \rvl+@ l))
+\end{lstlisting}
   \onslide<+->
-\begin{semiverbatim}
-(define (flatten l) (deep-fold \rvl{'()} \rvl{list} \rvl{append} l))
-\end{semiverbatim}
+\begin{lstlisting}
+(define (flatten l) (deep-fold @\rvl{'()} \rvl{list} \rvl{append}@ l))
+\end{lstlisting}
   \onslide<+->
-\begin{semiverbatim}
-\onslide<14>{(define (rcons x l) (append l (list x)))}
-
-(define (deep-reverse l) (deep-fold \rvl{'()} \rvl{id} \rvl{rcons} l))
-\end{semiverbatim}
+\begin{lstlisting}
+@\onslide<14>{(define (rcons x l) (append l (list x)))}@
+(define (deep-reverse l) (deep-fold @\rvl{'()} \rvl{id} \rvl{rcons}@ l))
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -633,15 +538,15 @@
   \onslide<+->
   Можем да реализираме \tt{deep-fold} чрез \tt{map} и \tt{foldr}!
   \onslide<+->
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (branch p? f g) (lambda (x) (p? x) (f x) (g x)))
 (define (deep-fold nv term op l)
-  (foldr \hstep{op} \hzero{nv}
+  (foldr @\hstep{op} \hzero{nv}@
    (map (branch atom?
-                \vzero{term}
-                \vstep{(lambda (l) (deep-fold nv term op l))})
+                @\vzero{term}@
+                @\vstep{(lambda (l) (deep-fold nv term op l))}@
         l)))
-\end{semiverbatim}
+\end{lstlisting}
 \end{frame}
 
 \section{Функции с произволен брой аргументи}
@@ -656,11 +561,11 @@
   \item създава функция с <тяло>, която получава няколко задължителни <параметър> и <списък> от опционални параметри
   \item \tta{(define (}<функция> \tta. <списък>\tta) <тяло>\tta)
   \item еквивалентно на \\
-    \tt{(define }<функция> \tt{(lambda }<списък> <тяло>\tt{))}
+    \lst{(define} <функция> \tt{(lambda }<списък> <тяло>\tt{))}
   \item \tta{(define (}<функция> \{<параметър>\}$^+$ \tta. <списък>\tta) <тяло>\tta)
   \item еквивалентно на \\
-    \tt{(define }<функция>\\
-    \hspace{10ex}\tt{(lambda (}\{<параметър>\}$^+$ \tt. <списък>\tt) <тяло>\tt{))}
+    \lst{(define} <функция>\\
+    \hspace{10ex}\lst{(lambda (}\{<параметър>\}$^+$ \tt. <списък>\tt) <тяло>\tt{))}
   \end{itemize}
 \end{frame}
 
@@ -668,11 +573,11 @@
   \frametitle{Примери}
 
   \begin{itemize}[<+->]
-  \item \tt{(define (maximum x . l) (foldl1 max (cons x l)))}
+  \item \lst{(define (maximum x . l) (foldl1 max (cons x l)))}
   \item \evalstop{(maximum 7 3 10 2)}{10}
   \item \evalstop{(maximum 100)}{100}
   \item \evalstoerrp{(maximum)}
-  \item \tt{(define (g x y . l) (append (append x l) (append y l)))}
+  \item \lst{(define (g x y . l) (append (append x l) (append y l)))}
   \item \evalstop{(g '(1 2 3) '(4 5 6)))}{(1 2 3 4 5 6)}
   \item \evalstop{(g '(1 2 3) '(4 5 6) 7 8))}{(1 2 3 7 8 4 5 6 7 8)}
   \end{itemize}
@@ -689,16 +594,15 @@
   \item \evalstop{(apply append '((1 2) (3 4) (5 6)))}{(1 2 3 4 5 6)}
   \item \evalstop{(apply list '(1 2 3 4))}{(1 2 3 4)}
   \end{itemize}
-
   \onslide<+->
 \small
-\begin{verbatim}
+\begin{lstlisting}
 (define (append . l)
    (cond ((null? l) '())
          ((null? (car l)) (apply append (cdr l)))
          (else (cons (caar l)
                      (apply append (cons (cdar l) (cdr l)))))))
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}
@@ -708,7 +612,7 @@
   \item \tta{(eval }<списък>\tta)
   \item връща оценката на \textbf{оценката на <списък>}
   \item Примери:
-  \item \tt{(define a 2)}
+  \item \lst{(define a 2)}
   \item \evalsto a2
   \item \evalsto{(eval a)}2
   \item \evalstop{(eval 'a)}2
@@ -723,12 +627,11 @@
   \begin{itemize}[<+->]
   \item \evalstop{(eval (list '+ 5 7 a))}{14}
   \item \evalstoerrp{(eval (list 'define b 5))}
-  \item \tt{(eval (list 'define 'b 5))} $\longleftrightarrow$ \tt{(define b 5)}
+  \item \lst{(eval (list 'define 'b 5))} \eqv\ \lst{(define b 5)}
   \item \evalsto{b}5
   \item {\small \evalstop{(eval (list 'if (list '< 2 5) (list 'quote 'a) 'b))}a}
-  \item \tt{(define (apply f l) (eval (cons f l)))}
+  \item \lst{(define (apply f l) (eval (cons f l)))}
   \end{itemize}
-
   \onslide<+->
   \alert{Програмите на Scheme могат да се разглеждат като данни!}
 \end{frame}
