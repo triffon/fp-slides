@@ -3,7 +3,7 @@
 
 \title{Функции от по-висок ред}
 
-\date{20 октомври 2016 г.}
+\date{20--27 октомври 2016 г.}
 
 \begin{document}
 
@@ -186,7 +186,7 @@
 (define (product a b term next) (accumulate * 1 a b term next))
 \end{lstlisting}
 \end{frame}
-\end{document}
+
 \subsection{Пример: правило на Хорнер}
 
 \newcommand{\pnx}{x^n + 2x^{n-1} + \ldots + (n-2)x^3 + (n-1)x^2 + nx + (n+1)}
@@ -195,23 +195,18 @@
   \frametitle{Задача: пресмятане на полином}
 
   Да се пресметне стойността на полинома
-
   \begin{eqnarray*}
   P_n(x) &=& \pnx\\
 \pause   &=& \sum_{i=0}^n (n+1-i)x^i
   \end{eqnarray*}
   \pause
-
   \textbf{Решение №1:}
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (p n x)
-\only<7->{  (define (term i) (* (- (1+ n) i) (expt x i)))
-}  (accumulate \rvl+ \rvl0 \rvl0 \rvl{n} \rvl{term} \rvl{1+}))
-\end{semiverbatim}
-
-  \pause
-
-  \vspace{1em}
+@\only<7->{  (define (term i) (* (- (1+ n) i) (expt x i)))}@
+  (accumulate @\rvl+ \rvl0 \rvl0 \rvl{n} \rvl{term} \rvl{1+}@))
+\end{lstlisting}\ \\[1em]
+  \onslide<+->
   \alert{Можем ли да решим задачата без да извикваме \tt{expt} на всяка стъпка?}
 \end{frame}
 
@@ -220,34 +215,24 @@
 \begin{frame}[fragile]
   \frametitle{Правило на Хорнер}
 
-  \begin{equation*}
-    P_n(x) = \pnxh
-  \end{equation*}
-
+  \begin{eqnarray*}
+    P_n(x) &=& \pnx\\
+           &=& \pnxh
+  \end{eqnarray*}
   \pause
-
-  \alert{Можем ли да сметнем с \tt{accumulate}?}
-
+  \alert{Можем ли да сметнем с \tt{accumulate}?}\\
   \pause
-
-  \textbf{Идея:} Да използваме операцията $a \oplus b := ax + b$.
-
+  \textbf{Идея:} Да използваме операцията $a \oplus b := ax + b$.\\
   \pause
-
-  \alert{Коя е ``нулевата стойност''  $\bot$?}
-  \vspace{1em}
-
+  \alert{Коя е ``нулевата стойност''  $\bot$?}\\[0.5em]
   \pause
-
   \textbf{Решение №2:}
-\begin{verbatim}
+\begin{lstlisting}
 (define (p n x)
   (define (op a b) (+ (* a x) b))
   (accumulate op 0 1 (1+ n) id 1+))
-\end{verbatim}
-
+\end{lstlisting}
   \pause
-
   \alert{Не смята правилно!}
 \end{frame}
 
@@ -259,21 +244,16 @@
   Q_n(x) = x + 2x + 3x + \ldots + nx + (n+1)x= \frac{(n+1)(n+2)}2x.
 \end{equation*}
   \pause
-  \textbf{Идея:} Да използваме операцията $a \oplus b := a + bx$.
-  \vspace{1em}
+  \textbf{Идея:} Да използваме операцията $a \oplus b := a + bx$.\\[1em]
   \pause
-
   \textbf{Решение №3:}
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (p n x)
   (define (op a b) (+ a (* b x)))
   (accumulate op 0 1 (1+ n) id 1+))
-\end{semiverbatim}
-
+\end{lstlisting}
   \pause
-
   \alert{Пак не смята правилно!!!}
-
 \end{frame}
 
 \begin{frame}
@@ -289,31 +269,26 @@
     P_n(x) &=& \pnxh\\
     &=& \pnx.
   \end{eqnarray*}
-
   \pause
-
   \alert{За неасоциативни  операции $\oplus$ има значение в какъв ред са скобите!}
 \end{frame}
 
 \subsection{Ляво натрупване}
 
 \begin{frame}[fragile]
-  \frametitle{Обобщена функция за натрупване}
+  \frametitle{Обобщена функция за ляво натрупване}
 
   Да се напише функция, която пресмята \textbf{ляво натрупване}:
-
   \begin{equation*}
     \bigg(\ldots\Big(\big(\bot \oplus term(a)\big) \oplus term(next(a))\Big) \oplus \ldots\bigg) \oplus term(b)
   \end{equation*}
-
   \pause
   \small
-\begin{verbatim}
+\begin{lstlisting}
 (define (accumulate-i op nv a b term next)
   (if (> a b) nv
       (accumulate-i op (op nv (term a)) (next a) b term next)))
-\end{verbatim}
-
+\end{lstlisting}
   \pause
   \begin{itemize}
   \item \tt{accumulate} --- дясно натрупване, рекурсивен процес
@@ -328,18 +303,14 @@
     P_n(x) &=& \pnx\\
     &=& \pnxh
   \end{eqnarray*}
-
-  Идея: използваме \tt{accumulate-i} и $a \oplus b := ax + b$.
-  \vspace{1em}
+  Идея: използваме \tt{accumulate-i} и $a \oplus b := ax + b$.\\[1em]
   \pause
-
   \textbf{Решение №4:}
-
-\begin{verbatim}
+\begin{lstlisting}
 (define (p n x)
   (define (op a b) (+ (* a x) b))
   (accumulate-i op 0 1 (1+ n) id 1+))
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \section{\tt{lambda}}
@@ -347,9 +318,7 @@
 \begin{frame}
   \frametitle{Анонимни функции}
 
-  Можем ли да ги конструираме параметрите на функциите от по-висок ред ``на място'', без да им даваме имена?
-  \vspace{0.5em}
-
+  Можем ли да ги конструираме параметрите на функциите от по-висок ред ``на място'', без да им даваме имена?\\[0.5em]
   \pause
   \begin{itemize}[<+->]
   \item \tta{(lambda (}\{<параметър>\}\tta) <тяло>\tta)
@@ -361,7 +330,7 @@
     \item \evalsto{((lambda (x) (+ x 3)) 5)}8
     \item
         \tt{(define (}<име> <параметри>\tt) <тяло>\tt)\\
-        $\longleftrightarrow$\\
+        $\Longleftrightarrow$\\
         \tt{(define }<име> \tt{(lambda (}<параметри>\tt) <тяло>\tt{))}
     \end{itemize}
   \end{itemize}
@@ -370,23 +339,19 @@
 \begin{frame}[fragile]
   \frametitle{Примери}
 
-\begin{verbatim}
+\begin{lstlisting}
 (define (integral a b f dx)
    (* dx (accumulate + 0 a b f (lambda (x) (+ x dx)))))
-\end{verbatim}
-
+\end{lstlisting}
 \pause
-
-\begin{verbatim}
+\begin{lstlisting}
 (define (p n x)
-   (accumulate-i + 0 1 (1+ n) (lambda (a b) (+ (* a x) b))
-                              (lambda (i) (+ i 1))))
-\end{verbatim}
-
+   (accumulate-i + 0 1 (+ n 1) (lambda (a b) (+ (* a x) b))
+                               (lambda (i) (+ i 1))))
+\end{lstlisting}
 \pause
-
-Как можем да реализираме с accumulate:
-\begin{itemize}
+\textbf{Задача:} Как можем да реализираме с accumulate:
+\begin{itemize}[<+->]
 \item $n!$
 \item $x^n$
 \item $\sum_{i=0}^n \frac{x^n}{n!}$
@@ -399,12 +364,11 @@
 \begin{frame}
   \frametitle{Функции, които връщат функции}
 
-  Да напишем функция, която прилага дадена функция два пъти над аргумент.
-
+  Да разгледаме функция, която прилага дадена функция два пъти над аргумент.
   \begin{itemize}[<+->]
-  \item \tt{(define (twice f x) (f (f x)))}
+  \item \lst{(define (twice f x) (f (f x)))}
   \item \evalstop{(twice square 3)}{81}
-  \item \tt{(define (twice f) (lambda (x) (f (f x))))}
+  \item \lst{(define (twice f) (lambda (x) (f (f x))))}
   \item \evalstoerrp{(twice square 3)}
   \item \evalstop{(twice square)}{\#<procedure>}
   \item \evalsto{((twice square) 3)}{81}
@@ -416,12 +380,12 @@
   \frametitle{Примери}
 
   \begin{itemize}[<+->]
-  \item \tt{(define (n+ n) (lambda (i) (+ i n)))}
-  \item \tt{(define 1+ (n+ 1))}
+  \item \lst{(define (n+ n) (lambda (i) (+ i n)))}
+  \item \lst{(define 1+ (n+ 1))}
   \item \evalsto{(1+ 7)}8
-  \item \tt{(define 5+ (n+ 5))}
+  \item \lst{(define 5+ (n+ 5))}
   \item \evalsto{(5+ 7)}{12}
-  \item \tt{(define (compose f g) (lambda (x) (f (g x))))}
+  \item \lst{(define (compose f g) (lambda (x) (f (g x))))}
   \item \evalstop{((compose square 1+) 3)}{16}
   \item \evalstop{((compose 1+ square) 3)}{10}
   \item \evalstop{((compose 1+ (compose square (n+ 2))) 3)}{26}
@@ -432,60 +396,59 @@
   \frametitle{Оценка на \tt{lambda}}
 
   \scriptsize
-  \begin{columns}[t,onlytextwidth]
-    \column{0.5\textwidth}
-    {}
-
-    \renewcommand{\arraystretch}{1.5}
-    \begin{tabular}{rc}
-      \nxt{\inenv E&\tt{(define (n+ n)}\\
-      &\tt{(lambda (i) (+ i n)))}\\
-      \nxt{\inenv E&\tt{(define 1+ (n+ 1))}\\
-      \nxt{\nxt{\inenv E&\tt{(define 5+ (n+ 5))}\\
-      \nxt{\nxt{\inenv E&\tt{(1+ 7)}\\
-      \nxt{&\bda\\
-      \inenv{E_3}&\tt{(+ i n)}\\
-      \nxt{&\bda\\
-      &\tt 8}\\
-      \nxt{\inenv E&\tt{(5+ 7)}\\
-      \nxt{&\bda\\
-      \inenv{E_4}&\tt{(+ i n)}\\
-      \nxt{&\bda\\
-      &\tt{12}
-      }}}}}}}}}}
-    \end{tabular}
-
-    \column{0.5\textwidth}
-    {}
-
-    \begin{tabular}{cc}
-      \multicolumn 2c{
-      \begin{envir}E
-        \\\firstinenv \tt{n+}&:&\funcenv{n}{($\lambda$(i) (+ i n)))}E
-        \only<3->{\\\tt{1+}&:&\funcenv{i}{(+ i n)}{E_1}}
-        \only<5->{\\\tt{5+}&:&\funcenv{i}{(+ i n)}{E_2}}
-      \end{envir}}\\
-      \only<2->\bua&
-      \only<4->\bua\\
-      \only<2->{
-      \begin{envir}{E_1}
-        \\\firstinenv \tt n&:&1
-      \end{envir}}&
-      \only<4->{
-      \begin{envir}{E_2}
-        \\\firstinenv \tt n&:&5
-      \end{envir}}\\
-      \only<7->\bua&
-      \only<10->\bua\\
-      \only<7->{
-      \begin{envir}{E_3}
-        \\\firstinenv \tt i&:&7
-      \end{envir}}&
-      \only<10->{
-      \begin{envir}{E_4}
-        \\\firstinenv \tt i&:&7
-      \end{envir}}\\
-    \end{tabular}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{.5\textwidth}
+      \renewcommand{\arraystretch}{1.5}
+      \begin{tabular}{rc}
+        \nxt{\inenv E&
+                       \renewcommand{\arraystretch}{1}
+                       \begin{tabular}{l}
+                         \lst{(define (n+ n)}\\[0em]
+                         \hskip2ex\lst{(lambda (i) (+ i n)))}
+                       \end{tabular}\\
+        \nxt{\inenv E&\lst{(define 1+ (n+ 1))}\\
+        \nxt{\nxt{\inenv E&\lst{(define 5+ (n+ 5))}\\
+        \nxt{\nxt{\inenv E&\tt{(1+ 7)}\\
+        \nxt{&\bda\\
+        \inenv{E_3}&\tt{(+ i n)}\\
+        \nxt{&\bda\\
+                     &\tt 8}\\
+        \nxt{\inenv E&\tt{(5+ 7)}\\
+        \nxt{&\bda\\
+        \inenv{E_4}&\tt{(+ i n)}\\
+        \nxt{&\bda\\
+                     &\tt{12}
+                       }}}}}}}}}}
+      \end{tabular}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \begin{tabular}{cc}
+        \multicolumn 2c{
+        \begin{envir}E
+          \\\firstinenv \tt{n+}&:&\funcenv{n}{($\lambda$(i) (+ i n)))}E
+          \only<3->{\\\tt{1+}&:&\funcenv{i}{(+ i n)}{E_1}}
+          \only<5->{\\\tt{5+}&:&\funcenv{i}{(+ i n)}{E_2}}
+        \end{envir}}\\
+        \only<2->\bua&
+                       \only<4->\bua\\
+        \only<2->{
+        \begin{envir}{E_1}
+          \\\firstinenv \tt n&:&1
+        \end{envir}}& \only<4->{
+                      \begin{envir}{E_2}
+                        \\\firstinenv \tt n&:&5
+                      \end{envir}}\\
+        \only<7->\bua&
+                       \only<10->\bua\\
+        \only<7->{
+        \begin{envir}{E_3}
+          \\\firstinenv \tt i&:&7
+        \end{envir}}& \only<10->{
+                      \begin{envir}{E_4}
+                        \\\firstinenv \tt i&:&7
+                      \end{envir}}\\
+      \end{tabular}
+    \end{column}
   \end{columns}
 
 \end{frame}
@@ -496,17 +459,14 @@
   \begin{equation*}
     f'(x) \alt<1>{= \lim_{x\to\infty} \frac{f(x+\Delta x) - f(x)}{\Delta x}}{\approx\frac{f(x+\Delta x) - f(x)}{\Delta x}\;\text{ за малки }\Delta x}
   \end{equation*}
-
   \pause\pause
-
-\begin{verbatim}
+\begin{lstlisting}
 (define (derive f dx)
   (lambda (x) (/ (- (f (+ x dx)) (f x)) dx)))
-\end{verbatim}
+\end{lstlisting}
   \pause
-
   \begin{itemize}[<+->]
-  \item \tt{(define 2* (derive square 0.01))}
+  \item \lst{(define 2* (derive square 0.01))}
   \item \evalsto{(2* 5)}{10.009999999999764}
   \item \evalsto{((derive square 0.0000001) 5)}{10.000000116860974}
   \item \evalstop{((derive (derive (lambda (x) (* x x x)) 0.001) 0.001) 3)}{18.006000004788802}
@@ -516,64 +476,53 @@
 \begin{frame}[fragile]
   \frametitle{Повторено прилагане}
 
-  Да се намери $n$-кратното прилагане на дадена функция.
+  Да се намери $n$-кратното прилагане на дадена едноместна функция.
   \begin{equation*}
     f^n(x) = \underbrace{f(f(f(\ldots(f}_n(x))\ldots)))
   \end{equation*}
   \pause
   \textbf{Решение №1:} $f^n(x) = f(f^{n-1}(x))$ \pause
-\begin{verbatim}
+\begin{lstlisting}
 (define (repeated f n)
   (lambda (x) (if (= n 0) x (f ((repeated f (- n 1)) x)))))
-\end{verbatim}
-
+\end{lstlisting}
   \pause
-
   \textbf{Решение №2:} $f^0 = id, f^n = f\circ f^{n-1}$ \pause
-\begin{verbatim}
+\begin{lstlisting}
 (define (repeated f n)
   (if (= n 0) id (compose f (repeated f (- n 1)))))
-\end{verbatim}
-
+\end{lstlisting}
   \pause
-
   \textbf{Решение №3:} $f^n = \underbrace{f \circ f \circ \ldots \circ f}_n \circ  id$ \pause
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (repeated f n)
-  (\rvl{accumulate} \rvl{compose} \rvl{id} \rvl1 \rvl{n} \rvl{(lambda (i) f)} \rvl{1+}))
-\end{semiverbatim}
+  (@\rvl{accumulate} \rvl{compose} \rvl{id} \rvl1 \rvl{n} \rvl{(lambda (i) f)} \rvl{1+}@))
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{$n$-та производна}
 
-  Да се намери $n$-та производна на дадена функция.
-
-  \vspace{1em}
-
+  Да се намери $n$-та производна на дадена едноместна функция.\\[1em]
   \pause
-
   \textbf{Решение №1:} $f^{(n)} = (f^{(n-1)})'$\pause
-\begin{verbatim}
+\begin{lstlisting}
 (define (derive-n f n dx)
   (if (= n 0) f (derive (derive-n f (- n 1) dx) dx)))
-\end{verbatim}
-
+\end{lstlisting}
   \pause
-
   \textbf{Решение №2:} $f^{(n)} = f\overbrace{''''{}^{\ldots}{}''}^n$\pause
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (derive-n f n dx)
-  \only<7->((\rvl{repeated} \rvl{(lambda (f) (derive f dx))} n)\only<7->{ f)})
-\end{semiverbatim}
-
+  @\only<7->((\rvl{repeated} \rvl{(lambda (f) (derive f dx))} n)\only<7->{ f)})@
+\end{lstlisting}
 \pause
   \textbf{Решение №3:} $^{(n)} = \underbrace{{}'{}^\circ{}'{}^{\circ\ldots\circ}{}'}_n$
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (derive-n f n dx)
-  ((\rvl{accumulate} \rvl{compose} \rvl{id} \rvl1 \rvl{n} \rvl{
-              (lambda (i) (lambda (f) (derive f dx)))} \rvl{1+}) f))
-\end{semiverbatim}
+  (@(\rvl{accumulate} \rvl{compose} \rvl{id} \rvl1 \rvl{n} \rvl{\\
+\hskip 15ex(lambda (i) (lambda (f) (derive f dx)))} \rvl{1+}) f))@
+\end{lstlisting}
 \end{frame}
 
 \section{All you need is $\lambda$}
@@ -581,29 +530,24 @@
 \begin{frame}
   \frametitle{All you need is $\lambda$ \only<2->{--- \tt{let}}}
 
-  Специалната форма \tt{lambda} е достатъчна за реализацията на всички останали конструкции в Scheme!
-  \vspace{1em}
-
+  Специалната форма \tt{lambda} е достатъчна за реализацията на всички останали конструкции в Scheme!\\[1em]
   \pause
-
   Симулация на \tt{let}:
   \begin{tabular}{c}
-    \tt{(let ((}<символ> <израз>\tt{))} <тяло>\tt)\\
-    $\longleftrightarrow$\\
-    \tt{((lambda (}<символ>\tt) <тяло>\tt{) <израз>)}
-  \end{tabular}
-  \vspace{1em}
+    \lst{(let ((}<символ> <израз>\tt{))} <тяло>\tt)\\
+    $\Longleftrightarrow$\\
+    \lst{((lambda (}<символ>\tt) <тяло>\tt{) <израз>)}
+  \end{tabular}\\[1em]
   \pause
-
   \begin{center}
     \begin{tabular}{r@{}l}
-      \tt{(let (}&\tt(<символ$_1$> <израз$_1$>\tt)\\
+      \lst{(let (}&\tt(<символ$_1$> <израз$_1$>\tt)\\
                  &\tt(<символ$_2$> <израз$_2$>\tt)\\
                  &\ldots\\
                  &\tt(<символ$_n$> <израз$_n$>\tt)\\
                  &<тяло>\tt)\\
-      \multicolumn 2c{$\longleftrightarrow$}\\
-      \tt{((lambda (}&<символ$_1$> \ldots <символ$_n$>\tt) <тяло>\tt)\\
+      \multicolumn 2c{$\Longleftrightarrow$}\\
+      \lst{((lambda (}&<символ$_1$> \ldots <символ$_n$>\tt) <тяло>\tt)\\
                  &<израз$_1$> \ldots <израз$_n$>\tt)
     \end{tabular}
   \end{center}
@@ -612,38 +556,33 @@
 \begin{frame}[fragile]
   \frametitle{All you need is $\lambda$ --- булева логика}
 
-Симулация на булеви стойности и \tt{if}:
-
-\begin{semiverbatim}
+Симулация на булеви стойности и \lst{if}:
+\begin{lstlisting}
 (define #t (lambda (x y) x))
 (define #f (lambda (x y) y))
-(define (lambda-if b x y) \only<2->((b x y)\only<2->))
-\end{semiverbatim}
+(define (lambda-if b x y) @\only<2->(@(b x y)@\only<2->)@)
+\end{lstlisting}
 \pause\pause
 Примери:
-
 \small
 \begin{itemize}[<+->]
 \item \evalsto{(lambda-if \#t (lambda () (+ 3 5)) (lambda () (/ 4 0)))}8
 \item \evalsto{(lambda-if \#f (lambda () +) (lambda () \"abc\"))}{\"abc\"}
-\item \tt{(define (not b) (lambda (x y) (b y x)))}
+\item \lst{(define (not b) (lambda (x y) (b y x)))}
 \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{All you need is $\lambda$ --- числа}
 
-  Симулация на естествени числа (\emph{нумерали на Чърч})
-
-  Идея: представяне на числото $n$ като $\lambda f,x \;f^n(x)$
-  \vspace{1em}
+  Симулация на естествени числа (\emph{нумерали на Чърч})\\
+  Идея: представяне на числото $n$ като $\lambda f,x \;f^n(x)$\\[1em]
   \pause
-
   \begin{itemize}[<+->]
-  \item \tt{(define c3 (lambda (f x) (f (f (f x)))))}
-  \item \tt{(define c5 (lambda (f x) (f (f (f (f (f x)))))))}
-  \item \tt{(define c1+ (lambda (a) (lambda (f x) (f (a f x)))))}
-  \item \tt{(define c+ (lambda (a b) (lambda (f x) (a f (b f x)))))}
+  \item \lst{(define c3 (lambda (f x) (f (f (f x)))))}
+  \item \lst{(define c5 (lambda (f x) (f (f (f (f (f x)))))))}
+  \item \lst{(define c1+ (lambda (a) (lambda (f x) (f (a f x)))))}
+  \item \lst{(define c+ (lambda (a b) (lambda (f x) (a f (b f x)))))}
   \end{itemize}
 \end{frame}
 
@@ -651,21 +590,18 @@
   \frametitle{All you need is $\lambda$ --- рекурсия}
 
   Комбинатор \tt Y за намиране на най-малка неподвижна точка (fixpoint combinator)
-
-\begin{verbatim}
+\begin{lstlisting}
 (define Y (lambda (f)
            ((lambda (x) (f (lambda (n) ((x x) n))))
             (lambda (x) (f (lambda (n) ((x x) n)))))))
-\end{verbatim}
-
+\end{lstlisting}
 \pause
-
-\begin{verbatim}
+\begin{lstlisting}
 (define fact-body (lambda (f)
                    (lambda (n) (if (= n 0) 1
                                    (* n (f (- n 1)))))))
 (define fact (Y fact-body))
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \end{document}
