@@ -3,7 +3,7 @@
 
 \title{Списъци}
 
-\date{27 октомври 2016 г.}
+\date{3 ноември 2016 г.}
 
 \begin{document}
 
@@ -188,8 +188,8 @@
 
   Нека $l = (a_1\,a_2\,a_3\,\ldots\,a_n)$.
   \begin{itemize}[<+->]
-  \item \evalstos{(car l)}{$a_1$}
-  \item \evalstos{(cdr l)}{$(a_2\,a_3\,...\,a_n)$}
+  \item \evalstos{\tt{(car l)}}{$a_1$}
+  \item \evalstos{\tt{(cdr l)}}{$(a_2\,a_3\,...\,a_n)$}
   \item \evalstwop{(car (cdr l))}{$a_2$}{(cadr l)}
   \item \evalstwop{(cdr (cdr l))}{$(a_3\,...\,a_n)$}{(cddr l)}
   \item \evalstwop{(car (cdr (cdr l)))}{$a_3$}{(caddr l)}
@@ -290,7 +290,7 @@
 \begin{frame}[fragile]
   \frametitle{Филтриране на списък (\tt{filter})}
 
-  Да се напише функция \tt{(filter }<условие> <списък>\tt), която връща само тези от елементите на <списък>, които удовлетворяват <условие>.
+  Да се дефинира функция \tt{(filter }<условие> <списък>\tt), която връща само тези от елементите на <списък>, които удовлетворяват <условие>.
 \pause
 \small
 \begin{lstlisting}
@@ -446,7 +446,7 @@
   \begin{itemize}[<+->]
   \item \hzero{Хоризонтално дъно:} \rvl{достигане до празен списък \tt{()}}
   \item \vzero{Вертикално дъно:} \rvl{достигане до друг атом}
-  \item \hstep{Хоризонтална стъпка:} \rvl{обхождане опашката \tt{(cdr l)}}
+  \item \hstep{Хоризонтална стъпка:} \rvl{обхождане на опашката \tt{(cdr l)}}
   \item \vstep{Вертикална стъпка:} \rvl{обхождане на главата \tt{(car l)}}
   \end{itemize}
   \vspace{1em}
