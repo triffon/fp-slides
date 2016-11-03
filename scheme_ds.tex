@@ -4,7 +4,7 @@
 \title{Структури от данни в Scheme}
 \subtitle{матрици, дървета, асоциативни списъци, графи}
 
-\date{11 ноември 2015 г.}
+\date{10 ноември 2016 г.}
 
 \begin{document}
 
@@ -37,9 +37,10 @@
     \end{column}
   \end{columns}
   \vspace{1em}
+  \pause
   Проверка за коректност:
   \pause
-\begin{verbatim}
+\begin{lstlisting}
 (define (all p? l) (foldr (lambda (x y) (and x y)) #t l))
 
 (define (matrix? m)
@@ -48,7 +49,7 @@
        (all list? m)
        (all (lambda (row) (= (length row)
                              (length (car m)))) m)))
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \subsection{Операции}
@@ -59,24 +60,24 @@
   Брой редове и стълбове
   \pause
   \onslide<+->
-\begin{semiverbatim}
-\alt<+->{(define get-rows length)}{(define (get-rows m) (length m))}
+\begin{lstlisting}
+(define @\alt<+->{get-rows length)}{(get-rows m) (length m))}@
 (define (get-columns m) (length (car m)))
-\end{semiverbatim}
+\end{lstlisting}
   \onslide<+->
   Намиране на първи ред и стълб
   \onslide<+->
-\begin{semiverbatim}
-\alt<+->{(define get-first-row car)}{(define (get-first-row m) (car m))}
+\begin{lstlisting}
+(define @\alt<+->{get-first-row car)}{(get-first-row m) (car m))}@
 (define (get-first-column m) (map car m))
-\end{semiverbatim}
+\end{lstlisting}
   \onslide<+->
   Изтриване на първи ред и стълб
   \onslide<+->
-\begin{semiverbatim}
-\alt<+->{(define del-first-row cdr)}{(define (del-first-row m) (cdr m))}
+\begin{lstlisting}
+(define @\alt<+->{del-first-row cdr)}{(del-first-row m) (cdr m))}@
 (define (del-first-column m) (map cdr m))
-\end{semiverbatim}
+\end{lstlisting}
 \end{frame}
 
 
@@ -85,21 +86,21 @@
 
   Намиране на ред и стълб по индекс
   \pause
-\begin{verbatim}
+\begin{lstlisting}
 (define (get-row i m) (list-ref m i))
 (define (get-column i m)
   (map (lambda (row) (list-ref row i)) m))
-\end{verbatim}
+\end{lstlisting}
   \pause
   Транспониране
   \pause
   \onslide<+->
   \begin{overprint}
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (transpose m)
-  (accumulate \rvl{cons} \rvl{'()} \rvl0 \rvl{(- (get-columns m) 1)}
-              \rvl{(lambda (i) (get-column i m))} \rvl{1+}))
-\end{semiverbatim}
+  (accumulate @\rvl{cons} \rvl{'()} \rvl0 \rvl{(- (get-columns m) 1)}@
+              @\rvl{(lambda (i) (get-column i m))} \rvl{1+}@))
+\end{lstlisting}
   \end{overprint}
 \end{frame}
 
@@ -108,15 +109,17 @@
 
   Събиране на матрици
   \pause
-\begin{verbatim}
+\begin{lstlisting}
 (define (sum-vectors v1 v2) (map + v1 v2))
 (define (sum-matrices m1 m2) (map sum-vectors m1 m2))
-\end{verbatim}
+\end{lstlisting}
   \pause
   \vspace{1em}
-  Умножение на матрици ($c_{i,j} = \vec a_i\cdot \vec b^T_j = \sum_{k=0}^n A_{i,k}B_{k,j}$)
+  Умножение на матрици \pause
+  ($c_{i,j} = \vec a_i\cdot \vec b^T_j = \sum_{k=0}^n A_{i,k}B_{k,j}$)
   \pause
-\begin{verbatim}
+  \small
+\begin{lstlisting}
 (define (mult-vectors v1 v2) (apply + (map * v1 v2)))
 (define (mult-matrices m1 m2)
   (let ((m2t (transpose m2)))
@@ -124,7 +127,7 @@
               (map (lambda (column) (mult-vectors row column))
                    m2t))
             m1)))
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 
