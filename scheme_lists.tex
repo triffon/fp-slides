@@ -11,6 +11,10 @@
   \titlepage
 \end{frame}
 
+\usetikzlibrary{matrix}
+\usetikzlibrary{graphs}
+\usetikzlibrary{positioning}
+
 \section{Точкови двойки}
 
 \begin{frame}
@@ -266,18 +270,50 @@
 
 \section{Функции от по-висок ред за списъци}
 
-\begin{frame}[fragile]
+\begin{frame}[label=map,fragile]
   \frametitle{Изобразяване на списък (\tt{map})}
 
-  % TODO картинка
-  Да се дефинира функция \tt{(map <функция> <списък>)}, която връща нов списък съставен от елементите на <списък>, върху всеки от които е приложена <функция>.\\
+  Да се дефинира функция \tta{(map }<функция> <списък>\tta), която връща нов списък съставен от елементите на <списък>, върху всеки от които е приложена <функция>.\\
+  \pause
+  \begin{center}
+    \begin{tikzpicture}
+      \matrix [
+      matrix of math nodes,
+      nodes={
+        rectangle,
+        minimum height=4ex,
+        minimum width=6.5ex,
+        text height=1ex,
+        text depth=0.25ex,
+        draw},
+      row sep=8ex] {
+        |(a1)| a_1 & |(a2)| a_2 & \ldots & |(an)| a_n \\
+        |(fa1)| f(a_1) & |(fa2)| f(a_2) &  \ldots & |(fan)| f(a_n) \\
+      };
+      \graph[use existing nodes,edges={thick,>=stealth}] {
+        a1 -> fa1;
+        a2 -> fa2;
+        an -> fan; };
+      \node[ellipse,draw,fill={white},below=3.5ex of a2.east,minimum width=26ex] {$f$};
+    \end{tikzpicture}
+  \end{center}
+  \pause
 \begin{lstlisting}
 (define (map f l)
         (if (null? l) '()
             (cons (f (car l)) (map f (cdr l)))))
 \end{lstlisting}
-  \pause
-  \textbf{Примери:}
+\end{frame}
+
+\begin{frame}[fragile,label=mapex]
+  \frametitle{Изобразяване на списък (\tt{map}) --- примери}
+
+\begin{lstlisting}
+(define (map f l)
+        (if (null? l) '()
+            (cons (f (car l)) (map f (cdr l)))))
+\end{lstlisting}
+
   \small
   \begin{itemize}[<+->]
   \item \evalstop{(map square '(1 2 3))}{(1 4 9)}
@@ -287,10 +323,41 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}[fragile,label=filter]
   \frametitle{Филтриране на списък (\tt{filter})}
 
-  Да се дефинира функция \tt{(filter }<условие> <списък>\tt), която връща само тези от елементите на <списък>, които удовлетворяват <условие>.
+  Да се дефинира функция \tta{(filter }<условие> <списък>\tta), която връща само тези от елементите на <списък>, които удовлетворяват <условие>.
+\pause
+  \begin{center}
+    \begin{tikzpicture}
+      \matrix [
+      matrix of math nodes,
+      nodes={
+        rectangle,
+        minimum height=4ex,
+        minimum width=6.5ex,
+        text height=1ex,
+        text depth=0.25ex,
+        draw},
+      row sep=7ex] {
+        |(a1)| a_1 & |(dots1)| \ldots & |(ai)| a_i & |(dots2)| \ldots & |(aj)| a_j & |(dots3)| \ldots & |(ak)| a_k & |(dots4)| \ldots & |(an)| a_n \\
+        && |(pa1)| a_1 & |(pai)| a_i &|(pak)| a_k& |(pdots)| \ldots \\
+      };
+      \graph[use existing nodes,edges={thick,>=stealth}] {
+        a1.south -> pa1.north;
+        ai.south -> pai.north;
+        ak.south -> pak.north;
+        dots1.south --[shorten >=5ex] pa1.north east;
+        dots2.south --[shorten >=3ex] pai.north east;
+        aj.south --[shorten >=3ex] pak.north west;
+        dots3.south --[shorten >=5ex] pak.north west;
+        dots4.south --[shorten >=6ex] pdots.north;
+        an.south --[shorten >=9ex] pdots.north east;
+
+      };
+      \node[trapezium,trapezium angle=98,trapezium stretches=true,right,draw,fill={white},below=4ex of a2.east,minimum width=50ex,minimum height=3ex] {$p$};
+    \end{tikzpicture}
+  \end{center}
 \pause
 \small
 \begin{lstlisting}
@@ -299,32 +366,60 @@
          ((p? (car l)) (cons (car l) (filter p? (cdr l))))
          (else (filter p? (cdr l)))))
 \end{lstlisting}
-\pause
-  \textbf{Примери:}
+\end{frame}
+
+\begin{frame}[fragile,label=filterex]
+  \frametitle{Филтриране на списък (\tt{filter})}
+\begin{lstlisting}
+(define (filter p? l)
+   (cond ((null? l) l)
+         ((p? (car l)) (cons (car l) (filter p? (cdr l))))
+         (else (filter p? (cdr l)))))
+\end{lstlisting}
   \begin{itemize}[<+->]
   \item \evalstop{(filter odd? '(1 2 3 4 5))}{(1 3 5)}
   \item \evalstop{(filter pair? '((a b) c () d (e)))}{((a b) (e))}
   \item \scriptsize\evalstop{(map (lambda (x) (filter even? x)) '((1 2 3) (4 5 6) (7 8 9)))}{((2) (4 6) (8))}
   \item \evalstop{(map (lambda (x) (map (lambda (f) (filter f x)) (list negative? zero? positive?))) '((-2 1 0) (1 4 -1) (0 0 1)))}{(((-2) (0) (1)) ((-1) () (1 4)) (() (0 0) (1)))}
   \end{itemize}
-
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}[fragile,label=foldr]
   \frametitle{Дясно свиване (\tt{foldr})}
 
-  Да се напише функция, която по даден списък $l = (a_1\,a_2\,a_3\,\ldots\,a_n)$ пресмята:
+  Да се дефинира функция, която по даден списък $l = (a_1\,a_2\,a_3\,\ldots\,a_n)$ пресмята:
   \begin{equation*}
     a_1 \oplus \Big(a_2 \oplus \big(\ldots \oplus (a_n \oplus \bot) \ldots\big)\Big),
   \end{equation*}\\[-0.5em]
   \pause
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{.2\textwidth}
+      \begin{forest} for tree={edge=<-}
+        [$\oplus$ [$a_1$]
+        [$\oplus$ [$a_2$]
+        [$\vdots$ [,phantom]
+        [$\oplus$ [$a_n$] [$\bot$]]]]]
+      \end{forest}
+    \end{column}
+    \pause
+    \begin{column}{.8\textwidth}
 \begin{lstlisting}
 (define (foldr op nv l)
         (if (null? l) nv
             (op (car l) (foldr op nv (cdr l)))))
 \end{lstlisting}
-  \pause
-  \textbf{Примери:}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile,label=foldrex]
+  \frametitle{Дясно свиване (\tt{foldr}) --- примери}
+
+\begin{lstlisting}
+(define (foldr op nv l)
+        (if (null? l) nv
+            (op (car l) (foldr op nv (cdr l)))))
+\end{lstlisting}
   \small
   \begin{itemize}[<+->]
   \item \evalstop{(foldr * 1 (from-to 1 5))}{120}
@@ -334,24 +429,48 @@
   \item \evalstop{(foldr append '() '((a b) (c d) (e f)))}{(a b c d e f)}
   \item \tt{map}, \tt{filter} и \tt{accumulate} могат да се реализират чрез \tt{foldr}
   \end{itemize}
-
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}[fragile,label=foldl]
   \frametitle{Ляво свиване (\tt{foldl})}
 
-  Да се напише функция, която по даден списък $l = (a_1\,a_2\,a_3\,\ldots\,a_n)$ пресмята:
+  Да се дефинира функция, която по даден списък $l = (a_1\,a_2\,a_3\,\ldots\,a_n)$ пресмята:
   \begin{equation*}
     \Big(\ldots\big((\bot \oplus a_1) \oplus a_2\big) \oplus \ldots\Big) \oplus a_n
   \end{equation*}\\[-0.5em]
   \pause
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{.3\textwidth}
+      \begin{forest} for tree={edge=<-}
+        [$\oplus$
+          [$\vdots$
+            [$\oplus$
+              [$\oplus$ [$\bot$] [$a_1$]]
+              [$a_2$]]
+            [,phantom]]
+          [$a_n$]]
+      \end{forest}
+    \end{column}
+    \pause
+    \begin{column}{.7\textwidth}
+\begin{lstlisting}
+(define (foldl op nv l)
+  (if (null? l) nv
+      (foldl op (op nv (car l)) (cdr l))))
+\end{lstlisting}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile,label=foldlex]
+  \frametitle{Ляво свиване (\tt{foldl}) --- примери}
+
 \begin{lstlisting}
 (define (foldl op nv l)
   (if (null? l) nv
       (foldl op (op nv (car l)) (cdr l))))
 \end{lstlisting}
   \pause
-  \textbf{Примери:}
   \small
   \begin{itemize}[<+->]
   \item \evalstop{(foldl * 1 (from-to 1 5))}{120}
@@ -581,6 +700,43 @@
   \item \evalstop{(g '(1 2 3) '(4 5 6)))}{(1 2 3 4 5 6)}
   \item \evalstop{(g '(1 2 3) '(4 5 6) 7 8))}{(1 2 3 7 8 4 5 6 7 8)}
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,label=mapl]
+  \frametitle{\lst{map} с произволен брой аргументи}
+  
+  \begin{itemize}[<+->]
+  \item Функцията \lst{map} може да се използва с произволен брой списъци!
+  \item \tta{(map }<$n$-местна функция> $l_1 \ldots l_n$\tta)
+  \item Конструира нов списък, като прилага <$n$-местна функция> над съответните поредни елементи на списъците $l_1, \ldots, l_n$\\
+    \onslide<+->
+    \begin{tikzpicture}[
+      comb/.style={
+        circle,minimum size=4ex}]
+    \scriptsize
+       \matrix [
+      matrix of math nodes,
+      nodes={
+        rectangle,
+        minimum height=4ex,
+        minimum width=6.5ex,
+        text height=1ex,
+        text depth=0.25ex,
+        draw}] {
+        |(a1)| a_1 & |(a2)| a_2 & \ldots & |(ak)| a_k && |(b1)| b_1 & |(b2)| b_2 & \ldots & |(bk)| b_k\\[4.5ex]
+        &&|(pab1)[comb]| f & |(pab2)[comb]| f &  & |(pabk)[comb]| f \\[2ex]
+        &&|(fab1)| c_1 & |(fab2)| c_2 & \ldots & |(fabk)| c_k\\
+      };
+      \graph[use existing nodes,edges={thick,>=stealth}] {
+        {a1.south, b1.south} -> pab1 -> fab1;
+        {a2.south, b2.south} -> pab2 -> fab2;
+        {ak.south, bk.south} -> pabk -> fabk;
+      };
+    \end{tikzpicture}
+  \item \evalstop{(map + '(1 2 3) '(4 5 6))}{(5 7 9)}
+  \item \evalstop{(map list '(1 2 3) '(4 5 6))}{((1 4) (2 5) (3 6))}
+  \item \small \evalstop{(map foldr (list * +) '(1 0) '((1 2 3) (4 5 6)))}{(6 15)}
+\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
