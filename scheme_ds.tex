@@ -225,24 +225,25 @@
   \pause
   Базови операции
   \begin{itemize}[<+->]
-  \item \alt<+->{\tt{(define make-rat cons)}}{\tt{(define (make-rat n d) (cons n d))}}
-  \item \alt<+->{\tt{(define get-numer car)}}{\tt{(define (get-numer r) (car r))}}
-  \item \alt<+->{\tt{(define get-denom cdr)}}{\tt{(define (get-denom r) (cdr r))}}
+  \item \alt<+->{\lst{(define make-rat cons)}}{\lst{(define (make-rat n d) (cons n d))}}
+  \item \alt<+->{\lst{(define get-numer car)}}{\lst{(define (get-numer r) (car r))}}
+  \item \alt<+->{\lst{(define get-denom cdr)}}{\lst{(define (get-denom r) (cdr r))}}
   \end{itemize}
   \onslide<+->
   \vspace{1em}
   По-добре:
-\begin{verbatim}
+\begin{lstlisting}
 (define (make-rat n d)
    (if (= d 0) (cons n 1) (cons n d)))
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Аритметични операции}
+
   \small
   \begin{columns}[t,onlytextwidth]
-    \begin{column}{0.33\textwidth}
+    \begin{column}{0.3\textwidth}
       \vspace{2em}
       \begin{equation*}
         \frac{n_1}{d_1}\frac{n_2}{d_2} = \frac{n_1n_2}{d_1d_2}
@@ -261,28 +262,28 @@
       \end{uncoverenv}
     \end{column}
 
-    \begin{column}{0.67\textwidth}
-\begin{verbatim}
+    \begin{column}{0.7\textwidth}
+\begin{lstlisting}
 (define (*rat p q)
   (make-rat (* (get-numer p) (get-numer q))
             (* (get-denom p) (get-denom q))))
-\end{verbatim}
+\end{lstlisting}
       \begin{uncoverenv}<2->
-\begin{verbatim}
+\begin{lstlisting}
 (define (+rat p q)
   (make-rat (+ (* (get-numer p)
                   (get-denom q))
                (* (get-denom p)
                   (get-numer q)))
             (* (get-denom p) (get-denom q))))
-\end{verbatim}
+\end{lstlisting}
       \end{uncoverenv}
       \begin{uncoverenv}<3->
-\begin{verbatim}
+\begin{lstlisting}
 (define (<rat p q)
   (< (* (get-numer p) (get-denom q))
      (* (get-numer q) (get-denom p))))
-\end{verbatim}
+\end{lstlisting}
       \end{uncoverenv}
     \end{column}
   \end{columns}
@@ -310,11 +311,12 @@
   \frametitle{Нормализация}
 
   \textbf{Проблем:} Числителят и знаменателят стават много големи!\\[1em]
+  \pause
   \textbf{Проблем:} \evalsto{(<rat (make-rat 1 2) (make-rat 1 -2))}{\#t}\\[1em]
   \pause
   \textbf{Идея:} Да работим с \emph{нормализирани} дроби $\frac p q$, където $p \in \mathbb Z, q \in \mathbb N^+$ и $gcd(p,q) = 1$.
   \pause
-\begin{verbatim}
+\begin{lstlisting}
 (define (make-rat n d)
   (if (or (= d 0) (= n 0)) (cons 0 1)
     (let* ((g (gcd n d))
@@ -322,7 +324,7 @@
            (dg (quotient d g)))
        (if (> dg 0) (cons ng dg)
                     (cons (- ng) (- dg))))))
-\end{verbatim}
+\end{lstlisting}
   \pause
   \alert{Не е нужно да правим каквито и да е други промени!}
 \end{frame}
@@ -346,62 +348,62 @@
     \end{tabular}
   \end{center}
   \pause
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (make-rat n d)
-  \alert{(cons 'rat}
+  @\alert{(cons 'rat}@
     (if (or (= d 0) (= n 0)) (cons 0 1)
       (let* ((g (gcd n d))
              (ng (quotient n g))
              (dg (quotient d g)))
          (if (> dg 0) (cons ng dg)
                       (cons (- ng) (- dg)))))))
-(define get-numer \alert{cadr})
-(define get-denom \alert{cddr})
-\end{semiverbatim}
+(define get-numer @\alert{cadr}@)
+(define get-denom @\alert{cddr}@)
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Проверка за коректност}
 
   Вече можем да проверим дали даден обект е рационално число:
-\begin{verbatim}
+\begin{lstlisting}
 (define (rat? p)
   (and (pair? p) (eq? (car p) 'rat)
-       (pair? (cdr p)) (number? (cadr p)) (number? (cddr p))))
-\end{verbatim}
-
+       (pair? (cdr p))
+       (integer? (cadr p)) (integer? (cddr p))))
+\end{lstlisting}
   \pause
-
   Можем да добавим проверка за коретност:
-\begin{verbatim}
+\begin{lstlisting}
 (define (check-rat f)
   (lambda (p)
     (if (rat? p) (f p) 'error)))
 
 (define get-numer (check-rat cadr))
 (define get-denom (check-rat cddr))
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \subsection{Капсулация}
 
 \begin{frame}[fragile]
   \frametitle{Капсулация на базови операции}
+
   \textbf{Проблем:} операциите над СД са видими глобално\\[1em]
   \pause
   \textbf{Идея:} да ги направим ``private''
   \pause
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (make-rat n d)
   (lambda (prop)
     (case prop
       ('get-numer n)
       ('get-denom d)
       ('print (cons n d)))))
-\end{semiverbatim}
+\end{lstlisting}
   \pause
   \begin{itemize}
-  \item \tt{(define r (make-rat 3 5))}
+  \item \lst{(define r (make-rat 3 5))}
   \item \evalsto{(r 'get-numer)}3
   \item \evalsto{(r 'get-denom)}5
   \item \evalsto{(r 'print)}{(3 . 5)}
@@ -410,28 +412,30 @@
 
 \begin{frame}[fragile]
   \frametitle{Нормализация при капсулация}
-\begin{semiverbatim}
+
+\begin{lstlisting}
 (define (make-rat n d)
-  \alert{(let* ((g (gcd n d))
-         (numer (quotient n g))
-         (denom (quotient d g)))}
+  @\alert{(let* ((g (gcd n d))}@
+         @\alert{(numer (quotient n g))}@
+         @\alert{(denom (quotient d g)))}@
    (lambda (prop)
     (case prop
       ('get-numer numer)
       ('get-denom denom)
       ('print (cons numer denom))))))
-\end{semiverbatim}
+\end{lstlisting}
   \pause
   \begin{itemize}
-  \item \tt{(define r (make-rat 4 6))}
+  \item \lst{(define r (make-rat 4 6))}
   \item \evalsto{(r 'print)}{(2 . 3)}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Капсулация на операции с аргументи}
+
 \small
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (make-rat n d)
   (let* ((g (gcd n d))
          (numer (quotient n g))
@@ -441,36 +445,39 @@
        ('get-numer numer)
        ('get-denom denom)
        ('print (cons numer denom))
-       \alert{('* (let ((r (car params)))
-            (make-rat (* numer (r 'get-numer))
-                      (* denom (r 'get-denom)))))}))))
-\end{semiverbatim}
+       @\alert{('* (let ((r (car params)))}@
+            @\alert{(make-rat (* numer (r 'get-numer))}@
+                      @\alert{(* denom (r 'get-denom)))))}@))))
+\end{lstlisting}
   \pause
   \begin{itemize}
-  \item \tt{(define r1 (make-rat 3 5))}
-  \item \tt{(define r2 (make-rat 5 2))}
+  \item \lst{(define r1 (make-rat 3 5))}
+  \item \lst{(define r2 (make-rat 5 2))}
   \item \evalsto{((r1 '* r2) 'print)}{(3 . 2)}
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}[fragile,fragile]
   \frametitle{Извикване на собствени операции}
-\small
-\begin{semiverbatim}
+
+  \small
+\begin{lstlisting}
 (define (make-rat n d)
   (let* ((g (gcd n d))
          (numer (quotient n g))
          (denom (quotient d g)))
-   \alert{(define (self prop . params)}
+   @\alert{(define (self prop . params)}@
      (case prop
        ('get-numer numer)
        ('get-denom denom)
        ('print (cons numer denom))
        ('* (let ((r (car params)))
-            (make-rat (* \alert{(self 'get-numer)} (r 'get-numer))
-                      (* \alert{(self 'get-denom)} (r 'get-denom)))))))
-   \alert{self}))
-\end{semiverbatim}
+            (make-rat (* @\alert{(self 'get-numer)}@ (r 'get-numer))
+                      (* @\alert{(self 'get-denom)}@ (r 'get-denom)))))))
+   @\alert{self}@))
+\end{lstlisting}
+  \pause
+  Извикването на метод на обект чрез референция към себе си \tt{self} или \tt{this} се нарича \alert{отворена рекурсия}.
 \end{frame}
 
 \section{Двоични дървета}
@@ -479,6 +486,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Представяне на двоични дървета}
+
   Представяме двоични дървета като вложени списъци от три елемента:\\[1em]
   \begin{columns}[t,onlytextwidth]
     \begin{column}{0.5\textwidth}
@@ -518,52 +526,52 @@
 
   Проверка за коректност:
   \pause
-\begin{verbatim}
+\begin{lstlisting}
 (define (tree? t)
   (or (null? t)
       (and (list t) (= (length t) 3))
            (tree? (cadr t))
            (tree? (caddr t))))
-\end{verbatim}
+\end{lstlisting}
   \pause
   Конструктори:
   \pause
-\begin{verbatim}
+\begin{lstlisting}
 (define empty-tree '())
 (define (make-tree root left right) (list root left right))
-\end{verbatim}
+\end{lstlisting}
   \pause
   Селектори:
   \pause
-\begin{verbatim}
+\begin{lstlisting}
 (define root-tree car)
 (define left-tree cadr)
 (define right-tree caddr)
 (define empty-tree? null?)
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile,fragile,fragile]
+\begin{frame}[fragile]
   \frametitle{Разширени операции}
 
   Дълбочина на дърво:
   \pause
-\begin{verbatim}
+\begin{lstlisting}
 (define (depth-tree t)
   (if (empty-tree? t) 0
       (1+ (max (depth (left-tree t))
                (depth (right-tree t))))))
-\end{verbatim}
+\end{lstlisting}
   \pause
   Намиране на поддърво:
   \pause
-\begin{verbatim}
-(define (member-tree x t)
+\begin{lstlisting}
+(define (memq-tree x t)
   (cond ((empty-tree? t) #f)
         ((eq? x (root-tree t)) t)
-        (else (or (member-tree x (left-tree t))
-                  (member-tree x (right-tree t))))))
-\end{verbatim}
+        (else (or (memq-tree x (left-tree t))
+                  (memq-tree x (right-tree t))))))
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -571,7 +579,7 @@
 
   \textbf{Задача:} Да се намери в дървото път от корена до даден възел \tt x.
   \pause
-\begin{verbatim}
+\begin{lstlisting}
 (define (path-tree x t)
   (cond ((empty-tree? t) #f)
         ((eq? x (root-tree t)) (list x))
@@ -580,7 +588,7 @@
                           (path-tree x (right-tree t)))))))
 
 (define (cons#f h t) (and t (cons h t)))
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \section{Асоциативни списъци}
@@ -589,6 +597,7 @@
 
 \begin{frame}
   \frametitle{Асоциативни списъци}
+
   \begin{definition}
     Асоциативните списъци (още: речник, хеш, map) са списъци от точкови двойки \tt(<ключ> \tt. <стойност>\tt). <ключ> и <стойност> може да са произволни S-изрази.
   \end{definition}
@@ -618,14 +627,13 @@
   \end{itemize}
   \vspace{1em}
   \onslide<+->
-  \textbf{Пример. }
+  \textbf{Пример:}
   Създаване на асоциатвен списък по списък от ключове и функция:
-\begin{verbatim}
+\begin{lstlisting}
 (define (make-alist f keys)
   (map (lambda (x) (cons x (f x))) l))
-\end{verbatim}
+\end{lstlisting}
   \onslide<+->
-  Пример:\\
   \evalsto{(make-alist square '(1 3 5))}{((1 . 1) (3 . 9) (5 . 25))}
 \end{frame}
 
@@ -635,8 +643,8 @@
   \frametitle{Операции над асоциативни списъци}
 
   \begin{itemize}[<+->]
-  \item \tt{(define (keys alist) (map car alist))}
-  \item \tt{(define (values alist) (map cdr alist))}
+  \item \lst{(define (keys alist) (map car alist))}
+  \item \lst{(define (values alist) (map cdr alist))}
   \item \tta{(assoc }<ключ> <асоциативен-списък>\tta)
     \begin{itemize}[<.->]
     \item Ако <ключ> се среща сред ключовете на <асоциативен-списък>,
@@ -654,10 +662,10 @@
     \end{itemize}
   \item Изтриване на ключ и съответната му стойност:\\
     \onslide<+->
-\begin{verbatim}
+\begin{lstlisting}
 (define (del-key-value key alist)
   (filter (lambda (kv) (not (eq? (car kv) key))) alist))
-\end{verbatim}
+\end{lstlisting}
   \end{itemize}
 \end{frame}
 
@@ -665,7 +673,7 @@
   \frametitle{Задаване на стойност за ключ}
 \small
   \textbf{Вариант №1 (грозен и по-бърз):}
-\begin{verbatim}
+\begin{lstlisting}
 (define (add-key-value key value alist)
    (let ((new-kv (cons key value)))
         (cond ((null? alist) (list new-kv))
@@ -673,17 +681,17 @@
                (cons new-kv (cdr alist)))
               (else (cons (car alist)
                     (add-key-value key value (cdr alist))))))
-\end{verbatim}
+\end{lstlisting}
   \pause
   \textbf{Вариант №2 (красив и по-бавен):}
-\begin{verbatim}
+\begin{lstlisting}
 (define (add-key-value key value alist)
   (let ((new-kv (cons key value)))
        (if (assq key alist)
            (map (lambda (kv) (if (eq? (car kv) key)
                                  new-kv kv)) alist)
            (cons new-kv alist))))
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -694,19 +702,19 @@
   \textbf{Формула:} $\exists x\in l: p(x)$\\
   \pause
   \textbf{Решение:}
-\begin{verbatim}
+\begin{lstlisting}
 (define (search p l)
   (and (not (null? l))
        (or (p (car l)) (search p (cdr l)))))
-\end{verbatim}
+\end{lstlisting}
   \pause
   \alert{Важно свойство:} Ако \tt p връща ``свидетел'' на истинността на свойството $p$ (както например \tt{memq} или \tt{assq}), то \tt{search} също връща този ``свидетел''.\\
   \pause
   \textbf{Пример:}
-\begin{verbatim}
+\begin{lstlisting}
 (define (assq key al)
   (search (lambda (kv) (and (eq? (car kv) key) kv)) al))
-\end{verbatim}
+\end{lstlisting}
   \pause
 \end{frame}
 
@@ -716,23 +724,23 @@
   \pause
   \textbf{Формула:} $\{f(x)\,|\,x \in l \}$\\
   \pause
-  \textbf{Решение:} \tt{(map f l)}\\[1em]
+  \textbf{Решение:} \lst{(map f l)}\\[1em]
   \pause
   \textbf{Задача.} Да се изберат тези елементи от l, които удовлетворяват p.\\
   \pause
   \textbf{Формула:} $\{x\,|\,x \in l \wedge p(x) \}$\\
   \pause
-  \textbf{Решение:} \tt{(filter p l)}\\[1em]
+  \textbf{Решение:} \lst{(filter p l)}\\[1em]
   \pause
   \textbf{Задача.} Да се провери дали всички елементи на l удовлетворяват p.\\
   \pause
   \textbf{Формула:} $\forall x\in l:\,p(x)$ \pause $\leftrightarrow \neg \exists x\in l:\,\neg p(x)$\\
   \pause
   \textbf{Решение:}
-\begin{verbatim}
+\begin{lstlisting}
 (define (forall p l)
   (not (search (lambda (x) (not (p x))) l)))
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \section{Графи}
@@ -761,6 +769,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Представяне на графи чрез асоциативни списъци}
+
   \begin{columns}[t,onlytextwidth]
     \begin{column}{0.7\textwidth}
       \begin{center}
@@ -787,72 +796,75 @@
   Асоциативен списък, в който \alert{ключовете} са върховете, а \alert{стойностите} са списъци от техните деца.
 \end{frame}
 
-\begin{frame}<0>[fragile]
+\begin{frame}[fragile]
   \frametitle{Абстракция за граф}
+
+\begin{lstlisting}
+(define (vertices g) (map car g))
+
+(define (children v g)             ;; @\alert{\(\{u|u\leftarrow{}v\}\)}@
+  (cdr (assq v g))))
+
+(define (edge? u v g)              ;; @\alert{\(u\stackrel?\rightarrow{}v\)}@
+  (memq v (children u g)))
+
+(define (map-children v f g)       ;; @\alert{\(\forall{}u\leftarrow{}v\)}@
+  (map f (children v g)))
+
+(define (search-child v f g)       ;; @\alert{\(\exists{}u\leftarrow{}v\)}@
+  (search f (children v g)))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Абстракция за граф}
+
   Абстракция чрез капсулация
   \small
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (make-graph g)
   (define (self prop . params)
     (case prop
       ('print g)
       ('vertices (map car g))
       ('children (let ((v (car params)))
-                   (cdr (assq v g))))             ;; \alert{\([s|s\leftarrow{}n]\)}
+                   (cdr (assq v g))))             ;; @\alert{\(\{u|u\leftarrow{}v\}\)}@
       ('edge? (let ((u (car params)) (v (cadr params)))
-                (memq v (self 'children u))))     ;; \alert{\(u\stackrel?\rightarrow{}v\)}
+                (memq v (self 'children u))))     ;; @\alert{\(u\stackrel?\rightarrow{}v\)}@
       ('map-children (let ((v (car params))
-                           (f (cadr params)))     ;; \alert{\(\forall{}s\leftarrow{}n\)}
+                           (f (cadr params)))     ;; @\alert{\(\forall{}u\leftarrow{}v\)}@
                        (map f (self 'children v))))
       ('search-child (let ((v (car params))
-                           (f (cadr params)))     ;; \alert{\(\exists{}s\leftarrow{}n\)}
+                           (f (cadr params)))     ;; @\alert{\(\exists{}u\leftarrow{}v\)}@
                        (search f (self 'children v))))))
   self)
-\end{semiverbatim}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Абстракция за граф}
-\begin{semiverbatim}
-(define (vertices g) (map car g))
-
-(define (children v g)             ;; \alert{\([u|u\leftarrow{}v]\)}
-  (cdr (assq v g))))
-
-(define (edge? u v g)              ;; \alert{\(u\stackrel?\rightarrow{}v\)}
-  (memq v (children u g)))
-
-(define (map-children v f g)       ;; \alert{\(\forall{}u\leftarrow{}v\)}
-  (map f (children v g)))
-
-(define (search-child v f g)       ;; \alert{\(\exists{}u\leftarrow{}v\)}
-  (search f (children v g)))
-\end{semiverbatim}
+\end{lstlisting}
 \end{frame}
 
 \subsection{Задачи}
 
 \begin{frame}[fragile]
   \frametitle{Локални задачи}
+
   \small
   \textbf{Задача. }Да се намерят върховете, които нямат деца.\\
   \pause
   \textbf{Решение. }\tt{childless(g)} $ = \{v | \nexists u \leftarrow v \}$
   \pause
-\begin{verbatim}
+\begin{lstlisting}
 (define (childless g)
-  (filter (lambda (v) (null? (children v g))) (vertices g)))
-\end{verbatim}
+  (filter (lambda (v) (null? (g 'children v))) (g 'vertices)))
+\end{lstlisting}
   \pause
   \vspace{1em}
   \textbf{Задача. }Да се намерят родителите на даден връх.\\
   \pause
   \textbf{Решение. }\tt{parents(v, g)} $ = \{u | u \rightarrow v \}$
   \pause
-\begin{verbatim}
+\begin{lstlisting}
 (define (parents v g)
-  (filter (lambda (u) (edge? u v g)) (vertices g)))
-\end{verbatim}
+  (filter (lambda (u) (g 'edge? u v)) (g 'vertices)))
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -861,29 +873,32 @@
   \pause
   \textbf{Решение. }\tt{symmetric?(g)} $ = \forall u\forall v\leftarrow u: v\rightarrow u$
   \pause
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (symmetric? g)
   (forall (lambda (u)
-            (forall (lambda (v) (edge? v u g))
-                    (children u g)))
-            (vertices g)))
-\end{semiverbatim}
+            (forall (lambda (v) (g 'edge? v u))
+                    (g 'children u)))
+            (g 'vertices)))
+\end{lstlisting}
 \end{frame}
 
 \subsection{Обхождане в дълбочина}
 
 \begin{frame}[fragile]
-\frametitle{Схема на обхождане в дълбочина}
+  \frametitle{Схема на обхождане в дълбочина}
+
   Обхождане на връх \tt v:
   \begin{itemize}
   \item Обходи последователно всички наследници на \tt v
   \end{itemize}
   \pause
-\begin{verbatim}
+{\small
+\begin{lstlisting}
 (define (dfs u g)
-  (<функция-за-обработка> (lambda (v) (<действие> (dfs v g)))
-                          (children u g)))
-\end{verbatim}
+  (@<функция-за-обработка>@ (lambda (v) (@<действие>@ (dfs v g)))
+                          (g 'children u)))
+\end{lstlisting}
+}
   \pause
   \begin{itemize}[<+->]
   \item \alert{Имаме ли дъно?}
@@ -905,29 +920,36 @@
 
 \begin{frame}[t,fragile]
   \frametitle{Търсене на път в дълбочина}
+
   \textbf{Задача.} Да се намери път от \tt u до \tt v, ако такъв има.\\
   \pause\onslide<+->
   \textbf{Решение.} Има път от \tt u до \tt v, ако:
   \begin{itemize}
   \item \tt u = \tt v, или
   \item има дете \tt w $\leftarrow$ \tt u, така че има път от \tt w до \tt v
-  \end{itemize}
-  \onslide<+->
-    \small
-    \begin{overlayarea}{\textwidth}{10em}
-\begin{semiverbatim}
-\alt<6->{(define (dfs-path u v g)
+  \end{itemize}\\[-1em]
+  \onslide<+-> \small
+    \begin{overlayarea}{\textwidth}{12em}
+      \begin{onlyenv}<6->
+\begin{lstlisting}
+(define (dfs-path u v g)
   (define (dfs-search path)
     (let ((current (car path)))
       (cond ((eq? current v) (reverse path))
             ((memq current (cdr path)) #f)
-            (else (search-child current
-                    (lambda (w) (dfs-search (cons w path)))))))
-  (dfs-search (list u)))}{(define (dfs-path u v g)
+            (else (g 'search-child current
+                     (lambda (w) (dfs-search (cons w path)))))))
+  (dfs-search (list u)))
+\end{lstlisting}
+      \end{onlyenv}
+      \begin{onlyenv}<-5>
+\begin{lstlisting}
+(define (dfs-path u v g)
   (if (eq? u v) (list u)
-      (search-child u (lambda (c)
-                         (cons#f u (dfs-path c v g))) g)))}
-\end{semiverbatim}
+      (g 'search-child u (lambda (c)
+                         (cons#f u (dfs-path c v g))))))
+\end{lstlisting}
+      \end{onlyenv}
     \end{overlayarea}
     \onslide<+->
     \alert{Директно рекурсивно решение, работи само за ацикличен граф!}\\
@@ -952,15 +974,16 @@
     \end{itemize}
   \end{onlyenv}
   \begin{visibleenv}<2->
-\begin{verbatim}
+\small
+\begin{lstlisting}
 (define (bfs u g)
   (define (bfs-level l)
-    (if (null? l) <дъно>
+    (if (null? l) @<дъно>@
         (bfs-level
-          (<функция-за-обработка> (lambda (v) (children v g))
+          (@<функция-за-обработка>@ (lambda (v) (g 'children v))
                                   l))))
   (bfs-level (list u)))
-\end{verbatim}
+\end{lstlisting}
   \end{visibleenv}
   \begin{itemize}[<+(3)->]
   \item \alert{Какво се случва ако графът е цикличен?}
@@ -984,21 +1007,21 @@
     \begin{column}{0.65\textwidth}
       \evalsto{(extend '(2 1))}{((3 2 1) (6 2 1))}
       \pause
-\begin{verbatim}
+\begin{lstlisting}
 (define (extend path)
-  (map-children (car path)
-    (lambda (u) (cons u path)) g))
-\end{verbatim}
+  (g 'map-children (car path)
+     (lambda (u) (cons u path))))
+\end{lstlisting}
       \pause
       Трябва да филтрираме циклите:
       \pause
-\begin{verbatim}
+\begin{lstlisting}
 (define (acyclic? path)
   (not (memq (car path) (cdr path))))
 
 (define (extend-acyclic path)
   (filter acyclic? (extend path))
-\end{verbatim}
+\end{lstlisting}
     \end{column}
     \begin{column}{0.35\textwidth}
       \onslide<2->
@@ -1014,10 +1037,10 @@
   \textbf{Решение.} Обхождаме в ширина от \tt u докато намерим ниво, в което има път, завършващ във върха  \tt v.
   \pause
   \small
-\begin{semiverbatim}
+\begin{lstlisting}
 (define (bfs-path u v g)
-  \textcolor{black!20}{(define (extend path) ...)
-  (define (extend-acyclic path) ...)}
+  @\textcolor{black!20}{(define (extend path) ...)}@
+  @\textcolor{black!20}{(define (extend-acyclic path) ...)}@
   (define (extend-level level)
     (apply append (map extend-acyclic level)))
 
@@ -1029,7 +1052,7 @@
         (bfs-level (extend-level level))))
 
   (bfs-level (list (list u))))
-\end{semiverbatim}
+\end{lstlisting}
 \end{frame}
 
 \end{document}
