@@ -659,9 +659,10 @@
   \onslide<+->
 \begin{lstlisting}
 (define (branch p? f g) (lambda (x) (p? x) (f x) (g x)))
+(define (valid-atom?) (and (not (pair? x)) (not (null? x))))
 (define (deep-fold nv term op l)
   (foldr @\hstep{op} \hzero{nv}@
-   (map (branch atom?
+   (map (branch valid-atom?
                 @\vzero{term}@
                 @\vstep{(lambda (l) (deep-fold nv term op l))}@
         l)))
