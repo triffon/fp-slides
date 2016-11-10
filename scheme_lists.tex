@@ -3,7 +3,7 @@
 
 \title{Списъци}
 
-\date{3 ноември 2016 г.}
+\date{3--10 ноември 2016 г.}
 
 \begin{document}
 
@@ -110,7 +110,7 @@
   \begin{definition}
     S-израз наричаме:
     \begin{itemize}
-    \item атоми (булеви, числа, знаци, символи, низове)
+    \item атоми (булеви, числа, знаци, символи, низове, функции)
     \item точкови двойки \tt{(S$_1$ . S$_2$)}, където \tt{S$_1$} и \tt{S$_2$} са S-изрази
     \end{itemize}
   \end{definition}
@@ -704,7 +704,7 @@
 
 \begin{frame}[fragile,label=mapl]
   \frametitle{\lst{map} с произволен брой аргументи}
-  
+
   \begin{itemize}[<+->]
   \item Функцията \lst{map} може да се използва с произволен брой списъци!
   \item \tta{(map }<$n$-местна функция> $l_1 \ldots l_n$\tta)
@@ -765,15 +765,17 @@
   \frametitle{Оценяване на списък като комбинация (\tt{eval})}
 
   \begin{itemize}[<+->]
-  \item \tta{(eval }<списък>\tta)
-  \item връща оценката на \textbf{оценката на <списък>}
+  \item \tta{(eval }<списък> <среда>\tta)
+  \item връща оценката на \textbf{оценката на <списък>} в <среда>
+  \item \tta{(interaction-environment)} --- текущата среда, в която оценяваме
+  \item \lst{(define (evali x) (eval x (interaction-environment)))}
   \item Примери:
   \item \lst{(define a 2)}
   \item \evalsto a2
-  \item \evalsto{(eval a)}2
-  \item \evalstop{(eval 'a)}2
-  \item \evalstop{(eval ''a)}a
-  \item \evalstop{(eval (eval ''a))}2
+  \item \evalsto{(evali a)}2
+  \item \evalstop{(evali 'a)}2
+  \item \evalstop{(evali ''a)}a
+  \item \evalstop{(evali (evali ''a))}2
   \end{itemize}
 \end{frame}
 
@@ -781,12 +783,12 @@
   \frametitle{Примери за \tt{eval}}
 
   \begin{itemize}[<+->]
-  \item \evalstop{(eval (list '+ 5 7 a))}{14}
-  \item \evalstoerrp{(eval (list 'define b 5))}
-  \item \lst{(eval (list 'define 'b 5))} \eqv\ \lst{(define b 5)}
+  \item \evalstop{(evali (list '+ 5 7 a))}{14}
+  \item \evalstoerrp{(evali (list 'define b 5))}
+  \item \lst{(evali (list 'define 'b 5))} \eqv\ \lst{(define b 5)}
   \item \evalsto{b}5
-  \item {\small \evalstop{(eval (list 'if (list '< 2 5) (list 'quote 'a) 'b))}a}
-  \item \lst{(define (apply f l) (eval (cons f l)))}
+  \item {\small \evalstop{(evali (list 'if (list '< 2 5) (list 'quote 'a) 'b))}a}
+  \item \lst{(define (apply f l) (evali (cons f l)))}
   \end{itemize}
   \onslide<+->
   \alert{Програмите на Scheme могат да се разглеждат като данни!}
