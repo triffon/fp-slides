@@ -44,6 +44,9 @@
 % клетки с диагонална черта
 \usepackage{diagbox}
 
+% умни интервали
+\usepackage{xspace}
+
 %%% настройки общи за всички слайдове
 \mode<presentation>
 {
@@ -106,6 +109,9 @@
 % грешка при оценяване
 \newcommand{\evalstoerr}[1]{\evalstox{#1} \textsf{\alert{Грешка!}}}
 
+% грешка при оценяване без lstlisting
+\newcommand{\evalstoerrs}[1]{\evalstos{#1}{\textsf{\alert{Грешка!}}}}
+
 % грешка при оценяване с пауза за въпрос
 \newcommand{\evalstoerrp}[1]{\evalstox{#1} \rvl{\textsf{\alert{Грешка!}}}}
 
@@ -157,7 +163,7 @@
 \colorlet{diagramblue}{blue!60!green!40}
 
 % еквивалентно на
-\newcommand{\eqv}{$\Longleftrightarrow$}
+\newcommand{\eqv}{$\Longleftrightarrow$\xspace}
 
 %% диаграми
 
