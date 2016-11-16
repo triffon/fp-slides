@@ -4,7 +4,7 @@
 \title{Структури от данни в Scheme}
 \subtitle{матрици, дървета, асоциативни списъци, графи}
 
-\date{10 ноември 2016 г.}
+\date{10--17 ноември 2016 г.}
 
 \begin{document}
 
@@ -550,7 +550,6 @@
 (define empty-tree? null?)
 \end{lstlisting}
 \end{frame}
-\end{document}
 
 \begin{frame}[fragile]
   \frametitle{Разширени операции}
@@ -854,7 +853,7 @@
   \pause
 \begin{lstlisting}
 (define (childless g)
-  (filter (lambda (v) (null? (g 'children v))) (g 'vertices)))
+  (filter (lambda (v) (null? (children v g))) (vertices g)))
 \end{lstlisting}
   \pause
   \vspace{1em}
@@ -864,7 +863,7 @@
   \pause
 \begin{lstlisting}
 (define (parents v g)
-  (filter (lambda (u) (g 'edge? u v)) (g 'vertices)))
+  (filter (lambda (u) (edge? u v g)) (vertices g)))
 \end{lstlisting}
 \end{frame}
 
@@ -877,9 +876,9 @@
 \begin{lstlisting}
 (define (symmetric? g)
   (forall (lambda (u)
-            (forall (lambda (v) (g 'edge? v u))
-                    (g 'children u)))
-            (g 'vertices)))
+            (forall (lambda (v) (edge? v u g))
+                    (children u g)))
+            (vertices g)))
 \end{lstlisting}
 \end{frame}
 
@@ -897,7 +896,7 @@
 \begin{lstlisting}
 (define (dfs u g)
   (@<функция-за-обработка>@ (lambda (v) (@<действие>@ (dfs v g)))
-                          (g 'children u)))
+                          (children u g)))
 \end{lstlisting}
 }
   \pause
@@ -928,7 +927,8 @@
   \begin{itemize}
   \item \tt u = \tt v, или
   \item има дете \tt w $\leftarrow$ \tt u, така че има път от \tt w до \tt v
-  \end{itemize}\\[-1em]
+  \end{itemize}
+  \vspace{-1em}
   \onslide<+-> \small
     \begin{overlayarea}{\textwidth}{12em}
       \begin{onlyenv}<6->
@@ -938,8 +938,8 @@
     (let ((current (car path)))
       (cond ((eq? current v) (reverse path))
             ((memq current (cdr path)) #f)
-            (else (g 'search-child current
-                     (lambda (w) (dfs-search (cons w path)))))))
+            (else (search-child current
+                     (lambda (w) (dfs-search (cons w path))) g))))
   (dfs-search (list u)))
 \end{lstlisting}
       \end{onlyenv}
@@ -947,8 +947,8 @@
 \begin{lstlisting}
 (define (dfs-path u v g)
   (if (eq? u v) (list u)
-      (g 'search-child u (lambda (c)
-                         (cons#f u (dfs-path c v g))))))
+      (search-child u (lambda (c)
+                         (cons#f u (dfs-path c v g))) g)))
 \end{lstlisting}
       \end{onlyenv}
     \end{overlayarea}
@@ -981,7 +981,7 @@
   (define (bfs-level l)
     (if (null? l) @<дъно>@
         (bfs-level
-          (@<функция-за-обработка>@ (lambda (v) (g 'children v))
+          (@<функция-за-обработка>@ (lambda (v) (children v g))
                                   l))))
   (bfs-level (list u)))
 \end{lstlisting}
@@ -1010,8 +1010,8 @@
       \pause
 \begin{lstlisting}
 (define (extend path)
-  (g 'map-children (car path)
-     (lambda (u) (cons u path))))
+  (map-children (car path)
+     (lambda (u) (cons u path)) g))
 \end{lstlisting}
       \pause
       Трябва да филтрираме циклите:
