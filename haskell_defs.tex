@@ -3,7 +3,9 @@
 
 \title{Синтаксис за дефиниране на функции}
 
-\date{6 януари 2016 г.}
+\date{1 декември 2016 г.}
+
+\lstset{language=Haskell,style=Haskell}
 
 \begin{document}
 
@@ -11,12 +13,11 @@
   \titlepage
 \end{frame}
 
-%\includeonlyframes{current}
-
 \section{Разглеждане на случаи}
 
 \begin{frame}[fragile]
   \frametitle{Разглеждане на случаи}
+
   Можем да дефинниране на функции с разглеждане на случаи по параметрите.\\
   Условието на всеки случай се нарича \textbf{пазач}.
   \begin{itemize}
@@ -28,45 +29,47 @@
       \hspace{3ex} \ldots\\
       \hspace{3ex} \tta| <пазач$_n$> \tta= <израз$_n$>\\
       \pause
-    \item ако <пазач$_1$> е \tt{True} връща <израз$_1$>, а ако е \tt{False}:
+    \item ако <пазач$_1$> е \tt{True} връща <израз$_1$>, а ако е \lst{False}:
     \item \ldots
-    \item ако <пазач$_n$> е \tt{True} връща <израз$_n$>, а ако е \tt{False}:
+    \item ако <пазач$_n$> е \tt{True} връща <израз$_n$>, а ако е \lst{False}:
     \item \alert{грешка!}
       \pause
-    \item За удобство \tt{Prelude} дефинира \tt{otherwise = True}
+    \item За удобство \lst{Prelude} дефинира \lst{otherwise = True}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Разглеждане на случаи --- примери}
-\begin{semiverbatim}
+
+\begin{lstlisting}
 fact n
-  | n == 0    = 1
-  | n > 0     = n * fact (n - 1)
-\onslide<6->{  | n < 0     = error "подадено отрицателно число"}
-\end{semiverbatim}
+  | n == 0  = 1
+  | n > 0   = n * fact (n - 1)
+  @\onslide<6->{| n < 0\hspace{3.7ex}= error "подадено отрицателно число"}@
+\end{lstlisting}
 \onslide<+->
 \begin{itemize}[<+->]
 \item \evalstoerrp{fact (-5)}
 \item добра практика е да имаме изчерпателни случаи
-\item можем да използваме стандартната функция \tt{error}
+\item можем да използваме стандартната функция \lst{error}
 \end{itemize}
 \onslide<+->
 \onslide<+->
-\begin{verbatim}
+\begin{lstlisting}
 grade x
   | x >= 5.5    = "Отличен"
   | x >= 4.5    = "Много добър"
   | x >= 3.5    = "Добър"
   | x >= 3      = "Среден"
   | otherwise   = "Слаб"
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \section{Локални дефиниции}
 
 \begin{frame}
   \frametitle{Локални дефиниции с \tt{let}}
+
   \begin{itemize}
   \item \tta{let} \{ <дефиниция> \}$^+$\\
     \tta{in} <тяло>
@@ -81,33 +84,35 @@ grade x
     \end{tabular}
     \pause
   \item{} <дефиниция$_i$> се въвеждат едновременно
-  \item областта на действие на дефинициите е само в рамките на \tt{let} конструкцията
+  \item областта на действие на дефинициите е само в рамките на \lst{let} конструкцията
   \item може да са взаимно рекурсивни
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Примери за \tt{let}}
+
   \begin{itemize}[<+->]
   \item \evalsto{let x = 5 in x + 3}8
-  \item \evalstop{%
+  \item \evalstops{%
       \begin{tabular}[t]{@{}l@{ }l@{}}
-        let&f x = y + x\\
-           &y = 7\\
-         in&f 2 * y
+        \lst{let}&\tt{f x = y + x}\\
+           &\tt{y = 7}\\
+         \lst{in}&\tt{f 2 * y}
       \end{tabular}}{63}
   \item \tt{%
     \begin{tabular}[t]{@{}l@{ }l@{ }l@{}}
-      fact2 n = &let fact n = &if n == 0 then 1\\
-                &             &else n * fact (n-1)\\
-                &in (fact n)\^{}2&
+      fact2 n = &\lst{let} fact n = &\lst{if} n == 0 \lst{then} 1\\
+                &             &\lst{else} n * fact (n-1)\\
+                &\lst{in} (fact n)\^{}2&
     \end{tabular}}
-  \item В интерактивен режим (GHCi) \tt{let} може да се използва без \tt{in} за въвеждане на нови дефиниции
+  \item В интерактивен режим (GHCi) \lst{let} може да се използва без \lst{in} за въвеждане на нови дефиниции
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Локални дефиниции с \tt{where}}
+
   \begin{itemize}
   \item{}
     \begin{tabular}[t]{@{}l@{\hspace{5ex}}ll}
@@ -130,27 +135,29 @@ grade x
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile,fragile]
+\begin{frame}[fragile]
   \frametitle{Примери за \tt{where}}
-\begin{verbatim}
+
+\begin{lstlisting}
 sumLastDigits n = lastDigit n + lastDigit (stripDigit n)
  where lastDigit  = (`mod` 10)
        stripDigit = (`div` 10)
-\end{verbatim}
+\end{lstlisting}
 \pause
-\begin{verbatim}
+\begin{lstlisting}
 quadratic a b c
  | a == 0     = "линейно уравнение"
  | d > 0      = "две реални решения"
  | d == 0     = "едно реално решение"
  | otherwise  = "няма реални решения"
  where d = b^2 - 4*a*c
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Пример за комбиниране на \tt{let} и \tt{where}}
-\begin{verbatim}
+
+\begin{lstlisting}
 area x1 y1 x2 y2 x3 y3 =
    let a = dist x1 y1 x2 y2
        b = dist x2 y2 x3 y3
@@ -160,20 +167,21 @@ area x1 y1 x2 y2 x3 y3 =
    where dist u1 v1 u2 v2 = sqrt (du^2 + dv^2)
           where du = u2 - u1
                 dv = v2 - v1
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}
   \frametitle{Сравнение на \tt{let} и \tt{where}}
+
   \begin{itemize}[<+->]
-  \item \tt{let} е израз, който може да участва във всеки израз
-  \item \tt{where} може да се използва само в рамките на дефиниция
-  \item \tt{where} дефинициите са видими при всички случаи с пазачи
-  \item \tt{let} са удобни когато има само едно <тяло>
+  \item \lst{let} е израз, който може да участва във всеки израз
+  \item \lst{where} може да се използва само в рамките на дефиниция
+  \item \lst{where} дефинициите са видими при всички случаи с пазачи
+  \item \lst{let} са удобни когато има само едно <тяло>
   \item стилистична разлика:
     \begin{itemize}
-    \item с \tt{let} помощните дефиниции се дават първи
-    \item с \tt{where} акцентът пада върху основната дефиниция
+    \item с \lst{let} помощните дефиниции се дават първи
+    \item с \lst{where} акцентът пада върху основната дефиниция
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -182,24 +190,25 @@ area x1 y1 x2 y2 x3 y3 =
 
 \begin{frame}[fragile]
   \frametitle{Подравняване на дефинициите}
+
   \begin{columns}[onlytextwidth]
     \begin{column}{0.35\textwidth}
-\begin{verbatim}
+\begin{lstlisting}
 let h = f + g
     b x = 2
 in  b h
-\end{verbatim}
+\end{lstlisting}
     \end{column}
     \pause
     \begin{column}{0.3\textwidth}
       а защо не:
     \end{column}
     \begin{column}{0.35\textwidth}
-\begin{verbatim}
+\begin{lstlisting}
 let h = f + g b
     x = 2
 in  b h
-\end{verbatim}
+\end{lstlisting}
     \end{column}
   \end{columns}
   \vspace{1em}
@@ -258,32 +267,34 @@ in  b h
 
 \begin{frame}[fragile]
   \frametitle{Поредица от равенства}
+
   Можем да дефинираме функция с поредица от равенства:
-\begin{verbatim}
+\begin{lstlisting}
 fact 0 = 1
 fact n = n * fact (n-1)
-\end{verbatim}
+\end{lstlisting}
   \pause
   Можем да имаме произволен брой равенства...
-\begin{verbatim}
+\begin{lstlisting}
 fib 0 = 0
 fib 1 = 1
 fib n = fib (n-1) + fib (n-2)
-\end{verbatim}
+\end{lstlisting}
   \pause
   \ldots или варианти за различните параметри
-\begin{verbatim}
-gcd 0 0 = error "няма най-голям общ делител"
+\begin{lstlisting}
+gcd 0 0 = error "@няма най-голям общ делител@"
 gcd x 0 = x
 gcd 0 y = y
 gcd x y
  | x > y     = gcd (x-y) y
  | otherwise = gcd x (y-x)
-\end{verbatim}
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Образци}
+
   \begin{itemize}[<+->]
   \item Как се разбира кое равенство да се използва?
   \item Видът на формалните параметри наричаме \alert{образец}
@@ -296,11 +307,18 @@ gcd x y
     \item \textbf{анонимен образец \tt\_} ---  пасва винаги без да свързва фактическата стойност с име
     \end{itemize}
   \item Пример:
-\begin{semiverbatim}
-\alt<+->{False && _ = False
-_     && b = b}{(&&) False _ = False
-(&&) _     b = b}
-\end{semiverbatim}
+    \begin{onlyenv}<-9>
+\begin{lstlisting}
+False && _ = False
+_     && b = b
+\end{lstlisting}
+    \end{onlyenv}
+    \begin{onlyenv}<10->
+\begin{lstlisting}
+(&&) False _ = False
+(&&) _     b = b
+\end{lstlisting}
+    \end{onlyenv}
   \end{itemize}
 \end{frame}
 
@@ -308,15 +326,15 @@ _     && b = b}{(&&) False _ = False
   \frametitle{Повторение на променливи}
   \begin{itemize}[<+->]
   \item Можем ли да напишем
-\begin{semiverbatim}
-gcd 0 0 = error "няма най-голям общ делител"
+\begin{lstlisting}
+gcd 0 0 = error "@няма най-голям общ делител@"
 gcd x 0 = x
 gcd 0 y = y
-\alert{gcd x x = x}
+@\alert{gcd x x = x}@
 gcd x y
  | x > y     = gcd (x-y) y
  | otherwise = gcd x (y-x)
-\end{semiverbatim}
+\end{lstlisting}
   \item \alert{Не!}
   \item Всички променливи в образците трябва да са уникални
   \item Няма унификация, както в Пролог
