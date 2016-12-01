@@ -159,7 +159,7 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
 
 \section{Вградени функции и операции}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Стандартен модул \tt{Prelude}}
 
   \begin{itemize}[<+->]
@@ -202,7 +202,7 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
 
   Числови предикати
 
-  \tt{<}, \tt{>}, \tt{=}, \tt{/=}, \tt{<=}, \tt{>=}, \lst{odd}, \lst{even}
+  \tt{<}, \tt{>}, \tt{==}, \tt{/=}, \tt{<=}, \tt{>=}, \lst{odd}, \lst{even}
 
   \vspace{1em}
   Булеви операции
@@ -244,7 +244,7 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
   \end{itemize}
   \onslide<+->
   \begin{block}{Основна идея}
-    Можем да разглеждаме функция с $n+1$ аргумента, като функция с един аргумент, която връща функции с $n$ аргумента.
+    Можем да разглеждаме функция с $n+1$ аргумента, като функция с един аргумент, която връща функция с $n$ аргумента.
   \end{block}
   \onslide<+->
   \alert{Това представяне на функциите с повече аргументи се нарича ``къринг'' (``currying'').}
