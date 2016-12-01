@@ -14,19 +14,30 @@
 % използване на специални апострофи и кавички
 \usepackage{textcomp}
 
-% форматиране на код на Scheme
+% форматиране на код: общи настройки
 \usepackage{listings}
 \lstset{
   showstringspaces=false,
   columns=fullflexible,
   keepspaces=true,
   extendedchars=false,
+  keywordstyle=\color{blue},
+  texcl=true,
   basicstyle=\ttfamily,
   escapechar=@
 }
 
+% форматиране на код на Haskell
+\lstdefinestyle{Haskell}{
+  commentstyle=\color[rgb]{0.133,0.545,0.133},
+  stringstyle=\color[rgb]{0.75,0.49,0.07}
+}
+
 % двойни разделителни черти в таблици
 \usepackage{hhline}
+
+% зачертан текст
+\usepackage{soul}
 
 % дървета
 \usepackage{forest}
@@ -66,6 +77,9 @@
 
 % код в червено
 \newcommand{\tta}[1]{\tt{\alert{#1}}}
+
+% зачертан код в червено
+\newcommand{\sta}[1]{\tta{\st{#1}}}
 
 % машина на Тюринг по даден код
 \newcommand{\mt}[1]{\{#1\}}

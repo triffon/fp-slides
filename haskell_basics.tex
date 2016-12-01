@@ -3,7 +3,9 @@
 
 \title{Основни понятия в Haskell}
 
-\date{16 декември 2015 г.}
+\date{1 декември 2016 г.}
+
+\lstset{language=Haskell,style=Haskell}
 
 \begin{document}
 
@@ -11,12 +13,11 @@
   \titlepage
 \end{frame}
 
-%\includeonlyframes{current}
-
 \section{Въведение в Haskell}
 
 \begin{frame}
   \frametitle{Какво е Haskell?}
+
   \pause
   \begin{center}
     \includegraphics[height=4cm]{images/HaskellBCurry.jpg}\\
@@ -25,31 +26,37 @@
   \end{center}
 \end{frame}
 
+\lstset{basicstyle=\small\ttfamily}
+
 \begin{frame}[fragile]
   \frametitle{Какво е Haskell?}
+
   \pause
-\begin{verbatim}
+\begin{lstlisting}
 fact 0 = 1
 fact n = n * fact (n-1)
-\end{verbatim}
+\end{lstlisting}
   \pause
-\begin{verbatim}
+\begin{lstlisting}
 quickSort []     = []
 quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
   where less = filter (<=x) xs
-        more =  filter (>x ) xs
-\end{verbatim}
+        more = filter (>x ) xs
+\end{lstlisting}
   \pause
-\begin{verbatim}
-студенти = [("Иван", 40000, 3.5), ("Мария", 60001, 5.5),
-            ("Петър", 40002, 5.0), ("Галя", 40003, 4.75)]
-избрани = foldr (++) [ ' ':име | (име,фн,оценка) <- студенти,
-                                  оценка > 4.5, фн < 60000 ])
-\end{verbatim}
+\begin{lstlisting}
+@студенти@ = [("@Иван@", 40000, 3.5), ("@Мария@", 60001, 5.5),
+            ("@Петър@", 40002, 5.0), ("@Галя@", 40003, 4.75)]
+@избрани@ = foldr1 (++) [ ' ':@име@ | (@име,фн,оценка@) <- @студенти@,
+                                  @оценка@ > 4.5, @фн@ < 60000 ]
+\end{lstlisting}
 \end{frame}
+
+\lstset{basicstyle=\ttfamily}
 
 \begin{frame}
   \frametitle{Какво е Haskell?}
+
   \pause
   \begin{itemize}
   \item Чист функционален език (без странични ефекти)
@@ -61,6 +68,7 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
 
 \begin{frame}
   \frametitle{Помощни материали}
+
   \begin{enumerate}
   \item S. Thompson. Haskell: The Craft of Functional Programming (2nd ed.). Addison-Wesley, 1999.
   \item P. Hudak, Peterson J., Fasel J. A Gentle Introduction to Haskell 98, 1999 (Internet, 2008).
@@ -71,15 +79,16 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
 
 \section{Дефиниции}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Синтактични елементи}
-  \begin{itemize}
+
+  \begin{itemize}[<+->]
   \item Идентификатори: \tt{fact}, \tt{\_myvar}, \tt{студенти}
     \begin{itemize}
     \item имена на обекти, започват с малка буква или \tt\_
     \end{itemize}
-  \item Запазени идентификатори: \tt{case}, \tt{if}, \tt{let}, \tt{where}, \ldots
-  \item Конструктори: \tt{Integer}, \tt{Maybe}, \tt{Just}, \ldots
+  \item Запазени идентификатори: \lst{case}, \lst{if}, \lst{let}, \lst{where}, \ldots
+  \item Конструктори: \lst{Integer}, \lst{Maybe}, \lst{Just}, \ldots
     \begin{itemize}
     \item имена на конструкции, започват с главна буква
     \end{itemize}
@@ -91,13 +100,14 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
     \end{itemize}
   \item Запазени операции: \tt{..} \tt: \tt{::} \tt= \tt\textbackslash \tt| \tt{<-} \tt{->} \tt@ \tt\~ \tt{=>}
   \item Специални символи: \tt( \tt) \tt, \tt; \tt[ \tt] \tt` \tt\{ \tt\}
-  \item Знаци: \tt{'a'}, \tt{'\textbackslash n'}, \tt{'+'}
-  \item Низове: \tt{"Hello, world!"}, \tt{"произволен низ"}
+  \item Знаци: \lst{'a'}, \lst{'\\n'}, \lst{'+'}
+  \item Низове: \lst{"Hello, world!"}, \lst{"произволен низ"}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Декларации и дефиниции}
+
   \begin{itemize}[<+->]
   \item {}<име> \tta{::} <тип> (типова декларация)
   \item декларира се, че <име> ще се свързва със стойности от <тип>
@@ -110,36 +120,37 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
   \item {}<име> \tta= <израз> (дефиниция)
   \item {}<име> се свърза с <израз>
     \begin{itemize}[<+->]
-    \item \tt{x = 2}
+    \item \lst{x = 2}
     \item \tt{y = \only<+->{fromIntegral }x\^{}2 + 7.5}
-    \item \tt{z = "Hello"}
-    \item \tta{z = x + y}
+    \item \lst{z = "Hello"}
+    \item \sta{z = x + y}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Типове}
+
   Типовете в Haskell обикновено се задават с конструктори. \pause
   \begin{itemize}[<+->]
-  \item \tt{Bool} --- булев тип с константи \tt{True} и \tt{False}
-  \item \tt{Char} --- Unicode знаци
+  \item \lst{Bool} --- булев тип с константи \lst{True} и \lst{False}
+  \item \lst{Char} --- Unicode знаци
   \item Целочислени
     \begin{itemize}
-    \item \tt{Int} --- цели числа с фиксирана големина $[-2^{63}; 2^{63}-1]$
-    \item \tt{Integer} --- цели числа с произволна големина
+    \item \lst{Int} --- цели числа с фиксирана големина $[-2^{63}; 2^{63}-1]$
+    \item \lst{Integer} --- цели числа с произволна големина
     \end{itemize}
   \item С плаваща запетая
     \begin{itemize}
-    \item \tt{Float} --- дробни числа с единична точност
-    \item \tt{Double} --- дробни числа с двойна точност
+    \item \lst{Float} --- дробни числа с единична точност
+    \item \lst{Double} --- дробни числа с двойна точност
     \end{itemize}
   \item Съставни
     \begin{itemize}
-    \item \tt{[a]} --- тип списък с \textbf{произволна} дължина и
+    \item \lst{[a]} --- тип списък с \textbf{произволна} дължина и
       елементи от \textbf{фиксиран} тип \tt a
-    \item \tt{String = [Char]} --- низ (списък от знаци)
-    \item \tt{(a,b,c)} --- тип кортеж (наредена $n$-торка) с
+    \item \lst{String = [Char]} --- низ (списък от знаци)
+    \item \lst{(a,b,c)} --- тип кортеж (наредена $n$-торка) с
       \textbf{фиксирана} дължина и \textbf{произволни} типове на
       компонентите
     \end{itemize}
@@ -150,6 +161,7 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
 
 \begin{frame}
   \frametitle{Стандартен модул \tt{Prelude}}
+
   \begin{itemize}[<+->]
   \item програмите в Haskell се разделят на модули
   \item \tta{module} <име> \tta{where}
@@ -172,17 +184,17 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
   \vspace{1em}
   Други числови функции
 
-  \tt{div}, \tt{mod}, \tt{max}, \tt{min}, \tt{gcd}, \tt{lcm}
+  \lst{div}, \lst{mod}, \lst{max}, \lst{min}, \lst{gcd}, \lst{lcm}
 
   \vspace{1em}
   Функции за преобразуване
 
-  \tt{fromIntegral}, \tt{fromInteger}, \tt{toInteger}, \tt{realToFrac}, \tt{fromRational}, \tt{toRational}, \tt{round}, \tt{ceiling}, \tt{floor}
+  \lst{fromIntegral}, \lst{fromInteger}, \lst{toInteger}, \lst{realToFrac}, \lst{fromRational}, \lst{toRational}, \lst{round}, \lst{ceiling}, \lst{floor}
 
   \vspace{1em}
   Функции над дробни числа
 
-  \tt{exp}, \tt{log}, \tt{sin}, \tt{cos}, \tt{tan}, \tt{asin}, \tt{acos}, \tt{atan}, \tt{sqrt}, \tt{**}
+  \lst{exp}, \lst{log}, \lst{sin}, \lst{cos}, \lst{tan}, \lst{asin}, \lst{acos}, \lst{atan}, \lst{sqrt}, \lst{**}
 \end{frame}
 
 \begin{frame}
@@ -190,18 +202,19 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
 
   Числови предикати
 
-  \tt{<}, \tt{>}, \tt{=}, \tt{/=}, \tt{<=}, \tt{>=}, \tt{odd}, \tt{even}
+  \tt{<}, \tt{>}, \tt{=}, \tt{/=}, \tt{<=}, \tt{>=}, \lst{odd}, \lst{even}
 
   \vspace{1em}
   Булеви операции
 
-  \tt{\&\&}, \tt{||}, \tt{not}
+  \tt{\&\&}, \tt{||}, \lst{not}
 \end{frame}
 
 \section{Функции}
 
 \begin{frame}
   \frametitle{Функции в Haskell}
+
   \begin{itemize}[<+->]
   \item \tt{t1 -> t2} --- тип на функция, която получава параметър от тип \tt{t1} и връща резултат от тип \tt{t2}
   \item {}<име> <параметър> \tta= <тяло>
@@ -223,22 +236,23 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
 \begin{frame}
   \frametitle{Функции на повече параметри}
   \begin{itemize}[<+->]
-  \item Как можем да изразим функция $f(x,y)$ на два параметъра чрез функции с един параметър?
-  \item Разглеждаме функция $F$ на един параметър $x$,...
-  \item ...която връща като резултат функцията на един параметър $f_x$,...
+  \item Как можем да изразим двуаргументна функция $f(x,y)$, ако разполагаме само с едноаргументни функции?
+  \item Разглеждаме функция $F$ с един аргумент $x$,...
+  \item ...която връща като резултат едноаргументната $f_x$,...
   \item ...така че $f_x(y) = f(x,y)$.
   \item Така имаме $f(x,y) = F(x)(y)$.
   \end{itemize}
   \onslide<+->
   \begin{block}{Основна идея}
-    Можем да разглеждаме функция с $n+1$ параметъра, като функция с един параметър, която връща функции с $n$ параметъра.
+    Можем да разглеждаме функция с $n+1$ аргумента, като функция с един аргумент, която връща функции с $n$ аргумента.
   \end{block}
   \onslide<+->
-  \alert{Това представяне на функциите с повече параметри се нарича ``къринг'' (``currying'').}
+  \alert{Това представяне на функциите с повече аргументи се нарича ``къринг'' (``currying'').}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Currying в Haskell}
+
   \begin{itemize}[<+->]
   \item \tt{t1 \alert{->} (t2 \alert{->} t3)}
     \begin{itemize}
@@ -247,28 +261,30 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
     \end{itemize}
   \item В общия случай: <функция> \tt{\alert{::} t1 \alert{->} (t2 \alert{->}} \ldots \tt{(tn \alert{->} t)}\ldots\tt)
   \item{} <функция> ще очаква $n$ параметъра от типове \tt{t1}, \tt{t2}, \ldots, \tt{tn} и ще връща резултат от тип \tt{t}
-  \item{} <функция> <параметър$_1$> \ldots <параметър$_n$> \tt= <тяло>
+  \item{} <функция> <параметър$_1$> \ldots <параметър$_n$> \tta= <тяло>
   \item дефинира <функция> с $n$ параметъра и <тяло>
     \begin{itemize}
-    \item \tt{hypothenuse :: Double -> \alt<+->{Double -> Double}{(Double -> Double)}}
-    \item \tt{hypothenuse a b = sqrt (a**2 + b**2)}
-    \item \evalsto{\alt<+->{hypothenuse 3 4}{(hypothenuse 3) 4}}5
+    \item \lst{hypothenuse :: Double -> }\alt<+->{\lst{Double -> Double}}{\lst{(Double -> Double)}}
+    \item \lst{hypothenuse a b = sqrt (a**2 + b**2)}
+    \item \evalstos{\alt<+->{\tt{hypothenuse 3 4}}{\tt{(hypothenuse 3) 4}}}{\tt5}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}<1-5>
+
   \frametitle{Частично прилагане на функции}
   Кърингът позволява удобно прилагане на функция към само част от параметрите.
   \begin{itemize}[<+->]
-  \item \tt{div50 :: Int -> Int}
-  \item \tt{div50\temporal<4>{ x}{ $\not{\tt x}$}{} = div 50\temporal<4>{ x}{ $\not{\tt x}$}{}}
+  \item \lst{div50 :: Int -> Int}
+  \item \tt{div50\temporal<4>{ x}{ $\!\!\not{\tt x}$}{} = div 50\temporal<4>{ x}{ $\!\!\not{\tt x}$}{}}
   \item \evalsto{div50 4}{12}
   \end{itemize}
 \end{frame}
 
-\begin{frame}<1-19>
+\begin{frame}<1-19>[fragile]
   \frametitle{Функции от по-висок ред}
+
   \alert{Внимание:} \tt{t1 -> (t2 -> t3)} $\neq$ \tt{(t1 -> t2) -> t3}!\pause
   \begin{itemize}[<+->]
   \item операцията \tt{->} е \textbf{дясноасоциативна}
@@ -276,12 +292,12 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
   \item \tt{(t1 -> t2) -> t3} --- функция, която връща резултат от тип \tt{t3}, а приема като единствен параметър функция, която приема един параметър от тип \tt{t1} и връща резултат от тип \tt{t2}
   \item \alert{функция от втори ред}
     \begin{itemize}
-    \item \tt{twice f x = f (f x)}
-    \item \tt{twice :: \alt<-11>{(Int -> Int) -> Int -> Int}{(t -> t) -> t -> t}}
+    \item \lst{twice f x = f (f x)}
+    \item \lst{twice :: }\alt<-11>{\lst{(Int -> Int) -> Int -> Int}}{\lst{(t -> t) -> t -> t}}
     \item \evalstop{twice square 3}{81}
     \item \evalstop{twice (mod 13) 5}1\pause
-    \item \tt{diag f x = f x x}
-    \item \tt{diag :: \alt<-18>{(Int -> Int -> Int) -> Int -> Int}{(t1 -> t1 -> t) -> t1 -> t}}
+    \item \lst{diag f x = f x x}
+    \item \lst{diag :: }\alt<-18>{\lst{(Int -> Int -> Int) -> Int -> Int}}{\lst{(t1 -> t1 -> t) -> t1 -> t}}
     \item \evalstop{diag div 5}1
     \item \evalstop{diag hypothenuse 1}{1.4142135623730951}
     \end{itemize}
@@ -299,7 +315,7 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
     \item \evalstoerr{square -x}
     \item \evalsto{square (-x)}4
     \end{itemize}
-  \item Преобразуване на бинарни функции към операции: \tta`<функция>\tta`
+  \item Преобразуване на двуаргументни функции към бинарни операции: \tta`<функция>\tta`
     \begin{itemize}
     \item \evalsto{13 `div` 5}3
     \item \evalstoerr{2 `square`}
@@ -310,23 +326,23 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
 \begin{frame}
   \frametitle{Операции и функции}
   \begin{itemize}[<+->]
-  \item Преобразуване на операции към бинарни функции: \tta(<операция>\tta)
+  \item Преобразуване на операции към двуаргументни функции: \tta(<операция>\tta)
     \begin{itemize}
     \item \evalsto{(+) 2 3}5
-    \item \tt{plus1 = (+) 1}
-    \item \tt{square = diag (*)}
+    \item \lst{plus1 = (+) 1}
+    \item \lst{square = diag (*)}
     \end{itemize}
-  \item Преобразуване на операции към унарни функции (отсичане на операции)
+  \item Преобразуване на операции към едноаргументни функции (отсичане на операции)
     \begin{itemize}
     \item \tta(<израз> <операция>\tta) --- ляво отсичане
     \item \tta(<операция> <израз>\tta) --- дясно отсичане
-    \item \evalstop{(2\^{}) 3}8
-    \item \evalstop{(\^{}2) 3}9
-    \item \tt{square = (\^{}2)}
+    \item \evalstop{(2\^) 3}8
+    \item \evalstop{(\^2) 3}9
+    \item \lst{square = (\^2)}
     \item \evalstoerrp{(-5) 8}
     \item \evalstop{twice (*2) 5}{20}
-    \item \tt{positive = (>0)}
-    \item \tt{lastDigit = (`mod` 10)}
+    \item \lst{positive = (>0)}
+    \item \lst{lastDigit = (`mod` 10)}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -336,11 +352,11 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
   \begin{itemize}[<+->]
   \item \tta{if} <условие> \tta{then} <израз$_1$> \tta{else} <израз$_2$>
     \begin{itemize}[<.->]
-    \item Ако <условие> е \tt{True}, връща <израз$_1$>
-    \item Ако <условие> е \tt{False}, връща <израз$_2$>
+    \item Ако <условие> е \lst{True}, връща <израз$_1$>
+    \item Ако <условие> е \lst{False}, връща <израз$_2$>
     \end{itemize}
-  \item \tt{abs x = if x < 0 then -x else x}
-  \item \tt{fact n = if n == 0 then 1 else n * fact (n - 1)}
+  \item \lst{abs x = if x < 0 then -x else x}
+  \item \lst{fact n = if n == 0 then 1 else n * fact (n - 1)}
   \item \evalstoerr{if x > 5 then x + 2 else "Error"}
   \item \alert{<израз$_1$> и <израз$_2$> трябва да са от един и същи тип!}
   \item \alert{<условие> трябва да е от тип \tt{Bool}!}
