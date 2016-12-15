@@ -20,8 +20,8 @@
   Кортежите са наредени $n$-торки от данни от произволен тип.
   \begin{itemize}[<+->]
   \item Примери: \lst{(1, 2)}, \lst{(3.5,'A', False)}, \lst{(("square", (^2)), 1.0)}
-  \item Тип кортеж от $n$ елемента: \tt($t_1$\tt, $t_2$\tt, $\ldots$\tt, $t_n$\tt)
-  \item Стойности: наредени $n$-торки от вида \tt($x_1$\tt, $x_2$\tt, $\ldots$\tt, $x_n$\tt), където $x_i$ е от тип $t_i$
+  \item Тип кортеж от $n$ елемента: \tuple t
+  \item Стойности: наредени $n$-торки от вида \tuple x, където $x_i$ е от тип $t_i$
   \item Позволяват ``пакетиране"' на няколко стойности в една
   \item Операции за наредени двойки:
     \begin{itemize}
@@ -81,8 +81,8 @@
 \begin{frame}[fragile]
   \frametitle{Образци на кортежи}
 
-  Образец на кортеж е конструкция от вида \tt($p_1$\tt, $p_2$\tt, $\ldots$\tt, $p_n$\tt).\\\pause
-  Пасва на всеки кортеж от точно $n$ елемента \tt($x_1$\tt, $x_2$\tt, $\ldots$\tt, $x_n$\tt), за който образецът $p_i$ пасва на елемента $x_i$.
+  Образец на кортеж е конструкция от вида \tuple p.\\\pause
+  Пасва на всеки кортеж от точно $n$ елемента \tuple x, за който образецът $p_i$ пасва на елемента $x_i$.
   \onslide<+->
   \begin{itemize}[<+->]
   \item \lst{addVectors (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)}
@@ -142,7 +142,7 @@ betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
   \item списъкът е последователност с \alert{произволна дължина} от елементи от \alert{еднакъв тип}
   \item \lst{(:) :: a -> [a] -> [a]}  е \alert{дясноасоциативна} бинарна операция
   \item \lst{(1:(2:(3:(4:[]))))} $=$ \lst{1:2:3:4:[]} $\neq$ \tta{((((1:2):3):4):[])}
-  \item \tt[$a_1$\tt, $a_2$\tt, $\ldots$\tt, $a_n$\tt] e по-удобен запис за $a_1$\tt{:(}$a_2$\tt:\ldots($a_n$\tt{:[])}\ldots\tt)
+  \item \hlist a e по-удобен запис за $a_1$\tt{:(}$a_2$\tt:\ldots($a_n$\tt{:[])}\ldots\tt)
   \item \lst{[1,2,3,4]} $=$ \lst{1:[2,3,4]} $=$ \lst{1:2:[3,4]} $=$ \lst{1:2:3:[4]} $=$ \lst{1:2:3:4:[]}\
   \end{itemize}
 \end{frame}
@@ -588,7 +588,7 @@ filter p (x:xs)
 
   \begin{itemize}[<+->]
   \item \lst{foldr :: (a -> b -> b) -> b -> [a] -> b}
-  \item \lst{foldr op nv} \tt[$x_1$\tt, $x_2$\tt, \ldots\tt, $x_n$\tt] = \\
+  \item \lst{foldr op nv} \hlist x = \\
     $x_1$ \tt{`op` (}$x_2$ \tt{`op`} \ldots \tt($x_n$\tt{ `op` nv)} \ldots\tt)
   \item
 \begin{lstlisting}
@@ -614,7 +614,7 @@ foldr op nv (x:xs) = x `op` foldr op nv xs
 
   \begin{itemize}[<+->]
   \item \lst{foldl :: (b -> a -> b) -> b -> [a] -> b}
-  \item \lst{foldl op nv }\tt[$x_1$\tt, $x_2$\tt, \ldots\tt, $x_n$\tt] = \\
+  \item \lst{foldl op nv }\hlist x = \\
     \tt(\ldots\tt{((nv `op` }$x_1$\tt{) `op` }$x_2$\tt) \ldots \tt{) `op` }$x_n$
   \item
 \begin{lstlisting}
@@ -634,7 +634,7 @@ foldl op nv (x:xs) = foldl op (nv `op` x) xs
 
   \begin{itemize}[<+->]
   \item \lst{foldr1 :: (a -> a -> a) -> [a] -> a}
-  \item \lst{foldr1 op nv }\tt[$x_1$\tt, $x_2$\tt, \ldots\tt, $x_n$\tt] = \\
+  \item \lst{foldr1 op nv }\hlist x = \\
     $x_1$\tt{ `op` (}$x_2$\tt{ `op` }\ldots \tt($x_{n-1}$\tt{ `op` }$x_n$\tt) \ldots\tt)
   \item
 \begin{lstlisting}
@@ -642,7 +642,7 @@ foldr1 _  [x] = x
 foldr1 op (x:xs) = x `op` foldr1 op xs
 \end{lstlisting}
   \item \lst{foldl1 :: (a -> a -> a) -> [a] -> a}
-  \item \lst{foldl1 op nv }\tt[$x_1$\tt, $x_2$\tt, \ldots\tt, $x_n$\tt] = \\
+  \item \lst{foldl1 op nv }\hlist x = \\
     \tt(\ldots\tt{((}$x_1$\tt{ `op` }$x_2$\tt) \ldots \tt{) `op` }$x_n$
   \item \lst{foldl1 op (x:xs) = foldl op x xs}
   \item Примери
@@ -661,14 +661,14 @@ foldr1 op (x:xs) = x `op` foldr1 op xs
   \pause\small
   \begin{itemize}[<+->]
   \item \lst!scanr :: (a -> b -> b) -> b -> [a] ->! \tta{[b]}
-  \item \lst{scanr op nv} \tt[$x_1$\tt, $x_2$\tt, \ldots\tt, $x_n$\tt] = \\
+  \item \lst{scanr op nv} \hlist x = \\
     \tt[$x_1$\tt{ `op` (}$x_2$\tt{ `op` }\ldots \tt($x_n$\tt{ `op` nv)} \ldots\tt{),}\\
     $x_2$\tt{ `op` (}\ldots \tt($x_n$\tt{ `op` nv)} \ldots\tt{),}\\
     \ldots\\
     $x_n$\tt{ `op` nv,}\\
     \tt{ nv]}
   \item \lst!scanl :: (b -> a -> b) -> b -> [a] ->! \tta{[b]}
-  \item \lst{scanl op nv} \tt[$x_1$\tt, $x_2$\tt, \ldots\tt, $x_n$\tt] = \\
+  \item \lst{scanl op nv} \hlist x = \\
     \tt{[nv,}\\
     \tt{ nv `op` }$x_1$\tt,\\
     \tt{ (nv `op` }$x_1$\tt{) `op` }$x_2$\tt,\\
@@ -683,8 +683,7 @@ foldr1 op (x:xs) = x `op` foldr1 op xs
   \begin{itemize}[<+->]
   \item \lst{zip :: [a] -> [b] -> [(a,b)]}
     \begin{itemize}
-    \item \evalstos{\lst{zip [}$x_1$\tt, $x_2$\tt, \ldots\tt, $x_n$\tt]
-        \tt[$y_1$\tt, $y_2$\tt, \ldots\tt, $y_n$\tt]}{\tt[($x_1$\tt, $y_1$\tt{), (}$x_2$\tt, $y_2$\tt{), }\ldots\tt{, (}$x_n$\tt, $y_n$\tt{)]}}
+    \item \evalstos{\lst{zip} \hlist x \hlist y}{\tt[($x_1$\tt, $y_1$\tt{), (}$x_2$\tt, $y_2$\tt{), }\ldots\tt{, (}$x_n$\tt, $y_n$\tt{)]}}
     \item ако единият списък е по-къс, спира когато свърши той
   \end{itemize}
   \item \lst{unzip :: [(a,b)] -> ([a],[b])}
@@ -692,14 +691,12 @@ foldr1 op (x:xs) = x `op` foldr1 op xs
     \item разделя списък от двойки на два списъка с равна
       дължина
     \item \evalstos{\lst{unzip}
-        \tt{[(}$x_1$\tt,$y_1$\tt{), (}$x_2$\tt,$y_2$\tt{), }\ldots\tt{, (}$x_n$,$y_n$\tt{)]}}{\tt{([}$x_1$\tt,$x_2$\tt, \ldots\tt,$x_n$\tt{], [}$y_1$\tt,$y_2$\tt, \ldots\tt, $y_n$\tt{])}}
+        \tt{[(}$x_1$\tt,$y_1$\tt{), (}$x_2$\tt,$y_2$\tt{), }\ldots\tt{, (}$x_n$,$y_n$\tt{)]}}{\tt(\hlist x\tt, \hlist y\tt)}
     \end{itemize}
   \item \lst{zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]}
     \begin{itemize}
     \item съшива два списъка с дадена бинарна операция
-    \item \evalstos{\lst{zipWith op} $x_1$\tt,$x_2$\tt,\ldots\tt,$x_n$\tt]
-        \tt[$y_1$\tt, $y_2$\tt, \ldots\tt,$y_n$\tt]}{\tt[$x_1$\tt{ `op` }$y_1$\tt, $x_2$\tt{ `op` }
-        $y_2$\tt, \ldots\tt, $x_n$\tt{ `op` }$y_n$]}
+    \item \evalstos{\lst{zipWith op} \hlist x \hlist y}{\tt[$x_1$\tt{ `op` }$y_1$\tt, $x_2$\tt{ `op` } $y_2$\tt, \ldots\tt, $x_n$\tt{ `op` }$y_n$]}
     \end{itemize}
   \item Примери
     \begin{itemize}

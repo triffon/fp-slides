@@ -149,6 +149,14 @@
 % няма тип с пауза за въпрос
 \newcommand{\ntypesp}[1]{\alt<.(1)->\tta\tt{#1 :{}: \rvl{$\bot$}}}
 
+% абстракция за кортеж и списък
+\newcommand{\tuplelist}[3]{\tt{#1}$#3_1$\tt, $#3_2$\tt, $\ldots$\tt, $#3_n$\tt{#2}}
+
+% кортеж
+\newcommand{\tuple}{\tuplelist()}
+
+% списък
+\newcommand{\hlist}{\tuplelist[]}
 
 % оценка на функция в среда
 \newcommand{\funcenv}[3]{\begin{tabular}{||l@{\hskip 1ex}l@{\hskip 1ex}l||}%
