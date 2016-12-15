@@ -119,6 +119,9 @@
 % оценява се до стойност с пауза за въпрос
 \newcommand{\evalstop}[2]{\evalstox{#1} \rvl{\lst!#2!}}
 
+% оценява се до стойност с пауза за въпрос без форматиране
+\newcommand{\evalstops}[2]{\evalstos{#1} \rvl{\tt{#2}}}
+
 % грешка при оценяване
 \newcommand{\evalstoerr}[1]{\evalstox{#1} \textsf{\alert{Грешка!}}}
 
@@ -135,10 +138,10 @@
 \newcommand{\evalstwop}[3]{\lst!#1! $\longrightarrow$ \rvl{#2} $\longleftarrow$ \lst!#3!}
 
 % има тип
-\newcommand{\typesto}[2]{\tt{#1 :{}: #2}}
+\newcommand{\typesto}[2]{\lst!#1 :: #2!}
 
 % има тип с пауза за въпрос
-\newcommand{\typestop}[2]{\tt{#1 :{}: \rvl{#2}}}
+\newcommand{\typestop}[2]{\lst!#1 ::! \rvl{\lst!#2!}}
 
 % няма тип
 \newcommand{\ntypes}[1]{\tta{#1 :{}: $\bot$}}
@@ -177,6 +180,9 @@
 
 % еквивалентно на
 \newcommand{\eqv}{$\Longleftrightarrow$\xspace}
+
+% обикновени кавички
+\newcommand{\quot}{\textquotedbl}
 
 %% диаграми
 

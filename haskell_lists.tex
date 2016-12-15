@@ -3,41 +3,44 @@
 
 \title{Кортежи и списъци}
 
-\date{6--7 януари 2016 г.}
+\date{15 декември 2016 г.}
+
+\lstset{language=Haskell,style=Haskell}
 
 \begin{document}
 
 \begin{frame}
   \titlepage
 \end{frame}
-
 \section{Кортежи}
 
 \begin{frame}
   \frametitle{Кортежи (tuples)}
+
   Кортежите са наредени $n$-торки от данни от произволен тип.
   \begin{itemize}[<+->]
-  \item Примери: \tt{(1, 2)}, \tt{(3.5,'A', False)}, \tt{(("square"{}, (\^{}2)), 1.0)}
-  \item Тип кортеж от $n$ елемента: \tt{(t$_1$, t$_2$, \ldots, t$_n$)}
-  \item Стойности: наредени $n$-торки от вида \tt{(x$_1$, x$_2$, \ldots, x$_n$)}, където \tt{x$_i$} е от тип \tt{t$_i$}
+  \item Примери: \lst{(1, 2)}, \lst{(3.5,'A', False)}, \lst{(("square", (^2)), 1.0)}
+  \item Тип кортеж от $n$ елемента: \tt($t_1$\tt, $t_2$\tt, $\ldots$\tt, $t_n$\tt)
+  \item Стойности: наредени $n$-торки от вида \tt($x_1$\tt, $x_2$\tt, $\ldots$\tt, $x_n$\tt), където $x_i$ е от тип $t_i$
   \item Позволяват ``пакетиране"' на няколко стойности в една
   \item Операции за наредени двойки:
     \begin{itemize}
-    \item \tt{(,) :: a -> b -> (a,b)} --- конструиране на наредена двойка
-    \item \tt{fst :: (a,b) -> a} --- първа компонента на наредена двойка
-    \item \tt{snd :: (a,b) -> b} --- втора компонента на наредена двойка
+    \item \lst{(,) :: a -> b -> (a,b)} --- конструиране на наредена двойка
+    \item \lst{fst :: (a,b) -> a} --- първа компонента на наредена двойка
+    \item \lst{snd :: (a,b) -> b} --- втора компонента на наредена двойка
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Потребителски типове}
+
   \begin{itemize}[<+->]
-  \item Типът \tt{(String, Int)} може да означава:
+  \item Типът \lst{(String, Int)} може да означава:
     \begin{itemize}
     \item име и ЕГН на човек
     \item продукт с описание и количество
-    \item сонет на Шекспир и поредния му номер
+    \item сонет на Шекспир и поредният му номер
     \end{itemize}
   \item Удобно е да именуваме типовете, за да означаваме смисъла им
   \item \tta{type }<конструктор> \tta= <тип>
@@ -46,29 +49,30 @@
     \end{itemize}
   \item Примери:
     \begin{itemize}
-    \item \tt{type Student = (String, Int, Double)}
-    \item \tt{type Point = (Double, Double)}
-    \item \tt{type Triangle = (Point, Point, Point)}
-    \item \tt{type Translation = Point -> Point}
-    \item \tt{type Vector = Point}
-    \item \tt{addVectors :: Vector -> Vector -> Vector}
-    \item<.-> \tt{addVectors v1 v2 = (fst v1 + fst v2, snd v1 + snd v2)}
+    \item \lst{type Student = (String, Int, Double)}
+    \item \lst{type Point = (Double, Double)}
+    \item \lst{type Triangle = (Point, Point, Point)}
+    \item \lst{type Translation = Point -> Point}
+    \item \lst{type Vector = Point}
+    \item \lst{addVectors :: Vector -> Vector -> Vector}
+    \item<.-> \lst{addVectors v1 v2 = (fst v1 + fst v2, snd v1 + snd v2)}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Особености на кортежите}
+
   \begin{itemize}[<+->]
   \item \evalstoerrp{fst (1,2,3)}
     \begin{itemize}
-    \item \tt{fst} и \tt{snd} работят само над наредени двойки!
+    \item \lst{fst} и \lst{snd} работят само над наредени двойки!
     \end{itemize}
-  \item \tt{((a,b),c)} $\neq$ \tt{(a,(b,c))} $\neq$ \tt{(a,b,c)}
+  \item \lst{((a,b),c)} $\neq$ \lst{(a,(b,c))} $\neq$ \lst{(a,b,c)}
   \item Няма специален тип кортеж от един елемент\ldots
-  \item \ldots но има тип ``празен кортеж'' \tt{()} с единствен елемент \tt{()}
+  \item \ldots но има тип ``празен кортеж'' \lst{()} с единствен елемент \lst{()}
     \begin{itemize}
-    \item в други езици такъв тип се нарича \tt{unit}
+    \item в други езици такъв тип се нарича \lst{unit}
     \item използва се за означаване на липса на информация
     \end{itemize}
   \end{itemize}
@@ -76,38 +80,42 @@
 
 \begin{frame}[fragile]
   \frametitle{Образци на кортежи}
-  Образец на кортеж е конструкция от вида \tt{(p$_1$, p$_2$, \ldots, p$_n$)}.\\\pause
-  Пасва на всеки кортеж от точно $n$ елемента \tt{(x$_1$, x$_2$, \ldots, x$_n$)}, за който образецът \tt{p$_i$} пасва на елемента \tt{x$_i$}.
+
+  Образец на кортеж е конструкция от вида \tt($p_1$\tt, $p_2$\tt, $\ldots$\tt, $p_n$\tt).\\\pause
+  Пасва на всеки кортеж от точно $n$ елемента \tt($x_1$\tt, $x_2$\tt, $\ldots$\tt, $x_n$\tt), за който образецът $p_i$ пасва на елемента $x_i$.
   \onslide<+->
   \begin{itemize}[<+->]
-  \item \verb#addVectors (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)#
-  \item \verb#fst (x,_) = x#
-  \item<.-> \verb#snd (_,y) = y#
-  \item \verb#getFN :: Student -> Int#
-  \item<.-> \verb#getFN (_, fn, _) = fn#
+  \item \lst{addVectors (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)}
+  \item \lst{fst (x,_) = x}
+  \item<.-> \lst{snd (_,y) = y}
+  \item \lst{getFN :: Student -> Int}
+  \item<.-> \lst{getFN (_, fn, _) = fn}
   \item образците на кортежи могат да се използват за ``разглобяване'' на кортежи при дефиниция
-  \item \verb#(x,y) = (3.5, 7.8)#
-  \item \verb#let (_, fn, grade) = student in (fn, min (grade + 1) 6)#
+  \item \lst{(x,y) = (3.5, 7.8)}
+  \item \lst{let (_, fn, grade) = student in (fn, min (grade + 1) 6)}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Именувани образци}
+
   \begin{itemize}[<+->]
   \item намиране на студент с по-висока оценка
-\begin{semiverbatim}
+\begin{lstlisting}
 betterStudent (name1, fn1, grade1) (name2, fn2, grade2)
  | grade1 > grade2 = (name1, fn1, grade1)
  | otherwise       = (name2, fn2, grade2)
-\end{semiverbatim}
+\end{lstlisting}
   \item ами ако имахме 10 полета?
   \item удобно е да използваме \alert{именувани образци}
   \item{} <име>\tta@<образец> \onslide<+->
-\begin{semiverbatim}
+\lstset{escapechar=!}
+\begin{lstlisting}
 betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
  | grade1 > grade2 = s1
  | otherwise       = s2
-\end{semiverbatim}
+\end{lstlisting}
+\lstset{escapechar=@}
   \end{itemize}
 \end{frame}
 
@@ -121,8 +129,8 @@ betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
 
   \begin{definition}
     \begin{enumerate}
-    \item Празният списък \tt{[]} е списък от тип \tt{[a]}
-    \item Ако \tt h е елемент от тип \tt a и \tt t е списък от тип \tt{[a]} то \tt{(h : t)} е списък от тип \tt{[a]}
+    \item Празният списък \lst{[]} е списък от тип \lst{[a]}
+    \item Ако \tt h е елемент от тип \tt a и \tt t е списък от тип \lst{[a]} то \lst{(h : t)} е списък от тип \lst{[a]}
       \begin{itemize}
       \item \tt h --- глава на списъка
       \item \tt t --- опашка на списъка
@@ -132,15 +140,16 @@ betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
   \onslide<+->
   \begin{itemize}[<+->]
   \item списъкът е последователност с \alert{произволна дължина} от елементи от \alert{еднакъв тип}
-  \item \tt{(:) :: a -> [a] -> [a]}  е \alert{дясноасоциативна} бинарна операция
-  \item \tt{(1:(2:(3:(4:[]))))} $=$ \tt{1:2:3:4:[]} $\neq$ \tta{((((1:2):3):4):[])}
-  \item \tt{[a$_1$, a$_2$, \ldots, a$_n$]} e по-удобен запис за \tt{a$_1$:(a$_2$:\ldots(a$_n$:[])\ldots)}
-  \item \tt{[1,2,3,4]} $=$ \tt{1:[2,3,4]} $=$ \tt{1:2:[3,4]} $=$ \tt{1:2:3:[4]} $=$ \tt{1:2:3:4:[]}\
+  \item \lst{(:) :: a -> [a] -> [a]}  е \alert{дясноасоциативна} бинарна операция
+  \item \lst{(1:(2:(3:(4:[]))))} $=$ \lst{1:2:3:4:[]} $\neq$ \tta{((((1:2):3):4):[])}
+  \item \tt[$a_1$\tt, $a_2$\tt, $\ldots$\tt, $a_n$\tt] e по-удобен запис за $a_1$\tt{:(}$a_2$\tt:\ldots($a_n$\tt{:[])}\ldots\tt)
+  \item \lst{[1,2,3,4]} $=$ \lst{1:[2,3,4]} $=$ \lst{1:2:[3,4]} $=$ \lst{1:2:3:[4]} $=$ \lst{1:2:3:4:[]}\
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Примери}
+
   \begin{itemize}[<+->]
   \item \typestop{[False]}{[Bool]}
   \item \ntypesp{["Иван"{}, 4.5]}
@@ -159,58 +168,58 @@ betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
   \end{itemize}
 \end{frame}
 
-
 \begin{frame}
   \frametitle{Низове}
 
   \begin{itemize}[<+->]
   \item В Haskell низовете са представени като списъци от символи
-  \item \tt{type String = [Char]}
+  \item \lst{type String = [Char]}
   \item Всички операции над списъци важат и над низове
   \item Примери
     \begin{itemize}
-    \item \tt{['H', 'e', 'l', 'l', 'o' ]} = \tt{"Hello"}
-    \item \tt{'H':'e':'l':'l':'o':[]} = \tt{"Hello"}
-    \item \tt{'H':'e':"llo"} = \tt{"Hello"}
-    \item \tt{"{}"} = \tt{[] :: [Char]}
+    \item \lst!['H', 'e', 'l', 'l', 'o' ] = "Hello"!
+    \item \lst!'H':'e':'l':'l':'o':[] = "Hello"!
+    \item \lst!'H':'e':"llo" = "Hello"!
+    \item \lst!\ "\{\}" = [] :: [Char]!
     \item \ntypesp{[[1,2,3],{}"{}"]}
-    \item \typestop{["12"{},['3'],[]]}{[String]}
+    \item \typestop{["12",['3'],[]]}{[String]}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Основни функции за списъци}
+
   % head, tail, null, length
   \begin{itemize}[<+->]
-  \item \tt{head :: [a] -> a} --- връща главата на (непразен) списък
+  \item \lst{head :: [a] -> a} --- връща главата на (непразен) списък
     \begin{itemize}
     \item \evalstop{head [[1,2],[3,4]]}{[1,2]}
     \item \evalstoerr{head []}
     \end{itemize}
-  \item \tt{tail :: [a] -> [a]} --- връща опашката на (непразен) списък
+  \item \lst{tail :: [a] -> [a]} --- връща опашката на (непразен) списък
     \begin{itemize}
     \item \evalstop{tail [[1,2],[3,4]]}{[[3,4]]}
     \item \evalstoerr{tail []}
     \end{itemize}
-  \item \tt{null :: [a] -> Bool} --- проверява дали списък е празен
-  \item \tt{length :: [a] -> Int} --- дължина на списък
+  \item \lst{null :: [a] -> Bool} --- проверява дали списък е празен
+  \item \lst{length :: [a] -> Int} --- дължина на списък
   \end{itemize}
 \end{frame}
 
-
 \begin{frame}
   \frametitle{Генератори на списъци}
+
   Можем да генерираме списъци от последователни елементи
   \begin{itemize}
-  \item \tta[from\tta{..}to\tta] $\rightarrow$ \tta[from\tta, from+1\tta, from+2\tta,\ldots to\tta]
+  \item \tta[$a$\tta{..}$b$\tta] $\rightarrow$ \tta[$a$\tta, $a+1$\tta, $a+2$\tta,\ldots $b$\tta]
   \item Пример: \evalsto{[1..5]}{[1,2,3,4,5]}
-  \item Пример: \evalsto{['a'..'e']}{"abcde"}
+  \item Пример: \evalsto{['a'..'e']}{\ "abcde"}
   \item Синтактична захар за \tt{enumFromTo from to}
     \pause
-  \item \tta[from\tta,from+inc\tta{..}to\tta] $\rightarrow$ \tta[from\tta, from+inc\tta, from+2.inc\tta,\ldots to'\tta], където to' е най-голямото число $\leq$ to, за което to' = from+k.inc
+  \item \tta[$a$\tta, $a+\Delta x$ \tta{..} $b$\tta] $\rightarrow$ \tta[$a$\tta, $a+\Delta x$\tta, $a + 2\Delta x$\tta, \ldots \tta, $b'$\tta], където $b'$ е най-голямото число $\leq b$, за което $b' = a+k\Delta x$
   \item Пример: \evalsto{[1,4..15]}{[1,4,7,10,13]}
-  \item Пример: \evalsto{['a','e'..'z']}{"aeimquy"}
+  \item Пример: \evalsto{['a','e'..'z']}{\ "aeimquy"}
   \item Синтактична захар за \tt{enumFromThenTo from then to}
   \end{itemize}
 \end{frame}
@@ -220,26 +229,26 @@ betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
 \begin{frame}[fragile]
   \frametitle{Рекурсивни функции над списъци}
   \begin{itemize}[<+->]
-  \item \tt{(++) :: [a] -> [a] -> [a]} --- слепва два списъка
+  \item \lst{(++) :: [a] -> [a] -> [a]} --- слепва два списъка
     \begin{itemize}[<.->]
     \item  \evalsto{[1..3] ++ [5..7]}{[1,2,3,5,6,7]}
     \end{itemize}
-  \item \verb#a ++ b = if null a then b else head a : tail a ++ b#
-  \item \tt{reverse :: [a] -> [a]} ---  обръща списък
+  \item \lst{a ++ b = if null a then b else head a : tail a ++ b}
+  \item \lst{reverse :: [a] -> [a]} ---  обръща списък
     \begin{itemize}[<.->]
     \item \evalsto{reverse [1..5]}{[5,4,3,2,1]}
     \end{itemize}
     \onslide<+->
-\begin{semiverbatim}
+\begin{lstlisting}
 reverse a
  | null a    = a
  | otherwise = reverse (tail a) ++ [head a]
-\end{semiverbatim}
-  \item \tt{(!!) :: [a] -> Int -> a} --- елемент с пореден номер (от 0)
+\end{lstlisting}
+  \item \lst{(!!) :: [a] -> Int -> a} --- елемент с пореден номер (от 0)
     \begin{itemize}[<.->]
-    \item \evalsto{"Haskell"{} !! 2}{'s'}
+    \item \evalsto{\ "Haskell" \!\! 2}{'s'}
     \end{itemize}
-  \item \tt{elem :: \alert{Eq a => }a -> [a] -> Bool} --- проверка за принадлежност на елемент към списък
+  \item \lst{elem :: }\tta{Eq a => }\lst{a -> [a] -> Bool} --- проверка за принадлежност на елемент към списък
     \begin{itemize}[<.->]
     \item \evalsto{3 `elem` [1..5]}{True}
     \end{itemize}
@@ -251,26 +260,26 @@ reverse a
 
   Много удобно е да използваме образци на списъци:
   \begin{itemize}[<+->]
-  \item \tt{p$_h$:p$_t$} --- пасва на всеки непразен списък \tt l, за който:
+  \item $p_h$\tt:$p_t$ --- пасва на всеки непразен списък $l$, за който:
     \begin{itemize}
-    \item образецът \tt{p$_h$} пасва на главата на \tt l
-    \item образецът  \tt{p$_t$} пасва на опашката на \tt l
+    \item образецът $p_h$ пасва на главата на $l$
+    \item образецът  $p_t$ пасва на опашката на $l$
     \end{itemize}
-  \item \alert{Внимание:} обикновено слагаме скоби \tt{(h:t)}, понеже операцията \tt: е с много нисък приоритет
-  \item \tt{[p$_1$, p$_2$, \ldots, p$_n$]} --- пасва на всеки списък от точно $n$ елемента \tt{[x$_1$, x$_2$, \ldots, x$_n$]}, за който образецът \tt{p$_i$} пасва на елемента \tt{x$_i$}
+  \item \alert{Внимание:} обикновено слагаме скоби \lst{(h:t)}, понеже операцията \tt: е с много нисък приоритет
+  \item \tt[$p_1$\tt, $p_2$\tt, \ldots\tt, $p_n$\tt] --- пасва на всеки списък от точно $n$ елемента \tt[$x_1$\tt, $x_2$\tt, \ldots\tt, $x_n$\tt], за който образецът $p_i$ пасва на елемента $x_i$
   \item Примери:
     \begin{itemize}
-    \item     \verb#head (h:_) = h#
-    \item     \verb#tail (_:t) = t#
-    \item     \verb#null [] = True#
-    \item<.-> \verb#null _  = False#
-    \item     \verb#length []    = 0#
-    \item<.-> \verb#length (_:t) = 1 + length t#
+    \item     \lst{head (h:_) = h}
+    \item     \lst{tail (_:t) = t}
+    \item     \lst{null [] = True}
+    \item<.-> \lst{null _  = False}
+    \item     \lst{length []    = 0}
+    \item<.-> \lst{length (_:t) = 1 + length t}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
-\begin{frame}[label=current]
+\begin{frame}
   \frametitle{Случаи по образци (\tt{case})}
   \begin{itemize}[<+->]
   \item \tta{case} <израз> \tta{of} \{ <образец> \tta{->} <израз> \}$^+$
@@ -292,62 +301,65 @@ reverse a
 
 \begin{frame}
   \frametitle{Полиморфни функции}
+
   %++, !!, reverse, elem, notElem
-  Функциите \tt{head}, \tt{tail}, \tt{null}, \tt{length}, \tt{reverse} и операциите \tt{++} и \tt{!!} са \textbf{полиморфни}
+  Функциите \lst{head}, \lst{tail}, \lst{null}, \lst{length}, \lst{reverse} и операциите \lst{++} и \lst{!!} са \textbf{полиморфни}
   \begin{itemize}[<+->]
-  \item работят над списъци с елементи от произволен тип \tt{[a]}
-  \item \tt a се нарича \textbf{типова променлива}
+  \item работят над списъци с елементи от произволен тип \lst{[t]}
+  \item \tt t се нарича \textbf{типова променлива}
   \item свойството се нарича \textbf{параметричен типов полиморфизъм}
   \item подобно на шаблоните в C++
   \item \alert{да не се бърка с \textbf{подтипов полиморфизъм}, реализиран с виртуални функции!}
-  \item \tt{[]} е \textbf{полиморфна константа}
+  \item \lst{[]} е \textbf{полиморфна константа}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Класове от типове (typeclasses)}
-  Функцията \tt{elem} има специални изисквания към типа на елементите на списъка: трябва да могат да бъдат сравнявани с \tt{==} или \tt{/=}
+
+  Функцията \lst{elem} има специални изисквания към типа на елементите на списъка: трябва да могат да бъдат сравнявани с \lst{==} или \lst{/=}
   \begin{itemize}[<+->]
-  \item \tt{elem :: \alert{Eq a => }a -> [a] -> Bool}
-  \item \tt{Eq} е \alert{клас от типове}
-  \item \tt{Eq} е класът на тези типове, за които има операции \tt{==} и \tt{/=}
+  \item \lst!elem ::!\tta{ Eq t => }\lst{t -> [t] -> Bool}
+  \item \lst{Eq} е \alert{клас от типове}
+  \item \lst{Eq} е класът на тези типове, за които има операции \lst{==} и \lst{/=}
     \begin{itemize}
     \item можем да си мислим за класовете от типове като за ``интерфейси''
     \end{itemize}
-  \item \tt{Eq a} наричаме \alert{класово ограничение} за типа \tt a (class constraint)
+  \item \lst{Eq t} наричаме \alert{класово ограничение} за типа \tt t (class constraint)
   \item множеството от всички класови ограничения наричаме \alert{контекст}
   \item \alert{инстанция} на клас от типове наричаме всеки тип, за който са реализирани операциите зададени в класа
-  \item инстанции на \tt{Eq} са:
+  \item инстанции на \lst{Eq} са:
     \begin{itemize}
-    \item \tt{Bool}, \tt{Char}, всички числови типове (\tt{Int}, \tt{Integer}, \tt{Float}, \tt{Double})
-    \item списъчните типове \tt{[a]}, за които \tt a е инстанция на \tt{Eq}
-    \item кортежните типове \tt{(t$_1$,\ldots t$_n$)}, за които \tt{t$_i$} са инстанции на \tt{Eq}
+    \item \lst{Bool}, \lst{Char}, всички числови типове (\lst{Int}, \lst{Integer}, \lst{Float}, \lst{Double})
+    \item списъчните типове \lst{[t]}, за които \tt t е инстанция на \lst{Eq}
+    \item кортежните типове \tt($t_1$\tt, \ldots\tt, $t_n$\tt), за които $t_i$ са инстанции на \lst{Eq}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Стандартни класове}
+
   Някои от по-често използваните класове на Haskell:
   \begin{itemize}[<+->]
-  \item \tt{Eq} --- типове с равенство
-  \item \tt{Ord} --- типове с (линейна) наредба
+  \item \lst{Eq} --- типове с равенство
+  \item \lst{Ord} --- типове с (линейна) наредба
     \begin{itemize}[<.->]
-    \item операциите \tt{==}, \tt{/=}, \tt{>=}, \tt{<=}, \tt{<}, \tt{>}
-    \item специалната функция \tt{compare}, която сравнява два елемента и връща \tt{LT}, \tt{GT} или \tt{EQ} в зависимост от резултата
-    \item функциите \tt{min} и \tt{max}
+    \item операциите \lst{==}, \lst{/=}, \lst{>=}, \lst{<=}, \lst{<}, \lst{>}
+    \item специалната функция \lst{compare}, която сравнява два елемента и връща \lst{LT}, \lst{GT} или \lst{EQ} в зависимост от резултата
+    \item функциите \lst{min} и \lst{max}
     \end{itemize}
-  \item \tt{Show} --- типове, чиито елементи могат да бъдат извеждани в низ
+  \item \lst{Show} --- типове, чиито елементи могат да бъдат извеждани в низ
     \begin{itemize}[<.->]
-    \item функция \tt{show :: a -> String}
+    \item функция \lst{show :: a -> String}
     \end{itemize}
-  \item \tt{Read} --- типове, чиито елементи могат да бъдат въвеждани от низ
+  \item \lst{Read} --- типове, чиито елементи могат да бъдат въвеждани от низ
     \begin{itemize}[<.->]
-    \item функция \tt{read :: String -> a}
+    \item функция \lst{read :: String -> a}
     \end{itemize}
-  \item \tt{Num} --- числови типове
-  \item<.-> \tt{Integral} --- целочислени типове
-  \item<.-> \tt{Floating} --- типове с плаваща запетая
+  \item \lst{Num} --- числови типове
+  \item<.-> \lst{Integral} --- целочислени типове
+  \item<.-> \lst{Floating} --- типове с плаваща запетая
   \item \alert{числата в Haskell са полиморфни константи!}
   \end{itemize}
 \end{frame}
@@ -356,15 +368,16 @@ reverse a
 
 \begin{frame}
   \frametitle{Отделяне на списъци (list comprehension)}
+
   Отделянето на списъци е удобен начин за дефиниране на нови списъци чрез използване на дадени такива
   \begin{itemize}[<+->]
   \item \tta[ <израз> \tta| <генератор> \{\tta, <генератор>\} \{\tta, <условие>\} \tta]
   \item{} <генератор> е от вида <образец> \tta{<-} <израз>, където
     \begin{itemize}
-    \item{} <израз> е от тип списък \tt{[a]}
+    \item{} <израз> е от тип списък \lst{[a]}
     \item{} <образец> пасва на елементи от тип \tt a
     \end{itemize}
-  \item{} <условие> е произволен израз от тип \tt{Bool}
+  \item{} <условие> е произволен израз от тип \lst{Bool}
   \item За всеки от елементите генериран от <генератор>, които удовлетворяват \alert{всички} <условие>, пресмята <израз> и натрупва резултатите в списък
   \end{itemize}
 \end{frame}
@@ -374,123 +387,126 @@ reverse a
 
   \begin{itemize}[<+->]
   \item \evalstop{[ 2 * x | x <- [1..5] ]}{[2,4,6,8,10]}
-  \item \evalstop{[ x\^{}2 | x <- [1..10], odd x]}{[1,9,25,49,81]}
-  \item \tt{[ fn | (\_, fn, grade) <- students, grade >= 2 ]}
-  \item \tt{[ x\^{}2 + y\^{}2 | (x, y) <- vectors, x >= 0, y >= 0]}
+  \item \evalstop{[ x^2 | x <- [1..10], odd x]}{[1,9,25,49,81]}
+  \item \lst{[ fn | (\_, fn, grade) <- students, grade >= 2 ]}
+  \item \lst{[ x^2 + y^2 | (x, y) <- vectors, x >= 0, y >= 0]}
   \item Ако имаме повече от един генератор, се генерират всички възможни комбинации от елементи (декартово произведение)
-  \item \evalstop{[ x++' ':y | x <- ["green"{},"blue"],y <- ["sky"{},"grass"]]}{["green sky"{},"green grass"{},"blue sky"{},"blue grass"]}
-  \item \evalstop{[ (x,y) | x <- [1,2,3], y <- [5,6,7], x + y <= 8 ]\\}{[(1,5),(1,6),(1,7),(2,5),(2,6),(3,5)]}
+  \item \evalstop{[ x++' ':y | x <- ["green","blue"],y <- ["sky","grass"]]}{["green sky","green grass","blue sky","blue grass"]}
+  \item \evalstop{[ (x,y) | x <- [1,2,3], y <- [5,6,7], x + y <= 8 ]}{[(1,5),(1,6),(1,7),(2,5),(2,6),(3,5)]}
   \item \textbf{Задача.} Да се генерират всички Питагорови тройки в даден интервал.
   \end{itemize}
-
 \end{frame}
 
 \section{Функции над списъци}
 
 \begin{frame}
   \frametitle{Отрязване на списъци}
-  \begin{itemize}
-  \item \tt{init :: [a] -> [a]} --- списъка без последния му елемент
-    \begin{itemize}
+
+  \begin{itemize}[<+->]
+  \item \lst{init :: [a] -> [a]} --- списъка без последния му елемент
+    \begin{itemize}[<.->]
     \item \evalsto{init [1..5]}{[1,2,3,4]}
     \end{itemize}
-  \item \tt{last :: [a] -> a} --- последния елемент на списъка
-    \begin{itemize}
-    \item \evalsto{last "Haskell"{}}l
+  \item \lst{last :: [a] -> a} --- последния елемент на списъка
+    \begin{itemize}[<.->]
+    \item \evalsto{last "Haskell"}l
     \end{itemize}
-  \item \tt{take :: Int -> [a] -> [a]} --- първите $n$ елемента на списък
-    \begin{itemize}
-    \item \evalsto{take 4 "Hello, world!"{}}{"Hell"}
+  \item \lst{take :: Int -> [a] -> [a]} --- първите $n$ елемента на списък
+    \begin{itemize}[<.->]
+    \item \evalsto{take 4 "Hello, world\!"}{\ "Hell"}
     \end{itemize}
-  \item \tt{drop :: Int -> [a] -> [a]} --- списъка без първите $n$ елемента
-    \begin{itemize}
+  \item \lst{drop :: Int -> [a] -> [a]} --- списъка без първите $n$ елемента
+    \begin{itemize}[<.->]
     \item \evalsto{drop 2 [1,3..10]}{[5,7,9]}
     \end{itemize}
-  \item \tt{splitAt :: Int -> [a] -> ([a],[a])}
-    \begin{itemize}
-    \item \tt{splitAt n l = (take n l, drop n l)}
+  \item \lst{splitAt :: Int -> [a] -> ([a],[a])}
+    \begin{itemize}[<.->]
+    \item \lst{splitAt n l = (take n l, drop n l)}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Агрегиращи функции}
+
   % maximum, minimum, product, sum, and, or, concat
   \small
-  \begin{itemize}
-  \item \tt{maximum :: Ord a => [a] -> a} --- максимален елемент
-  \item \tt{minimum :: Ord a => [a] -> a} --- минимален елемент
-  \item \tt{sum :: Num a => [a] -> a} --- сума на списък от числа
-  \item \tt{product :: Num a => [a] -> a} --- произведение на списък от числа
-  \item \tt{and :: [Bool] -> Bool} --- конюнкция на булеви стойности
-  \item \tt{or :: [Bool] -> Bool} --- дизюнкция на булеви стойности
-  \item \tt{concat :: [[a]] -> [a]} --- конкатенация на списък от списъци
-  \pause
+  \begin{itemize}[<+->]
+  \item \lst{maximum :: Ord a => [a] -> a} --- максимален елемент
+  \item<.-> \lst{minimum :: Ord a => [a] -> a} --- минимален елемент
+  \item \lst{sum :: Num a => [a] -> a} --- сума на списък от числа
+  \item<.-> \lst{product :: Num a => [a] -> a} --- произведение на списък от числа
+  \item \lst{and :: [Bool] -> Bool} --- конюнкция на булеви стойности
+  \item<.-> \lst{or :: [Bool] -> Bool} --- дизюнкция на булеви стойности
+  \item \lst{concat :: [[a]] -> [a]} --- конкатенация на списък от списъци
+  \onslide<+->
   \item Примери:
     \begin{itemize}[<+->]
-    \item \verb#[(sum l, product l)| l <- ll, maximum l == 2*minimum l]#
-    \item \verb#and [ or [ mod x k == 0 | x <- row] | row <- matrix]#
+    \item \lst{[(sum l, product l)| l <- ll, maximum l == 2*minimum l]}
+    \item \lst{and [ or [ mod x k == 0 | x <- row] | row <- matrix]}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \subsection{Функции от по-висок ред}
+
 \begin{frame}
   \frametitle{$\lambda$-функции}  \begin{itemize}[<+->]
+
   \item \tta{\textbackslash}\{ <параметър> \}$^+$ \tta{->} <тяло>
   \item \tta{\textbackslash} <параметър$_1$> \ldots <параметър$_n$> \tta{->} <тяло>
   \item анонимна функция с $n$ параметъра
   \item всеки <параметър$_i$> всъщност е образец
   \item параметрите са видими само в рамките на <тяло>
-  \item примери:
+  \item \textbf{Примери:}
     \begin{itemize}
-    \item \tt{id = \textbackslash x -> x}
-    \item \tt{const = \textbackslash x y -> x}
-    \item \evalsto{(\textbackslash x -> 2 * x + 1) 3}7
-    \item \evalsto{(\textbackslash x l -> l ++ [x]) 4 [1..3]}{[1,2,3,4]}
-    \item \evalsto{(\textbackslash (x,y) -> x\^{}2 + y) (3,5)}{14}
-    \item \evalsto{(\textbackslash f x -> f (f x)) (*3) 4}{36}
+    \item \lst{id = \\x -> x}
+    \item \lst{const = \\x y -> x}
+    \item \evalsto{(\\x -> 2 * x + 1) 3}{7}
+    \item \evalsto{(\\x l -> l ++ [x]) 4 [1..3]}{[1,2,3,4]}
+    \item \evalsto{(\\(x,y) -> x^2 + y) (3,5)}{14}
+    \item \evalsto{(\\f x -> f (f x)) (*3) 4}{36}
     \end{itemize}
   \item отсичането на операции може да се изрази чрез $\lambda$-функции:
     \begin{itemize}
-    \item \tt(<операция> <израз>\tt) = \tt{\textbackslash x -> x} <операция> <израз>
-    \item \tt(<израз> <операция>\tt) = \tt{\textbackslash x ->}  <израз> <операция> \tt x
+    \item \tt(<операция> <израз>\tt) = \lst{\\x -> x} <операция> <израз>
+    \item \tt(<израз> <операция>\tt) = \lst{\\x ->}  <израз> <операция> \tt x
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Свойства на $\lambda$-функциите}
-  \newcommand{\eqv}{$\longleftrightarrow$}
+
   \begin{itemize}[<+->]
   \item
     \begin{tabular}[t]{ll}
-      &\tt{\textbackslash x$_1$ x$_2$ \ldots{} x$_n$ ->} <тяло>\\
-      \eqv &\tt{\textbackslash x$_1$ -> \textbackslash x$_2$ -> \ldots{} \textbackslash x$_n$ ->}
+      &\tt\textbackslash $x_1\;x_2\;\ldots\;x_n$ \tt{->} <тяло>\\
+      \eqv &\tt\textbackslash $x_1$ \tt{-> \textbackslash} $x_2$ \tt{->} \ldots \tt\textbackslash $x_n$ \tt{->}
              <тяло>
     \end{tabular}
   \item
     \begin{tabular}[t]{ll}
-      &\tt{f x =} <тяло>\\
-      \eqv&  \tt{f = \textbackslash x -> }<тяло>
+      &\lst{f x =} <тяло>\\
+      \eqv&\lst!f = \\x ->! <тяло>
     \end{tabular}
   \item
     \begin{tabular}[t]{ll}
-      &\tt{f x y =} <тяло>\\
-      \eqv& \tt{f x = \textbackslash y -> }<тяло>\\
-      \eqv& \tt{f = \textbackslash x y -> }<тяло>
+      &\lst{f x y =} <тяло>\\
+      \eqv& \lst!f x = \\y ->! <тяло>\\
+      \eqv& \lst!f = \\x y ->! <тяло>
     \end{tabular}
   \item
     \begin{tabular}[t]{ll}
-      &\tt{f x$_1$ \ldots x$_n$ =} <тяло>\\
-      \eqv& \tt{f x$_1$ \ldots x$_{n-1}$ = \textbackslash x$_n$ ->} <тяло>\\
+      &\tt f $x_1 \ldots x_n$ \tt= <тяло>\\
+      \eqv& \tt f $x_1 \ldots x_{n-1}$ \tt= \tt\textbackslash $x_n$ \tt{->} <тяло>\\
       \eqv& \ldots\\
-      \eqv& \tt{f = \textbackslash x$_1$ \ldots x$_n$ -> }<тяло>
+      \eqv& \lst{f = \\}$x_1 \ldots x_n$\tt{ -> }<тяло>
     \end{tabular}
   \item
     \begin{tabular}[t]{ll}
-      &\tt{\textbackslash x y -> f x y}\\
-      \eqv& \tt{\textbackslash x -> f x}\\
+      &\lst{\\x y -> f x y}\\
+      \eqv& \lst{\\x -> f x}\\
       \eqv& \tt f
     \end{tabular}
   \end{itemize}
@@ -498,67 +514,70 @@ reverse a
 
 \begin{frame}
   \frametitle{Трансформация (\tt{map})}
+
   \begin{itemize}[<+->]
-  \item \tt{map :: (a -> b) -> [a] -> [b]}
-  \item \tt{map f l = [ f x  | x <- l ]}
-  \item \tt{map \_ [] = []}
-  \item<.-> \tt{map f (x:xs) = f x : map f xs}
+  \item \lst{map :: (a -> b) -> [a] -> [b]}
+  \item \lst{map f l = [ f x  | x <- l ]}
+  \item \lst{map \_ [] = []}
+  \item<.-> \lst{map f (x:xs) = f x : map f xs}
   \item Примери:
     \begin{itemize}
-    \item \evalstop{map (\^{}2) [1,2,3]}{[1,4,9]}
-    \item \evalstop{map (!!1) [[1,2,3],[4,5,6],[7,8,9]]}{[2,5,8]}
+    \item \evalstop{map (^2) [1,2,3]}{[1,4,9]}
+    \item \evalstop{map (\!\!1) [[1,2,3],[4,5,6],[7,8,9]]}{[2,5,8]}
     \item \evalstop{map sum [[1,2,3],[4,5,6],[7,8,9]]}{[6,15,24]}
-    \item \evalstop{map ("a "++) ["cat"{},"dog"{},"pig"]}{["a cat"{},"a dog"{},"a pig"]}
-    \item \evalstop{map (\textbackslash f -> f 2) [(\^{}2),(1+),(*3)]}{[4,3,6]}
+    \item \evalstop{map ("a "++) ["cat","dog","pig"]}{["a cat","a dog","a pig"]}
+    \item \evalstop{map (\\f -> f 2) [(^2),(1+),(*3)]}{[4,3,6]}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Филтриране (\tt{filter})}
+
   \begin{itemize}[<+->]
-  \item \tt{filter :: (a -> Bool) -> [a] -> [a]}
-  \item \tt{filter p l = [ x | x <- l, p x ]}
+  \item \lst{filter :: (a -> Bool) -> [a] -> [a]}
+  \item \lst{filter p l = [ x | x <- l, p x ]}
   \item
-\begin{verbatim}
+\begin{lstlisting}
 filter _ [] = []
 filter p (x:xs)
  | p x       = x : rest
  | otherwise = rest
  where rest = filter p xs
-\end{verbatim}
+\end{lstlisting}
   \item Примери
     \begin{itemize}
     \item \evalstop{filter odd [1..5]}{[1,3,5]}
-    \item \evalstop{filter (\textbackslash f -> f 2 > 3) [(\^{}2),(+1),(*3)]}{[(\^{}2),(*3)]}
+    \item \evalstop{filter (\\f -> f 2 > 3) [(^2),(+1),(*3)]}{[(^2),(*3)]}
     \item \evalstop{map (filter even) [[1,2,3],[4,5,6],[7,8,9]]}{[[2],[4,6],[8]]}
-    \item \evalstop{map (\textbackslash x -> map (\textbackslash f -> filter f x) [(<0),(==0),(>0)]) [[-2,1,0],[1,4,-1],[0,0,1]]}{[[[-2],[0],[1]],[[-1],[],[1,4]],[[],[0,0],[1]]]}
+    \item \evalstops{\lst{map (\\x -> map (\\f -> filter f x) [(<0),(==0),(>0)])} \tt{[[-2,1,0],[1,4,-1],[0,0,1]]}}{\tt{[[[-2],[0],[1]],[[-1],[],[1,4]],[[],[0,0],[1]]]}}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Отделяне на списъци с \tt{map} и \tt{filter}}
-  Отделянето на списъци е синтактична захар за \tt{map} и \tt{filter}\pause
+
+  Отделянето на списъци е синтактична захар за \lst{map} и \lst{filter}\pause
   \small
   \begin{itemize}[<+->]
   \item \begin{tabular}[t]{l}
       \tt[<израз> \tt| <образец> \tt{<-} <списък>\tt, <условие>\tt]\\
       $\longleftrightarrow$\\
-      \tt{map (\textbackslash}<образец> \tt{->} <израз>\tt)\\
-      \hspace{5ex}\tt{(filter (\textbackslash}<образец> \tt{->} <условие>\tt) <списък>\tt)
+      \lst{map (\\}<образец> \tt{->} <израз>\tt)\\
+      \hspace{5ex}\lst{(filter (\\}<образец> \tt{->} <условие>\tt) <списък>\tt)
     \end{tabular}
   \item \begin{tabular}[t]{l}
       \tt[<образец> \tt| <образец> \tt{<-} <списък>\tt,<условие$_1$>,<условие$_2$>\tt]\\
       $\longleftrightarrow$\\
-      \tt{filter (\textbackslash}<образец> \tt{->} <условие$_2$>\tt)\\
-      \hspace{5ex}\tt{(filter (\textbackslash}<образец> \tt{->} <условие$_1$>\tt) <списък>\tt)
+      \lst{filter (\\}<образец> \tt{->} <условие$_2$>\tt)\\
+      \hspace{5ex}\lst{(filter (\\}<образец> \tt{->} <условие$_1$>\tt) <списък>\tt)
     \end{tabular}
   \item \begin{tabular}[t]{l}
       \tt[<израз>\tt|<образец$_1$> \tt{<-} <списък$_1$>\tt,<образец$_2$> \tt{<-} <списък$_2$>\tt]\\
       $\longleftrightarrow$\\
-      \tt{concat (map (\textbackslash}<образец$_1$> \tt{->}\\
-      \hspace{15ex}\tt{map (\textbackslash} <образец$_2$> \tt{->} <израз>\tt) <списък$_2$>\tt)\\
+      \lst{concat (map (\\}<образец$_1$> \tt{->}\\
+      \hspace{15ex}\lst{map (\\} <образец$_2$> \tt{->} <израз>\tt) <списък$_2$>\tt)\\
       \hspace{10ex} <списък$_1$>\tt)
     \end{tabular}
   \end{itemize}
@@ -566,150 +585,156 @@ filter p (x:xs)
 
 \begin{frame}<1-14>[fragile]
   \frametitle{Дясно свиване (\tt{foldr})}
+
   \begin{itemize}[<+->]
-  \item \tt{foldr :: (a -> b -> b) -> b -> [a] -> b}
-  \item \tt{foldr op nv [x$_1$, x$_2$, \ldots, x$_n$]} = \\
-    \tt{x$_1$ `op` (x$_2$ `op` \ldots (x$_n$ `op` nv) \ldots)}
+  \item \lst{foldr :: (a -> b -> b) -> b -> [a] -> b}
+  \item \lst{foldr op nv} \tt[$x_1$\tt, $x_2$\tt, \ldots\tt, $x_n$\tt] = \\
+    $x_1$ \tt{`op` (}$x_2$ \tt{`op`} \ldots \tt($x_n$\tt{ `op` nv)} \ldots\tt)
   \item
-\begin{verbatim}
+\begin{lstlisting}
 foldr _  nv [] = nv
 foldr op nv (x:xs) = x `op` foldr op nv xs
-\end{verbatim}
+\end{lstlisting}
   \item Примери
     \begin{itemize}
-    \item \tt{sum = foldr (+) 0}
-    \item \tt{product = foldr (*) 1}
-    \item \tt{concat = foldr (++) []}
-    \item \tt{and = foldr (\&\&) True}
-    \item \tt{or = foldr (||) False}
-    \item \tt{map f = foldr (\textbackslash x\only<-10>{ r} -> \alt<10>{f x : r}{(f x:)}) []}
+    \item \lst{sum = foldr (+) 0}
+    \item \lst{product = foldr (*) 1}
+    \item \lst{concat = foldr (++) []}
+    \item \lst{and = foldr (&&) True}
+    \item \lst{or = foldr (||) False}
+    \item \lst{map f = foldr (\x} \tt{\only<-10>{ r} -> \alt<10>{f x : r}{(f x:)}) []}
       \onslide<+->
-    \item \tt{filter p = foldr (\textbackslash x\only<-13>{ r} -> \temporal<13>{if p x then x : r else r}{(if p x then (x:) else id) r}{if p x then (x:) else id}) []}
+    \item \lst{filter p = foldr (\x}\tt{\only<-13>{ r} -> \temporal<13>{if p x then x : r else r}{(if p x then (x:) else id) r}{if p x then (x:) else id}) []}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Ляво свиване (\tt{foldl})}
+
   \begin{itemize}[<+->]
-  \item \tt{foldl :: (b -> a -> b) -> b -> [a] -> b}
-  \item \tt{foldl op nv [x$_1$, x$_2$, \ldots, x$_n$]} = \\
-    \tt{(\ldots((nv `op` x$_1$) `op` x$_2$) \ldots ) `op` x$_n$}
+  \item \lst{foldl :: (b -> a -> b) -> b -> [a] -> b}
+  \item \lst{foldl op nv }\tt[$x_1$\tt, $x_2$\tt, \ldots\tt, $x_n$\tt] = \\
+    \tt(\ldots\tt{((nv `op` }$x_1$\tt{) `op` }$x_2$\tt) \ldots \tt{) `op` }$x_n$
   \item
-\begin{verbatim}
+\begin{lstlisting}
 foldl _  nv [] = nv
 foldl op nv (x:xs) = foldl op (nv `op` x) xs
-\end{verbatim}
+\end{lstlisting}
   \item Пример
     \begin{itemize}[<.->]
-    \item \tt{flip f x y = f y x}
-    \item \tt{reverse = foldl (flip (:)) []}
+    \item \lst{flip f x y = f y x}
+    \item \lst{reverse = foldl (flip (:)) []}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Свиване на непразни списъци (\tt{foldr1} и \tt{foldl1})}
+
   \begin{itemize}[<+->]
-  \item \tt{foldr1 :: (a -> a -> a) -> [a] -> a}
-  \item \tt{foldr1 op nv [x$_1$, x$_2$, \ldots, x$_n$]} = \\
-    \tt{x$_1$ `op` (x$_2$ `op` \ldots (x$_{n-1}$ `op` x$_n$) \ldots)}
+  \item \lst{foldr1 :: (a -> a -> a) -> [a] -> a}
+  \item \lst{foldr1 op nv }\tt[$x_1$\tt, $x_2$\tt, \ldots\tt, $x_n$\tt] = \\
+    $x_1$\tt{ `op` (}$x_2$\tt{ `op` }\ldots \tt($x_{n-1}$\tt{ `op` }$x_n$\tt) \ldots\tt)
   \item
-\begin{verbatim}
+\begin{lstlisting}
 foldr1 _  [x] = x
 foldr1 op (x:xs) = x `op` foldr1 op xs
-\end{verbatim}
-  \item \tt{foldl :: (a -> a -> a) -> [a] -> a}
-  \item \tt{foldl op nv [x$_1$, x$_2$, \ldots, x$_n$]} = \\
-    \tt{(\ldots((x$_1$ `op` x$_2$) \ldots ) `op` x$_n$}
-  \item \tt{foldl1 op (x:xs) = foldl op x xs}
+\end{lstlisting}
+  \item \lst{foldl1 :: (a -> a -> a) -> [a] -> a}
+  \item \lst{foldl1 op nv }\tt[$x_1$\tt, $x_2$\tt, \ldots\tt, $x_n$\tt] = \\
+    \tt(\ldots\tt{((}$x_1$\tt{ `op` }$x_2$\tt) \ldots \tt{) `op` }$x_n$
+  \item \lst{foldl1 op (x:xs) = foldl op x xs}
   \item Примери
     \begin{itemize}
-    \item \tt{maximum = foldr1 max}
-    \item \tt{minimum = foldr1 min}
-    \item \tt{last = foldl1 (\textbackslash \_ r -> r)}
+    \item \lst{maximum = foldr1 max}
+    \item \lst{minimum = foldr1 min}
+    \item \lst{last = foldl1 (\_ r -> r)}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Сканиране на списъци (\tt{scanl}, \tt{scanr})}
-  \tt{scanr} и \tt{scanl} връщат историята на пресмятането на \tt{foldr} и \tt{foldl}
+
+  \lst{scanr} и \lst{scanl} връщат историята на пресмятането на \lst{foldr} и \lst{foldl}
   \pause\small
   \begin{itemize}[<+->]
-  \item \tt{scanr :: (a -> b -> b) -> b -> [a] -> \alert{[b]}}
-  \item \tt{scanr op nv [x$_1$, x$_2$, \ldots, x$_n$]} = \\
-    \tt{[x$_1$ `op` (x$_2$ `op` \ldots (x$_n$ `op` nv) \ldots),}\\
-    \tt{ x$_2$ `op` (\ldots (x$_n$ `op` nv) \ldots),}\\
+  \item \lst!scanr :: (a -> b -> b) -> b -> [a] ->! \tta{[b]}
+  \item \lst{scanr op nv} \tt[$x_1$\tt, $x_2$\tt, \ldots\tt, $x_n$\tt] = \\
+    \tt[$x_1$\tt{ `op` (}$x_2$\tt{ `op` }\ldots \tt($x_n$\tt{ `op` nv)} \ldots\tt{),}\\
+    $x_2$\tt{ `op` (}\ldots \tt($x_n$\tt{ `op` nv)} \ldots\tt{),}\\
     \ldots\\
-    \tt{ x$_n$ `op` nv,}\\
+    $x_n$\tt{ `op` nv,}\\
     \tt{ nv]}
-  \item \tt{scanl :: (b -> a -> b) -> b -> [a] -> \alert{[b]}}
-  \item \tt{scanl op nv [x$_1$, x$_2$, \ldots, x$_n$]} = \\
+  \item \lst!scanl :: (b -> a -> b) -> b -> [a] ->! \tta{[b]}
+  \item \lst{scanl op nv} \tt[$x_1$\tt, $x_2$\tt, \ldots\tt, $x_n$\tt] = \\
     \tt{[nv,}\\
-    \tt{ nv `op` x$_1$,}\\
-    \tt{ (nv `op` x$_1$) `op` x$_2$,}\\
+    \tt{ nv `op` }$x_1$\tt,\\
+    \tt{ (nv `op` }$x_1$\tt{) `op` }$x_2$\tt,\\
     \ldots\\
-    \tt{ (\ldots((nv `op` x$_1$) `op` x$_2$) \ldots ) `op` x$_n$]}
+    \tt{(\ldots((nv `op` $x_1$) `op` $x_2$) \ldots ) `op` $x_n$]}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Съшиване на списъци (\tt{zip}, \tt{zipWith})}
+
   \begin{itemize}[<+->]
-  \item \tt{zip :: [a] -> [b] -> [(a,b)]}
+  \item \lst{zip :: [a] -> [b] -> [(a,b)]}
     \begin{itemize}
-    \item \evalsto{zip [x$_1$,x$_2$,\ldots,x$_n$]
-        [y$_1$,y$_2$,\ldots,y$_n$]}{[(x$_1$,y$_1$),(x$_2$,y$_2$),\ldots,(x$_n$,y$_n$)]}
+    \item \evalstos{\lst{zip [}$x_1$\tt, $x_2$\tt, \ldots\tt, $x_n$\tt]
+        \tt[$y_1$\tt, $y_2$\tt, \ldots\tt, $y_n$\tt]}{\tt[($x_1$\tt, $y_1$\tt{), (}$x_2$\tt, $y_2$\tt{), }\ldots\tt{, (}$x_n$\tt, $y_n$\tt{)]}}
     \item ако единият списък е по-къс, спира когато свърши той
   \end{itemize}
-  \item \tt{unzip :: [(a,b)] -> ([a],[b])}
+  \item \lst{unzip :: [(a,b)] -> ([a],[b])}
     \begin{itemize}
     \item разделя списък от двойки на два списъка с равна
       дължина
-    \item \evalsto{unzip
-        [(x$_1$,y$_1$),(x$_2$,y$_2$),\ldots,(x$_n$,y$_n$)]}{([x$_1$,x$_2$,\ldots,x$_n$], [y$_1$,y$_2$,\ldots,y$_n$])}
+    \item \evalstos{\lst{unzip}
+        \tt{[(}$x_1$\tt,$y_1$\tt{), (}$x_2$\tt,$y_2$\tt{), }\ldots\tt{, (}$x_n$,$y_n$\tt{)]}}{\tt{([}$x_1$\tt,$x_2$\tt, \ldots\tt,$x_n$\tt{], [}$y_1$\tt,$y_2$\tt, \ldots\tt, $y_n$\tt{])}}
     \end{itemize}
-  \item \tt{zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]}
+  \item \lst{zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]}
     \begin{itemize}
     \item съшива два списъка с дадена бинарна операция
-    \item \evalsto{zipWith op [x$_1$,x$_2$,\ldots,x$_n$]
-        [y$_1$,y$_2$,\ldots,y$_n$]}{[x$_1$ `op` y$_1$,x$_2$ `op`
-        y$_2$,\ldots,x$_n$ `op` y$_n$]}
+    \item \evalstos{\lst{zipWith op} $x_1$\tt,$x_2$\tt,\ldots\tt,$x_n$\tt]
+        \tt[$y_1$\tt, $y_2$\tt, \ldots\tt,$y_n$\tt]}{\tt[$x_1$\tt{ `op` }$y_1$\tt, $x_2$\tt{ `op` }
+        $y_2$\tt, \ldots\tt, $x_n$\tt{ `op` }$y_n$]}
     \end{itemize}
   \item Примери
     \begin{itemize}
     \item \evalsto{zip [1..3] [5..10]}{[(1,5),(2,6),(3,7)]}
     \item \evalsto{zipWith (*) [1..3] [5..10]}{[5,12,21]}
-    \item \tt{zip = zipWith (,)}
-    \item \tt{unzip = foldr (\textbackslash(x,y) (l1,l2) -> (x:l1,y:l2)) ([],[])}
+    \item \lst{zip = zipWith (,)}
+    \item \lst{unzip = foldr (\\(x,y) (l1,l2) -> (x:l1,y:l2)) ([],[])}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Разбивания на списъци}
+
   \begin{itemize}[<+->]
-  \item \tt{takeWhile :: (a -> Bool) -> [a] -> [a]}
+  \item \lst{takeWhile :: (a -> Bool) -> [a] -> [a]}
       \begin{itemize}
       \item връща първите елементи на списъка, за които е вярно условието
-      \item \tt{takeWhile p = foldr (\textbackslash x r -> if p x then x:r else []) []}
+      \item \lst{takeWhile p = foldr (\\x r -> if p x then x:r else []) []}
       \item \evalsto{takeWhile (<0) [-3..3]}{[-3,-2,-1]}
       \end{itemize}
-  \item \tt{dropWhile :: (a -> Bool) -> [a] -> [a]}
+  \item \lst{dropWhile :: (a -> Bool) -> [a] -> [a]}
       \begin{itemize}
       \item премахва първите елементи на списъка, за които е вярно условието
       \item \evalsto{dropWhile (<0) [-3..3]}{[0,1,2,3]}
       \end{itemize}
-  \item \tt{span :: (a -> Bool) -> [a] -> ([a], [a])}
+  \item \lst{span :: (a -> Bool) -> [a] -> ([a], [a])}
     \begin{itemize}
-    \item \tt{span p l = (takeWhile p l, dropWhile p l)}
+    \item \lst{span p l = (takeWhile p l, dropWhile p l)}
     \item \evalsto{span (<0) [-3..3]}{([-3,-2,-1],[0,1,2,3])}
     \end{itemize}
-  \item \tt{break :: (a -> Bool) -> [a] -> ([a],[a])}
+  \item \lst{break :: (a -> Bool) -> [a] -> ([a],[a])}
     \begin{itemize}
-    \item \tt{break p l = (takeWhile q l, dropWhile q l)}\\
-      \hspace{15ex}\tt{where q x = not (p x)}
+    \item \lst{break p l = (takeWhile q l, dropWhile q l)}\\
+      \hspace{15ex}\lst{where q x = not (p x)}
     \item \evalsto{break (>0) [-3..3]}{([-3,-2,-1-0],[1,2,3])}
     \end{itemize}
   \end{itemize}
@@ -717,18 +742,19 @@ foldr1 op (x:xs) = x `op` foldr1 op xs
 
 \begin{frame}
   \frametitle{Логически квантори (\tt{any}, \tt{all})}
+
   \begin{itemize}[<+->]
-  \item \tt{any :: (a -> Bool) -> [a] -> Bool}
+  \item \lst{any :: (a -> Bool) -> [a] -> Bool}
     \begin{itemize}
     \item проверява дали предикатът е изпълнен за \textbf{някой елемент} от списъка
-    \item \tt{any p l = or (map p l)}
-    \item \tt{elem x = any (==x)}
+    \item \lst{any p l = or (map p l)}
+    \item \lst{elem x = any (==x)}
     \end{itemize}
-  \item \tt{all :: (a -> Bool) -> [a] -> Bool}
+  \item \lst{all :: (a -> Bool) -> [a] -> Bool}
     \begin{itemize}
     \item проверява дали предикатът е изпълнен за \textbf{всички елементи} на списъка
-    \item \tt{all p l = and (map p l)}
-    \item \tt{sorted l = all (\textbackslash(x,y) -> x <= y) (zip l (tail l))}
+    \item \lst{all p l = and (map p l)}
+    \item \lst{sorted l = all (\\(x,y) -> x <= y) (zip l (tail l))}
     \end{itemize}
   \end{itemize}
 \end{frame}
