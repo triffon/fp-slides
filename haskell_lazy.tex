@@ -3,7 +3,11 @@
 
 \title[Лениво оценяване]{Лениво оценяване и програмиране от по-висок ред}
 
-\date{7 януари 2016 г.}
+\date{22 декември 2016 г.}
+
+\lstset{language=Haskell,style=Haskell}
+
+\newcommand{\lra}{\onslide<+->$\longrightarrow$}
 
 \begin{document}
 
@@ -17,7 +21,8 @@
 
 \begin{frame}
   \frametitle{Щипка $\lambda$-смятане}
-  \newcommand{\lra}{\rightarrow}
+
+  \renewcommand{\lra}{\onslide<+->\longrightarrow}
   \begin{itemize}[<+->]
   \item $\lambda$-изрази: $E ::= x \;|\; E_1(E_2) \;|\; \lambda x\, E$
   \item Изчислително правило: $(\lambda x\,E_1)(E_2) \mapsto E_1[x := E_2]$
@@ -25,26 +30,18 @@
   \item Нека $f := \lambda x\; x!$, $g := \lambda z\;z^2+z$
   \item $g(f(4)) \lra \quad ?$
   \item $g(\underline{f(4)})
-    \onslide<+->
     \lra g(\underline{4!})
-    \onslide<+->
     \lra \underline{g(24)}
-    \onslide<+->
     \lra 24^2 + 24
-    \onslide<+->
     \lra 600$
     \begin{itemize}
     \item<16-> оценява се \alert{отвътре навън}
     \item<17-> \alert{стриктно} (апликативно, лакомо) оценяване
     \end{itemize}
   \item $\underline{g(f(4))}
-    \onslide<+->
     \lra \underline{(f(4))}^2 + \underline{f(4)}
-    \onslide<+->
     \lra (\underline{4!})^2 + \underline{4!}
-    \onslide<+->
     \lra 24^2 + 24
-    \onslide<+->
     \lra 600$
     \begin{itemize}
     \item<16-> оценява се \alert{отвън навътре}
@@ -55,6 +52,7 @@
 
 \begin{frame}
   \frametitle{Стриктно и нестриктно оценяване}
+
   Стриктното оценяване
   \begin{itemize}[<+->]
   \item се използва в повечето езици за програмиране
@@ -78,33 +76,30 @@
 
 \begin{frame}[fragile]
   \frametitle{Кога мързелът помага}
-  \newcommand{\lra}{$\;\rightarrow\;$}
-\begin{verbatim}
+
+\begin{lstlisting}[language=Scheme]
 (define (f x y) (if (< x 5) x y))
 (define (g l)   (f (car l) (cadr l)))
-\end{verbatim}
+\end{lstlisting}
 \pause
 \begin{tabular}[t]{l@{}l}
 \tt{\underline{(g '(3))}}
-\pause
 &\lra \tt{(f \underline{(car '(3))} (cadr '(3)))}\\
-\pause
 &\lra \tt{(f 3 \underline{(cadr '(3))})}
-\pause
 \lra \alert{Грешка!}
 \end{tabular}
 \pause
-\begin{verbatim}
+\begin{lstlisting}
 f x y = if x < 5 then x else y
 g l   = f (head l) (head (tail l))
-\end{verbatim}
+\end{lstlisting}
 \pause
 \begin{tabular}[t]{l@{}l}
 \tt{\underline{g [3]}}
 \pause
-&\lra \tt{\underline{f (head [3]) (head (tail [3]))}}\\
+&\lra \underline{\tt{f (head [3]) (head (tail [3]))}}\\
 \pause
-&\lra \tt{if \underline{head [3]} < 5 then head [3] else head (tail [3])}\\
+&\lra \tt{if} \underline{\tt{head [3]}} \tt{< 5 then head [3] else head (tail [3])}\\
 \pause
 &\lra \tt{if \underline{3 < 5} then head [3] else head (tail [3])}\\
 \pause
@@ -118,6 +113,7 @@ g l   = f (head l) (head (tail l))
 
 \begin{frame}
   \frametitle{Теорема за нормализация}
+
   \begin{itemize}[<+->]
   \item всеки път когато апликативното оценяване дава резултат и нормалното оценяване дава резултат
   \item има случаи, когато нормалното оценяване дава резултат, но апликативното не!
@@ -165,82 +161,85 @@ g l   = f (head l) (head (tail l))
 
 \begin{frame}
   \frametitle{Кога се налага оценяване на израз?}
-  Във всеки даден момент Haskell оценява някой израз \tt s. \pause
+
+  Във всеки даден момент Haskell оценява някой израз $s$. \pause
   \begin{itemize}[<+->]
-  \item ако \tt{s = if e then e$_1$ else e$_2$}
+  \item ако $s \equiv$ \lst{if} $e$ \lst{then} $e_1$ \lst{else} $e_2$
     \begin{itemize}
-    \item първо се оценява \tt e
-    \item ако оценката е \tt{True}, се преминава към оценката на e$_1$
-    \item ако оценката е \tt{False}, се преминава към оценката на e$_2$
+    \item първо се оценява $e$
+    \item ако оценката е \lst{True}, се преминава към оценката на $e_1$
+    \item ако оценката е \lst{False}, се преминава към оценката на $e_2$
     \end{itemize}
-  \item ако \tt{s = f e$_1$ e$_2$ \ldots\ e$_n$}, за \tt f $n$-местна примитивна функция:
+  \item ако $s \equiv \tt f\,e_1\,e_2\,\ldots\,e_n$, за \tt f --- $n$-местна примитивна функция:
     \begin{itemize}
-    \item оценяват се последователно \tt{e$_1$}, \ldots\ \tt{e$_n$}
+    \item оценяват се последователно $e_1,\ldots,e_n$
     \item прилага се примитивната операция над оценките им
     \end{itemize}
-  \item нека сега да допуснем, че \tt{s = f e}
-  \item първо се оценява \tt f, за да разберем как да продължим
-  \item ако \tt{f x$_1$ \ldots\ x$_n$ | g$_1$ = t$_1$ \ldots\ | g$_k$ = t$_k$} е дефинирана чрез пазачи:
+  \item нека сега да допуснем, че $s \equiv \tt f\,e$
+  \item първо се оценява $f$, за да разберем как да продължим
+  \item ако $\tt f\,x_1\,\ldots\,x_n$ \tt| $g_1$ \tt= $t_1$ \ldots\ \tt| $g_k$ \tt= $t_k$ е дефинирана чрез пазачи:
     \begin{itemize}
-    \item тогава \tt f се замества с израза: \tt{\textbackslash x$_1$ \ldots\ x$_n$ -> if g$_1$ then t$_1$ else \ldots\ if g$_k$ then t$_k$ else error "..."}
-
+    \item тогава \tt f се замества с израза:\\
+      \tt{\textbackslash $x_1 \ldots\ x_n$ ->} \lst{if} $g_1$ \lst{then} $t_1$ \lst{else} \ldots\ \lst{if} $g_k$ \lst{then} $t_k$ \lst{else error "..."}
     \end{itemize}
-  \item ако \tt f е конструктор (константа), \alert{оценката остава \tt{f e}}
-  \item ако \tt{f = \textbackslash p -> t}, където \tt p е образец, редът на оценяване зависи от образеца!
+  \item ако \tt f е конструктор (константа), \alert{оценката остава \tt f $e$}
+  \item ако \tt{f = \textbackslash $p$ -> $t$}, където $p$ е образец, редът на оценяване зависи от образеца!
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Кога се оценяват изразите при използване на образци?}
-  Как се оценява \tt{(\textbackslash p -> t) e}?\pause
+
+  Как се оценява \tt{(\textbackslash $p$ -> $t$) $e$}?\pause
   \begin{itemize}[<+->]
-  \item ако \tt{p = c} е константа:
+  \item ако $p \equiv c$ е константа
     \begin{itemize}
-    \item преминава се към оценката на аргумента \tt e
-    \item ако се установи че оценката тя съвпада с \tt c, преминава се към оценката на тялото \tt t
+    \item преминава се към оценката на аргумента $e$
+    \item ако се установи че оценката тя съвпада с константата $c$, преминава се към оценката на тялото $t$
     \end{itemize}
-  \item ако \tt{p = \_} е анонимният образец:
+  \item ако $p \equiv \tt\_$ е анонимният образец
     \begin{itemize}
-    \item преминава се директно към оценката на \tt t \alert{без да се оценява \tt e}
+    \item преминава се директно към оценката на $t$ \alert{без да се оценява $e$}
     \end{itemize}
-  \item ако \tt{p = x} е променлива:
+  \item ако $p \equiv \tt x$ е променлива
     \begin{itemize}
-    \item преминава се към оценка на израза \tt t \alert{като се въвежда локалната дефиниция \tt{x = e}}
+    \item преминава се към оценка на израза $t$ \alert{като се въвежда локалната дефиниция \tt{x = $e$}}
     \end{itemize}
-  \item ако \tt{p = (p$_1$,p$_2$,\ldots,p$_n$)}:
+  \item ако \tt{$p \equiv\,$\tuple p}
     \begin{itemize}
-    \item преминава се към оценката на \tt e
-    \item ако се установи, че тя е от вида \tt{(e$_1$,e$_2$,\ldots,e$_n$)}, преминава се към оценката на израза \tt{(\textbackslash p$_1$ p$_2$ \ldots\ p$_n$ -> t) e$_1$ e$_2$ \ldots\ e$_n$}
+    \item преминава се към оценката на $e$
+    \item ако се установи, че тя е от вида \tuple e, преминава се към оценката на израза \tt{(\textbackslash $p_1\,p_2\,\ldots\,p_n$ -> $t$) $e_1\,e_2\,\ldots\,e_n$}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Кога се оценяват изразите при използване на образци?}
-  Как се оценява \tt{(\textbackslash p -> t) e}?
+
+  Как се оценява \tt{(\textbackslash $p$ -> $t$) $e$}?\pause
   \begin{itemize}[<+->]
-  \item ако \tt{p = (p$_h$:p$_t$)}:
+  \item ако $p \equiv \tt(p_h\tt:p_t\tt)$
     \begin{itemize}
-    \item преминава се към оценката на \tt e
-    \item ако се установи, че тя е от вида \tt{(e$_h$:e$_t$)}, преминава се към оценката на израза \tt{(\textbackslash p$_h$ p$_t$ -> t) e$_h$ e$_t$}
+    \item преминава се към оценката на $e$
+    \item ако се установи, че тя е от вида $\tt(e_h\tt:e_t\tt)$, преминава се към оценката на израза \tt{(\textbackslash $p_h\;p_t$ -> $t$) $e_h\;e_t$}
     \end{itemize}
-  \item ако \tt{p = [p$_1$,p$_2$,\ldots,p$_n$]}:
+  \item ако $p \equiv $\hlist p
     \begin{itemize}
-    \item преминава се към оценката на \tt e
-    \item ако се установи, че тя е от вида \tt{[e$_1$,e$_2$,\ldots,e$_n$]}, преминава се към оценката на израза \tt{(\textbackslash p$_1$ p$_2$ \ldots\ p$_n$ -> t) e$_1$ e$_2$ \ldots\ e$_n$}
-    \item всъщност е еквивалентно да разгледаме \tt p като \tt{p$_1$:p$_2$:\ldots:p$_n$:[]}
+    \item преминава се към оценката на $e$
+    \item ако се установи, че тя е от вида \hlist e, преминава се към оценката на израза \tt{(\textbackslash $p_1\;p_2\;\ldots\;p_n$ -> $t$) $e_1\;e_2\;\ldots\;e_n$}
+    \item всъщност е еквивалентно да разгледаме $p$ като $p_1\tt:p_2\tt:\ldots\tt:p_n$\tt{:[]}
     \end{itemize}
-  \item ако има няколко равенства за \tt f с използване на различни образци, се търси кой образец пасва отгоре надолу
+  \item ако има няколко равенства за $f$ с използване на различни образци, се търси кой образец пасва отгоре надолу
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Оценяване в Haskell: пример 1}
-\begin{verbatim}
+
+\begin{lstlisting}
 sumFirst (x:xs) (y:ys) = x + y
-\end{verbatim}
+\end{lstlisting}
 \pause
-\newcommand{\lra}{\onslide<+->$\longrightarrow$}
 \begin{tabular}{rl}
   &\tt{\underline{sumFirst} [1..10] [5..50]}\\\pause
   \lra& \tt{(\textbackslash(x:xs) -> \textbackslash(y:ys) -> x + y) \underline{[1..10]} [5..50]}\\
@@ -254,7 +253,7 @@ sumFirst (x:xs) (y:ys) = x + y
 
 \begin{frame}
   \frametitle{Оценяване в Haskell: пример 2}
-\newcommand{\lra}{\onslide<+->$\longrightarrow$}
+
 \begin{tabular}{r@{ }l@{ }l}
   &\multicolumn 2l{\tt{(filter isPrime [4..1000]) \underline{!!} 1}}\\\pause
   \lra&\multicolumn 2l{\tt{(\textbackslash(x:xs) n -> xs !! (n-1)) \underline{(filter isPrime [4..1000])} 1}}\\
@@ -274,7 +273,7 @@ sumFirst (x:xs) (y:ys) = x + y
 
 \begin{frame}
   \frametitle{Оценяване в Haskell: пример 2}
-\newcommand{\lra}{\onslide<+->$\longrightarrow$}
+
 \begin{tabular}{r@{ }l@{ }l}
   \lra&\ldots\tt{\underline{(\textbackslash p (z:zs) ->}}&\underline{\tt{if p z then z:filter p zs}}\\
   &&\tt{\underline{else filter p zs) isPrime} [5..1000]}\ldots\\
@@ -293,7 +292,7 @@ sumFirst (x:xs) (y:ys) = x + y
 
 \begin{frame}
   \frametitle{Оценяване в Haskell: пример 2}
-\newcommand{\lra}{\onslide<+->$\longrightarrow$}
+
 \begin{tabular}{r@{ }l@{ }l}
   \lra&\ldots\tt{\underline{(\textbackslash p (z:zs) ->}}&\underline{\tt{if p z then z:filter p zs}}\\
   &&\tt{\underline{else filter p zs) isPrime} [6..1000]}\ldots\\
@@ -312,9 +311,9 @@ sumFirst (x:xs) (y:ys) = x + y
 \end{tabular}
 \end{frame}
 
-\begin{frame}[label=current]
+\begin{frame}
   \frametitle{Оценяване в Haskell: пример 2}
-\newcommand{\lra}{\onslide<+->$\longrightarrow$}
+
 \begin{tabular}{r@{ }l@{ }l}
   \lra&\multicolumn 2{@{}l}{\ldots\tt{\lett{p=isPrime; z=7; zs=[8..1000]}{}}}\\
   &\multicolumn 2{@{}l}{\tt{if True then \underline{z:filter p} zs else filter p zs} \ldots}\\
@@ -328,6 +327,7 @@ sumFirst (x:xs) (y:ys) = x + y
 
 \begin{frame}
   \frametitle{Потоци в Haskell}
+
   \begin{itemize}[<+->]
   \item Можем да си мислим, че аргументите в Haskell са \textbf{обещания}, които се изпълняват при нужда
   \item В частност, \tt{x:xs = (:) x xs}, където
@@ -347,8 +347,9 @@ sumFirst (x:xs) (y:ys) = x + y
 
 \begin{frame}
   \frametitle{Генериране на безкрайни списъци}
+
   \begin{itemize}
-  \item \tta[from\tta{..}\tta] $\rightarrow$ \tta[from\tta, from+1\tta, \ldots\tta]
+  \item \tta[$a$\tta{..}\tta] $\rightarrow$ \tta[$a$\tta, $a+1$\tta, $a+2$\tta,\ldots\tta]
   \item Примери:
     \begin{itemize}
     \item \tt{nats = [0..]}
@@ -357,12 +358,12 @@ sumFirst (x:xs) (y:ys) = x + y
     \end{itemize}
   \item Синтактична захар за \tt{enumFrom from}
     \pause
-  \item \tta[from\tta,from+inc\tta{..}\tta] $\rightarrow$ \tta[from\tta, from+inc\tta, from+2.inc\tta,\ldots\tta]
+  \item \tta[$a$\tta, $a+\Delta x$ \tta{..}\tta] $\rightarrow$ \tta[$a$\tta, $a+\Delta x$\tta, $a + 2\Delta x$\tta, \ldots \tta, \tta]
   \item Примери:
     \begin{itemize}
     \item \tt{evens = [0,2..]}
     \item \evalsto{take 5 evens}{[0,2,4,6,8]}
-    \item \evalsto{take 7 ['a','e'..]}{"aeimquy"}
+    \item \evalsto{take 7 ['a','e'..]}{\ "aeimquy"}
     \end{itemize}
   \item Синтактична захар за \tt{enumFromThen from then}
   \end{itemize}
@@ -370,67 +371,72 @@ sumFirst (x:xs) (y:ys) = x + y
 
 \begin{frame}
   \frametitle{Генериране на безкрайни списъци}
+
   \begin{itemize}[<+->]
-  \item \tt{repeat :: a -> [a]}
+  \item \lst{repeat :: a -> [a]}
     \begin{itemize}
-    \item създава безкрайния списък \tt{[x,x,\ldots]}
-    \item \tt{repeat x = x:repeat x}
-    \item \tt{replicate n x = take n (repeat x)}
+    \item създава безкрайния списък \lst{[x,x,...]}
+    \item \lst{repeat x = x:repeat x}
+    \item \lst{replicate n x = take n (repeat x)}
     \end{itemize}
-  \item \tt{cycle :: [a] -> [a]}
+  \item \lst{cycle :: [a] -> [a]}
     \begin{itemize}
-    \item \evalsto{cycle [1,2,3]}{[1,2,3,1,2,3,\ldots]}
+    \item \evalsto{cycle [1,2,3]}{[1,2,3,1,2,3,...]}
     \item създава безкраен списък повтарайки подадения (краен) списък
     \end{itemize}
-  \item \tt{iterate :: (a -> a) -> a -> [a]}
+  \item \lst{iterate :: (a -> a) -> a -> [a]}
     \begin{itemize}
-    \item \tt{iterate f z} създава безкрайния списък \tt{[z,f(z),f(f(z)),\ldots]}
+    \item \lst{iterate f z} създава безкрайния списък \lst{[z,f(z),f(f(z)),...]}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
-
 \begin{frame}
   \frametitle{Отделяне на безкрайни списъци}
-  Отделянето на списъци работи и за безкрайни списъци.\pause
-  \begin{itemize}[<+->]
-  \item \tt{oddSquares = \rvl{[ x\^{}2 | x <- [1,3..] ]}}
-  \item \tt{twins = \rvl{[ (x,x+2) | x <- [1..], prime x, prime
-        (x+2) ]}}
-  \item \tt{pairs = \rvl{[ (x,y) | x <- [0..], y <- [0..x - 1] ]}}
-  \item \tt{pythagoreanTriples = \rvl{
-        \begin{tabular}[t]{ll}
-          [ (a,b,c) | &c <- [1..],\\
-                      &b <- [1..c-1],\\
-                      &a <- [1..b-1],\\
-                      &a\^{}2 + b\^{}2 == c\^{}2 ]
-        \end{tabular}}}
-  \end{itemize}
+
+  \begin{overlayarea}{\textwidth}{15em}
+    Отделянето на списъци работи и за безкрайни списъци.\pause
+    \begin{itemize}[<+->]
+    \item \tt{oddSquares = \rvl{[ x\^{}2 | x <- [1,3..] ]}}
+    \item \tt{twins = \rvl{[ (x,x+2) | x <- [1..], prime x, prime
+          (x+2) ]}}
+    \item \tt{pairs = \rvl{[ (x,y) | x <- [0..], y <- [0..x - 1] ]}}
+    \item \tt{pythagoreanTriples = \rvl{
+          \begin{tabular}[t]{ll}
+            [ (a,b,c) | &c <- [1..],\\
+                        &b <- [1..c-1],\\
+                        &a <- [1..b-1],\\
+                        &a\^{}2 + b\^{}2 == c\^{}2 ]
+          \end{tabular}}}
+    \end{itemize}
+  \end{overlayarea}
 \end{frame}
 
 \begin{frame}
   \frametitle{Функции от по-висок ред над безкрайни списъци}
+
   Повечето функции от по-висок ред работят и над безкрайни списъци!
   \begin{itemize}[<+->]
-  \item \tt{powers2 = 1 : map (*2) powers2}
-  \item \tt{notdiv k = filter (\textbackslash x -> x `mod` k > 0) [1..]}
-  \item \tt{fibs = 0:1:zipWith (+) fibs (tail fibs)}
-  \item \evalstop{foldr (+) 0 [1..]}{\ldots}
+  \item \lst{powers2 = 1 : map (*2) powers2}
+  \item \lst{notdiv k = filter (\x -> x `mod` k > 0) [1..]}
+  \item \lst{fibs = 0:1:zipWith (+) fibs (tail fibs)}
+  \item \evalstop{foldr (+) 0 [1..]}{...}
     \begin{itemize}
-    \item \alert{Внимание:} \tt{foldr} не работи над безкрайни списъци с операции, които изискват оценка на десния си аргумент!
-    \item \tt{triplets = iterate (map (+3)) [3,2,1]}
+    \item \alert{Внимание:} \lst{foldr} не работи над безкрайни списъци с операции, които изискват оценка на десния си аргумент!
+    \item \lst{triplets = iterate (map (+3)) [3,2,1]}
     \item \evalsto{take 3 triplets}{[[3,2,1],[6,5,4],[9,8,7]]}
     \item \evalstop{take 5 (foldr (++) [] triplets)}{[3,2,1,6,5]}
-    \item \evalstop{take 5 (foldl (++) [] triplets)}{\ldots}
-    \item \alert{\tt{foldl} не може да работи с безкрайни списъци!}
+    \item \evalstop{take 5 (foldl (++) [] triplets)}{...}
+    \item \alert{\lst{foldl} не може да работи с безкрайни списъци!}
     \end{itemize}
   \end{itemize}
 \end{frame}
-
+\end{document}
 \section{Безточково програмиране}
 
 \begin{frame}
   \frametitle{Апликация}
+
   \begin{itemize}[<+->]
   \item Операцията ``апликация'' се дефинира с \tt{f \$ x = f x}
   \item За какво може да бъде полезна?
@@ -452,6 +458,7 @@ sumFirst (x:xs) (y:ys) = x + y
 
 \begin{frame}
   \frametitle{Композиция}
+
   \begin{itemize}[<+->]
   \item \tt{(f . g) x = f (g x)} --- операция ``композиция''
   \item с най-висок приоритет, дясноасоциативна
@@ -473,6 +480,7 @@ sumFirst (x:xs) (y:ys) = x + y
 
 \begin{frame}
   \frametitle{Безточково (point-free) програмиране}
+
   С помощта на операциите \tt{\$} и \tt. можем да дефинираме функции чрез директно използване на други функции.\\\pause
   Този стил се нарича \textbf{безточково програмиране}\\\pause
   Пример 1:
@@ -498,6 +506,7 @@ sumFirst (x:xs) (y:ys) = x + y
 
 \begin{frame}
   \frametitle{Безточково (point-free) програмиране}
+
   Пример 3:
   \begin{itemize}[<+->]
   \item \tt{sorted l = all (\textbackslash(x,y) -> x <= y) (zip l (tail l))}
@@ -518,29 +527,32 @@ sumFirst (x:xs) (y:ys) = x + y
   \item \tt{checkMatrix = all . any . ((>0).) . mod}
   \end{itemize}
 \end{frame}
+
 \section{Стриктно оценяване}
 
 \begin{frame}
   \frametitle{Разходване на памет при лениво оценяване}
+
   Ленивото оценяване може да доведе до голям разход на памет.\\[1em]\pause
   В Scheme:
   \begin{itemize}[<+->]
   \item \tt{(define (f x) (f (- 1 x)))}
-  \item \evalstop{(f 0)}{\textsf{забива, но не изразходва памет}}
+  \item \evalstops{(f 0)}{\textsf{забива, но не изразходва памет}}
   \item \tt f е \textbf{опашково-рекурсивна} и се реализира чрез итерация
-  \item \evalsto{(f 0)}{\evalsto{(f 1)}{\evalsto{(f 0)}{\evalsto{(f 1)}\ldots}}}
+  \item \evalstos{(f 0)}{\evalstos{(f 1)}{\evalstos{(f 0)}{\evalstos{(f 1)}{...}}}}
   \end{itemize}
   \onslide<+->
   В Haskell:
   \begin{itemize}[<+->]
   \item \tt{f x = f (1-x)}
-  \item \evalstop{f 0}{\textsf{\alert{забива с изтичане на памет!}}}
-  \item \evalsto{f 0}{\evalsto{f (1-0)}{\evalsto{f (1-(1-0))}{\evalsto{f (1-(1-(1-0)))}\ldots}}}
+  \item \evalstops{f 0}{\textsf{\alert{забива с изтичане на памет!}}}
+  \item \evalstos{f 0}{\evalstos{f (1-0)}{\evalstos{f (1-(1-0))}{\evalstos{f (1-(1-(1-0)))}{...}}}}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Стриктно оценяване в Haskell}
+
   \begin{itemize}[<+->]
   \item в Haskell може да изискаме даден израз да се оцени веднага
   \item еквивалентно на форсиране на обещание
@@ -549,10 +561,10 @@ sumFirst (x:xs) (y:ys) = x + y
   \item Примери:
     \begin{itemize}
     \item \tt{second x y = y}
-    \item \evalsto{second [1..10\^{}10\^{}10] 2}2
+    \item \evalsto{second [1..10^10^10] 2}2
     \item \tt{seq [1..10\^{}10\^{}10] 2} $\xrightarrow{\hspace{35ex}}$ \tt 2
     \item \tt{f x = seq x (f (1-x))}
-    \item \evalstop{f 0}{\textsf{забива, но не изразходва памет!}}
+    \item \evalstops{f 0}{\textsf{забива, но не изразходва памет!}}
     \end{itemize}
   \item \tt{f \$! x = seq x \alt<+->{\$ f x}{(f x)}}
     \begin{itemize}
@@ -565,7 +577,7 @@ sumFirst (x:xs) (y:ys) = x + y
 
 \begin{frame}
   \frametitle{Изразходване на памет при \tt{foldl}}
-  \newcommand{\lra}{\onslide<+->$\longrightarrow$}
+
   \begin{tabular}{rl}
     &\tt{foldl (+) 0 [1..4]}\\
     \pause
@@ -585,7 +597,7 @@ sumFirst (x:xs) (y:ys) = x + y
 
 \begin{frame}[fragile]
   \frametitle{Стриктен вариант на \tt{foldl}}
-  \newcommand{\lra}{\onslide<+->$\longrightarrow$}
+
   \onslide<+->
 \begin{verbatim}
 foldl' _ nv [] = nv
