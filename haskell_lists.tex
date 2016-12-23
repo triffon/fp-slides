@@ -439,7 +439,6 @@ reverse a
   \item \lst{and :: [Bool] -> Bool} --- конюнкция на булеви стойности
   \item<.-> \lst{or :: [Bool] -> Bool} --- дизюнкция на булеви стойности
   \item \lst{concat :: [[a]] -> [a]} --- конкатенация на списък от списъци
-  \onslide<+->
   \item Примери:
     \begin{itemize}[<+->]
     \item \lst{[(sum l, product l)| l <- ll, maximum l == 2*minimum l]}
@@ -703,7 +702,7 @@ foldr1 op (x:xs) = x `op` foldr1 op xs
     \item \evalsto{zip [1..3] [5..10]}{[(1,5),(2,6),(3,7)]}
     \item \evalsto{zipWith (*) [1..3] [5..10]}{[5,12,21]}
     \item \lst{zip = zipWith (,)}
-    \item \lst{unzip = foldr (\\(x,y) (l1,l2) -> (x:l1,y:l2)) ([],[])}
+    \item \lst{unzip = foldr (\\(x,y) (xs,ys) -> (x:xs,y:ys)) ([],[])}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -732,7 +731,7 @@ foldr1 op (x:xs) = x `op` foldr1 op xs
     \begin{itemize}
     \item \lst{break p l = (takeWhile q l, dropWhile q l)}\\
       \hspace{15ex}\lst{where q x = not (p x)}
-    \item \evalsto{break (>0) [-3..3]}{([-3,-2,-1-0],[1,2,3])}
+    \item \evalsto{break (>0) [-3..3]}{([-3,-2,-1,0],[1,2,3])}
     \end{itemize}
   \end{itemize}
 \end{frame}
