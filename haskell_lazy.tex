@@ -3,11 +3,11 @@
 
 \title[Лениво оценяване]{Лениво оценяване и програмиране от по-висок ред}
 
-\date{22 декември 2016 г.}
+\date{5 януари 2017 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
-\newcommand{\lra}{\onslide<+->$\longrightarrow$}
+\newcommand{\lra}{\onslide<+->$\longrightarrow$\xspace}
 
 \begin{document}
 
@@ -15,14 +15,12 @@
   \titlepage
 \end{frame}
 
-%\includeonlyframes{current}
-
 \section{Лениво оценяване}
 
 \begin{frame}
   \frametitle{Щипка $\lambda$-смятане}
 
-  \renewcommand{\lra}{\onslide<+->\longrightarrow}
+  \renewcommand{\lra}{\onslide<+->\longrightarrow\xspace}
   \begin{itemize}[<+->]
   \item $\lambda$-изрази: $E ::= x \;|\; E_1(E_2) \;|\; \lambda x\, E$
   \item Изчислително правило: $(\lambda x\,E_1)(E_2) \mapsto E_1[x := E_2]$
@@ -57,7 +55,7 @@
   \begin{itemize}[<+->]
   \item се използва в повечето езици за програмиране
   \item се нарича още ``call-by-value'' (извикване по стойност)
-  \item позволява лесно да се контролира реда на изпълнение
+  \item позволява лесно да се контролира редът на изпълнение
   \item пестеливо откъм памет, понеже ``пази чисто''
   \end{itemize}
   \onslide<+->
@@ -88,25 +86,19 @@
 &\lra \tt{(f 3 \underline{(cadr '(3))})}
 \lra \alert{Грешка!}
 \end{tabular}
-\pause
+\onslide<+->
 \begin{lstlisting}
 f x y = if x < 5 then x else y
 g l   = f (head l) (head (tail l))
 \end{lstlisting}
-\pause
+\onslide<+->
 \begin{tabular}[t]{l@{}l}
 \tt{\underline{g [3]}}
-\pause
-&\lra \underline{\tt{f (head [3]) (head (tail [3]))}}\\
-\pause
+&\lra \tt{\underline{f (head [3]) (head (tail [3]))}}\\
 &\lra \tt{if} \underline{\tt{head [3]}} \tt{< 5 then head [3] else head (tail [3])}\\
-\pause
 &\lra \tt{if \underline{3 < 5} then head [3] else head (tail [3])}\\
-\pause
 &\lra \tt{\underline{if True then head [3] else head (tail [3])}}\\
-\pause
 &\lra \tt{\underline{head [3]}}
-\pause
 \lra \tt 3
 \end{tabular}
 \end{frame}
@@ -176,7 +168,7 @@ g l   = f (head l) (head (tail l))
     \item прилага се примитивната операция над оценките им
     \end{itemize}
   \item нека сега да допуснем, че $s \equiv \tt f\,e$
-  \item първо се оценява $f$, за да разберем как да продължим
+  \item първо се оценява \tt f, за да разберем как да продължим
   \item ако $\tt f\,x_1\,\ldots\,x_n$ \tt| $g_1$ \tt= $t_1$ \ldots\ \tt| $g_k$ \tt= $t_k$ е дефинирана чрез пазачи:
     \begin{itemize}
     \item тогава \tt f се замества с израза:\\
@@ -354,7 +346,7 @@ sumFirst (x:xs) (y:ys) = x + y
     \begin{itemize}
     \item \tt{nats = [0..]}
     \item \evalsto{take 5 [0..]}{[0,1,2,3,4]}
-    \item \evalsto{take 26 ['a'..]}{abcdefghijklmnopqrstuvwxyz"}
+    \item \evalsto{take 26 ['a'..]}{\ "abcdefghijklmnopqrstuvwxyz"}
     \end{itemize}
   \item Синтактична захар за \tt{enumFrom from}
     \pause
@@ -376,17 +368,19 @@ sumFirst (x:xs) (y:ys) = x + y
   \item \lst{repeat :: a -> [a]}
     \begin{itemize}
     \item създава безкрайния списък \lst{[x,x,...]}
-    \item \lst{repeat x = x:repeat x}
+    \item \lst{repeat x = x : repeat x}
     \item \lst{replicate n x = take n (repeat x)}
     \end{itemize}
   \item \lst{cycle :: [a] -> [a]}
     \begin{itemize}
     \item \evalsto{cycle [1,2,3]}{[1,2,3,1,2,3,...]}
+    \item \lst{cycle l = l ++ cycle l}
     \item създава безкраен списък повтарайки подадения (краен) списък
     \end{itemize}
   \item \lst{iterate :: (a -> a) -> a -> [a]}
     \begin{itemize}
     \item \lst{iterate f z} създава безкрайния списък \lst{[z,f(z),f(f(z)),...]}
+    \item \lst{iterate f z = z : iterate f (f z)}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -418,7 +412,7 @@ sumFirst (x:xs) (y:ys) = x + y
   Повечето функции от по-висок ред работят и над безкрайни списъци!
   \begin{itemize}[<+->]
   \item \lst{powers2 = 1 : map (*2) powers2}
-  \item \lst{notdiv k = filter (\x -> x `mod` k > 0) [1..]}
+  \item \lst{notdiv k = filter (\\x -> x `mod` k > 0) [1..]}
   \item \lst{fibs = 0:1:zipWith (+) fibs (tail fibs)}
   \item \evalstop{foldr (+) 0 [1..]}{...}
     \begin{itemize}
@@ -431,27 +425,27 @@ sumFirst (x:xs) (y:ys) = x + y
     \end{itemize}
   \end{itemize}
 \end{frame}
-\end{document}
+
 \section{Безточково програмиране}
 
 \begin{frame}
   \frametitle{Апликация}
 
   \begin{itemize}[<+->]
-  \item Операцията ``апликация'' се дефинира с \tt{f \$ x = f x}
+  \item Операцията ``апликация'' се дефинира с \lst{f $ x = f x}
   \item За какво може да бъде полезна?
-  \item Операцията \tt{\$} е с най-нисък прироритет и е дясноасоциативна
+  \item Операцията \lst{$} е с най-нисък прироритет и е дясноасоциативна
     \begin{itemize}
     \item за разлика от прилагането на функции, което е с най-висок приоритет и лявоасоциативно
     \end{itemize}
   \item Може да бъде използвана за спестяване на скоби вложени надясно
-  \item \tt{(\ldots((f x$_1$) x$_2$) \ldots x$_n$)} = \tt{f x$_1$ x$_2$ \ldots x$_n$}
-  \item \tt{f$_1$ (f$_2$ \ldots (f$_n$ x)\ldots)} = \tt{f$_1$ \$ f$_2$ \$ \ldots \$ f$_n$ \$ x}
+  \item \tt(\ldots\tt{((f} $x_1$\tt) $x_2$\tt) \ldots $x_n$\tt) = \tt f $x_1$ $x_2$ \ldots $x_n$
+  \item $f_1$ \tt($f_2$ \ldots \tt($f_n$ \tt{x)}\ldots\tt) = $f_1$ \tt\$ $f_2$ \tt\$ \ldots \tt\$ $f_n$ \tt{\$ x}
   \item Примери:
     \begin{itemize}
-    \item \tt{\alt<+->{head \$ tail \$ take 5 \$ drop 7 \$ l}{head (tail (take 5 (drop 7 l)))}}
-    \item \tt{\alt<+->{sum \$ map (\^{}2) \$ filter odd \$ [1..10]}{sum (map (\^{}2) (filter odd [1..10]))}}
-    \item \evalstop{map (\$2) [(+2),(3\^{}),(*5)]}{[4,9,10]}
+    \item \alt<+->{\lst{head $ tail $ take 5 $ drop 7 $ l}}{\lst{head (tail (take 5 (drop 7 l)))}}
+    \item \alt<+->{\lst{sum $ map (^2) $ filter odd $ [1..10]}}{\lst{sum (map (^2) (filter odd [1..10]))}}
+    \item \evalstop{map ($2) [(+2),(3^),(*5)]}{[4,9,10]}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -460,20 +454,20 @@ sumFirst (x:xs) (y:ys) = x + y
   \frametitle{Композиция}
 
   \begin{itemize}[<+->]
-  \item \tt{(f . g) x = f (g x)} --- операция ``композиция''
+  \item \lst{(f . g) x = f (g x)} --- операция ``композиция''
   \item с най-висок приоритет, дясноасоциативна
   \item Може да бъде използвана за спестяване на скоби вложени надясно
-  \item \tt{f$_1$ (f$_2$ \ldots (f$_n$ x)\ldots)} = \tt{f$_1$ . f$_2$ . \ldots . f$_n$ \$ x}
+  \item $f_1$ \tt($f_2$ \ldots \tt($f_n$ \tt{x)}\ldots\tt) = $f_1$ \tt. $f_2$ \tt. \ldots \tt. $f_n$ \tt{\$ x}
   \item Примери:
     \begin{itemize}
-    \item \tt{\alt<+->{sublist n m = take m . drop n}{sublist n m l = take m (drop n l)}}
-    \item \tt{\alt<+->{sumOddSquares = sum . map (\^{}2) . filter odd}{sumOddSquares l = sum (map (\^{}2) (filter odd l))}}
-    \item \tt{repeated n f x = foldr (\$) x (replicate n f)}
-    \item \tt{repeated n f = foldr (.) id (replicate n f)}
-    \item \tt{repeated n f = foldr (.) id ((replicate n) f)}
-    \item \tt{repeated n = foldr (.) id . replicate n}
-    \item \tt{repeated n = (foldr (.) id .) (replicate n)}
-    \item \tt{repeated = (foldr (.) id .) . replicate}
+    \item \alt<+->{\lst{sublist n m = take m . drop n}}{\lst{sublist n m l = take m (drop n l)}}
+    \item \alt<+->{\lst{sumOddSquares = sum . map (^2) . filter odd}}{\lst{sumOddSquares l = sum (map (\^2) (filter odd l))}}
+    \item \lst{repeated n f x = foldr (\$) x (replicate n f)}
+    \item \lst{repeated n f = foldr (.) id (replicate n f)}
+    \item \lst{repeated n f = foldr (.) id ((replicate n) f)}
+    \item \lst{repeated n = foldr (.) id . replicate n}
+    \item \lst{repeated n = (foldr (.) id .) (replicate n)}
+    \item \lst{repeated = (foldr (.) id .) . replicate}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -482,49 +476,56 @@ sumFirst (x:xs) (y:ys) = x + y
   \frametitle{Безточково (point-free) програмиране}
 
   С помощта на операциите \tt{\$} и \tt. можем да дефинираме функции чрез директно използване на други функции.\\\pause
-  Този стил се нарича \textbf{безточково програмиране}\\\pause
-  Пример 1:
+  Този стил се нарича \textbf{безточково програмиране}.\\\pause
+  \textbf{Пример 1:}
   \begin{itemize}[<+->]
     \small
-  \item \tt{g l = filter (\textbackslash f -> f 2 > 3) l}
-  \item \tt{g = filter (\textbackslash f -> f \$ 2 > 3)}
-  \item \tt{g = filter (\textbackslash f -> (>3) ((\$2) f)}
-  \item \tt{g = filter \$ (>3) . (\$2)}
+  \item \lst{g l = filter (\\f -> f 2 > 3) l}
+  \item \lst{g = filter (\\f -> f \$ 2 > 3)}
+  \item \lst{g = filter (\\f -> (>3) (($2) f)}
+  \item \lst{g = filter $ (>3) . ($2)}
   \end{itemize}
   \onslide<+->
-  Пример 2:
+  \textbf{Пример 2:}
   \begin{itemize}[<+->]
   \footnotesize
-  \item \tt{split3 ll = map (\textbackslash x -> map (\textbackslash f -> filter f x)  [(<0),(==0),(>0)]) ll}
-  \item \tt{split3 = map  (\textbackslash x -> map (\textbackslash f -> flip filter x f) [(<0),(==0),(>0)])}
-  \item \tt{split3 = map  (\textbackslash x -> map (flip filter x) [(<0),(==0),(>0)])}
-  \item \tt{split3 = map  (\textbackslash x -> flip map [(<0),(==0),(>0)] (flip filter x))}
-  \item \tt{split3 = map (flip map [(<0),(==0),(>0)] . flip filter)}
-  \item \tt{split3 = map \$ flip map [(<0),(==0),(>0)] . flip filter}
+  \item \lst{split3 ll = map (\\x -> map (\\f -> filter f x)  [(<0),(==0),(>0)]) ll}
+  \item \lst{split3 = map  (\\x -> map (\\f -> flip filter x f) [(<0),(==0),(>0)])}
+  \item \lst{split3 = map  (\\x -> map (flip filter x) [(<0),(==0),(>0)])}
+  \item \lst{split3 = map  (\\x -> flip map [(<0),(==0),(>0)] (flip filter x))}
+  \item \lst{split3 = map (flip map [(<0),(==0),(>0)] . flip filter)}
+  \item \lst{split3 = map $ flip map [(<0),(==0),(>0)] . flip filter}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Безточково (point-free) програмиране}
 
-  Пример 3:
+  Можем да използваме още \lst{join f x = f x x}.\\
+  \textbf{Пример 3:}
   \begin{itemize}[<+->]
-  \item \tt{sorted l = all (\textbackslash(x,y) -> x <= y) (zip l (tail l))}
-  \item \tt{sorted l = all (\textbackslash(x,y) -> (<=) x y) (zip l \$ tail l)}
-  \item \tt{sorted l = all (uncurry (<=)) \$ zip l \$ tail l}
+  \item \lst{sorted l = all (\\(x,y) -> x <= y) (zip l (tail l))}
+  \item \lst{sorted l = all (\\(x,y) -> (<=) x y) ((zip l . tail) l)}
+  \item \lst{sorted l = all (uncurry (<=)) ((. tail) (zip l) l)}
+  \item \lst{sorted l = all (uncurry (<=)) ((. tail) . zip) l l)}
+  \item \lst{sorted l = all (uncurry (<=)) (join ((. tail) . zip) l)}
+  \item \lst{sorted = all (uncurry (<=)) . join ((. tail) . zip)}
   \end{itemize}
-  \onslide<+->
-  Пример 4:
+\end{frame}
+
+\begin{frame}
+  \frametitle{Безточково (point-free) програмиране}
+  \textbf{Пример 4:}
   \begin{itemize}[<+->]
   \small
-  \item \tt{checkMatrix k m = all (\textbackslash r -> any (\textbackslash x -> mod k x > 0)) m}
-  \item \tt{checkMatrix k = all (\textbackslash r -> any (\textbackslash x -> mod k x > 0) r)}
-  \item \tt{checkMatrix k = all (\textbackslash r -> any (\textbackslash x -> (>0) ((mod k) x)))}
-  \item \tt{checkMatrix k = all (\textbackslash r -> any ((>0) . (mod k)) r)}
-  \item \tt{checkMatrix k = all (any ((>0) . (mod k)))}
-  \item \tt{checkMatrix k = all (any ((.) (>0) (mod k)))}
-  \item \tt{checkMatrix k = all . any . ((.)(>0)) . mod \$ k}
-  \item \tt{checkMatrix = all . any . ((>0).) . mod}
+  \item \lst{checkMatrix k m = all (\\r -> any (\\x -> mod k x > 0)) m}
+  \item \lst{checkMatrix k = all (\\r -> any (\\x -> mod k x > 0) r)}
+  \item \lst{checkMatrix k = all (\\r -> any (\\x -> (>0) ((mod k) x)))}
+  \item \lst{checkMatrix k = all (\\r -> any ((>0) . (mod k)) r)}
+  \item \lst{checkMatrix k = all (any ((>0) . (mod k)))}
+  \item \lst{checkMatrix k = all (any ((.) (>0) (mod k)))}
+  \item \lst{checkMatrix k = all . any . ((.)(>0)) . mod \$ k}
+  \item \lst{checkMatrix = all . any . ((>0).) . mod}
   \end{itemize}
 \end{frame}
 
@@ -535,18 +536,20 @@ sumFirst (x:xs) (y:ys) = x + y
 
   Ленивото оценяване може да доведе до голям разход на памет.\\[1em]\pause
   В Scheme:
+  \lstset{language=Scheme}
   \begin{itemize}[<+->]
-  \item \tt{(define (f x) (f (- 1 x)))}
-  \item \evalstops{(f 0)}{\textsf{забива, но не изразходва памет}}
+  \item \lst{(define (f x) (f (- 1 x)))}
+  \item \evalstops{\tt{(f 0)}}{\textsf{забива, но не изразходва памет}}
   \item \tt f е \textbf{опашково-рекурсивна} и се реализира чрез итерация
-  \item \evalstos{(f 0)}{\evalstos{(f 1)}{\evalstos{(f 0)}{\evalstos{(f 1)}{...}}}}
+  \item \evalstos{\tt{(f 0)}}{\evalstos{\tt{(f 1)}}{\evalstos{\tt{(f 0)}}{\evalstos{\tt{(f 1)}}{...}}}}
   \end{itemize}
   \onslide<+->
   В Haskell:
+  \lstset{language=Haskell}
   \begin{itemize}[<+->]
-  \item \tt{f x = f (1-x)}
-  \item \evalstops{f 0}{\textsf{\alert{забива с изтичане на памет!}}}
-  \item \evalstos{f 0}{\evalstos{f (1-0)}{\evalstos{f (1-(1-0))}{\evalstos{f (1-(1-(1-0)))}{...}}}}
+  \item \lst{f x = f (1-x)}
+  \item \evalstops{\tt{f 0}}{\textsf{\alert{забива с изтичане на памет!}}}
+  \item \evalstos{\tt{f 0}}{\evalstos{\tt{f (1-0)}}{\evalstos{\tt{f (1-(1-0))}}{\evalstos{\tt{f (1-(1-(1-0)))}{...}}}}}
   \end{itemize}
 \end{frame}
 
@@ -556,15 +559,15 @@ sumFirst (x:xs) (y:ys) = x + y
   \begin{itemize}[<+->]
   \item в Haskell може да изискаме даден израз да се оцени веднага
   \item еквивалентно на форсиране на обещание
-  \item \tt{seq :: a -> b -> b}
+  \item \lst{seq :: a -> b -> b}
   \item оценява първия си аргумент и връща втория като резултат
   \item Примери:
     \begin{itemize}
-    \item \tt{second x y = y}
-    \item \evalsto{second [1..10^10^10] 2}2
-    \item \tt{seq [1..10\^{}10\^{}10] 2} $\xrightarrow{\hspace{35ex}}$ \tt 2
-    \item \tt{f x = seq x (f (1-x))}
-    \item \evalstops{f 0}{\textsf{забива, но не изразходва памет!}}
+    \item \lst{second x y = y}
+    \item \evalsto{second [1..10^10^10] 2}{2}
+    \item \lst{seq [1..10^10^10] 2} $\xrightarrow{\hspace{35ex}}$ \tt2
+    \item \lst{f x = seq x (f (1-x))}
+    \item \evalstops{\tt{f 0}}{\textsf{забива, но не изразходва памет!}}
     \end{itemize}
   \item \tt{f \$! x = seq x \alt<+->{\$ f x}{(f x)}}
     \begin{itemize}
@@ -579,17 +582,17 @@ sumFirst (x:xs) (y:ys) = x + y
   \frametitle{Изразходване на памет при \tt{foldl}}
 
   \begin{tabular}{rl}
-    &\tt{foldl (+) 0 [1..4]}\\
+    &\lst{foldl (+) 0 [1..4]}\\
     \pause
-   \lra&\tt{foldl (+) (0 + 1) [2..4]}\\
-   \lra&\tt{foldl (+) ((0 + 1) + 2) [3..4]}\\
-   \lra&\tt{foldl (+) (((0 + 1) + 2) + 3) [4..4]}\\
-   \lra&\tt{foldl (+) ((((0 + 1) + 2) + 3) + 4) []}\\
-   \lra&\tt{((((0 + 1) + 2) + 3) + 4)}\\
-   \lra&\tt{(((1 + 2) + 3) + 4)}\\
-   \lra&\tt{((3 + 3) + 4)}\\
-   \lra&\tt{(6 + 4)}\\
-   \lra&\tt{10}
+   \lra&\lst{foldl (+) (0 + 1) [2..4]}\\
+   \lra&\lst{foldl (+) ((0 + 1) + 2) [3..4]}\\
+   \lra&\lst{foldl (+) (((0 + 1) + 2) + 3) [4..4]}\\
+   \lra&\lst{foldl (+) ((((0 + 1) + 2) + 3) + 4) []}\\
+   \lra&\lst{((((0 + 1) + 2) + 3) + 4)}\\
+   \lra&\lst{(((1 + 2) + 3) + 4)}\\
+   \lra&\lst{((3 + 3) + 4)}\\
+   \lra&\lst{(6 + 4)}\\
+   \lra&\lst{10}
   \end{tabular}\\[2em]
   \onslide<+->
   \alert{Проблем:} Изразходва памет при оценяване, понеже отлага изчисления!
@@ -599,10 +602,10 @@ sumFirst (x:xs) (y:ys) = x + y
   \frametitle{Стриктен вариант на \tt{foldl}}
 
   \onslide<+->
-\begin{verbatim}
+\begin{lstlisting}
 foldl' _ nv [] = nv
 foldl' op nv (x:xs) = (foldl' op $! op nv x) xs
-\end{verbatim}
+\end{lstlisting}
   \onslide<+->
   \begin{tabular}{rl}
     &\tt{foldl' (+) 0 [1..4]}\\
