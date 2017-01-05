@@ -368,6 +368,7 @@ sumFirst (x:xs) (y:ys) = x + y
   \item \lst{repeat :: a -> [a]}
     \begin{itemize}
     \item създава безкрайния списък \lst{[x,x,...]}
+%    \item \lst{repeat x = [x,x..]}
     \item \lst{repeat x = x : repeat x}
     \item \lst{replicate n x = take n (repeat x)}
     \end{itemize}
@@ -482,7 +483,7 @@ sumFirst (x:xs) (y:ys) = x + y
     \small
   \item \lst{g l = filter (\\f -> f 2 > 3) l}
   \item \lst{g = filter (\\f -> f \$ 2 > 3)}
-  \item \lst{g = filter (\\f -> (>3) (($2) f)}
+  \item \lst{g = filter (\\f -> (>3) (($2) f))}
   \item \lst{g = filter $ (>3) . ($2)}
   \end{itemize}
   \onslide<+->
@@ -501,7 +502,13 @@ sumFirst (x:xs) (y:ys) = x + y
 \begin{frame}
   \frametitle{Безточково (point-free) програмиране}
 
-  Можем да използваме още \lst{join f x = f x x}.\\
+  Можем да използваме още функциите:
+  \begin{itemize}
+  \item \lst{join f x = f x x}
+  \item \lst{curry f x y = f (x,y)}
+  \item \lst{uncurry f (x,y) = f x y}
+  \end{itemize}
+  \pause
   \textbf{Пример 3:}
   \begin{itemize}[<+->]
   \item \lst{sorted l = all (\\(x,y) -> x <= y) (zip l (tail l))}
@@ -528,6 +535,7 @@ sumFirst (x:xs) (y:ys) = x + y
   \item \lst{checkMatrix = all . any . ((>0).) . mod}
   \end{itemize}
 \end{frame}
+\end{document}
 
 \section{Стриктно оценяване}
 
