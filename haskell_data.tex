@@ -1,0 +1,411 @@
+\documentclass{beamer}
+\usepackage{fprog}
+
+\title{Типове и класове в Haskell}
+
+\date{12 януари 2017 г.}
+
+\lstset{language=Haskell,style=Haskell}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Полиморфизъм}
+
+\begin{frame}
+  \frametitle{Видове полиморфизъм в Haskell}
+
+  В Haskell има два основни вида полиморфизъм.
+  \begin{itemize}[<+->]
+  \item \alert{параметричен полиморфизъм} --- възможност да създаваме конструкции, които обработват елементи от различни типове по \alert{универсален} начин
+    \begin{itemize}
+    \item такива конструкции наричаме \textbf{генерични (generic)}
+    \item параметризират се  с \textbf{типови променливи}, които могат да приемат произволен тип за стойност
+    \end{itemize}
+  \item \alert{ad hoc полиморфизъм} --- възможност да създаваме конструкции, които обработват елементи от различни типове по \alert{специфичен} начин
+    \begin{itemize}
+    \item такива конструкции наричаме \textbf{претоварени (overloaded)}
+    \item налагат механизъм за \textbf{разпределение (dispatch)}, който определя коя специфична реализация на конструкцията трябва да се използва в конкретен случай
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Параметричен полиморфизъм}
+
+  Генеричните конструкции в Haskell са два вида:
+  \begin{itemize}[<+->]
+  \item \alert{генерични типове}, конструирани чрез използване на типови променливи
+    \begin{itemize}
+    \item функциите, кортежите и списъците могат да генерични 
+    \item \lst{type UnaryFunction a = a -> a}
+    \item \lst{type Matrix a = [[a]]}
+    \item \lst{type Dictionary k v = [(k, v)]}
+    \end{itemize}
+  \item \alert{генерични функции}, при които една и съща имплементация работи за различни типове
+    \begin{itemize}
+    \item \lst{length :: [a] -> Int}
+    \item \lst{map :: (a -> b) -> [a] -> [b]}
+    \item \lst{repeated :: Int -> UnaryFunction a -> UnaryFunction a}
+    \item \lst{transpose :: Matrix a -> Matrix a}
+    \item \lst{keys :: Dictionary k v -> [k]}
+    \item \lst{[] :: [a]}
+      \begin{itemize}
+      \item константите са частен случай на функции (функции без параметри)
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Ad hoc полиморфизъм}
+
+  В Haskell имаме претоварени константи, операции и функции:
+  \begin{itemize}[<+->]
+  \item \alert{претоварени константи}
+    \begin{itemize}
+    \item \tt5 може да означава цяло, дробно или комплексно число, в зависимост от контекста
+    \item \tt{5.0} може да означава рационално число, число с плаваща запетая или комплексно число
+    \item \tt{maxBound} е максималната стойност на ограничени типове
+    \end{itemize}
+  \item \alert{претоварени операции}
+    \begin{itemize}
+    \item \tt+ може да събира цели, дробни, или комплексни числа
+    \item \tt/ може да дели рационални, дробни или комплексни числа
+    \item \tt{==} може да сравнява числа, символи, кортежи или списъци
+    \end{itemize}
+  \item \alert{претоварени функции}
+    \begin{itemize}
+    \item \tt{elem} може да търси елемент в списък от сравними елементи
+    \item \tt{show} може да извежда елемент, който има низово представяне
+    \item \tt{[from..to]} може да генерира списък от елементи от тип, в който имаме линейна наредба
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section{Класове от типове}
+
+\begin{frame}
+  \frametitle{Класове от типове (typeclasses)}
+
+  \begin{definition}
+    \textbf{Клас от типове} наричаме множество от типове, които поддържат определен тип поведение, зададено чрез множество от имена на функции и техните типове. \pause Функциите на даден клас наричаме \textbf{методи}.
+  \end{definition}
+  \pause
+  Класовете от типове дават структуриран подход към ad hoc полиморфизма.\\
+  \pause
+  \textbf{Примери:}
+  \begin{itemize}[<+->]
+  \item \lst{Eq} е класът от типове, които поддържат сравнение
+  \item \lst{Ord} е класът от типове, които поддържат линейна наредба
+  \item \lst{Show} е класът от типове, чиито елементи могат да бъдат
+    извеждани в низ
+  \item \lst{Num} е класът на всички числови типове
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,fragile]
+  \frametitle{Дефиниране на класове от типове}
+  \tta{class }<клас> <типова-променлива>\tta{ where}\\
+  \hspace{2ex}\{<метод>\{,<метод>\} \tta{::} <тип>\}\\
+  \hspace{2ex}\{<метод> \tta{=} <реализация-по-подразбиране>\}\\[2em]
+  \pause
+  \textbf{Примери:}\\
+\begin{lstlisting}
+class Eq a where
+  (==), (/=) :: a -> a -> Bool
+  x /= y     =  not (x == y)
+  x == y     =  not (x /= y)
+\end{lstlisting}
+\pause
+\begin{lstlisting}
+class Measurable a where
+   size :: a -> Int
+   empty :: a -> Bool
+   empty x = size x == 0
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Класови ограничения}
+  \begin{definition}
+    Ако \tt{C} e клас, а \tt{t} е типова променлива, то \tt{C t} наричаме \textbf{класово ограничение}. \pause Множество от класови ограничения наричаме \textbf{контекст}.
+  \end{definition}
+  \onslide<+->
+  Класовите ограничения ни дават възможност да дефинираме претоварени функции.\\[1em]
+  \onslide<+->
+  \textbf{Примери:}
+  \begin{itemize}[<+->]
+  \item \lst{elem :: (Eq a) => a -> [a] -> Bool}
+  \item \lst{maximum :: (Ord a) => [a] -> a}
+  \item \lst{(^) :: (Integral b, Num a) => a -> b -> a}
+  \item \lst{larger :: (Measurable a) => a -> a -> Bool}
+  \item<.-> \lst{larger x y = size x > size y}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Дефиниране на екземпляри на клас}
+  \begin{definition}
+    \textbf{Екземпляр} (инстанция) на клас наричаме тип, за който са дефинирани методите на класа.
+  \end{definition}
+  \pause
+  \tta{instance} <клас> <тип> \tta{where}\\
+  \hspace{2ex} \{<дефиниция-на-метод>\}\\[1em]
+  \pause
+  \textbf{Примери:}
+\begin{lstlisting}
+instance Eq Bool where
+  True  == True  = True
+  False == False = True
+  _     == _     = False
+\end{lstlisting}
+  \pause
+\begin{lstlisting}
+instance Measurable Int where
+  size 0 = 0
+  size n = size (n `quot` 10) + 1
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Екземпляри с контекст}
+  Можем да добавяме контекст в дефиницията за екземпляри:\\
+  \tta{instance} [<контекст> \tta{=>}] <клас> <тип> \tta{where}\\
+  \hspace{2ex} \{<дефиниция-на-метод>\}\\[1em]
+  \pause
+  \textbf{Примери:}
+\small
+\begin{lstlisting}
+instance (Eq a, Eq b) => Eq (a,b) where
+  (x,y) == (u,t) = x == u && y == t
+\end{lstlisting}
+  \pause
+\begin{lstlisting}
+instance (Measurable a, Measurable b) => Measurable (a,b) where
+  size (x,y) = size x + size y
+\end{lstlisting}  
+  \pause
+\begin{lstlisting}
+instance Measurable a => Measurable [a] where
+  size = sum . map size
+\end{lstlisting}  
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Наследяване}
+  Можем да дефинираме клас \tt{B}, който допълва методите на вече съществуващ клас \tt{A}.\\
+  Тогава казваме, че:
+  \begin{itemize}[<+->]
+  \item Класът \tt{B} \textbf{наследява} (разширява) класа \tt{A}
+  \item Класът \tt{B} е \textbf{подклас} (производен клас, subclass) на класа \tt{A}
+  \item Класът \tt{A} е \textbf{надклас} (родителски клас, superclass) на класа \tt{B}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Пример: Стандартен клас Ord}
+\begin{lstlisting}
+class  (Eq a) => Ord a  where
+  (<), (<=), (>=), (>)  :: a -> a -> Bool
+  max, min              :: a -> a -> a
+  compare               :: a -> a -> Ordering
+  compare x y
+    | x == y    = EQ
+    | x < y     = LT
+    | otherwise = GT
+  x < y  == compare x y == LT
+  x > y  == compare x y == GT
+  x == y == compare x y == EQ
+  x <= y == compare x y /= GT
+  x >= y == compare x y /= LT
+  max x y == if x > y then x else y
+  min x y == if x < y then x else y
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile,fragile]
+  \frametitle{Множествено наследяване}
+  Даден клас може да наследява едновременно няколко родителски класа.\\[1em]
+  \textbf{Примери:}
+\begin{lstlisting}
+class (Ord a, Num a) => Real a where
+  ...
+\end{lstlisting}
+\pause
+\begin{lstlisting}
+class (Ord a, Measurable a) => OrdMeasurable a where
+  sortByOrder, sortBySize :: [a] -> [a]
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Сравнение на Haskell с други обектно-ориентирани езици}
+  \begin{itemize}[<+->]
+  \item Класовете в Haskell съответстват на \alert{абстрактни класове или интерфейси}
+  \item Методите в Haskell съответстват на \alert{чисти виртуални функции}
+  \item Класовете и обектите в C++ \alert{нямат директен еквивалент в Haskell}
+    \begin{itemize}
+    \item В Haskell данните винаги са разделени от методите
+    \item Няма ограничения на достъпа (public, private)
+    \item Няма понятие за разширяване на тип данни, само на интерфейс
+    \item Съответно, няма \alert{подтипов полиморфизъм}
+    \end{itemize}
+  \item Екземплярите съответстват на \alert{имплементиране (наследяване) на интерфейси}
+    \begin{itemize}
+    \item В C++ и Java то може да бъде и множествено
+    \end{itemize}
+  \item В Haskell претоварените функции имат \alert{еднозначно определен тип}
+    \begin{itemize}
+    \item В C++ сме свободни да пишем функции с едно и също име и различни сигнатури
+    \item В Haskell сме длъжни да наложим класови ограничения 
+    \end{itemize}
+  \item В Haskell не можем да правим насилствено преобразуване на тип към даден клас (casting)
+  \end{itemize}
+\end{frame}
+
+\section{Алгебрични типове}
+
+\begin{frame}
+  \frametitle{Потребителски дефинирани типове}
+  В Haskell имаме възможност да дефинираме нови типове данни.\\[1em]
+  \begin{itemize}[<+->]
+  \item \tta{data} [<контекст> \tta{=>}] <тип> [<параметри>] \tta= <дефиниция>
+  \item{} <тип> трябва да започва с главна буква
+  \item{} <контекст> е множество от класови ограничения
+  \item{} <параметри> е списък от различни типови променливи
+  \item{} <дефиниция> ::= <елемент> \{ \tta| <елемент> \}
+    \begin{itemize}
+    \item{} <дефиниция> описва различните варианти за елементи на типа
+    \end{itemize}
+  \item{} <елемент> ::= <конструктор> \{ <тип-на-параметър> \}
+    \begin{itemize}
+    \item всеки вид елемент на типа се описва с уникален <конструктор>
+    \item{} <конструктор> трябва да започва с главна буква
+    \item{} <конструктор> може да има произволен брой параметри, чиито типове се задават в дефиницията
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Изброени типове}
+  Най-простият вид потребителски дефинирани типове са \alert{изброените типове}.\\[1em]
+  \pause
+  \textbf{Примери:}
+  \begin{itemize}[<+->]
+  \item \lst{data Bool = False | True}
+  \item \lst{data Compare = LT | EQ | GT}
+  \item \lst{data Weekday = Mon | Tue | Wed | Thu | Fri | Sat | Sun}
+  \item \lst{today :: Weekday}
+  \item<.-> \lst{today = Thu}
+  \item \lst{isWeekend :: Weekday -> Bool}
+  \item<.-> \lst{isWeekend Sat = True}
+  \item<.-> \lst{isWeekend Sun = True}
+  \item<.-> \lst{isWeekend _   = False}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Записи}
+  Друга възможност за потребителски дефинирани типове са \alert{записите}.\\
+  \pause
+  \begin{itemize}[<+->]
+  \item \lst{data Player = Player Name Score}
+  \item<.-> \lst{type Name = Stirng}
+  \item<.-> \lst{type Score = Int}
+    \begin{itemize}
+    \item Да, името на типа може да съвпада с името на (единствения) конструктор
+    \end{itemize}
+  \item \lst{katniss :: Player}
+  \item<.-> \lst{katniss = Player "Katniss Everdeen" 45}
+  \item \lst{getName :: Player -> String}
+  \item<.-> \lst{getName (Player name _) = name}
+  \item \lst{better :: Player -> Player -> String}
+  \item \lst{better (Player name1 score1) (Player name2 score2)}
+  \item<.-> \hspace{2ex}\lst{ | score1 > score2  = name1}
+  \item<.-> \hspace{2ex}\lst{ | otherwise  = name2}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Записи с полета}
+  \begin{itemize}[<+->]
+  \item По същество записите са еквивалентни на кортежите...
+  \item ...които по същество са декартово произведение на типове
+  \item Би било удобно, ако имахме имена на всяко от полетата
+  \item В Haskell има специален синтаксис:
+  \item<.-> \tta{\{} <поле>\tta{::}<тип> \{, <поле>\tta{::}<тип> \}\tta{\}}
+  \item за всяко от полетата автоматично се дефинира функция селектор
+  \item \textbf{Пример:}
+    \begin{itemize}
+    \item \lst!data Player = Player { name :: String, score :: Int }!
+    \item \lst{name :: Player -> String}
+    \item<.-> \lst{score :: Player -> Int}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Алтернативи}
+  Можем да дефинираме типове, които обединяват няколко други типа.\\
+  \pause
+  \textbf{Примери:}
+  \begin{itemize}[<+->]
+  \item \lst!data Shape = Circle { radius :: Double } !\\
+    \hspace{10ex}\lst!| Rectangle { width :: Double, height :: Double}!
+  \item \lst{circle :: Shape}
+  \item<.-> \lst{circle = Circle 2.3}
+  \item \lst{rect :: Shape}
+  \item<.-> \lst{rect = Rectanlge 3.5 1.8}
+  \item \lst{area :: Shape -> Double}
+  \item \lst{area (Circle r) = pi * r^2}
+  \item<.-> \lst{area (Rectangle w h) = w * h}
+  \item \lst{enlarge :: Shape -> Shape}
+  \item \lst{enlarge (Circle r) = Circle (2*r)}
+  \item<.-> \lst{enlarge (Rectangle w h) = Rectangle (2*w) (2*h)}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Параметризирани типове}
+  Потребителските типове могат да бъдат \alert{генерични}, т.е. да зависят от типови параметри.\\
+  \pause
+  \textbf{Примери:}
+  \begin{itemize}[<+->]
+  \item \lst{data Maybe a = Nothing | Just a}
+  \item \typestop{Just 5}{Maybe Int}
+  \item \typestop{Just "wow"}{Maybe String}
+  \item \typestop{Nothing}{Maybe a}
+  \item \typestop{Just Nothing}{Maybe (Maybe a)}
+  \item \lst{getAt :: Int -> [a] -> Maybe a}
+  \item \lst{getAt _ []  = Nothing}
+  \item<.-> \lst{getAt 0 (x:_) = Just x}
+  \item<.-> \lst{getAt n (_:xs) = getAt (n-1) xs}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Сума на типове}
+  \begin{itemize}[<+->]
+  \item \lst{data Either a b = Left a | Right b}
+  \item \typestop{Left 3}{Either Int b}
+  \item \typestop{Right 'a'}{Either a Char}
+  \item \textbf{Задача.} Да се напише функция, която по даден списък от играчи намира най-добрия резултат, ако е постигнат от единствен играч, или списък от имената на играчите, които са постигнали най-добър резултат.
+   \item \lst{searchBest :: [Player] -> Either Int [String]}
+   \item \lst{searchBest players}
+   \item<.-> \hspace{2ex}\lst!| length bestPlayers == 1 = Left best!
+   \item<.-> \hspace{2ex}\lst!| otherwise = Right $ map name bestPlayers!
+   \item<.-> \hspace{2ex}\lst!where best = maximum $ map score players!
+   \item<.-> \hspace{9ex}\lst!bestPlayers = filter ((==best).score) players!
+  \end{itemize}
+\end{frame}
+\end{document}
+
+TODO:
++ deriving
++ рекурсивни типове
+
+\end{document}
