@@ -3,7 +3,7 @@
 
 \title{Типове и класове в Haskell}
 
-\date{12 януари 2017 г.}
+\date{12--19 януари 2017 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -40,7 +40,7 @@
   \begin{itemize}[<+->]
   \item \alert{генерични типове}, конструирани чрез използване на типови променливи
     \begin{itemize}
-    \item функциите, кортежите и списъците могат да генерични 
+    \item функциите, кортежите и списъците могат да генерични
     \item \lst{type UnaryFunction a = a -> a}
     \item \lst{type Matrix a = [[a]]}
     \item \lst{type Dictionary k v = [(k, v)]}
@@ -107,7 +107,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile,fragile]
+\begin{frame}[fragile]
   \frametitle{Дефиниране на класове от типове}
   \tta{class }<клас> <типова-променлива>\tta{ where}\\
   \hspace{2ex}\{<метод>\{,<метод>\} \tta{::} <тип>\}\\
@@ -187,12 +187,12 @@ instance (Eq a, Eq b) => Eq (a,b) where
 \begin{lstlisting}
 instance (Measurable a, Measurable b) => Measurable (a,b) where
   size (x,y) = size x + size y
-\end{lstlisting}  
+\end{lstlisting}
   \pause
 \begin{lstlisting}
 instance Measurable a => Measurable [a] where
   size = sum . map size
-\end{lstlisting}  
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -227,7 +227,7 @@ class  (Eq a) => Ord a  where
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile,fragile]
+\begin{frame}[fragile]
   \frametitle{Множествено наследяване}
   Даден клас може да наследява едновременно няколко родителски класа.\\[1em]
   \textbf{Примери:}
@@ -261,7 +261,7 @@ class (Ord a, Measurable a) => OrdMeasurable a where
   \item В Haskell претоварените функции имат \alert{еднозначно определен тип}
     \begin{itemize}
     \item В C++ сме свободни да пишем функции с едно и също име и различни сигнатури
-    \item В Haskell сме длъжни да наложим класови ограничения 
+    \item В Haskell сме длъжни да наложим класови ограничения
     \end{itemize}
   \item В Haskell не можем да правим насилствено преобразуване на тип към даден клас (casting)
   \end{itemize}
@@ -347,7 +347,6 @@ class (Ord a, Measurable a) => OrdMeasurable a where
     \end{itemize}
   \end{itemize}
 \end{frame}
-\end{document}
 
 \begin{frame}[fragile]
   \frametitle{Алтернативи}
@@ -370,13 +369,59 @@ class (Ord a, Measurable a) => OrdMeasurable a where
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Автоматични екземпляри на класове}
+
+  При работа с алгебрични типове се сблъскваме с един недостатък:\pause
+  \begin{itemize}[<+->]
+  \item \evalstoerrp{Circle 2.3 == Circle 4.5}
+  \item \evalstop{circle}{circle :: Shape}
+  \item \evalstoerrp{[Mon..Fri]}
+  \item \evalstoerrp{Thu < Sat}
+  \end{itemize}
+  \onslide<+->
+  За използването на тези елементарни операции се налага ръчно да пишем тривиални екземпляри за класове като \lst{Eq}, \lst{Ord}, \lst{Enum}, \lst{Show}:
+  \onslide<+->
+  \small
+\begin{lstlisting}
+instance Eq Shape where
+  Circle x      == Circle y       = x == y
+  Rectangle a b == Rectangle c d  = (a,b) == (c,d)
+  _             == _              = False
+\end{lstlisting}
+  \onslide<+->
+\begin{lstlisting}
+instance Show Shape where
+  show (Circle x)      = "Circle " ++ show x
+  show (Rectangle a b) = "Rectangle " ++ show a ++ " " ++ show b
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Автоматични екземпляри на класове}
+
+  Haskell има възможност за автоматично извеждане на екземпляри на класовете \lst{Eq}, \lst{Ord}, \lst{Enum}, \lst{Show}, \lst{Read}.\pause
+  \small
+  \begin{itemize}[<+->]
+  \item \tta{data} <тип> [<параметри>] \tta= <дефиниция> \tta{deriving} <класове>
+  \item{} <класове> е кортеж от стандартни класове, екземпляри за които искаме автоматично да бъдат изведени
+  \item \lst{data Weekday = Mon | Tue | Wed | Thu | Fri | Sat | Sun}\\
+    \hspace{10ex}\lst{deriving (Eq, Ord, Enum, Show, Read)}
+  \item \lst{Eq}: два елемента се считат равни, ако имат равни конструктори с равни параметри
+  \item \lst{Ord}: елементите се сравняват лексикографски, като конструкторите се считат наредени в реда, в който са дефинирани
+  \item \lst{Enum}: позволено само за изброени типове
+  \item \lst{Show}, \lst{Read}: извежда се/въвежда се конструкторът и след това всеки един от параметрите му
+  \end{itemize}
+\end{frame}
+
 \begin{frame}
   \frametitle{Параметризирани типове}
   Потребителските типове могат да бъдат \alert{генерични}, т.е. да зависят от типови параметри.\\
   \pause
   \textbf{Примери:}
   \begin{itemize}[<+->]
-  \item \lst{data Maybe a = Nothing | Just a}
+  \item \lst{data Maybe a = Nothing | Just a}\\
+      \hspace{10ex}\lst{deriving (Eq, Ord, Show, Read)}
   \item \typestop{Just 5}{Maybe Int}
   \item \typestop{Just "wow"}{Maybe String}
   \item \typestop{Nothing}{Maybe a}
@@ -391,7 +436,8 @@ class (Ord a, Measurable a) => OrdMeasurable a where
 \begin{frame}
   \frametitle{Сума на типове}
   \begin{itemize}[<+->]
-  \item \lst{data Either a b = Left a | Right b}
+  \item \lst{data Either a b = Left a | Right b}\\
+      \hspace{10ex}\lst{deriving (Eq, Ord, Show, Read)}
   \item \typestop{Left 3}{Either Int b}
   \item \typestop{Right 'a'}{Either a Char}
   \item \textbf{Задача.} Да се напише функция, която по даден списък от играчи намира най-добрия резултат, ако е постигнат от единствен играч, или списък от имената на играчите, които са постигнали най-добър резултат.
@@ -403,10 +449,168 @@ class (Ord a, Measurable a) => OrdMeasurable a where
    \item<.-> \hspace{9ex}\lst!bestPlayers = filter ((==best).score) players!
   \end{itemize}
 \end{frame}
-\end{document}
 
-TODO:
-+ deriving
-+ рекурсивни типове
+\section{Рекурсивни алгебрични типове}
+
+\begin{frame}[fragile]
+  \frametitle{Рекурсивни алгебрични типове}
+  Можем да дефинираме типове, позоавайки се на самите тях \alert{рекурсивно}.\\[1em]
+  \pause
+  \textbf{Пример:}
+  \lst{data Nat = Zero | Succ Nat deriving (Eq, Ord, Show, Read)}
+  \begin{itemize}[<+->]
+  \item \lst{five = Succ $ Succ $ Succ $ Succ $ Succ Zero}
+  \item \lst{fromNat :: Nat -> Int}
+  \item \lst{fromNat Zero = 0}
+  \item<.-> \lst{fromNat (Succ n) = fromNat n + 1}
+  \item \evalsto{fromNat five}5
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Двоични числа}
+
+\begin{lstlisting}
+data Bin = One | BitZero Bin | BitOne Bin
+           deriving (Eq, Ord, Show, Read)
+\end{lstlisting}
+  \pause
+  \begin{itemize}[<+->]
+  \item \lst{six = BitZero $ BitOne $ One}
+  \item \lst{fromBin :: Bin -> Int}
+  \item \lst{fromBin One = 1}
+  \item<.-> \lst{fromBin (BitZero b) = 2 * fromBin b}
+  \item<.-> \lst{fromBin (BitOne b) = 2 * fromBin b + 1}
+  \item \lst{succBin :: Bin -> Bin}
+  \item \lst{succBin One = BitZero One}
+  \item<.-> \lst{succBin (BitZero b) = BitOne b}
+  \item<.-> \lst{succBin (BitOne b) = BitZero (succBin b)}
+  \item \evalsto{fromBin \$ succBin \$ succBin six}8
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Списъци}
+
+\begin{lstlisting}
+data List a = Nil | Cons a (List a)
+              deriving (Eq, Ord, Show, Read)
+\end{lstlisting}
+  \pause
+  \begin{itemize}[<+->]
+  \item \lst{l = Cons 1 $ Cons 2 $ Cons 3 \$ Nil}
+  \item можем да използваме синтаксиса за записи:\\
+    \lst!data List a = Nil | Cons { listHead :: a,!\\
+      \hspace{31ex}\lst!listTail :: List a }!\\
+    \hspace{10ex}\lst{deriving (Eq, Ord, Show, Read)}
+  \item \evalstop{listHead l}1
+  \item \lst{fromList :: List a -> [a]}
+  \item \lst{fromList Nil = []}
+  \item<.-> \lst{fromList (Cons x t) = x:fromList t}
+  \item \lst{(+++) :: List a -> List a -> List a}
+  \item \lst{Nil +++ l = l}
+  \item<.-> \lst{Cons h t +++ l = Cons h (t +++ l)}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Двоични дървета}
+\begin{lstlisting}
+data BinTree a = Empty | Node { root :: a, left :: BinTree a,
+                                           right :: BinTree a }
+                 deriving (Eq, Ord, Show, Read)
+\end{lstlisting}
+  \textbf{Примери:}
+  \begin{itemize}[<+->]
+  \item \lst{t = Node 3 (Node 1 Empty Empty) (Node 5 Empty Empty)}
+  \item \lst{depth :: BinTree a -> Int}
+  \item<.-> \lst{depth Empty = 0}
+  \item<.-> \lst{depth (Node x l r) = max (depth l) (depth r) + 1}
+  \item \lst{leaves :: BinTree a -> [a]}
+  \item \lst{leaves Empty = []}
+  \item<.-> \lst{leaves (Node x Empty Empty) = [x]}
+  \item<.-> \lst{leaves (Node x l r) = leaves l ++ leaves r}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Функции от по-висок ред за двоични дървета}
+
+  Трансформиране на двоично дърво (\lst{map}):
+  \pause
+\begin{lstlisting}
+mapBinTree :: (a -> b) -> BinTree a -> BinTree b
+mapBinTree _ Empty        = Empty
+mapBinTree f (Node x l r) = Node (f x) (mapBinTree f l)
+                                       (mapBinTree f r)
+\end{lstlisting}
+  \vspace{2em}
+  \pause
+  Свиване на двоично дърво (\lst{foldr}):
+\begin{lstlisting}
+foldrBinTree :: (a -> a -> a) -> a -> BinTree a -> a
+foldrBinTree _  nv Empty        = nv
+foldrBinTree op nv (Node x l r) = op (foldrBinTree op nv l)
+                                   (op x
+                                     (foldrBinTree op nv r))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Дървета с произволен брой наследници}
+
+  Можем да правим \alert{взаимнорекурсивни} дефиниции:
+\begin{lstlisting}
+data Tree a =  Tree { root :: a, subtrees :: TreeList a }
+data TreeList a = None | SubTree { firstTree :: Tree a,
+                                   restTrees :: TreeList a }
+\end{lstlisting}
+\pause
+\begin{lstlisting}
+leaf x = Tree x None
+tree = Tree 1 $ SubTree (leaf 2)
+              $ SubTree (Tree 3 $ SubTree (leaf 4) $ None)
+              $ SubTree (leaf 5) $ None
+\end{lstlisting}
+\pause
+\begin{lstlisting}
+level :: Int -> Tree a -> [a]@\pause@
+level 0 (Tree x _)     = [x]
+level k (Tree _ ts)    = levelTrees (k - 1) ts
+\end{lstlisting}
+\pause
+\begin{lstlisting}
+levelTrees :: Int -> TreeList a -> [a]@\pause@
+levelTrees _ None           = []
+levelTrees k (SubTree t ts) = level k t ++ levelTrees k ts
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{S-списъци}
+\small
+\begin{lstlisting}
+data SList = SBool Bool | SChar Char | SInt Int | SDouble Double |
+             SList { getList :: [SList] }
+             deriving (Eq, Ord, Show, Read)
+\end{lstlisting}
+  \ \pause
+\begin{lstlisting}
+slist = SList [SInt 2, SChar 'a',
+                       SList [SBool True, SDouble 1.2, SList []]]
+\end{lstlisting}
+  \pause
+\begin{lstlisting}
+countAtoms :: SList -> Int@\pause@
+countAtoms (SList sls) = sum $ map countAtoms sls
+countAtoms _           = 1
+\end{lstlisting}
+  \pause
+\begin{lstlisting}
+flatten :: SList -> SList@\pause@
+flatten (SList sls) = SList $ concat $ map (getList . flatten) sls
+flatten x           = SList [x]
+\end{lstlisting}
+\end{frame}
 
 \end{document}
