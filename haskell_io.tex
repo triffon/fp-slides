@@ -1,0 +1,242 @@
+\documentclass{beamer}
+\usepackage{fprog}
+
+\title{Входно-изходни операции в Haskell}
+
+\date{19 януари 2017 г.}
+
+\lstset{language=Haskell,style=Haskell}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Странични ефекти в Haskell}
+
+\begin{frame}
+  \frametitle{Странични ефекти в Haskell}
+
+  \begin{itemize}[<+->]
+  \item Функциите в Haskell нямат странични ефекти
+  \item Но входно-изходните операции по природа са странични ефекти!
+  \item Как можем да се справим с този парадокс?
+  \item \textbf{Идея:} Можем да си мислим за входно-изходните операции като поточна обработка на данни
+  \end{itemize}
+  \onslide<+->
+  \begin{center}
+    производител
+    $\longrightarrow$ \includegraphics[width=0.4\textwidth,valign=c]{images/abstract_stream.pdf}
+    $\longrightarrow$ консуматор
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Поточна обработка}
+  \textbf{Задача.} Да се въведат \tt{n} числа и да се изведе тяхното средно аритметично.
+  \pause
+  \textbf{Решение:} Дефинираме трансформация над стандартните вход и изход, която:
+  \begin{itemize}[<+->]
+  \item приема \tt{n} като параметър
+  \item трансформира входния поток, като \alert{консумира} от него \tt{n} числа, записвайки ги в списък
+  \item пресмята средното аритметично \tt{avg} на числата в списъка
+  \item трансформира изходния поток, като \alert{произвежда} върху него низовото представяне на \tt{avg}
+  \end{itemize}
+  \onslide<+->
+  \textbf{Трансформирането} на входно-изходните потоци несъмнено е страничен ефект, но \textbf{конструирането на трансформацията} няма нужда от странични ефекти!\\
+  \onslide<+->
+  \alert{Функциите, които работят с вход и изход, по същество дефинират композиция на входно-изходни трансформации.}
+\end{frame}
+
+\section{\tt{IO}}
+
+\begin{frame}
+  \frametitle{Типът \tt{IO a}}
+
+  Стандартният генеричен тип \lst{IO a} задава тип на входно/изходна трансформация, резултатът от която е от тип \tt{a}.\\
+  \pause
+  \textbf{Частен случай:} \lst{IO ()} задава трансформация, която връща празен резултат.\\[1em]
+  \pause
+  \textbf{Входни трансформации:}
+  \begin{itemize}
+  \item \lst{getChar :: IO Char} --- връща символ, прочетен от входа
+  \item \lst{getLine :: IO String} --- връща ред, прочетен от входа
+  \end{itemize}
+  \pause
+  \textbf{Изходни трансформации:}
+  \begin{itemize}
+  \item \lst{putChar :: Char -> IO ()} --- извежда символ на изхода
+  \item \lst{putStr :: String -> IO ()} --- извежда низ на изхода
+  \item \lst{putStrLn :: String -> IO ()} --- извежда ред на изхода
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Главна функция \tt{main}}
+
+  \begin{itemize}[<+->]
+  \item Функцията \lst{main :: IO ()} от модула \lst{Main} в Haskell е
+    специална: тя е входната точка на компилираната програма.
+  \item По същество тя дефинира входно-изходна трансформация, която се прилага към стандартния вход и изход при изпълнение на програмата.
+  \item \textbf{Пример:} \lst^main = putStrLn "Hello, world!"^
+  \item Можем ли да дефинираме \lst!main = putStrLn ("Въведохте: " ++ getLine)!?
+  \item \alert{Не!} \lst{getLine :: }\tta{IO} \lst{String}
+  \item Композицията на входно-изходни трансформации не работи като композицията на функции
+  \item Низът, който връща \lst{getLine} е ``замърсен'' от входно-изходна операция
+  \item Как да композираме трансформации?
+  \end{itemize}
+\end{frame}
+
+\section{Синтаксис за вход/изход}
+
+\begin{frame}[fragile]
+  \frametitle{Конструкцията \lst{do}}
+
+  В Haskell има специален синтаксис за композиране на трансформации:\\[1em]
+  \tta{do} \{ <трансформация> \}\\[1em]
+  \pause
+  <трансформация> може да бъде:
+  \begin{itemize}[<+->]
+  \item произволен израз от тип \lst{IO a}
+  \item{} <име> \tta{<-} <трансформация>
+    \begin{itemize}
+    \item{} <трансформация> е от тип \lst{IO a}
+    \item резултатът от <трансформация> се свързва с <име>
+    \end{itemize}
+  \item \tta{return} <израз>
+    \begin{itemize}
+    \item празна трансформация, която връща <израз> като резултат
+    \item \lst{return :: a -> IO a}
+    \end{itemize}
+  \item резултатът от цялата конструкция \tt{do} е резултатът от последната трансформация в композицията
+  \end{itemize}
+  \onslide<+->
+\begin{lstlisting}
+main = do line <- getLine
+          putStrLn ("Въведохте: " ++ line)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile,fragile]
+  \frametitle{Локални дефиниции в \lst{do}}
+  \small
+  В някакъв смисъл \lst{<-} и \lst{return} са обратни една на друга операции:
+  \begin{itemize}[<+->]
+  \item \lst{<-} извлича ``чист'' резултат от тип \tt{a} от трансформация от тип \lst{IO a}
+  \item \lst{return} фиктивно ``замърсява'' резулат от тип \tt{a} за да стане от тип \lst{IO a}
+  \item Какъв е ефектът от <име> \lst{<- return} <израз> в \lst{do} конструкция?
+  \item Създава се локалната дефиниция <име> = <израз>!
+  \item Понже се налага често, има специален синтаксис за това:\\
+    \lst{let} <име> \tta= <израз>
+  \item Да не се бърка с \lst{let} <име> \tt= <израз> \tta{in} <израз>!
+  \end{itemize}
+  \onslide<+->
+  \textbf{Пример:}
+\begin{lstlisting}
+main = do putStrLn "Моля, въведете палиндром: "
+          line <- getLine
+          let revLine = reverse line
+          if revLine == line then putStrLn "Благодаря!"
+          else do putStrLn (line ++ " не е палиндром!")
+                  main
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Вход и изход на данни}
+
+  Как можем да извеждаме и въвеждаме данни от типове различни от \lst{Char} и \tt{String}?\\[1em]
+  \pause
+  На помощ идват класовете \lst{Show} и \lst{Read}:
+  \begin{itemize}[<+->]
+  \item \lst{show :: (Show a) => a -> String}
+  \item \lst{print :: (Show a) => a -> IO ()}
+  \item \lst{print = putStr . show}
+  \item \lst{read :: (Read a) => String -> a}
+  \item \evalstoerrp{read 1.23}
+  \item Haskell не може да познае типа на резултата, понеже е генеричен!
+  \item \lst{getInt :: IO Int}
+  \item \lst{getInt = do line <- getLine}\\
+    \hspace{15ex}\lst{return \$ read line}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Пример: средно аритметично на редица от числа}
+\begin{lstlisting}
+findAverage :: IO Double@\pause@
+findAverage = do putStr "Моля, въведете брой: "
+                 n <- getInt
+                 s <- readAndSum n
+                 return $ (fromIntegral s) / (fromIntegral n)
+@\pause@
+readAndSum :: Int -> IO Int@\pause@
+readAndSum 0 = return 0
+readAndSum n = do putStr "Моля, въведете число: "
+                  x <- getInt
+                  s <- readAndSum (n - 1)
+                  return $ x + s
+@\pause@
+main = do avg <- findAverage
+          putStrLn $ "Средното аритметично е: " ++ show avg
+\end{lstlisting}
+\end{frame}
+
+\section{Управляващи структури}
+
+
+\begin{frame}
+  \frametitle{Управляващи функции}
+
+  Можем да работим с трансформации с функции от по-висок ред:
+  \begin{itemize}[<+->]
+  \item \lst{import Control.Monad}
+  \item \lst{sequence :: [IO a] -> IO [a]}
+    \begin{itemize}
+    \item композира трансформации и събира резултатите им в списък
+    \item \lst{getInts n = sequence (replicate n getInt)}
+    \end{itemize}
+  \item \lst{mapM :: (a -> IO b) -> [a] -> IO [b]}
+    \begin{itemize}
+    \item композира списък от трансформации по списък от стойности
+    \item \lst{mapM = sequence . map}
+    \item \lst{printRead s = do putStr (s ++ " = "); getInt}
+    \item \lst{readCoordinates = mapM printRead ["x", "y", "z"]}
+    \end{itemize}
+  \item \lst{mapM_ :: (a -> IO b) -> [a] -> IO ()}
+    \begin{itemize}
+    \item Също като \lst{mapM}, но изхвърля резултата
+    \item \lst{printList = mapM_ print}
+    \end{itemize}
+  \item \lst{forever :: IO a -> IO b}
+    \begin{itemize}
+    \item безкрайна композиция на една и съща трансформация
+    \item както \lst{repeat} за списъци
+    \item \lst{forever \$ do line <- getLine; putStrLn line}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Средно аритметично на числа v2.0}
+
+  \small
+\begin{lstlisting}
+readInt :: String -> IO Int
+readInt s = do putStr $ "Моля, въведете " ++ s ++ ": "
+               getInt
+
+findAverage :: IO Double
+findAverage = do n <- readInt "брой"
+                 l <- mapM (readInt . ("число #"++) . show) [1..n]
+                 let s = sum l
+                 return ((fromIntegral s) / (fromIntegral n))
+
+main = forever $
+       do avg <- findAverage
+          putStrLn $ "Средното аритметично е: " ++ show avg
+          putStrLn "Хайде отново!"
+\end{lstlisting}
+\end{frame}
+\end{document}
