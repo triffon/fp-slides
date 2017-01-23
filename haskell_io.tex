@@ -34,7 +34,7 @@
 
 \begin{frame}
   \frametitle{Поточна обработка}
-  \textbf{Задача.} Да се въведат \tt{n} числа и да се изведе тяхното средно аритметично.
+  \textbf{Задача.} Да се въведат \tt{n} числа и да се изведе тяхното средно аритметично.\\
   \pause
   \textbf{Решение:} Дефинираме трансформация над стандартните вход и изход, която:
   \begin{itemize}[<+->]
@@ -154,7 +154,7 @@ main = do putStrLn "Моля, въведете палиндром: "
   \item \lst{print :: (Show a) => a -> IO ()}
   \item \lst{print = putStr . show}
   \item \lst{read :: (Read a) => String -> a}
-  \item \evalstoerrp{read 1.23}
+  \item \evalstoerrp{read "1.23"}
   \item Haskell не може да познае типа на резултата, понеже е генеричен!
   \item \lst{getInt :: IO Int}
   \item \lst{getInt = do line <- getLine}\\
