@@ -433,28 +433,32 @@ instance Show Shape where
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Сума на типове}
   \begin{itemize}[<+->]
   \item \lst{data Either a b = Left a | Right b}\\
       \hspace{10ex}\lst{deriving (Eq, Ord, Show, Read)}
   \item \typestop{Left 3}{Either Int b}
   \item \typestop{Right 'a'}{Either a Char}
-  \item \textbf{Задача.} Да се напише функция, която по даден списък от играчи намира най-добрия резултат, ако е постигнат от единствен играч, или списък от имената на играчите, които са постигнали най-добър резултат.
-   \item \lst{searchBest :: [Player] -> Either Int [String]}
-   \item \lst{searchBest players}
-   \item<.-> \hspace{2ex}\lst!| length bestPlayers == 1 = Left best!
-   \item<.-> \hspace{2ex}\lst!| otherwise = Right $ map name bestPlayers!
-   \item<.-> \hspace{2ex}\lst!where best = maximum $ map score players!
-   \item<.-> \hspace{9ex}\lst!bestPlayers = filter ((==best).score) players!
   \end{itemize}
+  \onslide<+->
+  \textbf{Задача.} Да се напише функция, която по даден списък от играчи намира най-добрия резултат, ако е постигнат от единствен играч, или списък от имената на играчите, които са постигнали най-добър резултат.
+  \onslide<+->
+\begin{lstlisting}
+searchBest :: [Player] -> Either Int [String]}@\onslide<+->@
+searchBest players
+ | length bestPlayers == 1 = Left best
+ | otherwise = Right $ map name bestPlayers
+   where best = maximum $ map score players
+         bestPlayers = filter ((==best).score) players
+\end{lstlisting}
 \end{frame}
 
 \section{Рекурсивни алгебрични типове}
 
 \begin{frame}[fragile]
   \frametitle{Рекурсивни алгебрични типове}
-  Можем да дефинираме типове, позоавайки се на самите тях \alert{рекурсивно}.\\[1em]
+  Можем да дефинираме типове, позовавайки се на самите тях \alert{рекурсивно}.\\[1em]
   \pause
   \textbf{Пример:}
   \lst{data Nat = Zero | Succ Nat deriving (Eq, Ord, Show, Read)}
@@ -498,7 +502,7 @@ data List a = Nil | Cons a (List a)
 \end{lstlisting}
   \pause
   \begin{itemize}[<+->]
-  \item \lst{l = Cons 1 $ Cons 2 $ Cons 3 \$ Nil}
+  \item \lst{l = Cons 1 $ Cons 2 $ Cons 3 $ Nil}
   \item можем да използваме синтаксиса за записи:\\
     \lst!data List a = Nil | Cons { listHead :: a,!\\
       \hspace{31ex}\lst!listTail :: List a }!\\
@@ -516,15 +520,16 @@ data List a = Nil | Cons a (List a)
 \begin{frame}[fragile]
   \frametitle{Двоични дървета}
 \begin{lstlisting}
-data BinTree a = Empty | Node { root :: a, left :: BinTree a,
-                                           right :: BinTree a }
+data BinTree a = Empty | Node { root :: a,
+                                left :: BinTree a,
+                                right :: BinTree a }
                  deriving (Eq, Ord, Show, Read)
 \end{lstlisting}
   \textbf{Примери:}
   \begin{itemize}[<+->]
   \item \lst{t = Node 3 (Node 1 Empty Empty) (Node 5 Empty Empty)}
   \item \lst{depth :: BinTree a -> Int}
-  \item<.-> \lst{depth Empty = 0}
+  \item \lst{depth Empty = 0}
   \item<.-> \lst{depth (Node x l r) = max (depth l) (depth r) + 1}
   \item \lst{leaves :: BinTree a -> [a]}
   \item \lst{leaves Empty = []}
@@ -558,7 +563,7 @@ foldrBinTree op nv (Node x l r) = op (foldrBinTree op nv l)
 
 \begin{frame}[fragile]
   \frametitle{Дървета с произволен брой наследници}
-
+\small
   Можем да правим \alert{взаимнорекурсивни} дефиниции:
 \begin{lstlisting}
 data Tree a =  Tree { root :: a, subtrees :: TreeList a }
@@ -587,27 +592,27 @@ levelTrees k (SubTree t ts) = level k t ++ levelTrees k ts
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{S-списъци}
+  \frametitle{S-изрази}
 \small
 \begin{lstlisting}
-data SList = SBool Bool | SChar Char | SInt Int | SDouble Double |
-             SList { getList :: [SList] }
+data SExpr = SBool Bool | SChar Char | SInt Int | SDouble Double |
+             SList { getList :: [SExpr] }
              deriving (Eq, Ord, Show, Read)
 \end{lstlisting}
   \ \pause
 \begin{lstlisting}
-slist = SList [SInt 2, SChar 'a',
+sexpr = SList [SInt 2, SChar 'a',
                        SList [SBool True, SDouble 1.2, SList []]]
 \end{lstlisting}
   \pause
 \begin{lstlisting}
-countAtoms :: SList -> Int@\pause@
+countAtoms :: SExpr -> Int@\pause@
 countAtoms (SList sls) = sum $ map countAtoms sls
 countAtoms _           = 1
 \end{lstlisting}
   \pause
 \begin{lstlisting}
-flatten :: SList -> SList@\pause@
+flatten :: SExpr -> SExpr@\pause@
 flatten (SList sls) = SList $ concat $ map (getList . flatten) sls
 flatten x           = SList [x]
 \end{lstlisting}
