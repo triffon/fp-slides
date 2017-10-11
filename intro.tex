@@ -1,9 +1,9 @@
 \documentclass{beamer}
 \usepackage{fprog}
 
-\title{Какво е функционално програмиране?}
+\title[Какво е ФП?]{Какво е функционално програмиране?}
 
-\date{6 октомври 2016 г.}
+\date{12 октомври 2017 г.}
 
 \begin{document}
 
@@ -83,12 +83,13 @@
   \textbf{Логическо програмиране}
   \begin{itemize}
   \item Описваме релацията над естествени числа $gcd(a,b,c)$
-  \item $\forall a \, gcd(a,a,a)$ \textbf{[факт]}
-  \item $\forall a\forall b ( a > b \land \forall c (gcd(a-b,b,c) \rightarrow gcd(a,b,c)))$ \textbf{[правило 1]}
-  \item $\forall a\forall b ( a < b \land \forall c (gcd(a,b-a,c) \rightarrow gcd(a,b,c)))$ \textbf{[правило 2]}
+  \item $\forall a \, gcd(a,a,a)$ \hspace{2ex}\textbf{[факт]}
+  \item $\forall a\forall b ( a > b \land \forall c (gcd(a-b,b,c) \rightarrow gcd(a,b,c)))$ \hspace{2ex}\textbf{[правило 1]}
+  \item $\forall a\forall b ( a < b \land \forall c (gcd(a,b-a,c) \rightarrow gcd(a,b,c)))$ \hspace{2ex}\textbf{[правило 2]}
   \item Дадени са $a, b$
   \item Намери такова $c$, за което $gcd(a,b,c)$
   \end{itemize}
+  \pause
   \textbf{Пример:}
   Нека $a = 8, b = 12$. Тогава:\\
   $\xrightarrow{\text{факт}} gcd(4,4,4) \xrightarrow{\text{правило 1}} gcd(8,4,4) \xrightarrow{\text{правило 2}} gcd(8,12,\mathbf4)$
@@ -101,9 +102,9 @@
   \textbf{Функционално програмиране}
   \begin{itemize}
   \item Функцията над естествени числа $gcd(a,b)$ притежава следните свойства:
-  \item $gcd(a,a) = a$ \textbf{(свойство 1)}
-  \item $gcd(a-b,b) = gcd(a,b)$, ако $a > b$ \textbf{(свойство 2)}
-  \item $gcd(a,b-a) = gcd(a,b)$, ако $b > a$ \textbf{(свойство 3)}
+  \item $gcd(a,a) = a$ \hspace{2ex}\textbf{(свойство 1)}
+  \item $gcd(a-b,b) = gcd(a,b)$, ако $a > b$ \hspace{2ex}\textbf{(свойство 2)}
+  \item $gcd(a,b-a) = gcd(a,b)$, ако $b > a$ \hspace{2ex}\textbf{(свойство 3)}
   \item Дадени са $a, b$
   \item Да се пресметне $gcd(a,b)$.
   \end{itemize}
@@ -135,10 +136,10 @@
     \column{0.5\textwidth}
     \textbf{Функционален стил}
     \begin{itemize}
-    \item От елементите на \tt l:
-    \item Избери нечетните
-    \item Приложи над резултата функцията $x^2$
-    \item Приложи над резултата операцията $+$.
+    \item От елементите на \tt l\ldots
+    \item \ldots избираме нечетните, \ldots
+    \item \ldots прилагаме над тях функцията $x^2$ \ldots
+    \item \ldots и ги групираме с операцията $+$.
     \end{itemize}
   \end{columns}
 \end{frame}
@@ -156,7 +157,7 @@ cout << s;
   \pause
   \textbf{Scheme:} \tt{(apply + (map square (filter odd? l)))}\\[1em]
   \pause
-  \textbf{Haskell:} \tt{foldr1 (+) [x * x | x <- l, odd x]}\\[1em]
+  \textbf{Haskell:} \tt{foldr1 (+) [ x\^{}2 | x <- l, odd x ]}\\[1em]
   \pause
   \textbf{Haskell:} \tt{sum . map (\^{}2) . filter odd}
 \end{frame}
@@ -184,7 +185,7 @@ cout << s;
   \pause
   \textbf{$M$ изчислява функцията $f_M$}, ако при лента с числото $n$ машината $M$ завършва и записва върху лентата числото $f_M(n)$.\\
   \pause
-  Ако $M$ не завърши, казваме, че \textbf{$f_M(n)$ не е дефинирана}.
+  Ако $M$ не завърши за някое $n$, казваме, че \textbf{$f_M(n)$ не е дефинирана}.
 \end{frame}
 
 \begin{frame}
@@ -205,13 +206,18 @@ cout << s;
 \begin{frame}
   \frametitle{Стоп проблем}
 
+  \small
   Нека с $\mt n$ означаваме машината на Turing с код $n$.\\
   Разглеждаме функцията:
   \begin{equation*}
-    halts(n) = \mt n\text{ завършва над лента с числото }n.
+    halts(n) =
+    \begin{cases}
+      1,&\text{ ако }\mt n\text{ завършва над лента с числото }n,\\
+      0,&\text{ иначе}.
+    \end{cases}
   \end{equation*}
   \pause
-  $halts$ не е изчислима!\\
+  \alert{$halts$ не е изчислима!}\\
   \pause
   \begin{proof}
     Да допуснем, че $halts$ се изчислява от машина на Turing $H$.\\
@@ -254,7 +260,8 @@ cout << s;
   \item $x$ (променлива)
   \item $E_1(E_2)$ (апликация, прилагане на функция)
   \item $\lambda x \, E$ (абстракция, конструиране на функция)
-  \end{itemize}\\[1em]
+  \end{itemize}
+  \vspace{1em}
   \textbf{Примери:} $\lambda x\, x, \quad (\lambda x\, x)(z), \quad \lambda f\lambda x\, f(f(f(x)))$\\[1em]
   \pause
   Едно изчислително правило:
@@ -320,24 +327,29 @@ cout << s;
   \end{itemize}
 \end{frame}
 
+\newcommand{\lang}[1]{\onslide<2->{\hspace{2ex}[\textbf{#1}]}}
+\newcommand{\scheme}{\lang{Scheme}}
+\newcommand{\haskell}{\lang{Haskell}}
+
 \begin{frame}[<1-2>]
   \frametitle{Видове функционални езици}
+
 
   \begin{itemize}
   \item според типовата система
     \begin{itemize}
-    \item динамично типизирани (стойностите имат тип) \onslide<2->{[\textbf{Scheme}]}
-    \item статично типизирани (променливите имат тип) \onslide<2->{[\textbf{Haskell}]}
+    \item динамично типизирани (стойностите имат тип) \scheme
+    \item статично типизирани (променливите имат тип) \haskell
     \end{itemize}
   \item според страничните ефекти
     \begin{itemize}
-    \item нечисти (със странични ефекти) \onslide<2->{[\textbf{Scheme}]}
-    \item чисти (без странични ефекти) \onslide<2->{[\textbf{Haskell}]}
+    \item нечисти (със странични ефекти) \scheme
+    \item чисти (без странични ефекти) \haskell
     \end{itemize}
   \item според стратегията за оценяване
     \begin{itemize}
-    \item стриктно (първо сметни, после предай)  \onslide<2->{[\textbf{Scheme}]}
-    \item мързеливо (първо предай, после смятай) \onslide<2->{[\textbf{Haskell}]}
+    \item стриктно (първо сметни, после предай)  \scheme
+    \item мързеливо (първо предай, после смятай) \haskell
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -355,7 +367,7 @@ cout << s;
   \item[(1990)] Публикувана е първата версия на \textbf{Haskell}
   \item[(1998)] Отваряне на кода на реализацията на Erlang
   \item[(1990--2000)] Функционални елементи започват да се появяват в императивни езици: Python (1991), JavaScript (1995), Ruby (1995), ActionScript (1998)
-  \item[(2000--)] Функционалният стил на програмиране превзема света: Scala (2003), F\# (2005), C\# (2007), Clojure (2007), C++11 (2011), Java 8 (2014)
+  \item[(2000--)] Функционалният стил на програмиране превзема света: Scala (2003), F\# (2005), C\# (2007), Clojure (2007), C++11 (2011), Elixir (2011), Java 8 (2014)
   \end{itemize}
 \end{frame}
 
