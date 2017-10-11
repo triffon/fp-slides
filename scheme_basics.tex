@@ -3,7 +3,7 @@
 
 \title{Основни понятия в Scheme}
 
-\date{13 октомври 2016 г.}
+\date{12 октомври 2017 г.}
 
 \lstset{language=Scheme}
 
@@ -48,14 +48,14 @@
   \frametitle{Синтаксис в Scheme}
 
   \begin{itemize}
-  \item Атоми
+  \item Литерали
     \begin{itemize}
     \item Булеви константи (\lst{#f}, \lst{#t})
-    \item Числа (\lst{15}, \lst{2/3}, \lst{-1.532})
-    \item Знаци (\lst{#\a}, \lst{#\newline})
-    \item Низове (\lst{"Scheme"}, \lst{"hi "})
-    \item Символи (\lst{f}, \lst{square}, \lst{+}, \lst{find-min})
+    \item Числови константи (\lst{15}, \lst{2/3}, \lst{-1.532})
+    \item Знакови константи (\lst{#\a}, \lst{#\newline})
+    \item Низови константи (\lst{"Scheme"}, \lst{"hi "})
     \end{itemize}
+  \item Символи (\lst{f}, \lst{square}, \lst{+}, \lst{find-min})
   \item Комбинации\\[1em]
     \alert({}<израз$_1$> <израз$_2$> \ldots <израз$_n$>\alert)
   \end{itemize}
@@ -125,8 +125,9 @@
       \end{tabular}}
   \end{equation*}\\[2em]
   \pause
+  \onslide<+->
   \begin{center}
-    \evalstoerr {(1 2 3)}
+    \evalstoerrp {(1 2 3)}
   \end{center}
 \end{frame}
 
