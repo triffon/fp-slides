@@ -3,7 +3,7 @@
 
 \title[Среди и процеси]{Модел на средите и изчислителни процеси}
 
-\date{13--20 октомври 2016 г.}
+\date{19 октомври 2017 г.}
 
 \lstset{language=Scheme}
 
@@ -90,40 +90,42 @@
 \begin{frame}
   \frametitle{Извикване на дефинирана функция}
 
-  \begin{columns}[T,onlytextwidth]
-    \begin{column}{.5\textwidth}
-      \begin{itemize}[<+->]
-      \item \lst{(define r 5)}
-      \item \lst{(define a 3)}
-      \item \lst{(define (f x) (* x r))}
-      \item
-        \begin{tabular}[t]{lc}
-          \inenv E&\lst{(f a)}\\
-          \nxt{&\bda\\
-          \inenv E &\lst{(f 3)}\\
-          \nxt{&\bda\\
-          \inenv {E_1} &\lst{(* x r)}\\
-          \nxt{&\bda\\
-                  &\tt{15}}}}
-        \end{tabular}
-      \end{itemize}
-    \end{column}
+  \begin{overlayarea}{\textwidth}{\textheight}
+    \begin{columns}[T,onlytextwidth]
+      \begin{column}{.5\textwidth}
+        \begin{itemize}[<+->]
+        \item \lst{(define r 5)}
+        \item \lst{(define a 3)}
+        \item \lst{(define (f x) (* x r))}
+        \item
+          \begin{tabular}[t]{lc}
+            \inenv E&\lst{(f a)}\\
+            \nxt{&\bda\\
+            \inenv E &\lst{(f 3)}\\
+            \nxt{&\bda\\
+            \inenv {E_1} &\lst{(* x r)}\\
+            \nxt{&\bda\\
+                    &\tt{15}}}}
+          \end{tabular}
+        \end{itemize}
+      \end{column}
 
-    \begin{column}{.5\textwidth}
-      \begin{tabular}{c}
-        \begin{envir}{E}
-          \\\firstinenv\tt r&:&\tt 5 \only<2->{\\\tt a&:&\tt 3}
-          \only<3->{\\\tt f&:&\funcenv x{(* x r)}E}
-        \end{envir}
-        \\
-        \only<6->{
-        \Bigg\uparrow\\
-        \begin{envir}{E_1}
-          \\\firstinenv\tt x&:&3
-        \end{envir}}
-      \end{tabular}
-    \end{column}
-  \end{columns}
+      \begin{column}{.5\textwidth}
+        \begin{tabular}{c}
+          \begin{envir}{E}
+            \\\firstinenv\tt r&:&\tt 5 \only<2->{\\\tt a&:&\tt 3}
+            \only<3->{\\\tt f&:&\funcenv x{(* x r)}E}
+          \end{envir}
+          \\
+          \only<6->{
+          \Bigg\uparrow\\
+          \begin{envir}{E_1}
+            \\\firstinenv\tt x&:&3
+          \end{envir}}
+        \end{tabular}
+      \end{column}
+    \end{columns}
+  \end{overlayarea}
 \end{frame}
 
 \section{Рекурсия}
@@ -220,9 +222,9 @@
   $f$ е най-малката неподвижна точка на уравнението $F = \Gamma(F)$.\\[1em]
   \pause
   \textbf{Операционна семантика}\\
-  Разглеждаме редицата от последователни оценки на комбинацията\\
-  \tt{(f a)} $\rightarrow$ \tt{$\Gamma$[f][x $\mapsto$ a]} $\rightarrow\ldots$.\\
-  Ако редицата завършва с атома \tt b, дефинираме $f(a) := b$.\\[1em]
+  Разглеждаме редицата от последователни оценки на комбинации\\
+  \tt{(f a)} $\rightarrow$ \tt{$\Gamma$[f][x $\mapsto$ a]} $\rightarrow\ldots$\\
+  Ако стигнем до елемент \tt b, който не е комбинация, то $f(a) := b$.\\[1em]
   \pause
   \alert{Функциите в Scheme имат дуален, но еквивалентен смисъл:}
   \begin{itemize}
@@ -360,7 +362,8 @@
 \begin{frame}[fragile]
   \frametitle{Факториел с цикъл}
 
-  \begin{columns}[t,onlytextwidth]
+  \begin{overlayarea}{\textwidth}{.5\textheight}
+  \begin{columns}[T,onlytextwidth]
     \begin{column}{.5\textwidth}
       Факториел на C++\\
 \begin{semiverbatim}
@@ -386,6 +389,7 @@
 \end{semiverbatim}
     \end{column}
   \end{columns}
+\end{overlayarea}
 \end{frame}
 
 \begin{frame}
@@ -519,59 +523,60 @@
 \begin{frame}<1-2>[fragile,label=reciter]
   \frametitle{Рекурсивен и итеративен процес}
 
-  \begin{columns}[t,onlytextwidth]
-    \begin{column}{.5\textwidth}
-      \begin{center}
-        \tiny
-        \begin{tabular}{c}
-          \tt{(fact 4)} \\
-          \bda\\
-          \tt{(* 4 (fact 3))}\\
-          \bda\\
-          \tt{(* 4 (* 3 (fact 2)))}\\
-          \bda\\
-          \tt{(* 4 (* 3 (* 2 (fact 1))))}\\
-          \bda\\
-          \tt{(* 4 (* 3 (* 2 (* 1 (fact 0)))))}\\
-          \bda\\
-          \tt{(* 4 (* 3 (* 2 (* 1 1))))}\\
-          \bda\\
-          \tt{(* 4 (* 3 (* 2 1)))}\\
-          \bda\\
-          \tt{(* 4 (* 3 2))}\\
-          \bda\\
-          \tt{(* 4 6)}\\
-          \bda\\
-          24
-        \end{tabular}
-      \end{center}
-      \scriptsize
+  \begin{overlayarea}{\textwidth}{\textheight}
+    \begin{columns}[T,onlytextwidth]
+      \begin{column}{.5\textwidth}
+        \begin{center}
+          \tiny
+          \begin{tabular}{c}
+            \tt{(fact 4)} \\
+            \bda\\
+            \tt{(* 4 (fact 3))}\\
+            \bda\\
+            \tt{(* 4 (* 3 (fact 2)))}\\
+            \bda\\
+            \tt{(* 4 (* 3 (* 2 (fact 1))))}\\
+            \bda\\
+            \tt{(* 4 (* 3 (* 2 (* 1 (fact 0)))))}\\
+            \bda\\
+            \tt{(* 4 (* 3 (* 2 (* 1 1))))}\\
+            \bda\\
+            \tt{(* 4 (* 3 (* 2 1)))}\\
+            \bda\\
+            \tt{(* 4 (* 3 2))}\\
+            \bda\\
+            \tt{(* 4 6)}\\
+            \bda\\
+            24
+          \end{tabular}
+        \end{center}
+        \scriptsize
 \begin{semiverbatim}
     (define (fact n)
       (if (= n 0) 1
           \only<2>\fbox{(* n }(fact (- n 1)))))
 \end{semiverbatim}
-    \end{column}
-    \begin{column}{.5\textwidth}
-      \begin{center}
-        \tiny
-        \begin{tabular}{c}
-          \tt{(fact 4)}\\
-          \bda\\
-          \tt{(for \alert<3> 4 1 1)}\\
-          \bda\\
-          \tt{(for \alert<3> 4 1 2)}\\
-          \bda\\
-          \tt{(for \alert<3> 4 2 3)}\\
-          \bda\\
-          \tt{(for \alert<3> 4 6 4)}\\
-          \bda\\
-          \tt{(for \alert<3> 4 24 5)}\\
-          \bda\\
-          \tt{24}
-        \end{tabular}
-      \end{center}
-      \scriptsize
+      \end{column}
+      \begin{column}{.5\textwidth}
+        \begin{center}
+          \tiny
+          \begin{tabular}{c}
+            \tt{(fact 4)}\\
+            \bda\\
+            \tt{(for \alert<3> 4 1 1)}\\
+            \bda\\
+            \tt{(for \alert<3> 4 1 2)}\\
+            \bda\\
+            \tt{(for \alert<3> 4 2 3)}\\
+            \bda\\
+            \tt{(for \alert<3> 4 6 4)}\\
+            \bda\\
+            \tt{(for \alert<3> 4 24 5)}\\
+            \bda\\
+            \tt{24}
+          \end{tabular}
+        \end{center}
+        \scriptsize
 \begin{semiverbatim}
 (define (for \alert<3>n r i)
   (if (<= i n)
@@ -581,8 +586,9 @@
 (define (fact n)
   (for \alert<3>n 1 1))
 \end{semiverbatim}
-    \end{column}
-  \end{columns}
+      \end{column}
+    \end{columns}
+  \end{overlayarea}
 \end{frame}
 
 \begin{frame}
@@ -612,11 +618,11 @@
 \begin{frame}[fragile]
   \frametitle{Вложени дефиниции}
 
-  \begin{itemize}
+  \begin{itemize}[<+->]
   \item \tta{(define (}<функция> \{<параметър\}\tta) \{<дефиниция>\} <тяло>\tta)
   \item При извикване на <функция> първо се оценяват всички <дефиниция> и след това се оценява <тяло>
   \item Вложените дефиниции се оценяват и записват в средата, която се \textbf{оценява} функцията, а не в средата, в която е \textbf{дефинирана}
-  \item Пример:\\
+  \item \textbf{Пример:}\\
 \begin{lstlisting}
 (define (dist x1 y1 x2 y2)
   (define dx (- x2 x1))
@@ -632,75 +638,88 @@
 
   \scriptsize
 
-  \begin{columns}[T,onlytextwidth]
-    \begin{column}{.5\textwidth}
-      \begin{tabular}{rc}
-        \nxt{\inenv E&\lst{(dist 2 5 -1 9)}\\
-                     &\nxt{\nxt{\bda\\
-        \inenv{E_1}&\lst{(define dx (- x2 x1))}\\
-        \nxt{\inenv{E_1}&\lst{(define dy (- y2 y1))}\\
-        \nxt{\inenv{E_1}&\lst{(define sq (* x x))}\\
-        \nxt{\inenv{E_1}&\lst{(sqrt (+ (sq dx) (sq dy)))}\\
-                     &\nxt{\bda\\
-        \inenv{E_2}&\lst{(sqrt (+ (* x x) (sq dy)))}\\
-                     &\nxt{\bda\\
-        \inenv{E_3}&\lst{(sqrt (+ 9 (* x x)))}\\
-                     &\nxt{\bda\\
-        \inenv{E_1}&\lst{(sqrt (+ 9 16))}\\
-                     &\nxt{\bda\\
-        \inenv{E_1}&\lst{(sqrt 25)}\\
-                     &\nxt{\bda\\
-        \inenv{E_1}&\tt 5}}}}}}}}}}}
-      \end{tabular}
-    \end{column}
-    \begin{column}{.5\textwidth}
-      \begin{tabular}{cc}
-        \multicolumn 2c{
-        \begin{envir}E
-          \\\firstinenv \tt{dist}&:&\funcenv{x1 y1 x2 y2}\ldots E
-        \end{envir}}
-        \\
-        \multicolumn 2c{\visible<2->\bua}
-        \\
-        \multicolumn 2c{\visible<2->{
-        \begin{envir}{E_1}
-          \\\firstinenv \tt{x1}&:&2 \\\tt{y1}&:&5 \\\tt{x2}&:&-1
-          \\\tt{y2}&:&9 \only<3->{\\\tt{dx}&:&3}
-          \only<4->{\\\tt{dy}&:&4} \only<5->{\\\tt{sq}&:&\funcenv x{(*
-              x x)}{E_1}}
-        \end{envir}}}
-        \\
-        \only<7->\bua&\visible<8->\bua\\
-        \only<7->{
-        \begin{envir}{E_2}
-          \\\firstinenv \tt x&:&3
-        \end{envir}}& \only<8->{
-                      \begin{envir}{E_3}
-                        \\\firstinenv \tt x&:&4
-                      \end{envir}}
-      \end{tabular}
-    \end{column}
-  \end{columns}
+  \begin{overlayarea}{\textwidth}{\textheight}
+    \begin{columns}[T,onlytextwidth]
+      \begin{column}{.5\textwidth}
+        \begin{tabular}{rc}
+          \nxt{\inenv E&\lst{(dist 2 5 -1 9)}\\
+                       &\nxt{\nxt{\bda\\
+          \inenv{E_1}&\lst{(define dx (- x2 x1))}\\
+          \nxt{\inenv{E_1}&\lst{(define dy (- y2 y1))}\\
+          \nxt{\inenv{E_1}&\lst{(define (sq x) (* x x))}\\
+          \nxt{\inenv{E_1}&\lst{(sqrt (+ (sq dx) (sq dy)))}\\
+                       &\nxt{\bda\\
+          \inenv{E_2}&\lst{(sqrt (+ (* x x) (sq dy)))}\\
+                       &\nxt{\bda\\
+          \inenv{E_3}&\lst{(sqrt (+ 9 (* x x)))}\\
+                       &\nxt{\bda\\
+          \inenv{E_1}&\lst{(sqrt (+ 9 16))}\\
+                       &\nxt{\bda\\
+          \inenv{E_1}&\lst{(sqrt 25)}\\
+                       &\nxt{\bda\\
+          \inenv{E_1}&\tt 5}}}}}}}}}}}
+        \end{tabular}
+      \end{column}
+      \begin{column}{.5\textwidth}
+        \begin{tabular}{cc}
+          \multicolumn 2c{
+          \begin{envir}E
+            \\\firstinenv \tt{dist}&:&\funcenv{x1 y1 x2 y2}\ldots E
+          \end{envir}}
+          \\
+          \multicolumn 2c{\visible<2->\bua}
+          \\
+          \multicolumn 2c{\visible<2->{
+          \begin{envir}{E_1}
+            \\\firstinenv \tt{x1}&:&2 \\\tt{y1}&:&5 \\\tt{x2}&:&-1
+            \\\tt{y2}&:&9 \only<3->{\\\tt{dx}&:&3}
+            \only<4->{\\\tt{dy}&:&4} \only<5->{\\\tt{sq}&:&\funcenv x{(*
+                x x)}{E_1}}
+          \end{envir}}}
+          \\
+          \only<7->\bua&\visible<8->\bua\\
+          \only<7->{
+          \begin{envir}{E_2}
+            \\\firstinenv \tt x&:&3
+          \end{envir}}& \only<8->{
+                        \begin{envir}{E_3}
+                          \\\firstinenv \tt x&:&4
+                        \end{envir}}
+        \end{tabular}
+      \end{column}
+    \end{columns}
+  \end{overlayarea}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Вложена помощна итеративна функция}
 
   При итеративни функция е удобно помощната функция да е вложена.
-\begin{semiverbatim}
-\only<1>{(define (for n r i)
+  \begin{overlayarea}{\textwidth}{.5\textheight}
+    \begin{onlyenv}<1>
+\begin{lstlisting}
+(define (for n r i)
   (if (<= i n)
       (for n (* r i) (+ i 1))
       r))
-}
+
 (define (fact n)
-\only<2->{  (define (for r i)
+  (for n 1 1))
+\end{lstlisting}
+    \end{onlyenv}
+    \begin{onlyenv}<2->
+\begin{lstlisting}
+(define (fact n)
+  (define (for r i)
     (if (<= i n)
         (for (* r i) (+ i 1))
         r))
-}  (for \only<1>{n }1 1))
-\end{semiverbatim}
-\onslide<3->{Вложените дефиниции ``виждат'' символите на обхващащите им дефиниции.}
+  (for 1 1))
+\end{lstlisting}
+    \end{onlyenv}
+  \end{overlayarea}
+  \onslide<3->
+  Вложените дефиниции ``виждат'' символите на обхващащите им дефиниции.
 \end{frame}
 
 \begin{frame}
