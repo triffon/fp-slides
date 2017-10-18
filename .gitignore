@@ -3,14 +3,8 @@
 !.gitignore
 \#*
 _region_.tex
-*.aux
-*.log
-*.nav
-*.out
 *.pdf
 !images/*.pdf
-*.snm
-*.toc
-*.vrb
 *.xoj
-auto
+auto/
+out/
