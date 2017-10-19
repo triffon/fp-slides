@@ -62,7 +62,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Оценки на атоми}
+  \frametitle{Оценки на литерали и символи}
 
   На всеки израз се дава оценка.
   \begin{itemize}[<+->]
@@ -270,7 +270,7 @@
 
   \begin{itemize}[<+->]
   \item \tta{(if} <условие> <израз$_1$> <израз$_2$>\tta)
-  \item Оценява се \tt{<условие>}
+  \item Оценява се <условие>
     \begin{itemize}
     \item Ако оценката е \tt{\#t} --- връща се оценката на <израз$_1$>
     \item Ако оценката е \tt{\#f} --- връща се оценката на <израз$_2$>
@@ -345,7 +345,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Пример с формата cond}
+  \frametitle{Пример с формата \tt{case}}
 
 \begin{lstlisting}
 (define (days-in-month m y)
