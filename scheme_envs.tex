@@ -3,7 +3,7 @@
 
 \title[Среди и процеси]{Модел на средите и изчислителни процеси}
 
-\date{19 октомври 2017 г.}
+\date{19--26 октомври 2017 г.}
 
 \lstset{language=Scheme}
 
@@ -721,7 +721,6 @@
   \onslide<3->
   Вложените дефиниции ``виждат'' символите на обхващащите им дефиниции.
 \end{frame}
-\end{document}
 
 \begin{frame}
   \frametitle{Оценка на итеративен факториел с вложена функция}
@@ -1302,9 +1301,9 @@
   \pause
 \begin{lstlisting}
 (define (fib n)
-  (define (iter i fib_i fib_i-1)
-    (if (= i n) fib_i
-        (iter (+ i 1) (+ fib_i fib_i-1) fib_i)))
+  (define (iter i fi fi-1)
+    (if (= i n) fi
+        (iter (+ i 1) (+ fi fi-1) fi)))
   (if (= n 0) 0
       (iter 1 1 0)))
 \end{lstlisting}
