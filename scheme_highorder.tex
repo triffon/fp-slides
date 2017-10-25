@@ -3,7 +3,7 @@
 
 \title{Функции от по-висок ред}
 
-\date{20--27 октомври 2016 г.}
+\date{26 октомври 2017 г.}
 
 \lstset{language=Scheme}
 
@@ -18,12 +18,9 @@
 \begin{frame}[fragile]
   \frametitle{Подаване на функции като параметри}
 
-  В Scheme функциите са ``първокласни'' стойности.
-  \vspace{1em}
-
+  В Scheme функциите са ``първокласни'' стойности.\\[1em]
   \pause
-
-  Примери:
+  \textbf{Примери:}
   \begin{itemize}[<+->]
   \item \lst{(define (fixed-point? f x) (= (f x) x))}
   \item \evalstop{(fixed-point? sin 0)}{\#t}
@@ -36,7 +33,6 @@
   \item \evalstop{(branch number? log id \"1\")}{\"1\"}
   \item \evalstop{(branch string? number? procedure? symbol?)}{\#t}
   \end{itemize}
-
 \end{frame}
 
 \begin{frame}
@@ -102,46 +98,44 @@
 \begin{frame}[fragile]
   \frametitle{Приложения на \tt{sum}}
 
-  Решение на задачите за суми чрез \tt{sum}:
-  \begin{columns}[t,onlytextwidth]
-    \begin{column}{.3\textwidth}
-      \begin{equation*}
-        \sum_{i=k}^{100} i^2
-      \end{equation*}\\[1em]
-      \only<3->{
-        \begin{equation*}
-          \sum_{\substack{i=a\\i\rightarrow i + \Delta x}}^b \Delta x\,f(i)
-        \end{equation*}}
-      \only<6->{
-        \begin{equation*}
-          \sum_{\substack{i=x\\i\rightarrow e^i}}^{10^{1000}} i
-        \end{equation*}}
-    \end{column}
-    \begin{column}{.7\textwidth}
-      \onslide<2->
+
+  \begin{overlayarea}{\textwidth}{\textheight}
+    Решение на задачите за суми чрез \tt{sum}:
+    \begin{tabular}[t]{p{.3\linewidth}p{.7\linewidth}}
+      \[\sum_{i=k}^{100} i^2\]%
+      &
+        \onslide<2->
 \begin{lstlisting}
 (define (square x) (* x x))
 (define (1+ x) (+ x 1))
 (define (sum1 k) (sum k 100 square 1+))
-\end{lstlisting}
-      \onslide<4->
+\end{lstlisting}\\[-1em]
+      \only<3->{%
+      \[\only<5->{\Delta x\,}\sum_{\substack{i=a\\i\rightarrow i + \Delta x}}^b
+      \only<-4>{\Delta x\,}f(i)\]}
+      &
+        \onslide<4->
 \begin{lstlisting}
 (define (sum2 a b f dx)
-  @\only<4>{(define (term x) (* dx (f x)))}@
-  (define (next x) (+ x dx))
-  @\only<5->{(* dx }@(sum a b @\alt<4>{term}f@ next))@\only<5->)@
-\end{lstlisting}
-      \onslide<7->
+@\only<4>{(define (term x) (* dx (f x)))}@
+(define (next x) (+ x dx))
+@\only<5->{(* dx }@(sum a b @\alt<4>{term}f@ next))@\only<5->)@
+\end{lstlisting}\\[-1em]
+      \only<6->{%
+      \[\sum_{\substack{i=x\\i\rightarrow e^i}}^{10^{1000}} i\]}
+      &
+        \onslide<7->
 \begin{lstlisting}
 (define (sum3 x)
-  (sum x (expt 10 1000) id exp))
+(sum x (expt 10 1000) id exp))
 \end{lstlisting}
-    \end{column}
-  \end{columns}
+    \end{tabular}
+  \end{overlayarea}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Обобщена функция за произведение}
+
   Да се напише функция от по-висок ред \tt{product}, която пресмята:
   \begin{equation*}
     \prod_{\substack{i=a \\i \leftarrow next(i)}}^b term(i).
@@ -151,12 +145,12 @@
   \newcommand{\upper}{\textcolor{red}}
   \newcommand{\term}{\textcolor{green}}
   \newcommand{\next}{\textcolor{blue}}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\linespread{1.2}\ttfamily]
 (define (prod a @\upper{b}@ @\term{term}@ @\next{next}@)
   (if (> a @\upper{b}@) @\fb1@ (@\fb*@ @\term{(term a)}@ (prod @\next{(next a)}@ @\upper{b}@ @\term{term}@ @\next{next}@))))
 \end{lstlisting}
 \pause
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\linespread{1.2}\ttfamily]
 (define (sum a @\upper{b}@ @\term{term}@ @\next{next}@)
   (if (> a @\upper{b}@) @\fb0@ (@\fb+@ @\term{(term a)}@ (sum @\next{(next a)}@ @\upper{b}@ @\term{term}@ @\next{next}@))))
 \end{lstlisting}
@@ -505,6 +499,7 @@
 \begin{frame}[fragile]
   \frametitle{$n$-та производна}
 
+  \begin{overlayarea}\textwidth\textheight
   Да се намери $n$-та производна на дадена едноместна функция.\\[1em]
   \pause
   \textbf{Решение №1:} $f^{(n)} = (f^{(n-1)})'$\pause
@@ -525,6 +520,7 @@
   (@(\rvl{accumulate} \rvl{compose} \rvl{id} \rvl1 \rvl{n} \rvl{\\
 \hskip 15ex(lambda (i) (lambda (f) (derive f dx)))} \rvl{1+}) f))@
 \end{lstlisting}
+\end{overlayarea}
 \end{frame}
 
 \section{All you need is $\lambda$}
@@ -562,10 +558,10 @@
 \begin{lstlisting}
 (define #t (lambda (x y) x))
 (define #f (lambda (x y) y))
-(define (lambda-if b x y) @\only<2->(@(b x y)@\only<2->)@)
+(define (lambda-if b x y) @\only<3->(\alert<2>{(b x y)}\only<3->)@)
 \end{lstlisting}
-\pause\pause
-Примери:
+\onslide<4->
+\textbf{Примери:}
 \small
 \begin{itemize}[<+->]
 \item \evalsto{(lambda-if \#t (lambda () (+ 3 5)) (lambda () (/ 4 0)))}8
