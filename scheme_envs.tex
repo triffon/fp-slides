@@ -1199,18 +1199,18 @@
   $f_{40} = ?$
 \end{frame}
 
-\begin{frame}
+\begin{frame}<handout:5>
   \frametitle{Дървовидна рекурсия}
 
   \begin{center}
-    \only<1>{
+    \only<1 |handout:0>{
       \begin{forest} for tree={edge=->}
         [\tt{(fib 2)}
         [\tt{(fib 1)} [\tt 1]] [\tt{(fib 0)}
         [\tt 0]]]
       \end{forest}
     }
-    \only<2>{
+    \only<2 |handout:0>{
       \begin{forest} for tree={edge=->}
       [\tt{(fib 3)}
       [\tt{(fib 2)}
@@ -1219,7 +1219,7 @@
       [\tt{(fib 1)} [\tt 1]]]
       \end{forest}
     }
-    \only<3>{
+    \only<3 |handout:0>{
       \begin{forest} for tree={edge=->}
       [\tt{(fib 4)}
       [\tt{(fib 3)}
@@ -1232,7 +1232,7 @@
       [\tt{(fib 0)} [\tt 0]]]]
       \end{forest}
     }
-    \only<4>{
+    \only<4 |handout:0>{
       \scriptsize
       \begin{forest} for tree={edge=->}
       [\tt{(fib 5)}
