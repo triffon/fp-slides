@@ -45,6 +45,7 @@
       \end{itemize}
     \end{column}
 
+    % TODO: да се реализира с TikZ
     \begin{column}{.5\textwidth}
       \begin{envir}{E}
         \\\firstinenv \tt a&:&8
@@ -110,6 +111,7 @@
         \end{itemize}
       \end{column}
 
+      % TODO: да се реализира с TikZ
       \begin{column}{.5\textwidth}
         \begin{tabular}{c}
           \begin{envir}{E}
@@ -297,9 +299,11 @@
         \nxt{&\bda\\
         \inenv E&24}}}}}}}}}}\\
         % фантомен ред за предодвратяване на подскачането
+        % TODO: да се реализира с {overlayarea}
         &\phantom{\lst{(* 4 (* 3 (* 2 (* 1 (if (= n 0) 1 (* n (fact (- n 1))))))))}}
       \end{tabular}
     \end{column}
+    % TODO: да се реализира с TikZ
     \begin{column}{.37\textwidth}
       \begin{tabular}{*{8}{c@{}}c}
         \multicolumn{9}c{
@@ -363,9 +367,11 @@
   \frametitle{Факториел с цикъл}
 
   \begin{overlayarea}{\textwidth}{.5\textheight}
+  % TODO: да се разреди текста, за да се предодврати подскачането
   \begin{columns}[T,onlytextwidth]
     \begin{column}{.5\textwidth}
       Факториел на C++\\
+%TODO: може ли да се използва lstlisting тук?
 \begin{semiverbatim}
 \only<3>\fbox{int fact(int n)} \{
   \only<4>\fbox{int r = 1;}
@@ -378,6 +384,7 @@
     \pause
     \begin{column}{.5\textwidth}
       Превод на Scheme\\
+%TODO: може ли да се използва lstlisting тук?
 \begin{semiverbatim}
 (define (for n \only<4,8>\fbox{r} \only<5,7>\fbox{i})
   (if \only<6>\fbox{(<= i n)}
@@ -441,6 +448,7 @@
       \end{tabular}
     \end{column}
 
+    % TODO: да се реализира с TikZ
     \begin{column}{.4\textwidth}
       \tiny
       \begin{tabular}{*{8}{c@{}}c}
@@ -637,7 +645,6 @@
   \frametitle{Оценка на вложени функции}
 
   \scriptsize
-
   \begin{overlayarea}{\textwidth}{\textheight}
     \begin{columns}[T,onlytextwidth]
       \begin{column}{.5\textwidth}
@@ -660,6 +667,7 @@
           \inenv{E_1}&\tt 5}}}}}}}}}}}
         \end{tabular}
       \end{column}
+      % TODO: да се реализира с TikZ
       \begin{column}{.5\textwidth}
         \begin{tabular}{cc}
           \multicolumn 2c{
@@ -743,9 +751,11 @@
                      &\nxt{\bda\\
         \inenv{E_5}&\alt<+->{\lst{24}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}}}}}}}}\\
         % фантомен ред за предодвратяване на подскачането
+        % подскачането да се предодврати с {overlayarea}
         &\phantom{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}
       \end{tabular}
     \end{column}
+    % TODO: да се реализира с TikZ
     \begin{column}{.4\textwidth}
       \tiny
       \begin{tabular}{*{8}{c@{}}c}
@@ -873,6 +883,7 @@
 \begin{frame}
   \frametitle{Оценка на \tt{let}}
 
+  % TODO: примерът да бъде за area, понеже там се вижда разлика между let и let*
   \scriptsize
   \begin{columns}[T,onlytextwidth]
     \begin{column}{.5\textwidth}
@@ -898,6 +909,7 @@
         \inenv{E_2}&\tt 5}}}}}}}}
       \end{tabular}
     \end{column}
+    % TODO: да се реализира с TikZ
     \begin{column}{.5\textwidth}
       \begin{tabular}{ccc}
         \multicolumn 3c{
@@ -988,6 +1000,7 @@
   \frametitle{Оценка на \tt{let*}}
 
   \scriptsize
+  % TODO: примерът да бъде за area, понеже там се вижда разлика между let и let*
   \begin{columns}[T,onlytextwidth]
     \begin{column}{.5\textwidth}
       \begin{tabular}{rc}
@@ -1012,6 +1025,7 @@
         \inenv{E_3}&\tt5}}}}}}}}}
       \end{tabular}
     \end{column}
+    % TODO: да се реализира с TikZ
     \begin{column}{.5\textwidth}
       \begin{tabular}{ccc}
         \multicolumn 3c{
@@ -1053,7 +1067,7 @@
         \begin{envir}{E_3}
           \\\firstinenv \tt{dy}&:&4
         \end{envir}}}
-      \end{tabular}  
+      \end{tabular}
     \end{column}
   \end{columns}
 \end{frame}
