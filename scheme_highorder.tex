@@ -3,7 +3,7 @@
 
 \title{Функции от по-висок ред}
 
-\date{26 октомври 2017 г.}
+\date[26.10--2.11]{26 октомври -- 2 ноември 2017 г.}
 
 \lstset{language=Scheme}
 
@@ -351,9 +351,6 @@
 \item $n!$
 \item $x^n$
 \item $\sum_{i=0}^n \frac{x^i}{i!}$
-\end{itemize}
-\end{frame}
-\end{document}
 \item $\exists x\in[a;b]\; p(x)$
 \end{itemize}
 \end{frame}
@@ -590,19 +587,102 @@
 \begin{frame}[fragile]
   \frametitle{All you need is $\lambda$ --- рекурсия}
 
-  Комбинатор \tt Y за намиране на най-малка неподвижна точка (fixpoint combinator)
-\begin{lstlisting}
-(define Y (lambda (f)
-           ((lambda (x) (f (lambda (n) ((x x) n))))
-            (lambda (x) (f (lambda (n) ((x x) n)))))))
-\end{lstlisting}
-\pause
-\begin{lstlisting}
-(define fact-body (lambda (f)
-                   (lambda (n) (if (= n 0) 1
-                                   (* n (f (- n 1)))))))
-(define fact (Y fact-body))
-\end{lstlisting}
+  Рекурсивна дефиниция:
+  \begin{lstlisting}
+    (define f (gamma f))
+  \end{lstlisting}%
+  \pause
+  \textbf{Пример:}
+  \begin{overlayarea}{\textwidth}{0.3\textheight}
+  \begin{onlyenv}<+>
+    \begin{lstlisting}
+      (define (fact n)
+        (if (= n 0) 1 (* n (fact (- n 1)))))
+    \end{lstlisting}%
+  \end{onlyenv}
+  \begin{onlyenv}<+>
+    \begin{lstlisting}
+      (define fact
+        (lambda (n)
+          (if (= n 0) 1 (* n (fact (- n 1))))))
+    \end{lstlisting}%
+  \end{onlyenv}
+  \begin{onlyenv}<+>
+    \begin{lstlisting}
+      (define fact (gamma fact))
+      (define (gamma f)
+        (lambda (n)
+          (if (= n 0) 1 (* n (f (- n 1))))))
+    \end{lstlisting}%
+  \end{onlyenv}
+  \begin{onlyenv}<+->
+    \begin{lstlisting}
+      (define fact (gamma fact))
+      (define gamma
+        (lambda (f)
+          (lambda (n)
+            (if (= n 0) 1 (* n (f (- n 1)))))))
+          \end{lstlisting}%
+  \end{onlyenv}
+\end{overlayarea}
+  \onslide<+->
+  \lst{fact} е най-малка неподвижна точка на оператора \lst{gamma}.\\
+  \onslide<+->
+  Търсим \lst{fact} такова, че \lst{(fact n)} = \lst{((gamma fact) n)} = \lst{((gamma (gamma fact)) n)} = \lst{((gamma (gamma (gamma fact))) n)} = \ldots
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{All you need is $\lambda$ --- намиране на неподвижна точка}
+  \textbf{Идея №1:} \lst{(define fact (((repeated gamma ?) 'empty))}\\
+  \pause
+  \textbf{Проблем №1:} Не знаем колко пъти да повторим \tt{gamma}\ldots\\[1em]
+  \pause
+  \textbf{Идея №2:} Да повтаряме \tt{gamma} безкрайно!
+  \begin{lstlisting}
+    (define (gamma-inf) (lambda (n) ((gamma (gamma-inf)) n)))
+    (define fact (gamma-inf))\end{lstlisting}%
+  \pause
+  \textbf{Проблем №2:} \lst{gamma-inf} се дефинира рекурсивно\ldots\\[1em]
+  \pause
+  \textbf{Идея №3:} Да подменим рекурсивното извикване с параметър:
+  \begin{lstlisting}
+    (define (gamma-inf me) (lambda (n) ((gamma (me me)) n)))\end{lstlisting}%
+  \pause
+  \textbf{Идея №4:} Да подадем \tt{gamma-inf} като параметър на себе си!
+  \pause
+  \begin{lstlisting}
+    (define fact (gamma-inf gamma-inf))\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{All you need is $\lambda$ --- комбинатор \tt Y}
+  Да напишем функция, която намира неподвижната точка на произволен оператор \tt{gamma}:
+  \begin{lstlisting}
+    (define (Y gamma)
+      (define (gamma-inf me) (lambda (n) ((gamma (me me)) n)))
+      (gamma-inf gamma-inf))\end{lstlisting}
+  \pause
+  А сега само с $\lambda$:
+  \begin{overlayarea}{\textwidth}{0.3\textheight}
+  \begin{onlyenv}<+>
+  \begin{lstlisting}
+    (define Y
+      (lambda (gamma)
+        ((lambda (gamma-inf) (gamma-inf gamma-inf))
+         (lambda (me) (lambda (n) ((gamma (me me) n)))))))
+   \end{lstlisting}
+ \end{onlyenv}
+ \begin{onlyenv}<+->
+  \begin{lstlisting}
+    (define Y
+      (lambda (gamma)
+        ((lambda (me) (lambda (n) ((gamma (me me) n))))
+         (lambda (me) (lambda (n) ((gamma (me me) n)))))))
+   \end{lstlisting}
+ \end{onlyenv}
+\end{overlayarea}
+   \onslide<+->
+   \tt Y се нарича комбинатор за намиране на най-малка неподвижна точка (fixpoint combinator).
 \end{frame}
 
 \end{document}
