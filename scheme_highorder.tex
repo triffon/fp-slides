@@ -594,20 +594,20 @@
   \pause
   \textbf{Пример:}
   \begin{overlayarea}{\textwidth}{0.3\textheight}
-  \begin{onlyenv}<+>
+  \begin{onlyenv}<+ |handout:0>
     \begin{lstlisting}
       (define (fact n)
         (if (= n 0) 1 (* n (fact (- n 1)))))
     \end{lstlisting}%
   \end{onlyenv}
-  \begin{onlyenv}<+>
+  \begin{onlyenv}<+ |handout:0>
     \begin{lstlisting}
       (define fact
         (lambda (n)
           (if (= n 0) 1 (* n (fact (- n 1))))))
     \end{lstlisting}%
   \end{onlyenv}
-  \begin{onlyenv}<+>
+  \begin{onlyenv}<+ |handout:0>
     \begin{lstlisting}
       (define (fact n) ((gamma fact) n))
       (define (gamma f)
@@ -664,7 +664,7 @@
   \pause
   А сега само с $\lambda$:
   \begin{overlayarea}{\textwidth}{0.3\textheight}
-  \begin{onlyenv}<+>
+  \begin{onlyenv}<+ |handout:0>
   \begin{lstlisting}
     (define Y
       (lambda (gamma)
