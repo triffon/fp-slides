@@ -3,7 +3,7 @@
 
 \title{Списъци}
 
-\date{3--10 ноември 2016 г.}
+\date{2 ноември 2017 г.}
 
 \lstset{language=Scheme}
 
@@ -17,10 +17,10 @@
 \usetikzlibrary{graphs}
 \usetikzlibrary{positioning}
 
-\section{Точкови двойки}
+\section{Наредени двойки}
 
 \begin{frame}
-  \frametitle{Точкови двойки}
+  \frametitle{Наредени двойки}
 
   \begin{columns}[t,onlytextwidth]
     \begin{column}{.5\textwidth}
@@ -45,13 +45,13 @@
   \vspace{1em}
   \begin{itemize}[<+->]
   \item \tta{(cons }<израз$_1$> <израз$_2$>\tta)
-  \item Точкова двойка от оценките на <израз$_1$> и <израз$_2$>
+  \item Наредена двойка от оценките на <израз$_1$> и <израз$_2$>
   \item \tta{(car }<израз>\tta)
   \item \textbf{Първият} компонент на двойката, която е оценката на <израз>
   \item \tta{(cdr }<израз>\tta)
   \item \textbf{Вторият} компонент на двойката, която е оценката на <израз>
   \item \tta{(pair? }<израз>\tta)
-  \item Проверява дали оценката на <израз> е точкова двойка
+  \item Проверява дали оценката на <израз> е наредена двойка
   \end{itemize}
 \end{frame}
 
@@ -106,6 +106,7 @@
   \end{columns}
 \end{frame}
 
+\begin{comment}
 \begin{frame}
   \frametitle{S-изрази}
 
@@ -113,7 +114,7 @@
     S-израз наричаме:
     \begin{itemize}
     \item атоми (булеви, числа, знаци, символи, низове, функции)
-    \item точкови двойки \tt{(S$_1$ . S$_2$)}, където \tt{S$_1$} и \tt{S$_2$} са S-изрази
+    \item наредени двойки \tt{(S$_1$ . S$_2$)}, където \tt{S$_1$} и \tt{S$_2$} са S-изрази
     \end{itemize}
   \end{definition}
   \vspace{1em}
@@ -121,9 +122,9 @@
   \alert{S-изразите са най-общият тип данни в Scheme.}\\[1em]
   С тяхна помощ могат да се дефинират произволно сложни структури от данни.
 \end{frame}
-
+\end{comment}
 \begin{frame}[fragile]
-  \frametitle{All you need is $\lambda$ --- точкови двойки}
+  \frametitle{All you need is $\lambda$ --- наредени двойки}
 
   Можем да симулираме \tt{cons}, \tt{car} и \tt{cdr} чрез \tt{lambda}!\\[1em]
   \pause
@@ -184,7 +185,7 @@
   \item \tt{(cons }<глава> <опашка>\tt) --- списък с <глава> и <опашка>
   \item \tt{(car }<списък>\tt) --- главата на <списък>
   \item \tt{(cdr }<списък>\tt) --- опашката на <списък>
-  \item \alert{\tt{()} не е точкова двойка!}
+  \item \alert{\tt{()} не е наредена двойка!}
   \item \evalstoerr{(car '())},\hskip 2ex \evalstoerr{(cdr '())}
   \end{itemize}
 \end{frame}
@@ -213,7 +214,7 @@
     \item Ако \tt{(eq? }<израз$_1$> <израз$_2$>\tt),\\
       то със сигурност \tt{(eqv? }<израз$_1$> <израз$_2$>\tt)
     \end{itemize}
-  \item \tta{(equal? }<израз$_1$> <израз$_2$>\tta) --- връща \tt{\#t} точно тогава, когато оценките на <израз$_1$> и <израз$_2$> са едни и същи по стойност \textbf{атоми или точкови двойки}, чиито компоненти са равни в смисъла на \tt{equal?}
+  \item \tta{(equal? }<израз$_1$> <израз$_2$>\tta) --- връща \tt{\#t} точно тогава, когато оценките на <израз$_1$> и <израз$_2$> са едни и същи по стойност \textbf{атоми или наредени двойки}, чиито компоненти са равни в смисъла на \tt{equal?}
     \begin{itemize}
     \item В частност, \tt{equal?} проверява за равенство на списъци
     \item Ако \tt{(eqv? }<израз$_1$> <израз$_2$>\tt),\\
@@ -222,7 +223,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}<1-5>
   \frametitle{Вградени функции за списъци}
   \small
   \begin{itemize}[<+->]
@@ -241,7 +242,7 @@
   \item \tta{(memq }<елемент> <списък>\tta) --- като \tt{member}, но сравнява с \tt{eq?}
   \end{itemize}
 \end{frame}
-
+\end{document}
 \subsection{Рекурсия над списъци}
 
 \begin{frame}
@@ -372,6 +373,7 @@
 
 \begin{frame}[fragile,label=filterex]
   \frametitle{Филтриране на списък (\tt{filter})}
+  \begin{overlayarea}{\textwidth}{\textheight}
 \begin{lstlisting}
 (define (filter p? l)
    (cond ((null? l) l)
@@ -384,6 +386,7 @@
   \item \scriptsize\evalstop{(map (lambda (x) (filter even? x)) '((1 2 3) (4 5 6) (7 8 9)))}{((2) (4 6) (8))}
   \item \evalstop{(map (lambda (x) (map (lambda (f) (filter f x)) (list negative? zero? positive?))) '((-2 1 0) (1 4 -1) (0 0 1)))}{(((-2) (0) (1)) ((-1) () (1 4)) (() (0 0) (1)))}
   \end{itemize}
+\end{overlayarea}
 \end{frame}
 
 \begin{frame}[fragile,label=foldr]
@@ -477,7 +480,7 @@
   \begin{itemize}[<+->]
   \item \evalstop{(foldl * 1 (from-to 1 5))}{120}
   \item \evalstop{(foldl cons '() '(1 5 10))}{(((() . 1) . 5) . 10)}
-  \item \evalstos{\tt{(foldl }\rvl{\lst{(lambda (x y) (cons y x))}}\lst{ '() '(1 5 10))}}{\tt{(10 5 1)}}
+  \item \evalstos{\tt{(foldl }\rvl{\lst{(lambda (x y) (cons y x))}} \lst{ '() '(1 5 10))}}{\tt{(10 5 1)}}
   \item \evalstop{(foldl list '() '(1 5 10))}{(((() 1) 5) 10)}
   \item \evalstop{(foldl append '() '((a b) (c d) (e f)))}{(a b c d e f)}
   \item \tt{foldr} генерира линеен рекурсивен процес, а \tt{foldl} --- линеен итеративен
@@ -490,7 +493,7 @@
   В R$^5$RS е дефинирана само функцията \tt{map}.\\
   В Racket са дефинирани функциите \tt{map}, \tt{filter}, \tt{foldr}, \tt{foldl}\\[1em]
   \pause
-  \alert{Внимание: \tt{foldl} в Racket е дефинирана по-различен начин!}\\[1em]
+  \alert{Внимание: \tt{foldl} в Racket е дефинирана по различен начин!}\\[1em]
   \begin{columns}[T,onlytextwidth]
     \small
     \begin{column}{.5\textwidth}
@@ -606,7 +609,7 @@
 \begin{frame}[fragile]
   \frametitle{Примери}
 
-  \textbf{Задача.} Да се обърне реда на атомите във вложен списък.\\
+  \textbf{Задача.} Да се обърне редът на атомите във вложен списък.\\
   \evalsto{(deep-reverse '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}{(8 ((7) () ((6) 5) (4 (3))) ((2) 1))}
   \pause
 \begin{lstlisting}
