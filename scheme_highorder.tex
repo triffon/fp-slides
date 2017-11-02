@@ -218,14 +218,14 @@
   \pause
   \alert{Можем ли да сметнем с \tt{accumulate}?}\\
   \pause
-  \textbf{Идея:} Да използваме операцията $a \oplus b := ax + b$.\\
+  \textbf{Идея:} Да използваме операцията $u \oplus v := ux + v$.\\
   \pause
   \alert{Коя е ``нулевата стойност''  $\bot$?}\\[0.5em]
   \pause
   \textbf{Решение №2:}
 \begin{lstlisting}
 (define (p n x)
-  (define (op a b) (+ (* a x) b))
+  (define (op u v) (+ (* u x) v))
   (accumulate op 0 1 (1+ n) id 1+))
 \end{lstlisting}
   \pause
@@ -240,12 +240,12 @@
   Q_n(x) = x + 2x + 3x + \ldots + nx + (n+1)x= \frac{(n+1)(n+2)}2x.
 \end{equation*}
   \pause
-  \textbf{Идея:} Да използваме операцията $a \oplus b := a + bx$.\\[1em]
+  \textbf{Идея:} Да използваме операцията $u \oplus v := u + vx$.\\[1em]
   \pause
   \textbf{Решение №3:}
 \begin{lstlisting}
 (define (p n x)
-  (define (op a b) (+ a (* b x)))
+  (define (op u v) (+ u (* v x)))
   (accumulate op 0 1 (1+ n) id 1+))
 \end{lstlisting}
   \pause
@@ -266,7 +266,7 @@
     &=& \pnx.
   \end{eqnarray*}
   \pause
-  \alert{За неасоциативни  операции $\oplus$ има значение в какъв ред са скобите!}
+  \alert{За неасоциативни операции $\oplus$ има значение в какъв ред са скобите!}
 \end{frame}
 
 \subsection{Ляво натрупване}
@@ -299,12 +299,12 @@
     P_n(x) &=& \pnx\\
     &=& \pnxh
   \end{eqnarray*}
-  Идея: използваме \tt{accumulate-i} и $a \oplus b := ax + b$.\\[1em]
+  Идея: използваме \tt{accumulate-i} и $u \oplus v := ux + v$.\\[1em]
   \pause
   \textbf{Решение №4:}
 \begin{lstlisting}
 (define (p n x)
-  (define (op a b) (+ (* a x) b))
+  (define (op u v) (+ (* u x) v))
   (accumulate-i op 0 1 (1+ n) id 1+))
 \end{lstlisting}
 \end{frame}
@@ -342,7 +342,7 @@
 \pause
 \begin{lstlisting}
 (define (p n x)
-   (accumulate-i + 0 1 (+ n 1) (lambda (a b) (+ (* a x) b))
+   (accumulate-i + 0 1 (+ n 1) (lambda (u v) (+ (* u x) v))
                                (lambda (i) (+ i 1))))
 \end{lstlisting}
 \pause
@@ -453,7 +453,7 @@
   \frametitle{Намиране на производна}
 
   \begin{equation*}
-    f'(x) \alt<1>{= \lim_{x\to\infty} \frac{f(x+\Delta x) - f(x)}{\Delta x}}{\approx\frac{f(x+\Delta x) - f(x)}{\Delta x}\;\text{ за малки }\Delta x}
+    f'(x) \alt<1>{= \lim_{\Delta x\to 0} \frac{f(x+\Delta x) - f(x)}{\Delta x}}{\approx\frac{f(x+\Delta x) - f(x)}{\Delta x}\;\text{ за малки }\Delta x}
   \end{equation*}
   \pause\pause
 \begin{lstlisting}
@@ -477,7 +477,7 @@
     f^n(x) = \underbrace{f(f(f(\ldots(f}_n(x))\ldots)))
   \end{equation*}
   \pause
-  \textbf{Решение №1:} $f^n(x) = f(f^{n-1}(x))$ \pause
+  \textbf{Решение №1:} $f^0(x) = x, f^n(x) = f(f^{n-1}(x))$ \pause
 \begin{lstlisting}
 (define (repeated f n)
   (lambda (x) (if (= n 0) x (f ((repeated f (- n 1)) x)))))
@@ -502,7 +502,7 @@
   \begin{overlayarea}\textwidth\textheight
   Да се намери $n$-та производна на дадена едноместна функция.\\[1em]
   \pause
-  \textbf{Решение №1:} $f^{(n)} = (f^{(n-1)})'$\pause
+  \textbf{Решение №1:} $f^{(0)} = f, f^{(n)} = (f^{(n-1)})'$\pause
 \begin{lstlisting}
 (define (derive-n f n dx)
   (if (= n 0) f (derive (derive-n f (- n 1) dx) dx)))
@@ -609,7 +609,7 @@
   \end{onlyenv}
   \begin{onlyenv}<+>
     \begin{lstlisting}
-      (define fact (gamma fact))
+      (define (fact n) ((gamma fact) n))
       (define (gamma f)
         (lambda (n)
           (if (= n 0) 1 (* n (f (- n 1))))))
@@ -617,7 +617,7 @@
   \end{onlyenv}
   \begin{onlyenv}<+->
     \begin{lstlisting}
-      (define fact (gamma fact))
+      (define (fact n) ((gamma fact) n))
       (define gamma
         (lambda (f)
           (lambda (n)
