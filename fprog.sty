@@ -79,7 +79,7 @@
 \newcommand{\lst}{\lstinline}
 
 % код в червено
-\newcommand{\tta}[1]{\tt{\alert{#1}}}
+\newcommand{\tta}[1]{\tt{\alert{#1}}\xspace}
 
 % зачертан код в червено
 \newcommand{\sta}[1]{\tta{\st{#1}}}
@@ -108,7 +108,7 @@
 %%% макроси
 
 % оценява се до...
-\newcommand{\evalstox}[1]{\lst!#1! $\longrightarrow$}
+\newcommand{\evalstox}[1]{\lst!#1! \nolinebreak$\longrightarrow$}
 
 % оценява се до стойност
 \newcommand{\evalsto}[2]{\evalstox{#1} \lst!#2!}
@@ -120,25 +120,25 @@
 \newcommand{\evalstoinf}[1]{\evalsto{#1}{...}}
 
 % оценява се до стойност с пауза за въпрос
-\newcommand{\evalstop}[2]{\evalstox{#1} \rvl{\lst!#2!}}
+\newcommand{\evalstop}[2]{\evalstox{#1} \nolinebreak\rvl{\lst!#2!}}
 
 % оценява се до стойност с пауза за въпрос без форматиране
-\newcommand{\evalstops}[2]{\evalstos{#1} \rvl{\tt{#2}}}
+\newcommand{\evalstops}[2]{\evalstos{#1} \nolinebreak\rvl{\tt{#2}}}
 
 % грешка при оценяване
-\newcommand{\evalstoerr}[1]{\evalstox{#1} \textsf{\alert{Грешка!}}}
+\newcommand{\evalstoerr}[1]{\evalstox{#1} \nolinebreak \textsf{\alert{Грешка!}}}
 
 % грешка при оценяване без lstlisting
-\newcommand{\evalstoerrs}[1]{\evalstos{#1}{\textsf{\alert{Грешка!}}}}
+\newcommand{\evalstoerrs}[1]{\evalstos{#1}\nolinebreak \textsf{\alert{Грешка!}}}
 
 % грешка при оценяване с пауза за въпрос
-\newcommand{\evalstoerrp}[1]{\evalstox{#1} \rvl{\textsf{\alert{Грешка!}}}}
+\newcommand{\evalstoerrp}[1]{\evalstox{#1} \nolinebreak\rvl{\textsf{\alert{Грешка!}}}}
 
 % два израза се оценяват до една и съща стойност
-\newcommand{\evalstwo}[3]{\lst!#1! $\longrightarrow$ \lst!#2! $\longleftarrow$ \lst!#3!}
+\newcommand{\evalstwo}[3]{\lst!#1! \nolinebreak$\longrightarrow$ \nolinebreak\lst!#2!\nolinebreak $\longleftarrow$ \nolinebreak\lst!#3!}
 
 % два израза се оценяват до една и съща стойност с пауза за въпрос
-\newcommand{\evalstwop}[3]{\lst!#1! $\longrightarrow$ \rvl{#2} $\longleftarrow$ \lst!#3!}
+\newcommand{\evalstwop}[3]{\lst!#1! \nolinebreak$\longrightarrow$ \nolinebreak\rvl{#2} \nolinebreak$\longleftarrow$ \nolinebreak \lst!#3!}
 
 % има тип
 \newcommand{\typesto}[2]{\lst!#1 :: #2!}
