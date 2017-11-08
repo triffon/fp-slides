@@ -4,7 +4,7 @@
 \title{Структури от данни в Scheme}
 \subtitle{матрици, дървета, асоциативни списъци, графи}
 
-\date{10--17 ноември 2016 г.}
+\date{9 ноември 2017 г.}
 
 \lstset{language=Scheme}
 
@@ -20,9 +20,8 @@
 
 \begin{frame}[fragile]
   \frametitle{Представяне на матрици}
-  Можем да представим матрица като списък от списък от елементи:
-
-  \begin{columns}[t,onlytextwidth]
+  Можем да представим матрица като списък от списък от елементи:\\
+  \begin{columns}[T,onlytextwidth]
     \begin{column}{0.5\textwidth}
       \begin{equation*}
         \left(
@@ -34,7 +33,7 @@
       \end{equation*}
     \end{column}
     \begin{column}{0.5\textwidth}
-
+      \vspace{1em}
       \tt{((1 2 3) (4 5 6))}
     \end{column}
   \end{columns}
@@ -122,7 +121,7 @@
   \pause
   \small
 \begin{lstlisting}
-(define (mult-vectors v1 v2) (apply + (map * v1 v2)))
+(define (mult-vectors v1 v2) (apply + (map * v1 v2)))@\pause@
 (define (mult-matrices m1 m2)
   (let ((m2t (transpose m2)))
        (map (lambda (row)
@@ -161,7 +160,7 @@
 
   \begin{itemize}
   \item Логическо описание: обикновена дроб
-  \item Физическо представяне: точкова двойка от цели числа
+  \item Физическо представяне: наредена двойка от цели числа
   \item Базови операции:
     \begin{itemize}[<.->]
     \item конструиране на рационално число
@@ -203,13 +202,13 @@
       \multicolumn 1c\bua\\
       \hline
       физическо представяне\\
-      (точкова двойка от цели числа)\\
+      (наредена двойка от цели числа)\\
       \hline
     \end{tabular}
   \end{center}
 \end{frame}
 
-\subsection{Абстракция с точкови двойки}
+\subsection{Абстракция с наредени двойки}
 
 \begin{frame}[fragile]
   \frametitle{Рационални числа}
@@ -601,7 +600,7 @@
   \frametitle{Асоциативни списъци}
 
   \begin{definition}
-    Асоциативните списъци (още: речник, хеш, map) са списъци от точкови двойки \tt(<ключ> \tt. <стойност>\tt). <ключ> и <стойност> може да са произволни S-изрази.
+    Асоциативните списъци (още: речник, хеш, map) са списъци от наредени двойки \tt(<ключ> \tt. <стойност>\tt). <ключ> и <стойност> може да са произволни S-изрази.
   \end{definition}
   \vspace{1em}
   \tt{((}$K_1$ \tt. $V_1$\tt) \tt($K_1$ \tt. $V_2$\tt) \ldots \tt($K_n$ \tt. $V_n$\tt{))}\\[1em]
@@ -717,7 +716,6 @@
 (define (assq key al)
   (search (lambda (kv) (and (eq? (car kv) key) kv)) al))
 \end{lstlisting}
-  \pause
 \end{frame}
 
 \begin{frame}[fragile]
@@ -804,16 +802,16 @@
 \begin{lstlisting}
 (define (vertices g) (map car g))
 
-(define (children v g)             ;; @\alert{\(\{u|u\leftarrow{}v\}\)}@
+(define (children v g)             @\alert{\(\{u|u\leftarrow{}v\}\)}@
   (cdr (assq v g))))
 
-(define (edge? u v g)              ;; @\alert{\(u\stackrel?\rightarrow{}v\)}@
+(define (edge? u v g)              @\alert{\(u\stackrel?\rightarrow{}v\)}@
   (memq v (children u g)))
 
-(define (map-children v f g)       ;; @\alert{\(\forall{}u\leftarrow{}v\)}@
+(define (map-children v f g)       @\alert{\(\forall{}u\leftarrow{}v\)}@
   (map f (children v g)))
 
-(define (search-child v f g)       ;; @\alert{\(\exists{}u\leftarrow{}v\)}@
+(define (search-child v f g)       @\alert{\(\exists{}u\leftarrow{}v\)}@
   (search f (children v g)))
 \end{lstlisting}
 \end{frame}
@@ -830,14 +828,14 @@
       ('print g)
       ('vertices (map car g))
       ('children (let ((v (car params)))
-                   (cdr (assq v g))))             ;; @\alert{\(\{u|u\leftarrow{}v\}\)}@
+                   (cdr (assq v g))))             @\alert{\(\{u|u\leftarrow{}v\}\)}@
       ('edge? (let ((u (car params)) (v (cadr params)))
-                (memq v (self 'children u))))     ;; @\alert{\(u\stackrel?\rightarrow{}v\)}@
+                (memq v (self 'children u))))     @\alert{\(u\stackrel?\rightarrow{}v\)}@
       ('map-children (let ((v (car params))
-                           (f (cadr params)))     ;; @\alert{\(\forall{}u\leftarrow{}v\)}@
+                           (f (cadr params)))     @\alert{\(\forall{}u\leftarrow{}v\)}@
                        (map f (self 'children v))))
       ('search-child (let ((v (car params))
-                           (f (cadr params)))     ;; @\alert{\(\exists{}u\leftarrow{}v\)}@
+                           (f (cadr params)))     @\alert{\(\exists{}u\leftarrow{}v\)}@
                        (search f (self 'children v))))))
   self)
 \end{lstlisting}
@@ -1001,6 +999,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Разширяване на пътища}
+
   Удобно е пътищата да са представени като \alert{стек}
   \begin{itemize}
   \item последно посетеният възел е най-лесно достъпен
@@ -1035,6 +1034,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Търсене на път в ширина}
+
   \textbf{Задача.} Да се намери \alert{най-краткия} път от \tt u до \tt v, ако такъв има.\\
   \pause
   \textbf{Решение.} Обхождаме в ширина от \tt u докато намерим ниво, в което има път, завършващ във върха  \tt v.
