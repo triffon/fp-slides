@@ -577,7 +577,7 @@
   \onslide<+->
   За удобство можем да дефинираме функцията \tt{atom?}:
 \begin{lstlisting}
-(define (atom? x) (not (pair? x)))
+(define (atom? x) (and (not (null? x)) (not (pair? x))))
 \end{lstlisting}
 \end{frame}
 
@@ -624,7 +624,7 @@
 \begin{frame}[fragile]
   \frametitle{Свиване на вложени списъци}
 
-  \tt{(deep-fold }<х-дъно> <в-дъно> <операция>\tt)\\
+  \tt{(deep-fold }<х-дъно> <в-дъно> <операция> <списък>\tt)\\
   \pause
   \onslide<+->
 \begin{lstlisting}
@@ -667,10 +667,9 @@
   \onslide<+->
 \begin{lstlisting}
 (define (branch p? f g) (lambda (x) (p? x) (f x) (g x)))
-(define (valid-atom?) (and (not (pair? x)) (not (null? x))))
 (define (deep-fold nv term op l)
   (foldr @\hstep{op} \hzero{nv}@
-   (map (branch valid-atom?
+   (map (branch atom?
                 @\vzero{term}@
                 @\vstep{(lambda (l) (deep-fold nv term op l))}@
         l)))
@@ -754,7 +753,7 @@
   \begin{itemize}[<+->]
   \item \tta{(apply }<функция> <списък>\tta)
   \item прилага <функция> над <списък> от параметри
-  \item Примери:
+  \item \textbf{Примери:}
   \item \evalsto{(apply + '(1 2 3 4 5))}{15}
   \item \evalstop{(apply append '((1 2) (3 4) (5 6)))}{(1 2 3 4 5 6)}
   \item \evalstop{(apply list '(1 2 3 4))}{(1 2 3 4)}
@@ -778,7 +777,7 @@
   \item връща оценката на \textbf{оценката на <списък>} в <среда>
   \item \tta{(interaction-environment)} --- текущата среда, в която оценяваме
   \item \lst{(define (evali x) (eval x (interaction-environment)))}
-  \item Примери:
+  \item \textbf{Примери:}
   \item \lst{(define a 2)}
   \item \evalsto a2
   \item \evalsto{(evali a)}2
