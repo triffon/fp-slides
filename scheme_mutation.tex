@@ -3,7 +3,7 @@
 
 \title{Мутиращи операции}
 
-\date{24 ноември 2016 г.}
+\date{16 ноември 2017 г.}
 
 \lstset{language=Scheme}
 
@@ -17,7 +17,7 @@
   \frametitle{Мутиращи операции в Scheme}
 
   Мутиращите операции в Scheme позволяват въвеждането на \alert{странични ефекти}.\\[2em]
-  Преглед:
+  \textbf{Преглед:}
   \begin{itemize}[<+->]
   \item \lst{set!} --- промяна на оценка, свързана със символ
   \item \lst{set-car!}, \lst{set-cdr!} --- промяна на компоненти на точкови двойки
@@ -80,7 +80,7 @@
   \item \tta{(set-car! }<двойка> <израз>\tta)
   \item<.-> \tta{(set-cdr! }<двойка> <израз>\tta)
   \item Съответният компонент на <двойка> се променя да сочи към оценката на <израз>
-  \item Примери:
+  \item \textbf{Примери:}
     \begin{itemize}
     \item \lst{(define p (cons (cons 1 2) (cons 3 4)))}
     \item \lst{(set-car! p 7)}

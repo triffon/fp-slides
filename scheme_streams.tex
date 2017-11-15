@@ -3,7 +3,7 @@
 
 \title{Потоци}
 
-\date{24 ноември 2016 г.}
+\date{16 ноември 2017 г.}
 
 \lstset{language=Scheme}
 
@@ -45,7 +45,7 @@
   \item \tta{(force }<обещание>\tta)
   \item форсира изчислението на <обещание> и връща оценката на <израз> \visible<5->{\alert{(примитивна функция)}}
     \pause
-  \item Примери:
+  \item \textbf{Примери:}
     \begin{itemize}
     \item \lst{(define bigpromise (delay (fact 30000)))}
     \item \lst{(force bigpromise)}$\;\xrightarrow{\hspace*{3cm}}\;$\tt{2759537246...}
@@ -82,9 +82,10 @@
   \begin{definition}[Поток]
     Списък, чиито елементи се изчисляват отложено. \\
     \pause
-    По-точно: Поток е празен списък \tt{()} или точкова двойка \tt{(h . t)}, където
+    По-точ
+    но: Поток е празен списък \tt{()} или двойка \tt{(h . t)}, където
       \begin{itemize}
-      \item \tt h --- е S-израз (глава на потока)
+      \item \tt h --- е произволен елемент (глава на потока)
       \item \tt t --- е \alert{обещание} за поток (опашка на потока)
       \end{itemize}
   \end{definition}
@@ -127,7 +128,7 @@
   \item Повечето специални форми на Scheme могат да се дефинират с \tt{define-syntax} (за справка: R$^5$RS)
   \end{itemize}
   \onslide<+->
-  Примери:
+  \textbf{Примери:}
   \onslide<+->
 \begin{lstlisting}
 (define-syntax delay
@@ -261,9 +262,18 @@
                  & 1 & 2 & 3 & 4 & 5 & 6 & \ldots
   \end{tabular}\\
   \pause
-\begin{semiverbatim}
-(define nats (cons-stream 0 \alt<5->{(zip-streams + ones nats)}{(map-stream 1+ nats)}))
-\end{semiverbatim}
+  \begin{overprint}
+  \begin{onlyenv}<4>
+\begin{lstlisting}
+(define nats (cons-stream 0 (map-stream 1+ nats)))
+\end{lstlisting}
+  \end{onlyenv}
+  \begin{onlyenv}<5->
+\begin{lstlisting}
+(define nats (cons-stream 0 (zip-streams + ones nats)))
+\end{lstlisting}
+  \end{onlyenv}
+\end{overprint}
   \pause\pause
   Построяване на \tt{fibs}:\hspace{4ex}
   \begin{tabular}{*8c}
