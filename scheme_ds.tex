@@ -632,7 +632,7 @@
   Създаване на асоциатвен списък по списък от ключове и функция:
 \begin{lstlisting}
 (define (make-alist f keys)
-  (map (lambda (x) (cons x (f x))) l))
+  (map (lambda (x) (cons x (f x))) keys))
 \end{lstlisting}
   \onslide<+->
   \evalsto{(make-alist square '(1 3 5))}{((1 . 1) (3 . 9) (5 . 25))}
@@ -641,7 +641,7 @@
 \subsection{Операции}
 
 \begin{frame}[fragile]
-  \frametitle{Операции над асоциативни списъци}
+  \frametitle{Селектори за асоциативни списъци}
 
   \begin{itemize}[<+->]
   \item \lst{(define (keys alist) (map car alist))}
@@ -653,7 +653,7 @@
     \item Ако <ключ> не се среща сред ключовете, връща \tt{\#f}
     \item Сравнението се извършва с \tt{equal?}
     \end{itemize}
-  \item \tta{(assqv }<ключ> <асоциативен-списък>\tta)
+  \item \tta{(assv }<ключ> <асоциативен-списък>\tta)
     \begin{itemize}[<.->]
     \item също като \tt{assoc}, но сравнява с \tt{eqv?}
     \end{itemize}
@@ -661,15 +661,30 @@
     \begin{itemize}[<.->]
     \item също като \tt{assoc}, но сравнява с \tt{eq?}
     \end{itemize}
-  \item Изтриване на ключ и съответната му стойност:\\
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Трансформации над асоциативни списъци}
+  
+  \begin{itemize}[<+->]
+  \item Изтриване на ключ и съответната му стойност (ако съществува):\\
     \onslide<+->
 \begin{lstlisting}
-(define (del-key-value key alist)
-  (filter (lambda (kv) (not (eq? (car kv) key))) alist))
+(define (del-assoc key alist)
+  (filter (lambda (kv) (not (equal? (car kv) key))) alist))
+\end{lstlisting}
+  \item Задаване на стойност за ключ (изтривайки старата, ако има такава):\\
+    \onslide<+->
+\begin{lstlisting}
+(define (add-assoc key value alist)
+  (cons (cons key value) (del-assoc key alist)))
 \end{lstlisting}
   \end{itemize}
 \end{frame}
 
+\begin{comment}
+%% Ненужно усложняване на задачата
 \begin{frame}[fragile]
   \frametitle{Задаване на стойност за ключ}
 \small
@@ -694,6 +709,7 @@
            (cons new-kv alist))))
 \end{lstlisting}
 \end{frame}
+\end{comment}
 
 \begin{frame}[fragile]
   \frametitle{Задачи за съществуване}
@@ -840,7 +856,7 @@
   self)
 \end{lstlisting}
 \end{frame}
-
+\end{document}
 \subsection{Задачи}
 
 \begin{frame}[fragile]
