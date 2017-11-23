@@ -1,10 +1,10 @@
-\documentclass{beamer}
+\documentclass[handout]{beamer}
 \usepackage{fprog}
 
 \title{Структури от данни в Scheme}
 \subtitle{матрици, дървета, асоциативни списъци, графи}
 
-\date{16 ноември 2017 г.}
+\date{16--23 ноември 2017 г.}
 
 \lstset{language=Scheme}
 
@@ -666,7 +666,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Трансформации над асоциативни списъци}
-  
+
   \begin{itemize}[<+->]
   \item Изтриване на ключ и съответната му стойност (ако съществува):\\
     \onslide<+->
@@ -754,7 +754,7 @@
   \pause
   \textbf{Решение:}
 \begin{lstlisting}
-(define (forall p l)
+(define (all p l)
   (not (search (lambda (x) (not (p x))) l)))
 \end{lstlisting}
 \end{frame}
@@ -856,7 +856,7 @@
   self)
 \end{lstlisting}
 \end{frame}
-\end{document}
+
 \subsection{Задачи}
 
 \begin{frame}[fragile]
@@ -891,8 +891,8 @@
   \pause
 \begin{lstlisting}
 (define (symmetric? g)
-  (forall (lambda (u)
-            (forall (lambda (v) (edge? v u g))
+  (all (lambda (u)
+            (all (lambda (v) (edge? v u g))
                     (children u g)))
             (vertices g)))
 \end{lstlisting}
@@ -959,7 +959,7 @@
   (dfs-search (list u)))
 \end{lstlisting}
       \end{onlyenv}
-      \begin{onlyenv}<-5>
+      \begin{onlyenv}<-5 |handout:0>
 \begin{lstlisting}
 (define (dfs-path u v g)
   (if (eq? u v) (list u)
@@ -1062,13 +1062,13 @@
   @\textcolor{black!20}{(define (extend-acyclic path) ...)}@
   (define (extend-level level)
     (apply append (map extend-acyclic level)))
-
   (define (target-path path)
     (and (eq? (car path) v) path))
 
   (define (bfs-level level)
-    (or (search target-path level)
-        (bfs-level (extend-level level))))
+    (and (not (null? level))
+         (or (search target-path level)
+             (bfs-level (extend-level level)))))
 
   (bfs-level (list (list u))))
 \end{lstlisting}
