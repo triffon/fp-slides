@@ -3,7 +3,7 @@
 
 \title{Основни понятия в Haskell}
 
-\date{1 декември 2016 г.}
+\date{7 декември 2017 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -166,9 +166,9 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
   \item програмите в Haskell се разделят на модули
   \item \tta{module} <име> \tta{where}
   \item дефинира модул с <име>
-  \item \tta{import} <модул>[\tta.<име>]
-  \item внася дефиницията <име> от <модул>
-  \item ако <име> не е указана, внася всички дефиниции
+  \item \tta{import} <модул> [\tta(<име>\{,<име>\}\tta)]
+  \item внася дефинициите <име> от <модул>
+  \item ако <име> не е указано, внася всички дефиниции
   \item стандартната библиотека в Haskell се съдържа в модула \lst{Prelude}
   \item всички дефиниции от \lst{Prelude} се внасят автоматично във всяко програма
   \end{itemize}
