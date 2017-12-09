@@ -107,7 +107,7 @@
   \begin{itemize}[<+->]
   \item \lst{(define s (cons-stream 1 (cons-stream 2 (cons-stream 3 the-empty-stream))))}
   \item \evalsto{(head s)}1
-  \item \evalsto{(tail s)}{\#<promise>}
+  \item \evalsto{(tail s)}{(2 . \#<promise>)}
   \item \evalsto{(head (tail s))}2
   \item \evalsto{(head (tail (tail s)))}3
   \item \evalstoerrs{\tt{(define s2 (cons-stream 3 (cons-stream b the-empty-stream)))}}
@@ -240,8 +240,8 @@
   \textbf{Комбиниране (\tt{zip})}
 \begin{lstlisting}
 (define (zip-streams op s1 s2)
-  (cons (op (head s1) (head s2))
-        (zip-streams (tail s1) (tail s2))))
+  (cons-stream (op (head s1) (head s2))
+               (zip-streams (tail s1) (tail s2))))
 \end{lstlisting}
 \end{frame}
 
