@@ -110,6 +110,9 @@
 % оценява се до...
 \newcommand{\evalstox}[1]{\lst!#1! \nolinebreak$\longrightarrow$}
 
+% оценява се до... с нов ред
+\newcommand{\evalstoxnl}[1]{\lst!#1! \\$\longrightarrow$}
+
 % оценява се до стойност
 \newcommand{\evalsto}[2]{\evalstox{#1} \lst!#2!}
 
@@ -122,8 +125,11 @@
 % оценява се до стойност с пауза за въпрос
 \newcommand{\evalstop}[2]{\evalstox{#1} \nolinebreak\rvl{\lst!#2!}}
 
+% оценява се до стойност с пауза за въпрос, преминавайки на нов ред
+\newcommand{\evalstopnl}[2]{\evalstoxnl{#1} \nolinebreak\rvl{\lst!#2!}}
+
 % оценява се до стойност с пауза за въпрос без форматиране
-\newcommand{\evalstops}[2]{\evalstos{#1} \nolinebreak\rvl{\tt{#2}}}
+\newcommand{\evalstops}[2]{\evalstos{#1} \rvl{\tt{#2}}}
 
 % грешка при оценяване
 \newcommand{\evalstoerr}[1]{\evalstox{#1} \nolinebreak \textsf{\alert{Грешка!}}}
