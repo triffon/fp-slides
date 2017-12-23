@@ -3,7 +3,7 @@
 
 \title{Кортежи и списъци}
 
-\date{14 декември 2017 г.}
+\date[14.12.2017--4.01.2018]{14 декември 2017 г. -- 4 януари 2018 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -391,7 +391,7 @@ reverse a
   \item \lst{[ fn | (\_, fn, grade) <- students, grade >= 2 ]}
   \item \lst{[ x^2 + y^2 | (x, y) <- vectors, x >= 0, y >= 0]}
   \item Ако имаме повече от един генератор, се генерират всички възможни комбинации от елементи (декартово произведение)
-  \item \evalstopnl{[ x++' ':y | x <- ["green","blue"],y <- ["sky","grass"]]}{["green sky","green grass","blue sky","blue grass"]}
+  \item \evalstopnl{[ x++(' ':y) | x<-["green","blue"],y<-["sky","grass"]]}{["green sky","green grass","blue sky","blue grass"]}
   \item \evalstopnl{[ (x,y) | x <- [1,2,3], y <- [5,6,7], x + y <= 8 ]}{[(1,5),(1,6),(1,7),(2,5),(2,6),(3,5)]}
   \item \textbf{Задача.} Да се генерират всички Питагорови тройки в даден интервал.
   \end{itemize}
@@ -607,6 +607,8 @@ foldr op nv (x:xs) = x `op` foldr op nv xs
     \end{itemize}
   \end{itemize}
 \end{frame}
+\end{document}
+
 
 \begin{frame}[fragile]
   \frametitle{Ляво свиване (\tt{foldl})}
