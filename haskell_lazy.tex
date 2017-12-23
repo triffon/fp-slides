@@ -3,7 +3,7 @@
 
 \title[Лениво оценяване]{Лениво оценяване и програмиране от по-висок ред}
 
-\date{5--12 януари 2017 г.}
+\date[21.12.17--04.01.18]{21 декември 2017 г. -- 4 януари 2018 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -342,7 +342,7 @@ sumFirst (x:xs) (y:ys) = x + y
 
   \begin{itemize}
   \item \tta[$a$\tta{..}\tta] $\rightarrow$ \tta[$a$\tta, $a+1$\tta, $a+2$\tta,\ldots\tta]
-  \item Примери:
+  \item \textbf{Примери:}
     \begin{itemize}
     \item \tt{nats = [0..]}
     \item \evalsto{take 5 [0..]}{[0,1,2,3,4]}
@@ -351,7 +351,7 @@ sumFirst (x:xs) (y:ys) = x + y
   \item Синтактична захар за \tt{enumFrom from}
     \pause
   \item \tta[$a$\tta, $a+\Delta x$ \tta{..}\tta] $\rightarrow$ \tta[$a$\tta, $a+\Delta x$\tta, $a + 2\Delta x$\tta, \ldots \tta, \tta]
-  \item Примери:
+  \item \textbf{Примери:}
     \begin{itemize}
     \item \tt{evens = [0,2..]}
     \item \evalsto{take 5 evens}{[0,2,4,6,8]}
@@ -376,7 +376,7 @@ sumFirst (x:xs) (y:ys) = x + y
     \begin{itemize}
     \item \evalsto{cycle [1,2,3]}{[1,2,3,1,2,3,...]}
     \item \lst{cycle l = l ++ cycle l}
-    \item създава безкраен списък повтарайки подадения (краен) списък
+    \item създава безкраен списък повтаряйки подадения (краен) списък
     \end{itemize}
   \item \lst{iterate :: (a -> a) -> a -> [a]}
     \begin{itemize}
@@ -435,14 +435,14 @@ sumFirst (x:xs) (y:ys) = x + y
   \begin{itemize}[<+->]
   \item Операцията ``апликация'' се дефинира с \lst{f $ x = f x}
   \item За какво може да бъде полезна?
-  \item Операцията \lst{$} е с най-нисък прироритет и е дясноасоциативна
+  \item Операцията \lst{$} е с най-нисък приоритет и е дясноасоциативна
     \begin{itemize}
     \item за разлика от прилагането на функции, което е с най-висок приоритет и лявоасоциативно
     \end{itemize}
   \item Може да бъде използвана за спестяване на скоби вложени надясно
   \item \tt(\ldots\tt{((f} $x_1$\tt) $x_2$\tt) \ldots $x_n$\tt) = \tt f $x_1$ $x_2$ \ldots $x_n$
   \item $f_1$ \tt($f_2$ \ldots \tt($f_n$ \tt{x)}\ldots\tt) = $f_1$ \tt\$ $f_2$ \tt\$ \ldots \tt\$ $f_n$ \tt{\$ x}
-  \item Примери:
+  \item \textbf{Примери:}
     \begin{itemize}
     \item \alt<+->{\lst{head $ tail $ take 5 $ drop 7 $ l}}{\lst{head (tail (take 5 (drop 7 l)))}}
     \item \alt<+->{\lst{sum $ map (^2) $ filter odd $ [1..10]}}{\lst{sum (map (^2) (filter odd [1..10]))}}
@@ -459,7 +459,7 @@ sumFirst (x:xs) (y:ys) = x + y
   \item с най-висок приоритет, дясноасоциативна
   \item Може да бъде използвана за спестяване на скоби вложени надясно
   \item $f_1$ \tt($f_2$ \ldots \tt($f_n$ \tt{x)}\ldots\tt) = $f_1$ \tt. $f_2$ \tt. \ldots \tt. $f_n$ \tt{\$ x}
-  \item Примери:
+  \item \textbf{Примери:}
     \begin{itemize}
     \item \alt<+->{\lst{sublist n m = take m . drop n}}{\lst{sublist n m l = take m (drop n l)}}
     \item \alt<+->{\lst{sumOddSquares = sum . map (^2) . filter odd}}{\lst{sumOddSquares l = sum (map (\^2) (filter odd l))}}
@@ -568,7 +568,7 @@ sumFirst (x:xs) (y:ys) = x + y
   \item еквивалентно на форсиране на обещание
   \item \lst{seq :: a -> b -> b}
   \item оценява първия си аргумент и връща втория като резултат
-  \item Примери:
+  \item \textbf{Примери:}
     \begin{itemize}
     \item \lst{second x y = y}
     \item \evalsto{second [1..10^10^10] 2}{2}
