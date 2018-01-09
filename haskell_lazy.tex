@@ -3,7 +3,7 @@
 
 \title[Лениво оценяване]{Лениво оценяване и програмиране от по-висок ред}
 
-\date[21.12.17--04.01.18]{21 декември 2017 г. -- 4 януари 2018 г.}
+\date{4 януари 2018 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -426,6 +426,7 @@ sumFirst (x:xs) (y:ys) = x + y
     \end{itemize}
   \end{itemize}
 \end{frame}
+\end{document}
 
 \section{Безточково програмиране}
 
@@ -501,28 +502,7 @@ sumFirst (x:xs) (y:ys) = x + y
 
 \begin{frame}
   \frametitle{Безточково (point-free) програмиране}
-
-  Можем да използваме още функциите:
-  \begin{itemize}
-  \item \lst{join f x = f x x}
-  \item \lst{curry f x y = f (x,y)}
-  \item \lst{uncurry f (x,y) = f x y}
-  \end{itemize}
-  \pause
   \textbf{Пример 3:}
-  \begin{itemize}[<+->]
-  \item \lst{sorted l = all (\\(x,y) -> x <= y) (zip l (tail l))}
-  \item \lst{sorted l = all (\\(x,y) -> (<=) x y) ((zip l . tail) l)}
-  \item \lst{sorted l = all (uncurry (<=)) ((. tail) (zip l) l)}
-  \item \lst{sorted l = all (uncurry (<=)) ((. tail) . zip) l l)}
-  \item \lst{sorted l = all (uncurry (<=)) (join ((. tail) . zip) l)}
-  \item \lst{sorted = all (uncurry (<=)) . join ((. tail) . zip)}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Безточково (point-free) програмиране}
-  \textbf{Пример 4:}
   \begin{itemize}[<+->]
   \small
   \item \lst{checkMatrix k m = all (\\r -> any (\\x -> mod k x > 0)) m}
@@ -533,6 +513,54 @@ sumFirst (x:xs) (y:ys) = x + y
   \item \lst{checkMatrix k = all (any ((.) (>0) (mod k)))}
   \item \lst{checkMatrix k = all . any . ((.)(>0)) . mod \$ k}
   \item \lst{checkMatrix = all . any . ((>0).) . mod}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Безточково (point-free) програмиране}
+
+  Можем да използваме още следните функции от \lst{Control.Monad}:
+  \begin{itemize}[<+->]
+  \item \lst{curry f x y = f (x,y)}
+  \item \lst{uncurry f (x,y) = f x y}
+  \item \lst{join f x = f x x}
+  \item \lst{ap f g x = f x (g x)}
+    \begin{itemize}
+    \item \lst{join f = ap f id}
+    \item \lst{join = (`ap` id)}
+    \end{itemize}
+  \item \lst{(f >>= g) x = g (f x) x}
+    \begin{itemize}
+    \item \lst{g =<< f = f >>= g}
+    \item \lst{f >>= g = ap (flip g) f}
+    \end{itemize}
+  \item \lst{liftM2 f g h x = f (g x) (h x)}
+    \begin{itemize}
+    \item \lst{ap f = liftM2 f id}
+    \item \lst{ap = (`liftM2` id)}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Безточково (point-free) програмиране}
+  \textbf{Пример 4:}
+  \begin{itemize}[<+->]
+  \item \lst{sorted l = all (\\(x,y) -> x <= y) (zip l (tail l))}
+  \item \lst{sorted l = all (\\(x,y) -> (<=) x y) (ap zip tail l)}
+  \item \lst{sorted l = all (uncurry (<=)) (ap zip tail l)}
+  \item \lst{sorted = all (uncurry (<=)) . ap zip tail}
+  \item \lst{sorted = all (uncurry (>=)) . (zip =<< tail)}
+  \end{itemize}
+  \onslide<+->
+  \textbf{Пример 5:}
+  \begin{itemize}[<+->]
+    \item \lst{minsAndMaxs m = map (\\r -> (minimum r, maximum r)) m}
+    \item \lst{minsAndMaxs = map (\\r -> (minimum r, maximum r))}
+    \item \lst{minsAndMaxs = map (\\r -> (,) (minimum r) (maximum r))}
+    \item \lst{minsAndMaxs = map (liftM2 (,) minimum maximum)}
+    \item \lst{minsAndMaxs = map \$ liftM2 (,) minimum maximum}
   \end{itemize}
 \end{frame}
 
