@@ -607,8 +607,6 @@ foldr op nv (x:xs) = x `op` foldr op nv xs
     \end{itemize}
   \end{itemize}
 \end{frame}
-\end{document}
-
 
 \begin{frame}[fragile]
   \frametitle{Ляво свиване (\tt{foldl})}
@@ -650,7 +648,7 @@ foldr1 op (x:xs) = x `op` foldr1 op xs
     \begin{itemize}
     \item \lst{maximum = foldr1 max}
     \item \lst{minimum = foldr1 min}
-    \item \lst{last = foldl1 (\_ r -> r)}
+    \item \lst{last = foldl1 (\_ x -> x)}
     \end{itemize}
   \end{itemize}
 \end{frame}
