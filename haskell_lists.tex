@@ -633,7 +633,7 @@ foldl op nv (x:xs) = foldl op (nv `op` x) xs
 
   \begin{itemize}[<+->]
   \item \lst{foldr1 :: (a -> a -> a) -> [a] -> a}
-  \item \lst{foldr1 op nv }\hlist x = \\
+  \item \lst{foldr1 op }\hlist x = \\
     $x_1$\tt{ `op` (}$x_2$\tt{ `op` }\ldots \tt($x_{n-1}$\tt{ `op` }$x_n$\tt) \ldots\tt)
   \item
 \begin{lstlisting}
@@ -641,7 +641,7 @@ foldr1 _  [x] = x
 foldr1 op (x:xs) = x `op` foldr1 op xs
 \end{lstlisting}
   \item \lst{foldl1 :: (a -> a -> a) -> [a] -> a}
-  \item \lst{foldl1 op nv }\hlist x = \\
+  \item \lst{foldl1 op }\hlist x = \\
     \tt(\ldots\tt{((}$x_1$\tt{ `op` }$x_2$\tt) \ldots \tt{) `op` }$x_n$
   \item \lst{foldl1 op (x:xs) = foldl op x xs}
   \item \textbf{Примери:}
