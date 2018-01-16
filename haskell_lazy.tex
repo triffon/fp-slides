@@ -3,7 +3,7 @@
 
 \title[Лениво оценяване]{Лениво оценяване и програмиране от по-висок ред}
 
-\date{4 януари 2018 г.}
+\date{4--11 януари 2018 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -426,7 +426,6 @@ sumFirst (x:xs) (y:ys) = x + y
     \end{itemize}
   \end{itemize}
 \end{frame}
-\end{document}
 
 \section{Безточково програмиране}
 
@@ -483,7 +482,7 @@ sumFirst (x:xs) (y:ys) = x + y
   \begin{itemize}[<+->]
     \small
   \item \lst{g l = filter (\\f -> f 2 > 3) l}
-  \item \lst{g = filter (\\f -> f \$ 2 > 3)}
+  \item \lst{g = filter (\\f -> (f \$ 2) > 3)}
   \item \lst{g = filter (\\f -> (>3) (($2) f))}
   \item \lst{g = filter $ (>3) . ($2)}
   \end{itemize}
@@ -505,14 +504,13 @@ sumFirst (x:xs) (y:ys) = x + y
   \textbf{Пример 3:}
   \begin{itemize}[<+->]
   \small
-  \item \lst{checkMatrix k m = all (\\r -> any (\\x -> mod k x > 0)) m}
+  \item \lst{checkMatrix k m = all (\\r -> any (\\x -> mod k x > 0) r) m}
   \item \lst{checkMatrix k = all (\\r -> any (\\x -> mod k x > 0) r)}
-  \item \lst{checkMatrix k = all (\\r -> any (\\x -> (>0) ((mod k) x)))}
-  \item \lst{checkMatrix k = all (\\r -> any ((>0) . (mod k)) r)}
+  \item \lst{checkMatrix k = all (any (\\x -> mod k x > 0))}
+  \item \lst{checkMatrix k = all (any (\\x -> (>0) ((mod k) x)))}
   \item \lst{checkMatrix k = all (any ((>0) . (mod k)))}
-  \item \lst{checkMatrix k = all (any ((.) (>0) (mod k)))}
-  \item \lst{checkMatrix k = all . any . ((.)(>0)) . mod \$ k}
-  \item \lst{checkMatrix = all . any . ((>0).) . mod}
+  \item \lst{checkMatrix k = all (any (((>0) .) (mod k)))}
+  \item \lst{checkMatrix = all . any . ((>0) .) . mod}
   \end{itemize}
 \end{frame}
 
@@ -608,7 +606,8 @@ sumFirst (x:xs) (y:ys) = x + y
     \begin{itemize}
     \item първо оценява \tt x и след това прилага \tt f над оценката на \tt x
     \item прилага \tt f над \tt x със стриктно оценяване
-    \item \tt{f x = f \$! (1-x)}
+    \item \lst^f x = f \$! (1-x)^
+    \item \lst^(\$!) = ap seq^
     \end{itemize}
   \end{itemize}
 \end{frame}
