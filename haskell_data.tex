@@ -3,7 +3,7 @@
 
 \title{Типове и класове в Haskell}
 
-\date{12--19 януари 2017 г.}
+\date{11--18 януари 2018 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -134,9 +134,9 @@ class Measurable a where
   \begin{definition}
     Ако \tt{C} e клас, а \tt{t} е типова променлива, то \tt{C t} наричаме \textbf{класово ограничение}. \pause Множество от класови ограничения наричаме \textbf{контекст}.
   \end{definition}
-  \onslide<+->
+  \pause
   Класовите ограничения ни дават възможност да дефинираме претоварени функции.\\[1em]
-  \onslide<+->
+  \pause
   \textbf{Примери:}
   \begin{itemize}[<+->]
   \item \lst{elem :: (Eq a) => a -> [a] -> Bool}
@@ -413,7 +413,7 @@ instance Show Shape where
   \item \lst{Show}, \lst{Read}: извежда се/въвежда се конструкторът и след това всеки един от параметрите му
   \end{itemize}
 \end{frame}
-
+\end{document}
 \begin{frame}
   \frametitle{Параметризирани типове}
   Потребителските типове могат да бъдат \alert{генерични}, т.е. да зависят от типови параметри.\\
