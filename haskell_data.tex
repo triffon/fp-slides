@@ -165,9 +165,9 @@ instance Eq Bool where
 \end{lstlisting}
   \pause
 \begin{lstlisting}
-instance Measurable Int where
+instance Measurable Integer where
   size 0 = 0
-  size n = size (n `quot` 10) + 1
+  size n = 1 + size (n `div` 10)
 \end{lstlisting}
 \end{frame}
 
