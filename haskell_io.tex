@@ -3,7 +3,7 @@
 
 \title{Входно-изходни операции в Haskell}
 
-\date{19 януари 2017 г.}
+\date{18 януари 2018 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -80,8 +80,8 @@
     специална: тя е входната точка на компилираната програма.
   \item По същество тя дефинира входно-изходна трансформация, която се прилага към стандартния вход и изход при изпълнение на програмата.
   \item \textbf{Пример:} \lst^main = putStrLn "Hello, world!"^
-  \item Можем ли да дефинираме \lst!main = putStrLn ("Въведохте: " ++ getLine)!?
-  \item \alert{Не!} \lst{getLine :: }\tta{IO} \lst{String}
+  \item Можем ли да дефинираме \lst!main = putStrLn $ "Въведохте: " ++ getLine!? % поправка на оцветяването на синтаксис$
+  \item \alert{Не!} \hspace{5ex} \lst{getLine :: }\tta{IO} \lst{String}
   \item Композицията на входно-изходни трансформации не работи като композицията на функции
   \item Низът, който връща \lst{getLine} е ``замърсен'' от входно-изходна операция
   \item Как да композираме трансформации?
@@ -114,7 +114,7 @@
   \onslide<+->
 \begin{lstlisting}
 main = do line <- getLine
-          putStrLn ("Въведохте: " ++ line)
+          putStrLn $ "Въведохте: " ++ line
 \end{lstlisting}
 \end{frame}
 
@@ -124,10 +124,10 @@ main = do line <- getLine
   В някакъв смисъл \lst{<-} и \lst{return} са обратни една на друга операции:
   \begin{itemize}[<+->]
   \item \lst{<-} извлича ``чист'' резултат от тип \tt{a} от трансформация от тип \lst{IO a}
-  \item \lst{return} фиктивно ``замърсява'' резулат от тип \tt{a} за да стане от тип \lst{IO a}
+  \item \lst{return} фиктивно ``замърсява'' резултат от тип \tt{a} за да стане от тип \lst{IO a}
   \item Какъв е ефектът от <име> \lst{<- return} <израз> в \lst{do} конструкция?
   \item Създава се локалната дефиниция <име> = <израз>!
-  \item Понже се налага често, има специален синтаксис за това:\\
+  \item Понеже се налага често, има специален синтаксис за това:\\
     \lst{let} <име> \tta= <израз>
   \item Да не се бърка с \lst{let} <име> \tt= <израз> \tta{in} <израз>!
   \end{itemize}
@@ -138,7 +138,7 @@ main = do putStrLn "Моля, въведете палиндром: "
           line <- getLine
           let revLine = reverse line
           if revLine == line then putStrLn "Благодаря!"
-          else do putStrLn (line ++ " не е палиндром!")
+          else do putStrLn $ line ++ " не е палиндром!"
                   main
 \end{lstlisting}
 \end{frame}
@@ -175,7 +175,7 @@ readAndSum :: Int -> IO Int@\pause@
 readAndSum 0 = return 0
 readAndSum n = do putStr "Моля, въведете число: "
                   x <- getInt
-                  s <- readAndSum (n - 1)
+                  s <- readAndSum $ n - 1
                   return $ x + s
 @\pause@
 main = do avg <- findAverage
@@ -195,13 +195,14 @@ main = do avg <- findAverage
   \item \lst{sequence :: [IO a] -> IO [a]}
     \begin{itemize}
     \item композира трансформации и събира резултатите им в списък
-    \item \lst{getInts n = sequence (replicate n getInt)}
+    \item \lst!getInts n = sequence $ replicate n getInt! % поправка на оцветяването $
+    \item \lst!getInts = sequence . (`replicate` getInt)!
     \end{itemize}
   \item \lst{mapM :: (a -> IO b) -> [a] -> IO [b]}
     \begin{itemize}
     \item композира списък от трансформации по списък от стойности
     \item \lst{mapM = sequence . map}
-    \item \lst{printRead s = do putStr (s ++ " = "); getInt}
+    \item \lst!printRead s = do putStr $ s ++ " = "; getInt! % поправка на оцветяването $
     \item \lst{readCoordinates = mapM printRead ["x", "y", "z"]}
     \end{itemize}
   \item \lst{mapM_ :: (a -> IO b) -> [a] -> IO ()}
@@ -231,12 +232,143 @@ findAverage :: IO Double
 findAverage = do n <- readInt "брой"
                  l <- mapM (readInt . ("число #"++) . show) [1..n]
                  let s = sum l
-                 return ((fromIntegral s) / (fromIntegral n))
+                 return $ (fromIntegral s) / (fromIntegral n)
 
 main = forever $
        do avg <- findAverage
           putStrLn $ "Средното аритметично е: " ++ show avg
           putStrLn "Хайде отново!"
 \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Ленив вход и изход}
+
+  \begin{itemize}[<+->]
+  \item Ленивото оценяване в Haskell ни позволява да работим с входно/изходни потоци
+  \item \lst{getContents :: IO String} --- връща списък от \alert{всички} символи на стандартния вход
+  \item списъкът се оценява лениво, т.е. прочита се при нужда
+  \item \textbf{Пример:}
+\begin{lstlisting}
+noSpaces = do text <- getContents
+              putStr $ filter (/=' ') text
+\end{lstlisting}
+  \item \lst{interact :: (String -> String) -> IO ()} --- лениво прилага функция над низове над стандартния вход и извежда резултата на стандартния изход
+  \item \textbf{Пример:}
+\begin{lstlisting}
+noSpaces = interact $ filter (/=' ')
+\end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Работа с файлове}
+
+  \begin{itemize}[<+->]
+  \item \lst{IO} позволява работа с произволни файлове, не само със стандартните вход и изход
+  \item \lst{import System.IO}
+  \item \lst{openFile :: FilePath -> IOMode -> IO Handle} --- отваря файл със зададено име в зададен режим
+    \begin{itemize}
+      \footnotesize
+    \item \lst{type FilePath = String}
+    \item \lst{data IOMode = ReadMode|WriteMode|AppendMode|ReadWriteMode}
+    \end{itemize}
+  \item Има варианти на функциите за вход/изход, които работят с \lst{Handle}
+  \item \lst{hGetLine}, \lst{hGetChar}, \lst{hPutStr}, \lst{hPutStrLn}, \lst{hGetContents}\ldots
+  \item \textbf{Пример:}
+\begin{lstlisting}
+encrypt cypher inFile outFile =
+  do h1 <- openFile inFile ReadMode
+     text <- hGetContents h1
+     h2 <- openFile outFile WriteMode
+     hPutStr h2 $ map cypher text
+\end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\section{Монади}
+
+\begin{frame}
+  \frametitle{Монади}
+
+  \begin{itemize}[<+->]
+  \item \lst{IO} е пример за \alert{монада}
+  \item Монадите са конструкции, които ``опаковат'' обекти от даден тип
+  \item \textbf{Примери:}
+    \begin{itemize}
+    \item \lst{IO} опакова стойност във входно/изходна трансформация
+    \item \lst{Maybe} опакова стойност с ``флаг'' дали стойността съществува
+    \item \lst{[a]} опакова няколко ``алтернативни'' стойности в едно
+    \item \lst{r -> a} опакова стойност от тип \lst{a} в ``машинка'', която я пресмята при подаден параметър от тип \lst{r}
+    \item \lst{s -> (a,s)} опакова стойност от тип \lst{a} в ``действие'', което променя дадено състояние от тип \lst{s}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Монадни операции}
+
+  \begin{itemize}[<+->]
+  \item \lst{Monad} е клас от \alert{типови конструктори}, които
+    са монади
+  \item ``Опаковката'' често е \alert{еднопосочна}: един път опакована, не можем да извадим стойността извън опаковката\ldots
+  \item \ldots но можем да я преопаковаме!
+  \item \lst{(>>=) :: Monad m => m a -> (a -> m b) -> m b}
+  \item оператор за ``свързване'' на опаковани стойности
+  \item \lst{b = a >>= f}:
+    \begin{itemize}
+    \item поглеждаме стойността \lst{x} в опаковката \lst{a}
+    \item прилагаме функцията \lst{f} над \lst{x}
+    \item и получаваме нова опакована стойност \lst{b}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Императивен стил чрез монади}
+
+  \small
+  \begin{overlayarea}{\textwidth}{\textheight}
+    \begin{itemize}[<+->]
+    \item \lst{do} всъщност е синтактична захар за поредица от ``свързвания``
+    \item \textbf{Примери:}
+      \begin{onlyenv}<2>
+\begin{lstlisting}
+main = do line <- getLine
+          putStrLn $ "Въведохте: " ++ line
+\end{lstlisting}
+      \end{onlyenv}
+      \begin{onlyenv}<3>
+\begin{lstlisting}
+main = getLine >>= (\line -> putStrLn $ "Въведохте: " ++ line)
+\end{lstlisting}
+      \end{onlyenv}
+      \begin{onlyenv}<4->
+\begin{lstlisting}
+main = getLine >>= putStrLn . ("Въведохте: " ++)
+\end{lstlisting}
+      \end{onlyenv}
+      \begin{onlyenv}<5>
+\begin{lstlisting}
+findAverage = do putStr "Моля, въведете брой: "
+                 n <- getInt
+                 s <- readAndSum n
+                 return $ (fromIntegral s) / (fromIntegral n)
+\end{lstlisting}
+      \end{onlyenv}
+      \begin{onlyenv}<6->
+\begin{lstlisting}
+findAverage = putStr "Моля, въведете брой: " >>=
+               (\_ -> getInt >>=
+               (\n -> readAndSum n >>=
+               (\s -> return $ (fromIntegral s) /
+                               (fromIntegral n)))
+\end{lstlisting}
+      \end{onlyenv}
+    \item<7-> работи за произволни монади, не само за \lst{IO}!
+    \item<8-> позволява абстрахиране от страничните ефекти и моделиране на поредица от инструкции
+    \item<9-> императивен стил във функционалното програмиране
+    \end{itemize}
+  \end{overlayarea}
 \end{frame}
 \end{document}
