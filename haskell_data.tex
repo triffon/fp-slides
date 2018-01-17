@@ -413,7 +413,7 @@ instance Show Shape where
   \item \lst{Show}, \lst{Read}: извежда се/въвежда се конструкторът и след това всеки един от параметрите му
   \end{itemize}
 \end{frame}
-\end{document}
+
 \begin{frame}
   \frametitle{Параметризирани типове}
   Потребителските типове могат да бъдат \alert{генерични}, т.е. да зависят от типови параметри.\\
@@ -592,7 +592,7 @@ levelTrees k (SubTree t ts) = level k t ++ levelTrees k ts
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{S-изрази}
+  \frametitle{Полиморфни списъци}
 \small
 \begin{lstlisting}
 data SExpr = SBool Bool | SChar Char | SInt Int | SDouble Double |
