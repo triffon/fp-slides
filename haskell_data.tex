@@ -553,11 +553,10 @@ mapBinTree f (Node x l r) = Node (f x) (mapBinTree f l)
   \pause
   Свиване на двоично дърво (\lst{foldr}):
 \begin{lstlisting}
-foldrBinTree :: (a -> a -> a) -> a -> BinTree a -> a
+foldrBinTree :: (a -> b -> b) -> b -> BinTree a -> b
 foldrBinTree _  nv Empty        = nv
-foldrBinTree op nv (Node x l r) = op (foldrBinTree op nv l)
-                                   (op x
-                                     (foldrBinTree op nv r))
+foldrBinTree op nv (Node x l r) = foldrBinTree op
+                                   (x `op` foldrBinTree op nv r) l
 \end{lstlisting}
 \end{frame}
 
