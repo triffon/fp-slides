@@ -300,7 +300,7 @@
     P_n(x) &=& \pnx\\
     &=& \pnxh
   \end{eqnarray*}
-  \textbf{Идея: използваме \tt{accumulate-i} и $u \oplus v := ux + v$.\\[1em]
+  \textbf{Идея:} използваме \tt{accumulate-i} и $u \oplus v := ux + v$.\\[1em]
   \pause
   \textbf{Решение №4:}
 \begin{lstlisting}
@@ -343,8 +343,8 @@
 \pause
 \begin{lstlisting}
 (define (p n x)
-   (accumulate-i + 0 1 (+ n 1) (lambda (u v) (+ (* u x) v))
-                               (lambda (i) (+ i 1))))
+   (accumulate-i (lambda (u v) (+ (* u x) v)) 0
+                 1 (+ n 1) (lambda (i) (+ i 1))))
 \end{lstlisting}
 \pause
 \textbf{Задача:} Как можем да реализираме с accumulate:
@@ -514,6 +514,9 @@
 (define (derive-n f n dx)
   @\only<7->((\rvl{repeated} \rvl{(lambda (f) (derive f dx))} n)\only<7->{ f)})@
 \end{lstlisting}
+\end{overlayarea}
+\end{frame}
+\end{document}
 \pause
   \textbf{Решение №3:} $^{(n)} = \underbrace{{}'{}^\circ{}'{}^{\circ\ldots\circ}{}'}_n$
 \begin{lstlisting}
