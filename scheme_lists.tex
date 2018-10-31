@@ -593,7 +593,9 @@
         ((atom? l) @\vzero1@)
         (else (+ @\vstep{(count-atoms (car l))} \hstep{(count-atoms (cdr l))}@))))
 \end{lstlisting}
-  \vspace{1em}
+\end{frame}
+\end{document}
+\vspace{1em}
   \pause
   \textbf{Задача.} Да се съберат всички атоми от вложен списък.\\
   \evalsto{(flatten '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}{(1 2 3 4 5 6 7 8)}
