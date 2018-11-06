@@ -1,10 +1,10 @@
-\documentclass[handout]{beamer}
+\documentclass{beamer}
 \usepackage{fprog}
 
 \title{Структури от данни в Scheme}
 \subtitle{матрици, дървета, асоциативни списъци, графи}
 
-\date{16--23 ноември 2017 г.}
+\date{7 ноември 2018 г.}
 
 \lstset{language=Scheme}
 
@@ -239,7 +239,7 @@
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<1-3>[label=ratarith,fragile]
   \frametitle{Аритметични операции}
 
   \small
@@ -258,7 +258,7 @@
       \vspace{4em}
       \begin{uncoverenv}<3->
         \begin{equation*}
-          \frac{n_1}{d_1} < \frac{n_2}{d_2} \leftrightarrow n_1d_2 < n_2d_1
+          \frac{n_1}{d_1} < \frac{n_2}{d_2} \alt<3>{\leftrightarrow}{\alert{\nleftrightarrow}} n_1d_2 < n_2d_1
         \end{equation*}
       \end{uncoverenv}
     \end{column}
@@ -290,7 +290,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}[label=ratprog,fragile]
   \frametitle{Програми с рационални числа}
 
   \begin{equation*}
@@ -308,7 +308,7 @@
   \end{overprint}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<1-2>[label=ratnorm,fragile]
   \frametitle{Нормализация}
 
   \textbf{Проблем:} Числителят и знаменателят стават много големи!\\[1em]
@@ -329,6 +329,10 @@
   \pause
   \alert{Не е нужно да правим каквито и да е други промени!}
 \end{frame}
+
+\againframe<4>{ratarith}
+
+\againframe<3->{ratnorm}
 
 \subsection{Абстракция със сигнатура}
 
@@ -646,18 +650,18 @@
   \begin{itemize}[<+->]
   \item \lst{(define (keys alist) (map car alist))}
   \item \lst{(define (values alist) (map cdr alist))}
-  \item \tta{(assoc }<ключ> <асоциативен-списък>\tta)
+  \item \tta{(assoc} <ключ> <асоциативен-списък>\tta)
     \begin{itemize}[<.->]
     \item Ако <ключ> се среща сред ключовете на <асоциативен-списък>,
       връща първата двойка \tt(<ключ> \tt. <стойност>\tt)
     \item Ако <ключ> не се среща сред ключовете, връща \tt{\#f}
     \item Сравнението се извършва с \tt{equal?}
     \end{itemize}
-  \item \tta{(assv }<ключ> <асоциативен-списък>\tta)
+  \item \tta{(assv} <ключ> <асоциативен-списък>\tta)
     \begin{itemize}[<.->]
     \item също като \tt{assoc}, но сравнява с \tt{eqv?}
     \end{itemize}
-  \item \tta{(assq }<ключ> <асоциативен-списък>\tta)
+  \item \tta{(assq} <ключ> <асоциативен-списък>\tta)
     \begin{itemize}[<.->]
     \item също като \tt{assoc}, но сравнява с \tt{eq?}
     \end{itemize}
@@ -865,7 +869,7 @@
   \small
   \textbf{Задача. }Да се намерят върховете, които нямат деца.\\
   \pause
-  \textbf{Решение. }\tt{childless(g)} $ = \{v | \nexists u \leftarrow v \}$
+  \textbf{Решение. }\tt{childless(g)} $ = \{v\;|\;\nexists u \leftarrow v \}$
   \pause
 \begin{lstlisting}
 (define (childless g)
@@ -875,7 +879,7 @@
   \vspace{1em}
   \textbf{Задача. }Да се намерят родителите на даден връх.\\
   \pause
-  \textbf{Решение. }\tt{parents(v, g)} $ = \{u | u \rightarrow v \}$
+  \textbf{Решение. }\tt{parents(v, g)} $ = \{u\;|\;u \rightarrow v \}$
   \pause
 \begin{lstlisting}
 (define (parents v g)
