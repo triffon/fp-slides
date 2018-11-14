@@ -3,7 +3,7 @@
 
 \title{Потоци}
 
-\date{30 ноември 2017 г.}
+\date{15 ноември 2018 г.}
 
 \lstset{language=Scheme}
 
@@ -40,9 +40,9 @@
   \frametitle{Примитивни операции \tt{force} и \tt{delay}}
 
   \begin{itemize}[<+->]
-  \item \tta{(delay }<израз>\tta)
+  \item \tta{(delay} <израз>\tta)
   \item връща \alert{обещание} за оценяването на <израз> \visible<5->{\alert{(специална форма)}}
-  \item \tta{(force }<обещание>\tta)
+  \item \tta{(force} <обещание>\tta)
   \item форсира изчислението на <обещание> и връща оценката на <израз> \visible<5->{\alert{(примитивна функция)}}
     \pause
   \item \textbf{Примери:}
@@ -82,8 +82,7 @@
   \begin{definition}[Поток]
     Списък, чиито елементи се изчисляват отложено. \\
     \pause
-    По-точ
-    но: Поток е празен списък \tt{()} или двойка \tt{(h . t)}, където
+    По-точно: Поток е празен списък \tt{()} или двойка \tt{(h . t)}, където
       \begin{itemize}
       \item \tt h --- е произволен елемент (глава на потока)
       \item \tt t --- е \alert{обещание} за поток (опашка на потока)
@@ -122,7 +121,7 @@
 
   \begin{itemize}[<+->]
   \item \tta{(define-syntax} <символ>\\
-    \hspace{5ex}\tta{(syntax-rules () }\{\tta(<шаблон> <тяло>\tta)\}\tta{))}
+    \hspace{5ex}\tta{(syntax-rules ()} \{\tta(<шаблон> <тяло>\tta)\}\tta{))}
   \item дефинира специална форма <символ> така, че всяко срещане на <шаблон> се замества с <тяло>
   \item \tt{define-syntax} има и други, по-сложни форми
   \item Повечето специални форми на Scheme могат да се дефинират с \tt{define-syntax} (за справка: R$^5$RS)
