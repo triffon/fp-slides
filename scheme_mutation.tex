@@ -3,7 +3,7 @@
 
 \title{Мутиращи операции}
 
-\date{16 ноември 2017 г.}
+\date{14 ноември 2018 г.}
 
 \lstset{language=Scheme}
 
@@ -17,6 +17,7 @@
   \frametitle{Мутиращи операции в Scheme}
 
   Мутиращите операции в Scheme позволяват въвеждането на \alert{странични ефекти}.\\[2em]
+  \pause
   \textbf{Преглед:}
   \begin{itemize}[<+->]
   \item \lst{set!} --- промяна на оценка, свързана със символ
@@ -31,7 +32,7 @@
   \frametitle{Промяна на оценка, свързана със символ (\tt{set!})}
 
   \begin{itemize}[<+->]
-  \item \tta{(set! }<символ> <израз>\tta)
+  \item \tta{(set!} <символ> <израз>\tta)
   \item Търси се <символ> във веригата от среди
     \begin{itemize}
     \item Ако бъде намерен, свързва се с оценката на <израз>
@@ -41,7 +42,7 @@
     \begin{itemize}
     \item \lst{(define a 2)}\hspace{5ex}\evalsto{a}2
     \item \lst{(set! a 5)}\hspace{7ex}\evalsto{a}5
-    \item \lst{(define (sum x) }\only<-.>{\tt{(begin }}\lst{(set! a (+ a x)) a}\only<-.>{\tt)}\tt)\pause
+    \item \lst{(define (sum x)}\only<-.>{\tt{ (begin }}\lst{ (set! a (+ a x)) a}\only<-.>{\tt)}\tt)\pause
     \item \evalsto{(sum 10)}{15}
     \item \evalsto{(sum 10)}{25}
     \item \alert{губи се референциалната прозрачност!}
@@ -77,8 +78,8 @@
   \frametitle{Промяна на компоненти (\tt{set-car!}, \tt{set-cdr!})}
 
   \begin{itemize}[<+->]
-  \item \tta{(set-car! }<двойка> <израз>\tta)
-  \item<.-> \tta{(set-cdr! }<двойка> <израз>\tta)
+  \item \tta{(set-car!} <двойка> <израз>\tta)
+  \item<.-> \tta{(set-cdr!} <двойка> <израз>\tta)
   \item Съответният компонент на <двойка> се променя да сочи към оценката на <израз>
   \item \textbf{Примери:}
     \begin{itemize}
