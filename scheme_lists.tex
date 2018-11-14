@@ -551,7 +551,7 @@
   \end{tabular}
 \end{frame}
 
-\section{Вложени списъци}
+\section{Дълбоки списъци}
 
 \newcommand{\hzero}{\textcolor{red}}
 \newcommand{\vzero}{\textcolor{orange}}
@@ -559,12 +559,12 @@
 \newcommand{\vstep}{\textcolor{cyan}}
 
 \begin{frame}[fragile]
-  \frametitle{Работа с вложени списъци}
+  \frametitle{Работа с дълбоки списъци}
 
 \begin{verbatim}
 ((1 (2)) (((3) 4) (5 (6)) () (7)) 8)
 \end{verbatim}
-  \textbf{Задача.} Да се преброят в атомите във вложен списък.\\
+  \textbf{Задача.} Да се преброят в атомите в дълбок списък.\\
   \textbf{Подход:} Обхождане в две посоки: хоризонтално и вертикално
   \pause
   \begin{itemize}[<+->]
@@ -584,7 +584,7 @@
 \begin{frame}[fragile]
   \frametitle{Примери}
   \small
-  \textbf{Задача.} Да се преброят в атомите във вложен списък.\\
+  \textbf{Задача.} Да се преброят в атомите в дълбок списък.\\
   \evalsto{(count-atoms '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}8
   \pause
 \begin{lstlisting}
@@ -595,7 +595,7 @@
 \end{lstlisting}
 \vspace{1em}
   \pause
-  \textbf{Задача.} Да се съберат всички атоми от вложен списък.\\
+  \textbf{Задача.} Да се съберат всички атоми от дълбок списък.\\
   \evalsto{(flatten '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}{(1 2 3 4 5 6 7 8)}
   \pause
 \begin{lstlisting}
@@ -609,7 +609,7 @@
 \begin{frame}[fragile]
   \frametitle{Примери}
 
-  \textbf{Задача.} Да се обърне редът на атомите във вложен списък.\\
+  \textbf{Задача.} Да се обърне редът на атомите в дълбок списък.\\
   \evalsto{(deep-reverse '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}{(8 ((7) () ((6) 5) (4 (3))) ((2) 1))}
   \pause
 \begin{lstlisting}
@@ -622,25 +622,25 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Свиване на вложени списъци}
+  \frametitle{Свиване на дълбоки списъци}
 
-  \tt{(deep-fold }<х-дъно> <в-дъно> <операция> <списък>\tt)\\
+  \tt{(deep-foldr }<х-дъно> <в-дъно> <операция> <списък>\tt)\\
   \pause
   \onslide<+->
 \begin{lstlisting}
-(define (deep-fold nv term op l)
+(define (deep-foldr nv term op l)
   (cond ((null? l) @\hzero{nv}@)
         ((atom? l) @\vzero{(term l)}@)
-        (else (op @\vstep{(deep-fold nv term op (car l))}@
-                  @\hstep{(deep-fold nv term op (cdr l))}@))))
+        (else (op @\vstep{(deep-foldr nv term op (car l))}@
+                  @\hstep{(deep-foldr nv term op (cdr l))}@))))
 \end{lstlisting}
   \onslide<+->
 \begin{lstlisting}
-(define (count-atoms l) (deep-fold @\rvl0 \rvl{(lambda (x) 1)} \rvl+@ l))
+(define (count-atoms l) (deep-foldr @\rvl0 \rvl{(lambda (x) 1)} \rvl+@ l))
 \end{lstlisting}
   \onslide<+->
 \begin{lstlisting}
-(define (flatten l) (deep-fold @\rvl{'()} \rvl{list} \rvl{append}@ l))
+(define (flatten l) (deep-foldr @\rvl{'()} \rvl{list} \rvl{append}@ l))
 \end{lstlisting}
   \onslide<+->
   \begin{visibleenv}<14>
@@ -648,32 +648,34 @@
 (define (rcons x l) (append l (list x)))\end{lstlisting}%
   \end{visibleenv}%
 \begin{lstlisting}
-(define (deep-reverse l) (deep-fold @\rvl{'()} \rvl{id} \rvl{rcons}@ l))
+(define (deep-reverse l) (deep-foldr @\rvl{'()} \rvl{id} \rvl{rcons}@ l))
 \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Директна реализация на \tt{deep-fold}}
+  \frametitle{Директна реализация на \tt{deep-foldr}}
 
-  Как работи \tt{deep-fold}?
+  Как работи \tt{deep-foldr}?
   \pause
   \begin{itemize}[<+->]
-  \item пуска себе си рекурсивно за всеки елемент на вложения списък
+  \item пуска себе си рекурсивно за всеки елемент на дълбокия списък
   \item при достигане на вертикално дъно (атоми) прилага \tt{term}
   \item и събира резултатите с \tt{op}
   \end{itemize}
   \onslide<+->
-  Можем да реализираме \tt{deep-fold} чрез \tt{map} и \tt{foldr}!
+  Можем да реализираме \tt{deep-foldr} чрез \tt{map} и \tt{foldr}!
   \onslide<+->
 \begin{lstlisting}
 (define (branch p? f g) (lambda (x) (p? x) (f x) (g x)))
-(define (deep-fold nv term op l)
+(define (deep-foldr nv term op l)
   (foldr @\hstep{op} \hzero{nv}@
    (map (branch atom?
                 @\vzero{term}@
-                @\vstep{(lambda (l) (deep-fold nv term op l))}@
+                @\vstep{(lambda (l) (deep-foldr nv term op l))}@
         l)))
 \end{lstlisting}
+  \onslide<+->
+ \textbf{Задача.} Реализирайте функция за ляво свиване на дълбоки списъци \tt{deep-foldl}.
 \end{frame}
 
 \section{Функции с произволен брой аргументи}
