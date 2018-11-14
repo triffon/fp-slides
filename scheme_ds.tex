@@ -42,14 +42,14 @@
   Проверка за коректност:
   \pause
 \begin{lstlisting}
-(define (all p? l)
+(define (all? p? l)
   (foldr (lambda (x y) (and x y)) #t (map p? l)))
 
 (define (matrix? m)
   (and (list? m)
        (not (null? (car m)))
-       (all list? m)
-       (all (lambda (row) (= (length row)
+       (all? list? m)
+       (all? (lambda (row) (= (length row)
                              (length (car m)))) m)))
 \end{lstlisting}
 \end{frame}
@@ -587,11 +587,11 @@
   Намиране на поддърво:
   \pause
 \begin{lstlisting}
-(define (memq-tree x t)
+(define (memv-tree x t)
   (cond ((empty-tree? t) #f)
         ((eqv? x (root-tree t)) t)
-        (else (or (memq-tree x (left-tree t))
-                  (memq-tree x (right-tree t))))))
+        (else (or (memv-tree x (left-tree t))
+                  (memv-tree x (right-tree t))))))
 \end{lstlisting}
 \end{frame}
 
@@ -603,7 +603,7 @@
 \begin{lstlisting}
 (define (path-tree x t)
   (cond ((empty-tree? t) #f)
-        ((eq? x (root-tree t)) (list x))
+        ((eqv? x (root-tree t)) (list x))
         (else (cons#f (root-tree t)
                       (or (path-tree x (left-tree t))
                           (path-tree x (right-tree t)))))))
@@ -744,7 +744,7 @@
        (or (p (car l)) (search p (cdr l)))))
 \end{lstlisting}
   \pause
-  \alert{Важно свойство:} Ако \tt p връща ``свидетел'' на истинността на свойството $p$ (както например \tt{memq} или \tt{assq}), то \tt{search} също връща този ``свидетел''.\\
+  \alert{Важно свойство:} Ако \tt p връща ``свидетел'' на истинността на свойството $p$ (както например \tt{memv} или \tt{assv}), то \tt{search} също връща този ``свидетел''.\\
   \pause
   \textbf{Пример:}
 \begin{lstlisting}
@@ -773,7 +773,7 @@
   \pause
   \textbf{Решение:}
 \begin{lstlisting}
-(define (all p l)
+(define (all? p l)
   (not (search (lambda (x) (not (p x))) l)))
 \end{lstlisting}
 \end{frame}
@@ -835,13 +835,13 @@
   \frametitle{Абстракция за граф}
 
 \begin{lstlisting}
-(define (vertices g) (map car g))
+(define @\alt<2>{vertices keys)}{(vertices g) (keys g))}@
 
 (define (children v g)             @\alert{\(\{u|u\leftarrow{}v\}\)}@
-  (cdr (assq v g))))
+  (cdr (assv v g))))
 
 (define (edge? u v g)              @\alert{\(u\stackrel?\rightarrow{}v\)}@
-  (memq v (children u g)))
+  (memv v (children u g)))
 
 (define (map-children v f g)       @\alert{\(\forall{}u\leftarrow{}v\)}@
   (map f (children v g)))
@@ -861,11 +861,11 @@
   (define (self prop . params)
     (case prop
       ('print g)
-      ('vertices (map car g))
+      ('vertices (keys g))
       ('children (let ((v (car params)))
-                   (cdr (assq v g))))             @\alert{\(\{u|u\leftarrow{}v\}\)}@
+                   (cdr (assv v g))))             @\alert{\(\{u|u\leftarrow{}v\}\)}@
       ('edge? (let ((u (car params)) (v (cadr params)))
-                (memq v (self 'children u))))     @\alert{\(u\stackrel?\rightarrow{}v\)}@
+                (memv v (self 'children u))))     @\alert{\(u\stackrel?\rightarrow{}v\)}@
       ('map-children (let ((v (car params))
                            (f (cadr params)))     @\alert{\(\forall{}u\leftarrow{}v\)}@
                        (map f (self 'children v))))
@@ -910,8 +910,8 @@
   \pause
 \begin{lstlisting}
 (define (symmetric? g)
-  (all (lambda (u)
-            (all (lambda (v) (edge? v u g))
+  (all? (lambda (u)
+            (all? (lambda (v) (edge? v u g))
                     (children u g)))
             (vertices g)))
 \end{lstlisting}
@@ -972,9 +972,9 @@
   (define (dfs-search path)
     (let ((current (car path)))
       (cond ((eqv? current v) (reverse path))
-            ((memq current (cdr path)) #f)
+            ((memv current (cdr path)) #f)
             (else (search-child current
-                     (lambda (w) (dfs-search (cons w path))) g))))
+                    (lambda (w) (dfs-search (cons w path))) g))))
   (dfs-search (list u)))
 \end{lstlisting}
       \end{onlyenv}
@@ -982,8 +982,8 @@
 \begin{lstlisting}
 (define (dfs-path u v g)
   (if (eqv? u v) (list u)
-      (search-child u (lambda (c)
-                         (cons#f u (dfs-path c v g))) g)))
+      (search-child u (lambda (w)
+                         (cons#f u (dfs-path w v g))) g)))
 \end{lstlisting}
       \end{onlyenv}
     \end{overlayarea}
@@ -1053,11 +1053,11 @@
       Трябва да филтрираме циклите:
       \pause
 \begin{lstlisting}
-(define (acyclic? path)
-  (not (memq (car path) (cdr path))))
+(define (remains-acyclic? path)
+  (not (memv (car path) (cdr path))))
 
 (define (extend-acyclic path)
-  (filter acyclic? (extend path))
+  (filter remains-acyclic? (extend path))
 \end{lstlisting}
     \end{column}
     \begin{column}{0.35\textwidth}
