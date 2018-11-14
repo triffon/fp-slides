@@ -42,7 +42,8 @@
   Проверка за коректност:
   \pause
 \begin{lstlisting}
-(define (all p? l) (foldr (lambda (x y) (and x y)) #t l))
+(define (all p? l)
+  (foldr (lambda (x y) (and x y)) #t (map p? l)))
 
 (define (matrix? m)
   (and (list? m)
@@ -82,7 +83,7 @@
 \end{frame}
 
 
-\begin{frame}[fragile]
+\begin{frame}[fragile,fragile]
   \frametitle{Разширени операции}
 
   Намиране на ред и стълб по индекс
@@ -93,9 +94,19 @@
   (map (lambda (row) (list-ref row i)) m))
 \end{lstlisting}
   \pause
-  Транспониране
+  Транспониране\\
   \pause
   \onslide<+->
+  \textbf{Вариант 1 (директна рекурсия):}
+\begin{lstlisting}
+(define (transpose m)
+  (if (null? (get-first-row m)) '()
+      (cons (get-first-col m)
+            (transpose (del-first-col m)))))
+\end{lstlisting}
+  \onslide<+->
+
+ \textbf{Вариант 2 (\tt{accumulate}):}
   \begin{overprint}
 \begin{lstlisting}
 (define (transpose m)
@@ -373,9 +384,10 @@
   Вече можем да проверим дали даден обект е рационално число:
 \begin{lstlisting}
 (define (rat? p)
-  (and (pair? p) (eq? (car p) 'rat)
+  (and (pair? p) (eqv? (car p) 'rat)
        (pair? (cdr p))
-       (integer? (cadr p)) (integer? (cddr p))))
+       (integer? (cadr p)) (positive? (cddr p))
+       (= (gcd (cadr p) (cddr p)) 1)))
 \end{lstlisting}
   \pause
   Можем да добавим проверка за коретност:
@@ -404,7 +416,8 @@
     (case prop
       ('get-numer n)
       ('get-denom d)
-      ('print (cons n d)))))
+      ('print (cons n d))
+      (else 'unknown-prop))))
 \end{lstlisting}
   \pause
   \begin{itemize}
@@ -427,7 +440,8 @@
     (case prop
       ('get-numer numer)
       ('get-denom denom)
-      ('print (cons numer denom))))))
+      ('print (cons numer denom))
+      (else 'unknown-prop))))
 \end{lstlisting}
   \pause
   \begin{itemize}
@@ -452,7 +466,8 @@
        ('print (cons numer denom))
        @\alert{('* (let ((r (car params)))}@
             @\alert{(make-rat (* numer (r 'get-numer))}@
-                      @\alert{(* denom (r 'get-denom)))))}@))))
+                      @\alert{(* denom (r 'get-denom)))))}@
+       (else 'unknown-prop))))
 \end{lstlisting}
   \pause
   \begin{itemize}
@@ -478,7 +493,8 @@
        ('print (cons numer denom))
        ('* (let ((r (car params)))
             (make-rat (* @\alert{(self 'get-numer)}@ (r 'get-numer))
-                      (* @\alert{(self 'get-denom)}@ (r 'get-denom)))))))
+                      (* @\alert{(self 'get-denom)}@ (r 'get-denom)))))
+       (else 'unknown-prop)))
    @\alert{self}@))
 \end{lstlisting}
   \pause
@@ -573,7 +589,7 @@
 \begin{lstlisting}
 (define (memq-tree x t)
   (cond ((empty-tree? t) #f)
-        ((eq? x (root-tree t)) t)
+        ((eqv? x (root-tree t)) t)
         (else (or (memq-tree x (left-tree t))
                   (memq-tree x (right-tree t))))))
 \end{lstlisting}
@@ -686,7 +702,7 @@
 \end{lstlisting}
   \end{itemize}
 \end{frame}
-
+\end{document}
 \begin{comment}
 %% Ненужно усложняване на задачата
 \begin{frame}[fragile]
@@ -697,7 +713,7 @@
 (define (add-key-value key value alist)
    (let ((new-kv (cons key value)))
         (cond ((null? alist) (list new-kv))
-              ((eq? (caar alist) key)
+              ((eqv? (caar alist) key)
                (cons new-kv (cdr alist)))
               (else (cons (car alist)
                     (add-key-value key value (cdr alist))))))
@@ -956,7 +972,7 @@
 (define (dfs-path u v g)
   (define (dfs-search path)
     (let ((current (car path)))
-      (cond ((eq? current v) (reverse path))
+      (cond ((eqv? current v) (reverse path))
             ((memq current (cdr path)) #f)
             (else (search-child current
                      (lambda (w) (dfs-search (cons w path))) g))))
@@ -966,7 +982,7 @@
       \begin{onlyenv}<-5 |handout:0>
 \begin{lstlisting}
 (define (dfs-path u v g)
-  (if (eq? u v) (list u)
+  (if (eqv? u v) (list u)
       (search-child u (lambda (c)
                          (cons#f u (dfs-path c v g))) g)))
 \end{lstlisting}
@@ -1067,7 +1083,7 @@
   (define (extend-level level)
     (apply append (map extend-acyclic level)))
   (define (target-path path)
-    (and (eq? (car path) v) path))
+    (and (eqv? (car path) v) path))
 
   (define (bfs-level level)
     (and (not (null? level))
