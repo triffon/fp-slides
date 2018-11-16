@@ -245,6 +245,29 @@
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{\tt{map-stream} с произволен брой параметри}
+
+  Стандартната функция \lst{map} за списъци позволява комбиниране на произволен брой $n$ списъци с $n$-аргументна функция.\\
+  \pause
+  Можем да реализираме \lst{map-stream} аналогично да комбинира произволен брой потоци:\\
+  \pause
+\begin{lstlisting}
+(define (map-stream f . streams)
+  (cons-stream (apply f (map head streams))
+               (apply map-stream f (map tail streams))))
+\end{lstlisting}
+  \pause
+  \textbf{Примери:}
+  \begin{itemize}[<+->]
+  \item \evalsto{(map-stream + nats ones)}{1 2 3 4 ...}
+    \begin{itemize}
+    \item еквивалентно на \lst{zip-streams}
+    \end{itemize}
+  \item \evalsto{(map-stream list nats (map-stream + nats nats ones))}{(0 1) (1 3) (2 5) (3 7) ...}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
   \frametitle{Директна дефиниция на потоци}
 
   Можем да дефиниране на потоци с \alert{директна рекурсия}!
@@ -311,7 +334,7 @@
 
 (define (sieve stream)
   (cons-stream (head stream)
-               (sieve (filter-stream?
+               (sieve (filter-stream
                         (notdivides (head stream))
                         (tail stream)))))@\pause@
 
