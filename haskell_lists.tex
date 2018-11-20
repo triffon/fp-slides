@@ -3,7 +3,7 @@
 
 \title{Кортежи и списъци}
 
-\date[14.12.2017--4.01.2018]{14 декември 2017 г. -- 4 януари 2018 г.}
+\date{21 ноември 2018 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -140,7 +140,7 @@ betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
   \onslide<+->
   \begin{itemize}[<+->]
   \item списъкът е последователност с \alert{произволна дължина} от елементи от \alert{еднакъв тип}
-  \item \lst{(:) :: a -> [a] -> [a]}  е \alert{дясноасоциативна} бинарна операция
+  \item \lst{(:) :: a -> [a] -> [a]}  е \alert{дясноасоциативна} двуместна операция
   \item \lst{(1:(2:(3:(4:[]))))} $=$ \lst{1:2:3:4:[]} $\neq$ \tta{((((1:2):3):4):[])}
   \item \hlist a e по-удобен запис за $a_1$\tt{:(}$a_2$\tt:\ldots($a_n$\tt{:[])}\ldots\tt)
   \item \lst{[1,2,3,4]} $=$ \lst{1:[2,3,4]} $=$ \lst{1:2:[3,4]} $=$ \lst{1:2:3:[4]} $=$ \lst{1:2:3:4:[]}\
@@ -176,14 +176,16 @@ betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
   \item \lst{type String = [Char]}
   \item Всички операции над списъци важат и над низове
   \item \textbf{Примери:}
+    \begin{overprint}
     \begin{itemize}
-    \item \lst!['H', 'e', 'l', 'l', 'o' ] = "Hello"!
-    \item \lst!'H':'e':'l':'l':'o':[] = "Hello"!
-    \item \lst!'H':'e':"llo" = "Hello"!
-    \item \lst!\ "" = [] :: [Char]!
+    \item \lst!['H', 'e', 'l', 'l', 'o' ] == "Hello"!
+    \item \lst!'H':'e':'l':'l':'o':[] == "Hello"!
+    \item \lst!'H':'e':"llo" == "Hello"!
+    \item \lst!\ "" == [] :: [Char]!
     \item \ntypesp{[[1,2,3],{}"{}"]}
     \item \typestop{["12",['3'],[]]}{[String]}
     \end{itemize}
+  \end{overprint}
   \end{itemize}
 \end{frame}
 
@@ -215,7 +217,7 @@ betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
   \item \tta[$a$\tta{..}$b$\tta] $\rightarrow$ \tta[$a$\tta, $a+1$\tta, $a+2$\tta,\ldots $b$\tta]
   \item \textbf{Пример:} \evalsto{[1..5]}{[1,2,3,4,5]}
   \item \textbf{Пример:} \evalsto{['a'..'e']}{\ "abcde"}
-  \item Синтактична захар за \tt{enumFromTo from to}
+  \item Синтактична захар за \tt{enumFromTo from to}\\[1em]
     \pause
   \item \tta[$a$\tta, $a+\Delta x$ \tta{..} $b$\tta] $\rightarrow$ \tta[$a$\tta, $a+\Delta x$\tta, $a + 2\Delta x$\tta, \ldots \tta, $b'$\tta], където $b'$ е най-голямото число $\leq b$, за което $b' = a+k\Delta x$
   \item \textbf{Пример:} \evalsto{[1,4..15]}{[1,4,7,10,13]}
@@ -545,12 +547,14 @@ filter p (x:xs)
  where rest = filter p xs
 \end{lstlisting}
   \item \textbf{Примери:}
+    \begin{overprint}
     \begin{itemize}
     \item \evalstop{filter odd [1..5]}{[1,3,5]}
     \item \evalstop{filter (\\f -> f 2 > 3) [(^2),(+1),(*3)]}{[(^2),(*3)]}
     \item \evalstopnl{map (filter even) [[1,2,3],[4,5,6],[7,8,9]]}{[[2],[4,6],[8]]}
     \item \evalstops{\lst{map (\\x -> map (\\f -> filter f x) [(<0),(==0),(>0)])} \tt{[[-2,1,0],[1,4,-1],[0,0,1]]}\\}{\tt{[[[-2],[0],[1]],[[-1],[],[1,4]],[[],[0,0],[1]]]}}
     \end{itemize}
+  \end{overprint}
   \end{itemize}
 \end{frame}
 
@@ -603,7 +607,7 @@ foldr op nv (x:xs) = x `op` foldr op nv xs
     \item \lst{or = foldr (||) False}
     \item \lst{map f = foldr (\x} \tt{\only<-10>{ r} -> \alt<10>{f x : r}{(f x:)}) []}
       \onslide<+->
-    \item \lst{filter p = foldr (\x}\tt{\only<-13>{ r} -> \temporal<13>{if p x then x : r else r}{(if p x then (x:) else id) r}{if p x then (x:) else id}) []}
+    \item \footnotesize\lst{filter p = foldr (\x}\tt{\only<-13>{ r} -> \temporal<13>{if p x then x:r else r}{(if p x then (x:) else id) r}{if p x then (x:) else id}) []}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -694,7 +698,7 @@ foldr1 op (x:xs) = x `op` foldr1 op xs
     \end{itemize}
   \item \lst{zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]}
     \begin{itemize}
-    \item съшива два списъка с дадена бинарна операция
+    \item ``съшива'' два списъка с дадена двуместна операция
     \item \evalstos{\lst{zipWith op} \hlist x \hlist y}{\tt[$x_1$\tt{ `op` }$y_1$\tt, $x_2$\tt{ `op` } $y_2$\tt, \ldots\tt, $x_n$\tt{ `op` }$y_n$]}
     \end{itemize}
   \item \textbf{Примери:}
