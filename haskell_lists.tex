@@ -52,7 +52,7 @@
     \item \lst{type Student = (String, Int, Double)}
     \item \lst{type Point = (Double, Double)}
     \item \lst{type Triangle = (Point, Point, Point)}
-    \item \lst{type Translation = Point -> Point}
+    \item \lst{type Transformation = Point -> Point}
     \item \lst{type Vector = Point}
     \item \lst{addVectors :: Vector -> Vector -> Vector}
     \item<.-> \lst{addVectors v1 v2 = (fst v1 + fst v2, snd v1 + snd v2)}
@@ -246,7 +246,10 @@ reverse a
  | null a    = a
  | otherwise = reverse (tail a) ++ [head a]
 \end{lstlisting}
-  \item \lst{(!!) :: [a] -> Int -> a} --- елемент с пореден номер (от 0)
+  \end{itemize}
+\end{frame}
+\end{document}
+\item \lst{(!!) :: [a] -> Int -> a} --- елемент с пореден номер (от 0)
     \begin{itemize}[<.->]
     \item \evalsto{\ "Haskell" \!\! 2}{'s'}
     \end{itemize}
