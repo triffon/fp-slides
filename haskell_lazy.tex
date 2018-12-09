@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[alsotrans]{beamerswitch}
 \usepackage{fprog}
 
 \title[Лениво оценяване]{Лениво оценяване и програмиране от по-висок ред}
@@ -37,7 +37,7 @@
     \item<17-> \alert{стриктно} (апликативно, лакомо) оценяване
     \end{itemize}
   \item $\underline{g(f(4))}
-    \lra \underline{(f(4))}^2 + \underline{f(4)}
+    \lra (\underline{f(4)})^2 + \underline{f(4)}
     \lra (\underline{4!})^2 + \underline{4!}
     \lra 24^2 + 24
     \lra 600$
@@ -242,6 +242,7 @@ sumFirst (x:xs) (y:ys) = x + y
   \lra& \tt{\underline{1 + 5}} \lra\;\tt 6
 \end{tabular}
 \end{frame}
+\end{document}
 
 \begin{frame}
   \frametitle{Оценяване в Haskell: пример 2}
