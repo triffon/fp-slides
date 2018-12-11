@@ -1,9 +1,9 @@
-\documentclass{beamer}
+\documentclass[alsotrans]{beamerswitch}
 \usepackage{fprog}
 
 \title{Типове и класове в Haskell}
 
-\date{11--18 януари 2018 г.}
+\date{12 декември 2018 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -109,7 +109,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Дефиниране на класове от типове}
-  \tta{class }<клас> <типова-променлива>\tta{ where}\\
+  \tta{class} <клас> <типова-променлива>\tta{ where}\\
   \hspace{2ex}\{<метод>\{,<метод>\} \tta{::} <тип>\}\\
   \hspace{2ex}\{<метод> \tta{=} <реализация-по-подразбиране>\}\\[2em]
   \pause
@@ -273,9 +273,8 @@ class (Ord a, Measurable a) => OrdMeasurable a where
   \frametitle{Потребителски дефинирани типове}
   В Haskell имаме възможност да дефинираме нови типове данни.\\[1em]
   \begin{itemize}[<+->]
-  \item \tta{data} [<контекст> \tta{=>}] <тип> [<параметри>] \tta= <дефиниция>
+  \item \tta{data} <тип> [<параметри>] \tta= <дефиниция>
   \item{} <тип> трябва да започва с главна буква
-  \item{} <контекст> е множество от класови ограничения
   \item{} <параметри> е списък от различни типови променливи
   \item{} <дефиниция> ::= <елемент> \{ \tta| <елемент> \}
     \begin{itemize}
@@ -555,8 +554,8 @@ mapBinTree f (Node x l r) = Node (f x) (mapBinTree f l)
 \begin{lstlisting}
 foldrBinTree :: (a -> b -> b) -> b -> BinTree a -> b
 foldrBinTree _  nv Empty        = nv
-foldrBinTree op nv (Node x l r) = foldrBinTree op
-                                   (x `op` foldrBinTree op nv r) l
+foldrBinTree op nv (Node x l r) =
+  foldrBinTree op (x `op` foldrBinTree op nv r) l
 \end{lstlisting}
 \end{frame}
 
