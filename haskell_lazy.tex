@@ -393,8 +393,8 @@ sumFirst (x:xs) (y:ys) = x + y
     Отделянето на списъци работи и за безкрайни списъци.\pause
     \begin{itemize}[<+->]
     \item \tt{oddSquares = \rvl{[ x\^{}2 | x <- [1,3..] ]}}
-    \item \tt{twins = \rvl{[ (x,x+2) | x <- [1..], prime x, prime
-          (x+2) ]}}
+    \item {\small\tt{twins = \rvl{[ (x,x+2) | x <- [1..], isPrime x, isPrime
+          (x+2) ]}}}
     \item \tt{pairs = \rvl{[ (x,y) | x <- [0..], y <- [0..x - 1] ]}}
     \item \tt{pythagoreanTriples = \rvl{
           \begin{tabular}[t]{ll}
@@ -406,6 +406,8 @@ sumFirst (x:xs) (y:ys) = x + y
     \end{itemize}
   \end{overlayarea}
 \end{frame}
+
+
 
 \begin{frame}
   \frametitle{Функции от по-висок ред над безкрайни списъци}
@@ -597,8 +599,8 @@ sumFirst (x:xs) (y:ys) = x + y
   \item \textbf{Примери:}
     \begin{itemize}
     \item \lst{second x y = y}
-    \item \evalsto{second [1..10^10^10] 2}{2}
-    \item \lst{seq [1..10^10^10] 2} $\xrightarrow{\hspace{35ex}}$ \tt2
+    \item \evalsto{second (10^10^10) 2}{2}
+    \item \lst{seq (10^10^10) 2} $\xrightarrow{\hspace{35ex}}$ \tt2
     \item \lst{f x = seq x (f (1-x))}
     \item \evalstops{\tt{f 0}}{\textsf{забива, но не изразходва памет!}}
     \end{itemize}
