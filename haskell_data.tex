@@ -3,7 +3,7 @@
 
 \title{Типове и класове в Haskell}
 
-\date{12 декември 2018 г.}
+\date{12--19 декември 2018 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -226,7 +226,6 @@ class  (Eq a) => Ord a  where
   min x y == if x < y then x else y
 \end{lstlisting}
 \end{frame}
-\end{document}
 
 \begin{frame}[fragile]
   \frametitle{Множествено наследяване}
@@ -308,14 +307,14 @@ class (Ord a, Measurable a) => OrdMeasurable a where
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Записи}
   Друга възможност за потребителски дефинирани типове са \alert{записите}.\\
   \pause
   \begin{itemize}[<+->]
-  \item \lst{data Player = Player Name Score}
-  \item<.-> \lst{type Name = String}
+  \item \lst{type Name = String}
   \item<.-> \lst{type Score = Int}
+  \item<.-> \lst{data Player = Player Name Score}
     \begin{itemize}
     \item Да, името на типа може да съвпада с името на (единствения) конструктор
     \end{itemize}
@@ -324,9 +323,11 @@ class (Ord a, Measurable a) => OrdMeasurable a where
   \item \lst{getName :: Player -> String}
   \item<.-> \lst{getName (Player name _) = name}
   \item \lst{better :: Player -> Player -> String}
-  \item \lst{better (Player name1 score1) (Player name2 score2)}
-  \item<.-> \hspace{2ex}\lst{ | score1 > score2  = name1}
-  \item<.-> \hspace{2ex}\lst{ | otherwise  = name2}
+    \begin{lstlisting}
+better (Player name1 score1) (Player name2 score2)
+  | score1 > score2  = name1
+  | otherwise        = name2
+    \end{lstlisting}
   \end{itemize}
 \end{frame}
 
@@ -445,7 +446,7 @@ instance Show Shape where
   \textbf{Задача.} Да се напише функция, която по даден списък от играчи намира най-добрия резултат, ако е постигнат от единствен играч, или списък от имената на играчите, които са постигнали най-добър резултат.
   \onslide<+->
 \begin{lstlisting}
-searchBest :: [Player] -> Either Int [String]}@\onslide<+->@
+searchBest :: [Player] -> Either Int [String]@\onslide<+->@
 searchBest players
  | length bestPlayers == 1 = Left best
  | otherwise = Right $ map name bestPlayers
