@@ -1,0 +1,343 @@
+\documentclass[alsotrans]{beamerswitch}
+\usepackage{fprog}
+
+\title{Функтори и монади}
+
+\date{16 януари 2019 г.}
+
+\lstset{language=Haskell,style=Haskell}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Функтори}
+
+\begin{frame}[fragile]
+  \frametitle{Класове от по-висок ред}
+
+  \begin{itemize}[<+->]
+  \item Досега разглеждахме \emph{класове} от типове, които имат
+    сходно поведение (\lst{Eq}, \lst{Read}, \lst{Show}, \lst{Enum},
+    \lst{Measurable}, \lst{Num}, \ldots).
+  \item
+    Разглеждахме и \emph{типови конструктори}, които позволяват дефиниране на параметризирани (генерични) типове (\lst{Maybe}, \lst{[]}, \lst{BinTree}, \lst{Tree}, \lst{IO}, \ldots).
+  \item
+    Нека да разгледаме \emph{клас от типови конструктори}, които имат някаква обща характеристика.
+  \item
+    \textbf{Пример:} Има ли нещо общо, което можем да правим с \lst{[]}, \lst{BinTree} и \lst{Tree}?
+  \item Нещо, което не зависи от \emph{типа} на елементите в тези контейнери?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Примери за класове от конструктори}
+  \begin{itemize}[<+->]
+  \item
+    \textbf{Пример:} Има ли нещо общо, което можем да правим с \lst{[]}, \lst{BinTree} и \lst{Tree}?
+  \item Можем да намираме брой елементи
+\begin{lstlisting}
+class Countable c where
+  length :: c a -> Integer
+\end{lstlisting}
+  \item Можем да намерим списък от всички елементи
+\begin{lstlisting}
+class Listable c where
+  elements :: c a -> [a]
+\end{lstlisting}
+  \item Можем да приложим функция над всеки елемент
+\begin{lstlisting}
+class Functor f where
+  fmap :: (a -> b) -> f a -> f b
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Функтори}
+  \begin{definition}
+    Класът \lst{Functor} в Haskell се състои от типовите конструктори $f$, за които може да се дефинира \lst{fmap :: (a -> b) -> f a -> f b}.
+  \end{definition}
+  \pause
+  За удобство операцията \lst!<$>! е инфиксен вариант на \lst{fmap}.\\ % $ за поправка на оцветяването
+  \pause
+  \textbf{Примери за функтори:}
+  \begin{itemize}[<+->]
+  \item \lst{Maybe}
+  \item \lst{Either a}
+  \item \lst{(,) a}  
+  \item \lst{[]}
+  \item \lst{BinTree}
+  \item \lst{Tree}
+  \item \lst{(->) r}
+  \item \lst{IO}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Странни функторни екземпляри}
+  \textbf{Пример:} да разгледаме екземпляра
+\begin{lstlisting}
+data Pill a = BluePill a | RedPill a
+instance Functor Pill where
+  fmap f (BluePill x) = RedPill (f x)
+  fmap f (RedPill  x) = BluePill (f x)
+\end{lstlisting}
+  \pause
+  \textbf{Проблем №1:}
+  \begin{itemize}[<+->]
+  \item \lst{fmap id (BluePill 2) = RedPill 2}
+  \item \lst{fmap} с ``празна'' функция променя структурата на функтора!
+  \end{itemize}
+  \onslide<+->
+  \textbf{Проблем №2:}
+  \begin{itemize}[<+->]
+  \item \lst{fmap (+3) (BluePill 3) = RedPill 6}
+  \item \lst{fmap (+1) (fmap (+2) (BluePill 3)) = BluePill 6}
+  \item Има значение колко поред функции ще приложим!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Функторни закони}
+  \begin{definition}
+    \emph{Функтор} наричаме екземпляр на класа \emph{Functor} такъв, че:
+    \begin{enumerate}
+    \item \lst{fmap id} \eqv \lst{id} (запазване на идентитета)
+    \item \lst{fmap f . fmap g} \eqv {fmap (f . g)} (дистрибутивност относно композиция)
+    \end{enumerate}
+  \end{definition}
+  \pause
+  Функторните закони ни дават гаранция, че реализацията на \lst{fmap} е ``неутрална'' към функтора и променя стойностите в него само и единствено на базата на подадената функция \lst{f}.\\
+  \pause
+  Всички примерни екземпляри (освен \lst{Pill}) удовлетворяват функторните закони.\\
+  \pause
+  Можем да мислим, че \lst{fmap} ``повдига'' функцията \lst{f} от елементи към функтори.
+\end{frame}
+
+\section{Апликативни функтори}
+
+\begin{frame}
+  \frametitle{\tt{fmap} с двуаргументни функции}
+  Можем ли да използваме \tt{fmap} за ``повдигане'' на двуаргументна функция?\\
+  \pause
+  \onslide<+->
+  \textbf{Пример:} \evalstoerrp{fmap (+) (Just 3) (Just 5)}\\
+  \onslide<+->
+  \textbf{Проблем:} \typestop{fmap (+) (Just 3)}{Maybe (Int -> Int)}\\
+  \onslide<+->
+  Получаваме функтор над функция, която не можем директно да приложим над функтор над стойност!\\
+  \onslide<+->
+  \textbf{Идея:} Да разбием \lst{fmap} на две части:
+  \begin{itemize}[<+->]
+  \item повдигане на функтор над функция към функция над функтори
+    \begin{itemize}
+    \item \lst{f (a -> b) -> f a -> f b}
+    \end{itemize}
+  \item повдигане на обикновена функция към функтор над функция
+    \begin{itemize}
+    \item \lst{(a -> b) -> f (a -> b)} 
+    \end{itemize}
+  \end{itemize}
+  \onslide<+->
+  Функторите, които поддържат такова разлагане на \lst{fmap} наричаме \emph{апликативни}.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Класът \tt{Applicative}}
+\begin{lstlisting}
+class (Functor f) => Applicative f where
+  pure  :: a -> f a
+  (<*>) :: f (a -> b) -> f a -> f b
+\end{lstlisting}
+  % TODO съкращаване на a и f
+  \pause
+  Можем да дефинираме \lst{fmap f a = pure f <*> a}.\\
+  \pause
+  \textbf{Примери за апликативни функтори:}
+  \begin{itemize}[<+->]
+  \item \lst{Maybe}
+  \item \lst{(,) a}  
+  \item \lst{[]}
+  \item \lst{ZipList}
+  \item \lst{(->) r}
+  \item \lst{IO}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Функции за апликативни функтори}
+  \begin{itemize}[<+->]
+  \item \lst!liftA2 :: (Applicative f) => !\\
+    \hspace{10ex}\lst{(a -> b -> c) -> f a -> f b -> f c}
+    \begin{itemize}
+    \item повдига двуаргументна функция над функтор
+    \item \lst!liftA2 f a b = f <$> a <*> b!   % $ оцветяване на синтаксиса
+    \item \textbf{Пример:}\\\evalstop{liftA2 (+) [2,3] [10,20,30]}{[12,22,32,13,23,33]}
+    \end{itemize}
+  \item \lst{sequenceA :: (Applicative f) => [f a] -> f [a]}
+    \begin{itemize}
+    \item повдига списък от функтори до функтор над списък
+    \item     \lst{sequenceA []     = pure []}
+    \item<.-> \lst{sequenceA (x:xs) = liftA2 (:) x (sequenceA xs)}
+    \item     \lst{sequenceA = foldr (liftA2 (:)) (pure [])}
+    \item \textbf{Пример:}\\\evalstop{sequenceA [Just 2, Just 3, Just 5]}{Just [2,3,5]}
+    \item \textbf{Пример:} \evalstop{sequenceA [Just 2, Nothing, Just 5]}{Nothing}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Закони за апликативни функтори}
+  \begin{definition}
+    \emph{Апликативен функтор} наричаме екземпляр на класа \lst{Applicative}, за който:
+    \begin{enumerate}[<+->]
+    \item \lst{pure f <*> x} \eqv \lst{fmap f x}
+    \item \lst{pure id <*> v} \eqv \lst{v}
+    \item \lst{pure (.) <*> u <*> v <*> w} \eqv \lst{u <*> (v <*> w)}
+    \item \lst{pure f <*> pure x} \eqv \lst{pure (f x)}
+    \item \lst{u <*> pure y} \eqv \lst{pure ($ y) <*> u} % $ оцветяване на синтаксис
+    \end{enumerate}
+  \end{definition}
+\end{frame}
+
+\section{Монади}
+
+\begin{frame}
+  \frametitle{Операцията ``свързване'' (bind)}
+  
+  \begin{itemize}[<+->]
+  \item Функторите ни позволяваха да превърнем \emph{функция над елементи} във функция над функтори:
+    \begin{itemize}
+    \item \evalsto{(+3) <$> [1,2]}{[4,5]} % $ оцветяване на синтаксиса
+    \end{itemize}
+  \item Апликативните функтори ни позволяваха да превърнем \emph{функтор над функция} към функция над функтори
+    \begin{itemize}
+    \item \evalsto{(+) <$> [1,2] <*> [10,20]}{[11,12,21,22]} % $ оцветяване на синтаксиса
+    \end{itemize}
+  \item Но как можем да превърнем \emph{функция, връщаща функтор} във функция над функтори?
+    \begin{itemize}
+    \item \evalsto{(\x -> [1..x]) =<< [3,4]}{[1,2,3,1,2,3,4]} % >> оцветяване на синтаксиса
+    \item Искаме структурата на функтора-резултат да може да зависи от стойността във функтора-параметър!
+    \item \lst!(=<<) :: (a -> f b) -> f a -> f b!  % >> оцветяване на синтаксиса
+    \item По-често се използва операцията ``свързване'' (bind) с разменени аргументи:
+    \item \lst!(>>=) :: f a -> (a -> f b) -> f b!
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Класът \tt{Monad}}
+\begin{lstlisting}
+class (Applicaive m) => Monad m where  
+  return :: a -> m a  
+  return = pure     
+  
+  (>>=) :: m a -> (a -> m b) -> m b  
+  
+  (>>) :: m a -> m b -> m b  
+  x >> y = x >>= \_ -> y  
+      
+  fail :: String -> m a  
+  fail msg = error msg
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Примери за монади}
+  \begin{itemize}[<+->]
+  \item \lst{Maybe}
+  \item \lst{[]}
+  \item \lst{(->) r}
+  \item \lst{IO}
+  \end{itemize}
+  \onslide<+->
+  \lst{do} синтаксисът работи за всички екземпляри на \lst{Monad}!
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Монадни функции (1)}
+  \begin{itemize}[<+->]
+  \item \lst{liftM :: (Monad m) => (a -> b) -> m a -> m b}
+    \begin{itemize}
+    \item \lst{fmap} за монади
+    \item \lst!liftM f m = m >>= (\\x -> return (f x))!
+    \end{itemize}
+  \item \lst{ap :: (Monad m) => m (a -> b) -> m a -> m b}
+    \begin{itemize}
+    \item \lst{<*>} за монади
+    \item \lst!ap mf m = mf >>= (\\f -> m >>= (\\x -> return $ f x))! % $ оцветяване на синтаксиса
+    \end{itemize}
+  \item \lst{liftM2::(Monad m) => (a -> b -> c) -> m a -> m b -> m c}
+    \begin{itemize}
+    \item \lst{liftA2} за монади
+\onslide<+->
+\begin{lstlisting}
+liftM2 f m1 m2 = m1 <<= (\x1 ->
+                 m2 <<= (\x2 ->
+                 return $ f x1 x2))
+\end{lstlisting}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Монадни функции (2)}
+  \begin{itemize}[<+->]
+  \item \lst{join :: (Monad m) => m (m a) -> m a}
+    \begin{itemize}
+    \item ``слива'' двойната опаковка в единична
+      % TODO: съкращаване на mm
+    \item \lst{join mm = mm >>= id}
+    \item Можем да дефинираме \lst{(>>=)} чрез \lst{join} и \lst{fmap}:
+    \item<.-> \lst{m >>= f = join (fmap f m)} 
+    \end{itemize}
+  \item \lst{filterM :: (Monad m) => (a -> m Bool) -> [a] -> m [a]}
+    \begin{itemize}
+    \item Филтрира с предикат, връщащ ``опаковани'' булеви стойности
+    \item Резултатът е ``опакованите'' елементи на списъка
+    \item \lst{powerset = filterM (\x -> [True,False])}
+    \end{itemize}
+  \item \lst{foldM :: (Monad m) => (a -> b -> m a) -> a -> [b] -> m a}
+    \begin{itemize}
+    \item Натрупва елементи от списък с монадна операция
+    \item Натрупването е ляво (итеративен процес, подобно на \lst{foldl})
+    \item
+\begin{lstlisting}
+boundSum lim = foldM (\x y -> if x+y < lim then Just (x+y)
+                              else Nothing) 0
+\end{lstlisting}
+    \item \evalstop{boundSum 60 [1..10]}{Just 55}
+    \item \evalstop{boundSum 50 [1..10]}{Nothing}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Монадни закони}
+  \begin{definition}
+    \emph{Монада} наричаме инстанция на класа \lst{Monad}, за която:
+    \small
+    \begin{enumerate}[<+->]
+    \item \lst{return x >>= f} \eqv \lst{f x} (ляв идентитет)
+    \item \lst{m >>= return}   \eqv \lst{m}   (десен идентитет)
+    \item \lst{(m >>= f) >>= g} \eqv \lst{m >>= (\x -> f x >>= g)} (асоциативност)
+    \end{enumerate}
+  \end{definition}
+  \onslide<+->
+  Композиция на монадни функции:\\
+\begin{lstlisting}
+(<=<) :: (Monad m) => (b -> m c) -> (a -> m b) -> (a -> m c)  
+f <=< g = (\x -> g x >>= f)
+\end{lstlisting}
+  \onslide<+->
+  Монадните закони чрез композиция:
+  \begin{enumerate}
+  \item \lst{f <=< return} \eqv \lst{f} (ляв идентитет)
+  \item \lst{return <=< f} \eqv \lst{f} (десен идентитет)
+  \item \lst{f <=< (g <=< h)} \eqv \lst{(f <=< g) <=< h} (асоциативност)
+  \end{enumerate}
+\end{frame}
+\end{document}
