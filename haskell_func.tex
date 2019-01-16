@@ -40,7 +40,7 @@
   \item Можем да намираме брой елементи
 \begin{lstlisting}
 class Countable c where
-  length :: c a -> Integer
+  count :: c a -> Integer
 \end{lstlisting}
   \item Можем да намерим списък от всички елементи
 \begin{lstlisting}
@@ -66,8 +66,8 @@ class Functor f where
   \textbf{Примери за функтори:}
   \begin{itemize}[<+->]
   \item \lst{Maybe}
-  \item \lst{Either a}
   \item \lst{(,) a}  
+  \item \lst{Either a}
   \item \lst{[]}
   \item \lst{BinTree}
   \item \lst{Tree}
@@ -159,7 +159,7 @@ class (Functor f) => Applicative f where
   \textbf{Примери за апликативни функтори:}
   \begin{itemize}[<+->]
   \item \lst{Maybe}
-  \item \lst{(,) a}  
+  \item \lst{Either a}
   \item \lst{[]}
   \item \lst{ZipList}
   \item \lst{(->) r}
@@ -219,7 +219,7 @@ class (Functor f) => Applicative f where
     \end{itemize}
   \item Но как можем да превърнем \emph{функция, връщаща функтор} във функция над функтори?
     \begin{itemize}
-    \item \evalsto{(\x -> [1..x]) =<< [3,4]}{[1,2,3,1,2,3,4]} % >> оцветяване на синтаксиса
+    \item \evalsto{(\\x -> [1..x]) =<< [3,4]}{[1,2,3,1,2,3,4]} % >> оцветяване на синтаксиса
     \item Искаме структурата на функтора-резултат да може да зависи от стойността във функтора-параметър!
     \item \lst!(=<<) :: (a -> f b) -> f a -> f b!  % >> оцветяване на синтаксиса
     \item По-често се използва операцията ``свързване'' (bind) с разменени аргументи:
@@ -231,22 +231,16 @@ class (Functor f) => Applicative f where
 \begin{frame}[fragile]
   \frametitle{Класът \tt{Monad}}
 \begin{lstlisting}
-class (Applicaive m) => Monad m where  
+class (Applicative m) => Monad m where  
   return :: a -> m a  
   return = pure     
   
-  (>>=) :: m a -> (a -> m b) -> m b  
-  
-  (>>) :: m a -> m b -> m b  
-  x >> y = x >>= \_ -> y  
-      
-  fail :: String -> m a  
-  fail msg = error msg
+  (>>=) :: m a -> (a -> m b) -> m b
+  (>>)  :: m a -> m b -> m b  
+  x >> y   =   x >>= \_ -> y  
 \end{lstlisting}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Примери за монади}
+  \pause
+  \textbf{Примери за монади:}
   \begin{itemize}[<+->]
   \item \lst{Maybe}
   \item \lst{[]}
@@ -263,12 +257,12 @@ class (Applicaive m) => Monad m where
   \item \lst{liftM :: (Monad m) => (a -> b) -> m a -> m b}
     \begin{itemize}
     \item \lst{fmap} за монади
-    \item \lst!liftM f m = m >>= (\\x -> return (f x))!
+    \item \lst!liftM f m = m >>= (\x -> return $ f x)! % $ оцветяване на синтаксиса
     \end{itemize}
   \item \lst{ap :: (Monad m) => m (a -> b) -> m a -> m b}
     \begin{itemize}
     \item \lst{<*>} за монади
-    \item \lst!ap mf m = mf >>= (\\f -> m >>= (\\x -> return $ f x))! % $ оцветяване на синтаксиса
+    \item \lst!ap mf m = mf >>= (\f -> m >>= (\x -> return $ f x))! % $ оцветяване на синтаксиса
     \end{itemize}
   \item \lst{liftM2::(Monad m) => (a -> b -> c) -> m a -> m b -> m c}
     \begin{itemize}
@@ -285,6 +279,7 @@ liftM2 f m1 m2 = m1 <<= (\x1 ->
 
 \begin{frame}[fragile]
   \frametitle{Монадни функции (2)}
+  \begin{overlayarea}{\textwidth}{\textheight}
   \begin{itemize}[<+->]
   \item \lst{join :: (Monad m) => m (m a) -> m a}
     \begin{itemize}
@@ -305,14 +300,13 @@ liftM2 f m1 m2 = m1 <<= (\x1 ->
     \item Натрупва елементи от списък с монадна операция
     \item Натрупването е ляво (итеративен процес, подобно на \lst{foldl})
     \item
-\begin{lstlisting}
-boundSum lim = foldM (\x y -> if x+y < lim then Just (x+y)
-                              else Nothing) 0
-\end{lstlisting}
+\lst!boundSum lim = foldM (\x y -> if x+y < lim!\\
+\hspace{30ex}\lst{then Just (x+y) else Nothing) 0}
     \item \evalstop{boundSum 60 [1..10]}{Just 55}
     \item \evalstop{boundSum 50 [1..10]}{Nothing}
     \end{itemize}
   \end{itemize}
+\end{overlayarea}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -330,7 +324,7 @@ boundSum lim = foldM (\x y -> if x+y < lim then Just (x+y)
   Композиция на монадни функции:\\
 \begin{lstlisting}
 (<=<) :: (Monad m) => (b -> m c) -> (a -> m b) -> (a -> m c)  
-f <=< g = (\x -> g x >>= f)
+f <=< g   =   \x -> g x >>= f
 \end{lstlisting}
   \onslide<+->
   Монадните закони чрез композиция:
