@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[handout]{beamer}
 \usepackage{fprog}
 
 \title{Функции от по-висок ред}
@@ -344,7 +344,7 @@
 \begin{lstlisting}
 (define (p n x)
    (accumulate-i (lambda (u v) (+ (* u x) v)) 0
-                 1 (+ n 1) (lambda (i) (+ i 1))))
+                 1 (+ n 1) id (lambda (i) (+ i 1))))
 \end{lstlisting}
 \pause
 \textbf{Задача:} Как можем да реализираме с accumulate:
