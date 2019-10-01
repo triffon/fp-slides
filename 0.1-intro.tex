@@ -1,9 +1,13 @@
-\documentclass{beamer}
+\documentclass[alsotrans]{beamerswitch}
 \usepackage{fprog}
 
 \title[Какво е ФП?]{Какво е функционално програмиране?}
 
-\date{3 октомври 2018 г.}
+\newcommand{\lang}[1]{\onslide<2->{\hspace{2ex}[\textbf{#1}]}}
+\newcommand{\scheme}{\lang{Scheme}}
+\newcommand{\haskell}{\lang{Haskell}}
+
+\date{2 октомври 2019 г.}
 
 \begin{document}
 
@@ -327,13 +331,8 @@ cout << s;
   \end{itemize}
 \end{frame}
 
-\newcommand{\lang}[1]{\onslide<2->{\hspace{2ex}[\textbf{#1}]}}
-\newcommand{\scheme}{\lang{Scheme}}
-\newcommand{\haskell}{\lang{Haskell}}
-
-\begin{frame}[<1-2>]
+\begin{frame}
   \frametitle{Видове функционални езици}
-
 
   \begin{itemize}
   \item според типовата система

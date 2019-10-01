@@ -8,6 +8,9 @@
 \deftranslation[to=bulgarian]{Definition}{Дефиниция}
 \deftranslation[to=bulgarian]{Corollary}{Следствие}
 
+% избягване на предупреждения за неподдържани символи от hyperref
+\hypersetup{unicode=true}
+
 % поддръжка на линкове
 \usepackage{hyperref}
 
@@ -70,7 +73,7 @@
 }
 \author{Трифон Трифонов}
 \institute[ФП 19/20]{\small Функционално програмиране, 2019/20 г.}
-\titlegraphic{\vspace{8ex}\scalebox{.45}{\textcolor{lightgray}{Тази презентация е достъпна под лиценза Creative Commons Признание-Некомерсиално-Споделяне на споделеното 4.0 Международен \doclicenseIcon}}}
+\titlegraphic{\vspace{8ex}\scalebox{.45}{\textcolor{gray}{Тази презентация е достъпна под лиценза Creative Commons Признание-Некомерсиално-Споделяне на споделеното 4.0 Международен \doclicenseIcon}}}
 \subject{LectureSlides}
 
 %%% кратки команди за форматиране
@@ -228,4 +231,4 @@
 \newcommand{\where}{\,\textbf{where}\,}
 
 % creative commons признание
-\newcommand{\imageAttr}[4]{\scalebox{.4}{\textcolor{lightgray}{``#1'' от #2 (\url{#3}), #4}}}
+\newcommand{\imageAttr}[4]{\scalebox{.4}{\textcolor{gray}{``#1'' от #2 (\url{#3}), #4}}}
