@@ -1,4 +1,4 @@
-\documentclass[handout]{beamer}
+\documentclass[alsotrans]{beamerswitch}
 \usepackage{fprog}
 
 \title{Функции от по-висок ред}
@@ -6,6 +6,12 @@
 \date{17--31 октомври 2018 г.}
 
 \lstset{language=Scheme}
+
+\newcommand<>{\upper}[1]{{\textcolor#2{red}{#1}}}
+\newcommand<>{\term}[1]{{\textcolor#2{green}{#1}}}
+\newcommand<>{\nextf}[1]{{\textcolor#2{blue}{#1}}}
+\newcommand{\pnx}{x^n + 2x^{n-1} + \ldots + (n-2)x^3 + (n-1)x^2 + nx + (n+1)}
+\newcommand{\pnxh}{\Bigg(\bigg(\Big(\ldots\big((x + 2)x + 3\big)x + \ldots\Big)x + (n-1)\bigg)x + n\Bigg)x + (n+1)}
 
 \begin{document}
 
@@ -59,24 +65,20 @@
   \item $x + e^x + e^{e^x} + e^{e^{e^x}} + \ldots$ докато поредното събираемо е $\leq 10^{1000}$
   \end{enumerate}
   \pause
-  \newcommand{\upper}{\textcolor<5->{red}}
-  \newcommand{\term}{\textcolor<6->{green}}
-  \newcommand{\next}{\textcolor<7->{blue}}
 \begin{lstlisting}
 (define (sum1 k)
-  (if (> k @\upper{100}@) 0 (+ @\term{(* k k)}@ (sum1 @\next{(+ k 1)}@))))
+  (if (> k @\upper<5->{100}@) 0 (+ @\term<6->{(* k k)}@ (sum1 @\nextf<7->{(+ k 1)}@))))
 \end{lstlisting}
-  \pause
+   \pause
 \begin{lstlisting}
 (define (sum2 a b f dx)
-  (if (> a @\upper{b}@) 0 (+ @\term{(* dx (f a))}@ (sum2 @\next{(+ a dx)}@ b f dx))))
+  (if (> a @\upper<5->{b}@) 0 (+ @\term<6->{(* dx (f a))}@ (sum2 @\nextf<7->{(+ a dx)}@ b f dx))))
 \end{lstlisting}
-  \pause
+   \pause
 \begin{lstlisting}
 (define (sum3 x)
-  (if (> x @\upper{(expt 10 1000)}@) 0 (+ @\term{x}@ (sum3 @\next{(exp x)}@))))
+  (if (> x @\upper<5->{(expt 10 1000)}@) 0 (+ @\term<6->{x}@ (sum3 @\nextf<7->{(exp x)}@))))
 \end{lstlisting}
-
 \end{frame}
 
 \begin{frame}[fragile]
@@ -86,12 +88,9 @@
     \sum_{\substack{i=a \\i \leftarrow next(i)}}^b term(i).
   \end{equation*}
   \pause
-  \newcommand{\upper}{\textcolor{red}}
-  \newcommand{\term}{\textcolor{green}}
-  \newcommand{\next}{\textcolor{blue}}
 \begin{lstlisting}
-(define (sum a @\upper{b} \term{term} \next{next}@)
-  (if (> a @\upper{b}@) 0 (+ @\term{(term a)}@ (sum @\next{(next a)} \upper{b} \term{term} \next{next}@))))
+(define (sum a @\upper{b} \term{term} \nextf{next}@)
+  (if (> a @\upper{b}@) 0 (+ @\term{(term a)}@ (sum @\nextf{(next a)} \upper{b} \term{term} \nextf{next}@))))
 \end{lstlisting}
 \end{frame}
 
@@ -99,29 +98,29 @@
   \frametitle{Приложения на \tt{sum}}
 
 
-  \begin{overlayarea}{\textwidth}{\textheight}
+  \begin{overlayarea}{\textwidth}{.8\textheight}
     Решение на задачите за суми чрез \tt{sum}:
     \begin{tabular}[t]{p{.3\linewidth}p{.7\linewidth}}
       \[\sum_{i=k}^{100} i^2\]%
-      &
+      &%
         \onslide<2->
+\vspace{-1em}
 \begin{lstlisting}
 (define (square x) (* x x))
 (define (1+ x) (+ x 1))
 (define (sum1 k) (sum k 100 square 1+))
-\end{lstlisting}\\[-1em]
+\end{lstlisting}\\[-2em]
       \only<3->{%
       \[\only<5->{\Delta x\,}\sum_{\substack{i=a\\i\rightarrow i + \Delta x}}^b
       \only<-4>{\Delta x\,}f(i)\]}
-      &
-        \onslide<4->
-
+      &%
+        \onslide<4->%
 \begin{lstlisting}
 (define (sum2 a b f dx)
   @\only<4>{(define (term x) (* dx (f x)))}@
   (define (next x) (+ x dx))
   @\only<5->{(* dx }@(sum a b @\alt<4>{term}f@ next))@\only<5->)@
-\end{lstlisting}\\[-1em]
+\end{lstlisting}\\[-2em]
       \only<6->{%
       \[\sum_{\substack{i=x\\i\rightarrow e^i}}^{10^{1000}} i\]}
       &
@@ -143,17 +142,14 @@
   \end{equation*}
   \pause
   \newcommand{\fb}{\only<4>\fbox}
-  \newcommand{\upper}{\textcolor{red}}
-  \newcommand{\term}{\textcolor{green}}
-  \newcommand{\next}{\textcolor{blue}}
 \begin{lstlisting}[basicstyle=\linespread{1.2}\ttfamily]
-(define (prod a @\upper{b}@ @\term{term}@ @\next{next}@)
-  (if (> a @\upper{b}@) @\fb1@ (@\fb*@ @\term{(term a)}@ (prod @\next{(next a)}@ @\upper{b}@ @\term{term}@ @\next{next}@))))
+(define (prod a @\upper{b}@ @\term{term}@ @\nextf{next}@)
+  (if (> a @\upper{b}@) @\fb1@ (@\fb*@ @\term{(term a)}@ (prod @\nextf{(next a)}@ @\upper{b}@ @\term{term}@ @\nextf{next}@))))
 \end{lstlisting}
 \pause
 \begin{lstlisting}[basicstyle=\linespread{1.2}\ttfamily]
-(define (sum a @\upper{b}@ @\term{term}@ @\next{next}@)
-  (if (> a @\upper{b}@) @\fb0@ (@\fb+@ @\term{(term a)}@ (sum @\next{(next a)}@ @\upper{b}@ @\term{term}@ @\next{next}@))))
+(define (sum a @\upper{b}@ @\term{term}@ @\nextf{next}@)
+  (if (> a @\upper{b}@) @\fb0@ (@\fb+@ @\term{(term a)}@ (sum @\nextf{(next a)}@ @\upper{b}@ @\term{term}@ @\nextf{next}@))))
 \end{lstlisting}
 \end{frame}
 
@@ -186,8 +182,6 @@
 
 \subsection{Пример: правило на Хорнер}
 
-\newcommand{\pnx}{x^n + 2x^{n-1} + \ldots + (n-2)x^3 + (n-1)x^2 + nx + (n+1)}
-
 \begin{frame}[fragile]
   \frametitle{Задача: пресмятане на полином}
 
@@ -206,8 +200,6 @@
   \onslide<+->
   \alert{Можем ли да решим задачата без да извикваме \tt{expt} на всяка стъпка?}
 \end{frame}
-
-\newcommand{\pnxh}{\Bigg(\bigg(\Big(\ldots\big((x + 2)x + 3\big)x + \ldots\Big)x + (n-1)\bigg)x + n\Bigg)x + (n+1)}
 
 \begin{frame}[fragile]
   \frametitle{Правило на Хорнер}
@@ -389,10 +381,10 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[label=current]
   \frametitle{Оценка на \tt{lambda}}
 
-  \scriptsize
+  \scriptsize\lstscriptsize
   \begin{columns}[T,onlytextwidth]
     \begin{column}{.5\textwidth}
       \renewcommand{\arraystretch}{1.5}
@@ -419,35 +411,19 @@
       \end{tabular}
     \end{column}
     \begin{column}{.5\textwidth}
-      \begin{tabular}{cc}
-        \multicolumn 2c{
-        \begin{envir}E
-          \\\firstinenv \tt{n+}&:&\funcenv{n}{($\lambda$(i) (+ i n)))}E
-          \only<3->{\\\tt{1+}&:&\funcenv{i}{(+ i n)}{E_1}}
-          \only<5->{\\\tt{5+}&:&\funcenv{i}{(+ i n)}{E_2}}
-        \end{envir}}\\
-        \only<2->\bua&
-                       \only<4->\bua\\
-        \only<2->{
-        \begin{envir}{E_1}
-          \\\firstinenv \tt n&:&1
-        \end{envir}}& \only<4->{
-                      \begin{envir}{E_2}
-                        \\\firstinenv \tt n&:&5
-                      \end{envir}}\\
-        \only<7->\bua&
-                       \only<10->\bua\\
-        \only<7->{
-        \begin{envir}{E_3}
-          \\\firstinenv \tt i&:&7
-        \end{envir}}& \only<10->{
-                      \begin{envir}{E_4}
-                        \\\firstinenv \tt i&:&7
-                      \end{envir}}\\
-      \end{tabular}
+      \begin{tikzpicture}
+        \envir{E}{
+          \kf{n+}n{($\lambda$(i) (+ i n))}E
+          \only<3->{\kf{1+}i{(+ i n)}{E_1}}
+          \only<5->{\kf{5+}i{(+ i n)}{E_2}}
+        }
+        \childenvir[2- ]{below left =2em and -5em}E{E_1}{\kv n1}
+        \childenvir[4- ]{below right=2em and -5em}E{E_2}{\kv n5}
+        \childenvir[7- ]{below=2em}{E_1}{E_3}{\kv i7}
+        \childenvir[10-]{below=2em}{E_2}{E_4}{\kv i7}
+      \end{tikzpicture}
     \end{column}
   \end{columns}
-
 \end{frame}
 
 \begin{frame}[fragile]
@@ -595,20 +571,20 @@
   \pause
   \textbf{Пример:}
   \begin{overlayarea}{\textwidth}{0.3\textheight}
-  \begin{onlyenv}<+ |handout:0>
+  \begin{onlyenv}<+ |trans:0>
     \begin{lstlisting}
       (define (fact n)
         (if (= n 0) 1 (* n (fact (- n 1)))))
     \end{lstlisting}%
   \end{onlyenv}
-  \begin{onlyenv}<+ |handout:0>
+  \begin{onlyenv}<+ |trans:0>
     \begin{lstlisting}
       (define fact
         (lambda (n)
           (if (= n 0) 1 (* n (fact (- n 1))))))
     \end{lstlisting}%
   \end{onlyenv}
-  \begin{onlyenv}<+ |handout:0>
+  \begin{onlyenv}<+ |trans:0>
     \begin{lstlisting}
       (define (fact n) ((gamma fact) n))
       (define (gamma f)
@@ -665,7 +641,7 @@
   \pause
   А сега само с $\lambda$:
   \begin{overlayarea}{\textwidth}{0.3\textheight}
-  \begin{onlyenv}<+ |handout:0>
+  \begin{onlyenv}<+ |trans:0>
   \begin{lstlisting}
     (define Y
       (lambda (gamma)
