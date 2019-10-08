@@ -57,6 +57,9 @@
 % поддръжка на beamer overlays
 \usetikzlibrary{overlay-beamer-styles}
 
+% графи за вериги от оценки
+\usetikzlibrary{graphs}
+
 % указател към #1 с име #2 на позиция #3
 \newcommand{\pointerto}[3]{
   \node (x) [#3=of #1] {#2};
@@ -85,6 +88,8 @@
 \tikzset{
   % стил за стрелка
   pointer/.style={-{Stealth[length=1.5ex]}},
+  % стил за по-малка стрелка
+  ptr/.style={-{Stealth[length=1ex]}},
   % стил за правоъгълна клетка на матрица
   mtxnode/.style={
     rectangle,
@@ -197,7 +202,35 @@
 % ограждане на текст с кутия на даден слайд
 \newcommand<>{\altbox}[1]{\alt#2{\fcolorbox{black}{white}{#1}}{\fcolorbox{white}{white}{#1}}}
 
+% вертикална верига от оценки с постъпково откриване
+\newcommand{\evalchain}[2][]{
+  \begin{tikzpicture}[
+    font=\ttfamily,
+    label distance=2em,label position=left,
+    env/.style args={##1}{label={[visible on=<.#1->] \inenv{##1}}},
+    v/.style={visible on=<.->},
+    vp/.style={visible on=<.(-1)->},
+    envv/.style args={##1}{label={[v] \inenv{##1}}}]
+    \graph[
+    grow down sep=2ex,
+    nodes={visible on=<+->},
+    edges={ptr,visible on=<.#1->}]
+    {#2};
+  \end{tikzpicture}
+}
 
+% вертикална верига от оценки
+\newcommand{\evalchainx}[1]{
+  \begin{tikzpicture}[
+    font=\ttfamily,
+    label distance=2em,label position=left,
+    env/.style args={##1}{label=\inenv{##1}}]
+    \graph[
+    grow down sep=2ex,
+    edges=ptr]
+    {#1};
+  \end{tikzpicture}
+}
 
 % зачертан текст
 \usepackage{soul}
@@ -379,4 +412,5 @@
 \newcommand{\lstsize}[1]{\lstset{basicstyle=#1\ttfamily}}
 \newcommand{\lstsmall}{\lstsize\small}
 \newcommand{\lstscriptsize}{\lstsize\scriptsize}
+\newcommand{\lstfootnotesize}{\lstsize\footnotesize}
 \newcommand{\lsttiny}{\lstsize\tiny}

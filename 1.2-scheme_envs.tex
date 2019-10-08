@@ -94,18 +94,13 @@
         \begin{itemize}[<+->]
         \item \lst{(define r 5)}
         \item \lst{(define a 3)}
-        \item \lst{(define (f x) (* x r))}
-        \item
-          % TODO : да се реализира с TikZ
-          \begin{tabular}[t]{lc}
-            \inenv E&\lst{(f a)}\\
-            \nxt{&\bda\\
-            \inenv E &\lst{(f 3)}\\
-            \nxt{&\bda\\
-            \inenv {E_1} &\lst{(* x r)}\\
-            \nxt{&\bda\\
-                    &\tt{15}}}}
-          \end{tabular}
+        \item \lst{(define (f x) (* x r))}\\[2ex]
+          \evalchain{
+            "(f 1)"[env=E] ->
+            "(f 3)"[env=E] ->
+            "(* x r)"[env=E_1] ->
+            "15";
+          }
         \end{itemize}
       \end{column}
 
@@ -149,7 +144,7 @@
   \frametitle{Какво е рекурсия?}
 
   \pause
-  Повторение чрез позоваване на себе си\\[1em]
+  Повторение чрез позоваване на себе си\\[2ex]
   \pause
   Рекурсивна функция: дефинира се чрез себе си\\
   \begin{equation*}
@@ -158,7 +153,7 @@
       1,&\text{ при }n = 0,&\textbf{(база)}\\
       n\cdot (n-1)!,&\text{ при }n > 0.&\textbf{(стъпка)}
     \end{array}\right.
-  \end{equation*}\\[1em]
+  \end{equation*}\\[2ex]
   \pause
   \begin{itemize}
   \item Дава се отговор на най-простата задача (база, дъно)
@@ -170,7 +165,7 @@
 \begin{frame}
   \frametitle{Рекурсивни уравнения}
 
-  Какво означава ``да дефинираме функция чрез себе си''?\\[1em]
+  Какво означава ``да дефинираме функция чрез себе си''?\\[2ex]
   \pause
   Да разгледаме \emph{рекурсивното уравнение}, в което $F$ е неизвестно:
   \begin{equation*}
@@ -212,15 +207,15 @@
   \pause
   Нека \tt{(define (f x) $\Gamma$[f])} е рекурсивно дефинирана функция.\\
   \pause
-  \alert{Коя е математическата функция $f$, която се пресмята от \tt f?}\\[1em]
+  \alert{Коя е математическата функция $f$, която се пресмята от \tt f?}\\[2ex]
   \pause
   \textbf{Денотационна семантика}\\
-  $f$ е най-малката неподвижна точка на уравнението $F = \Gamma(F)$.\\[1em]
+  $f$ е най-малката неподвижна точка на уравнението $F = \Gamma(F)$.\\[2ex]
   \pause
   \textbf{Операционна семантика}\\
   Разглеждаме редицата от последователни оценки на комбинации\\
   \tt{(f a)} $\rightarrow$ \tt{$\Gamma$[f][x $\mapsto$ a]} $\rightarrow\ldots$\\
-  Ако стигнем до елемент \tt b, който не е комбинация, то $f(a) := b$.\\[1em]
+  Ако стигнем до елемент \tt b, който не е комбинация, то $f(a) := b$.\\[2ex]
   \pause
   \alert{Функциите в Scheme имат дуален, но еквивалентен смисъл:}
   \begin{itemize}
@@ -235,67 +230,52 @@
   \frametitle{Оценка на рекурсивна функция}
 
   \begin{center}
-    \footnotesize
-    % TODO : да се реализира с TikZ
-    \begin{tabular}{c}
-      \lst{(fact 4)}\\
-      \pause
-      \nxt{\bda\\
-      \alt<+->{\lst{(* 4 (fact 3))}}{\lst{(if (= 4 0) 1 (* 4 (fact (- 4 1))))}}\\
-      \nxt{\bda\\
-      \alt<+->{\lst{(* 4 (* 3 (fact 2)))}}{\lst{(* 4 (if (= 3 0) 1 (* 3 (fact (- 3 1)))))}}\\
-      \nxt{\bda\\
-      \alt<+->{\lst{(* 4 (* 3 (* 2 (fact 1))))}}{\lst{(* 4 (* 3 (if (= 2 0) 1 (* 2 (fact (- 2 1))))))}}\\
-      \nxt{\bda\\
-      \alt<+->{\lst{(* 4 (* 3 (* 2 (* 1 (fact 0)))))}}{\lst{(* 4 (* 3 (* 2 (if (= 1 0) 1 (* 1 (fact (- 1 1)))))))}}\\
-      % TODO: да се добави разширението на дъното (if (= 0 0) 1 ...)
-      \nxt{\bda\\
-      \lst{(* 4 (* 3 (* 2 (* 1 1))))}\\
-      \nxt{\bda\\
-      \lst{(* 4 (* 3 (* 2 1)))}\\
-      \nxt{\bda\\
-      \lst{(* 4 (* 3 2))}\\
-      \nxt{\bda\\
-      \lst{(* 4 6)}\\
-      \nxt{\bda\\
-      24}}}}}}}}}
-    \end{tabular}
+    \scriptsize\lstscriptsize
+    \evalchain[(-1)]{
+      "\lst{(fact 4)}" ->
+      "\alt<+->{\lst{(* 4 (fact 3))}}
+      {\lst{(if (= 4 0) 1 (* 4 (fact (- 4 1))))}}" ->
+      "\alt<+->{\lst{(* 4 (* 3 (fact 2)))}}
+      {\lst{(* 4 (if (= 3 0) 1 (* 3 (fact (- 3 1)))))}}" ->
+      "\alt<+->{\lst{(* 4 (* 3 (* 2 (fact 1))))}}
+      {\lst{(* 4 (* 3 (if (= 2 0) 1 (* 2 (fact (- 2 1))))))}}" ->
+      "\alt<+->{\lst{(* 4 (* 3 (* 2 (* 1 (fact 0)))))}}
+      {\lst{(* 4 (* 3 (* 2 (if (= 1 0) 1 (* 1 (fact (- 1 1)))))))}}" ->
+      "\alt<+->{\lst{(* 4 (* 3 (* 2 (* 1 1))))}}
+      {\lst{(* 4 (* 3 (* 2 (* 1 (if (= 0 0) 1 (* 0 (fact (- 0 1))))))))}}" ->
+      "\lst{(* 4 (* 3 (* 2 1)))}" ->
+      "\lst{(* 4 (* 3 2))}" ->
+      "\lst{(* 4 6)}" ->
+      24;
+    }
   \end{center}
 \end{frame}
 
 \begin{frame}
   \frametitle{Оценка на рекурсивна функция в среда}
 
-  {
-  \tiny\lsttiny
   \begin{columns}[T,onlytextwidth]
+    \tiny\lsttiny
     \begin{column}{.68\textwidth}
-      % TODO : да се реализира с TikZ
-      \begin{tabular}{lc}
-        \nxt{
-        \inenv E&\lst{(fact 4)}\\
-        \nxt{&\bda\\
-        \inenv{E_1}&\alt<+->{\lst{(* 4 (fact 3))}}{\lst{(if (= n 0) 1 (* n (fact (- n 1))))}}\\
-        \nxt{&\bda\\
-        \inenv{E_2}&\alt<+->{\lst{(* 4 (* 3 (fact 2)))}}{\lst{(* 4 (if (= n 0) 1 (* n (fact (- n 1)))))}}\\
-        \nxt{&\bda\\
-        \inenv{E_3}&\alt<+->{\lst{(* 4 (* 3 (* 2 (fact 1))))}}{\lst{(* 4 (* 3 (if (= n 0) 1 (* n (fact (- n 1))))))}}\\
-        \nxt{&\bda\\
-        \inenv{E_4}&\alt<+->{\lst{(* 4 (* 3 (* 2 (* 1 (fact 0)))))}}{\lst{(* 4 (* 3 (* 2 (if (= n 0) 1 (* n (fact (- n 1)))))))}}\\
-        \nxt{&\bda\\
-        \alt<+->{\inenv{E_4}&\lst{(* 4 (* 3 (* 2 (* 1 1))))}}{\inenv{E_5}&\lst{(* 4 (* 3 (* 2 (* 1 (if (= n 0) 1 (* n (fact (- n 1))))))))}}\\
-        \nxt{&\bda\\
-        \inenv{E_3}&\lst{(* 4 (* 3 (* 2 1)))}\\
-        \nxt{&\bda\\
-        \inenv{E_2}&\lst{(* 4 (* 3 2))}\\
-        \nxt{&\bda\\
-        \inenv{E_1}&\lst{(* 4 6)}\\
-        \nxt{&\bda\\
-        \inenv E&24}}}}}}}}}}\\
-        % фантомен ред за предодвратяване на подскачането
-        % TODO: да се реализира с {overlayarea}
-        &\phantom{\lst{(* 4 (* 3 (* 2 (* 1 (if (= n 0) 1 (* n (fact (- n 1))))))))}}
-      \end{tabular}
+      \begin{center}
+        \evalchain[(-1)]{
+          "\lst{(fact 4)}"[env=E] ->
+          "\alt<+->{\lst{(* 4 (fact 3))}}
+          {\lst{(if (= n 0) 1 (* n (fact (- n 1))))}}"[env=E_1] ->
+          "\alt<+->{\lst{(* 4 (* 3 (fact 2)))}}
+          {\lst{(* 4 (if (= n 0) 1 (* n (fact (- n 1)))))}}"[env=E_2] ->
+          "\alt<+->{\lst{(* 4 (* 3 (* 2 (fact 1))))}}
+          {\lst{(* 4 (* 3 (if (= n 0) 1 (* n (fact (- n 1))))))}}"[env=E_3] ->
+          "\alt<+->{\lst{(* 4 (* 3 (* 2 (* 1 (fact 0)))))}}
+          {\lst{(* 4 (* 3 (* 2 (if (= n 0) 1 (* n (fact (- n 1)))))))}}"[env=E_4] ->
+          "\alt<+->{\lst{(* 4 (* 3 (* 2 (* 1 1))))}}
+          {\lst{(* 4 (* 3 (* 2 (* 1 (if (= n 0) 1 (* n (fact (- n 1))))))))}}"[env=\alt<10>{E_5}{E_4}] ->[v]
+          "\lst{(* 4 (* 3 (* 2 1)))}"[envv=E_3] ->[v]
+          "\lst{(* 4 (* 3 2))}"[envv=E_2] ->[v]
+          "\lst{(* 4 6)}"[envv=E_1] ->[v]
+          24[envv=E];
+        }
+      \end{center}
     \end{column}
     \begin{column}{.32\textwidth}
       \begin{tikzpicture}
@@ -308,7 +288,7 @@
       \end{tikzpicture}
     \end{column}
   \end{columns}
-  }\ \\[1em]
+  \vspace{2ex}
   \nxt{Линеен рекурсивен процес}
 \end{frame}
 
@@ -318,61 +298,55 @@
   \frametitle{Факториел с цикъл}
 
   \small
-  \begin{overlayarea}{\textwidth}{.5\textheight}
   \begin{columns}[T,onlytextwidth]
     \begin{column}{.5\textwidth}
-      Факториел на C++\\
+      \textbf{Факториел на C++}\\
 %TODO: може ли да се използва lstlisting тук?
 \begin{semiverbatim}
-\altbox<3>{int fact(int n)} \{
-  \altbox<4>{int r = 1;}
-  \altbox<0>{for(\altbox<5>{int i = 1};\altbox<6>{i <= n};\altbox<7>{i++})}
-    \altbox<8>{r *= i;}
-  \altbox<9>{return r;}
+\altbox<3| trans:0>{int fact(int n)} \{
+  \altbox<4| trans:0>{int r = 1;}
+  \altbox<0>{for(\altbox<5| trans:0>{int i = 1};\altbox<6| trans:0>{i <= n};\altbox<7>{i++})}
+    \altbox<8| trans:0>{r *= i;}
+  \altbox<9| trans:0>{return r;}
 \}
 \end{semiverbatim}
     \end{column}
     \pause
     \begin{column}{.5\textwidth}
-      Превод на Scheme\\
+      \textbf{Превод на Scheme}\\
 %TODO: може ли да се използва lstlisting тук?
 \begin{semiverbatim}
-(define (for n \altbox<4,8>{r}\altbox<5,7>{i})
-  (if \altbox<6>{(<= i n)}
-      (for n \altbox<8>{(* r i)}\altbox<7>{(+ i 1)})
-      \altbox<9>{r}))
+(define (for n \altbox<4,8| trans:0>{r}\altbox<5,7| trans:0>{i})
+  (if \altbox<6| trans:0>{(<= i n)}
+      (for n \altbox<8| trans:0>{(* r i)}\altbox<7| trans:0>{(+ i 1)})
+      \altbox<9| trans:0>{r}))
 
-\altbox<3>{(define (fact n)}
-  (for n \altbox<4>{1}\altbox<5>{1}))
+\altbox<3| trans:0>{(define (fact n)}
+  (for n \altbox<4| trans:0>{1}\altbox<5| trans:0>{1}))
 \end{semiverbatim}
     \end{column}
   \end{columns}
-\end{overlayarea}
 \end{frame}
 
 \begin{frame}
   \frametitle{Оценка на итеративен факториел}
 
-  \begin{center}
-    \small
-    % TODO : да се реализира с TikZ
-    \begin{tabular}{c}
-      \nxt{\lst{(fact 4)}\\
-      \nxt{\bda\\
-      \lst{(for 4 1 1)}\\
-      \nxt{\bda\\
-      \alt<+->{\lst{(for 4 1 2)}}{\lst{(if (<= 1 4) (for 4 (* 1 1) (+ 1 1)) 1)}}\\
-      \nxt{\bda\\
-      \alt<+->{\lst{(for 4 2 3)}}{\lst{(if (<= 2 4) (for 4 (* 1 2) (+ 2 1)) 2)}}\\
-      \nxt{\bda\\
-      \alt<+->{\lst{(for 4 6 4)}}{\lst{(if (<= 3 4) (for 4 (* 2 3) (+ 3 1)) 6)}}\\
-      \nxt{\bda\\
-      \alt<+->{\lst{(for 4 24 5)}}{\lst{(if (<= 4 4) (for 4 (* 6 4) (+ 4 1)) 24)}}\\
-      \nxt{\bda\\
-      \alt<+->{\lst{24}}{\lst{(if (<= 5 4) (for 4 (* 24 5) (+ 5 1)) 24)}}}}}}}}}
-    \end{tabular}
-  \end{center}\ \\[1em]
-  \nxt{Линеен итеративен процес}
+  \begin{overlayarea}{\textwidth}{.62\textwidth}
+    \begin{center}
+      \small\lstsmall
+      \evalchain[(-1)]{
+        "\lst{(fact 4)}" ->[v]
+        "\lst{(for 4 1 1)}" ->
+        "\alt<+->{\lst{(for 4 1 2)}}{\lst{(if (<= 1 4) (for 4 (* 1 1) (+ 1 1)) 1)}}" ->
+        "\alt<+->{\lst{(for 4 2 3)}}{\lst{(if (<= 2 4) (for 4 (* 1 2) (+ 2 1)) 2)}}" ->
+        "\alt<+->{\lst{(for 4 6 4)}}{\lst{(if (<= 3 4) (for 4 (* 2 3) (+ 3 1)) 6)}}" ->
+        "\alt<+->{\lst{(for 4 24 5)}}{\lst{(if (<= 4 4) (for 4 (* 6 4) (+ 4 1)) 24)}}" ->
+        "\alt<+->{\lst{24}}{\lst{(if (<= 5 4) (for 4 (* 24 5) (+ 5 1)) 24)}}";
+      }
+    \end{center}
+    \vspace{2ex}
+    \nxt{Линеен итеративен процес}
+  \end{overlayarea}
 \end{frame}
 
 \begin{frame}<1-13>[label=iterenv]
@@ -381,26 +355,18 @@
   \begin{columns}[T,onlytextwidth]
     \begin{column}{.62\textwidth}
       \scriptsize\lstscriptsize
-      % TODO : да се реализира с TikZ
-      \begin{tabular}{lc}
-        \nxt{\inenv E&\lst{(fact 4)}\\
-                     &\nxt{\bda\\
-        \inenv{E_0}&\alt<+->{\tt{(for \alert<14>4 1 1)}}{\lst{(for n 1 1)}}\\
-                     &\nxt{\bda\\
-        \inenv{E_1}&\alt<+->{\tt{(for \alert<14>4 1 2)}}{\lst{(if (<= i n) (for n (* r i) (+ i 1)) r)}}\\
-                     &\nxt{\bda\\
-        \inenv{E_2}&\alt<+->{\tt{(for \alert<14>4 2 3)}}{\lst{(if (<= i n) (for n (* r i) (+ i 1)) r)}}\\
-                     &\nxt{\bda\\
-        \inenv{E_3}&\alt<+->{\tt{(for \alert<14>4 6 4)}}{\lst{(if (<= i n) (for n (* r i) (+ i 1)) r)}}\\
-                     &\nxt{\bda\\
-        \inenv{E_4}&\alt<+->{\tt{(for \alert<14>4 24 5)}}{\lst{(if (<= i n) (for n (* r i) (+ i 1)) r)}}\\
-                     &\nxt{\bda\\
-        \inenv{E_5}&\alt<+->{\lst{24}}{\lst{(if (<= i n) (for n (* r i) (+ i 1)) r)}}}}}}}}}\\
-        % фантомен ред за предодвратяване на подскачането
-                     &\phantom{\lst{(if (<= i n) (for n (* r i) (+ i 1)) r)}}
-      \end{tabular}
+      \begin{center}
+        \evalchain[(-1)]{
+          "\lst{(fact 4)}"[env=E] ->
+          "\alt<+->{\tt{(for \alert<14>4 1 1)}}{\lst{(for n 1 1)}}"[env=E_0] ->
+          "\alt<+->{\tt{(for \alert<14>4 1 2)}}{\lst{(if (<= i n) (for n (* r i) (+ i 1)) r)}}"[env=E_1] ->
+          "\alt<+->{\tt{(for \alert<14>4 2 3)}}{\lst{(if (<= i n) (for n (* r i) (+ i 1)) r)}}"[env=E_2] ->
+          "\alt<+->{\tt{(for \alert<14>4 6 4)}}{\lst{(if (<= i n) (for n (* r i) (+ i 1)) r)}}"[env=E_3] ->
+          "\alt<+->{\tt{(for \alert<14>4 24 5)}}{\lst{(if (<= i n) (for n (* r i) (+ i 1)) r)}}"[env=E_4] ->
+          "\alt<+->{\lst{24}}{\lst{(if (<= i n) (for n (* r i) (+ i 1)) r)}}"[env=E_5];
+        }
+      \end{center}
     \end{column}
-
     \begin{column}{.38\textwidth}
       \tiny
       \begin{tikzpicture}
@@ -421,63 +387,45 @@
 
 \begin{frame}<1-2>[fragile,label=reciter]
   \frametitle{Рекурсивен и итеративен процес}
-
-  \begin{overlayarea}{\textwidth}{.85\textheight}
-    \begin{columns}[T,onlytextwidth]
-      \begin{column}{.5\textwidth}
-        \begin{center}
-          \tiny
-          % TODO : да се реализира с TikZ
-          \begin{tabular}{c}
-            \tt{(fact 4)} \\
-            \bda\\
-            \tt{(* 4 (fact 3))}\\
-            \bda\\
-            \tt{(* 4 (* 3 (fact 2)))}\\
-            \bda\\
-            \tt{(* 4 (* 3 (* 2 (fact 1))))}\\
-            \bda\\
-            \tt{(* 4 (* 3 (* 2 (* 1 (fact 0)))))}\\
-            \bda\\
-            \tt{(* 4 (* 3 (* 2 (* 1 1))))}\\
-            \bda\\
-            \tt{(* 4 (* 3 (* 2 1)))}\\
-            \bda\\
-            \tt{(* 4 (* 3 2))}\\
-            \bda\\
-            \tt{(* 4 6)}\\
-            \bda\\
-            24
-          \end{tabular}
-        \end{center}
-        \scriptsize
+  \vspace{-2ex}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{.5\textwidth}
+      \begin{center}
+        \tiny
+        \evalchainx{
+          "(fact 4)" ->
+          "(* 4 (fact 3))" ->
+          "(* 4 (* 3 (fact 2)))" ->
+          "(* 4 (* 3 (* 2 (fact 1))))" ->
+          "(* 4 (* 3 (* 2 (* 1 (fact 0)))))" ->
+          "(* 4 (* 3 (* 2 (* 1 1))))" ->
+          "(* 4 (* 3 (* 2 1)))" ->
+          "(* 4 (* 3 2))" ->
+          "(* 4 6)" ->
+          "24";
+        }
+      \end{center}
+      \scriptsize
 \begin{semiverbatim}
     (define (fact n)
       (if (= n 0) 1
           \altbox<2>{(* n }(fact (- n 1)))))
 \end{semiverbatim}
-      \end{column}
-      \begin{column}{.5\textwidth}
-        \begin{center}
-          \tiny
-          % TODO : да се реализира с TikZ
-          \begin{tabular}{c}
-            \tt{(fact 4)}\\
-            \bda\\
-            \tt{(for \alert<3> 4 1 1)}\\
-            \bda\\
-            \tt{(for \alert<3> 4 1 2)}\\
-            \bda\\
-            \tt{(for \alert<3> 4 2 3)}\\
-            \bda\\
-            \tt{(for \alert<3> 4 6 4)}\\
-            \bda\\
-            \tt{(for \alert<3> 4 24 5)}\\
-            \bda\\
-            \tt{24}
-          \end{tabular}
-        \end{center}
-        \scriptsize
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \begin{center}
+        \tiny
+        \evalchainx{
+          "(fact 4)" ->
+          "(for \alert<3> 4 1 1)" ->
+          "(for \alert<3> 4 1 2)" ->
+          "(for \alert<3> 4 2 3)" ->
+          "(for \alert<3> 4 6 4)" ->
+          "(for \alert<3> 4 24 5)" ->
+          "24";
+        }
+      \end{center}
+      \scriptsize
 \begin{semiverbatim}
 (define (for \alert<3>n r i)
   (if (<= i n)
@@ -487,9 +435,8 @@
 (define (fact n)
   (for \alert<3>n 1 1))
 \end{semiverbatim}
-      \end{column}
-    \end{columns}
-  \end{overlayarea}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}
@@ -541,25 +488,18 @@
   \begin{overlayarea}{\textwidth}{.85\textheight}
     \begin{columns}[T,onlytextwidth]
       \begin{column}{.5\textwidth}
-        % TODO : да се реализира с TikZ
-        \begin{tabular}{rc}
-          \nxt{\inenv E&\lst{(dist 2 5 -1 9)}\\
-                       &\nxt{\nxt{\bda\\
-          \inenv{E_1}&\lst{(define dx (- x2 x1))}\\
-          \nxt{\inenv{E_1}&\lst{(define dy (- y2 y1))}\\
-          \nxt{\inenv{E_1}&\lst{(define (sq x) (* x x))}\\
-          \nxt{\inenv{E_1}&\lst{(sqrt (+ (sq dx) (sq dy)))}\\
-                       &\nxt{\bda\\
-          \inenv{E_2}&\lst{(sqrt (+ (* x x) (sq dy)))}\\
-                       &\nxt{\bda\\
-          \inenv{E_3}&\lst{(sqrt (+ 9 (* x x)))}\\
-                       &\nxt{\bda\\
-          \inenv{E_1}&\lst{(sqrt (+ 9 16))}\\
-                       &\nxt{\bda\\
-          \inenv{E_1}&\lst{(sqrt 25)}\\
-                       &\nxt{\bda\\
-          \inenv{E_1}&\tt 5}}}}}}}}}}}
-        \end{tabular}
+        \evalchain{
+          "\lst{(dist 2 5 -1 9)}\only<+->{}"[label={[vp] \inenv E}] ->
+          "\lst{(define dx (- x2 x1))}"[env=E_1] -!-
+          "\lst{(define dy (- y2 y1))}"[env=E_1] -!-
+          "\lst{(define (sq x) (* x x))}"[env=E_1] -!-
+          "\lst{(sqrt (+ (sq dx) (sq dy)))}"[env=E_1] ->
+          "\lst{(sqrt (+ (* x x) (sq dy)))}"[env=E_2] ->
+          "\lst{(sqrt (+ 9 (* x x)))}"[env=E_3] ->
+          "\lst{(sqrt (+ 9 16))}"[env=E_1] ->
+          "\lst{(sqrt 25)}"[env=E_1] ->
+          "\tt 5"[env=E_1];
+        }
       \end{column}
       \begin{column}{.5\textwidth}
         \begin{tikzpicture}
@@ -618,25 +558,17 @@
   \begin{columns}[T,onlytextwidth]
     \begin{column}{.63\textwidth}
       \scriptsize\lstscriptsize
-      % TODO : да се реализира с TikZ
-      \begin{tabular}{lc}
-        \nxt{\inenv E&\lst{(fact 4)}\\
-                     &\nxt{\bda\\
-        \inenv{E_0}&\alt<+->{\lst{(for 1 1)}}{\lst{(define (for r i) ...)}}\\
-                     &\nxt{\bda\\
-        \inenv{E_1}&\alt<+->{\lst{(for 1 2)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}\\
-                     &\nxt{\bda\\
-        \inenv{E_2}&\alt<+->{\lst{(for 2 3)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}\\
-                     &\nxt{\bda\\
-        \inenv{E_3}&\alt<+->{\lst{(for 6 4)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}\\
-                     &\nxt{\bda\\
-        \inenv{E_4}&\alt<+->{\lst{(for 24 5)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}\\
-                     &\nxt{\bda\\
-        \inenv{E_5}&\alt<+->{\lst{24}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}}}}}}}}\\
-        % фантомен ред за предодвратяване на подскачането
-        % подскачането да се предодврати с {overlayarea}
-        &\phantom{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}
-      \end{tabular}
+      \begin{center}
+        \evalchain[(-1)]{
+          "\lst{(fact 4)}"[env=E] ->
+          "\alt<+->{\lst{(for 1 1)}}{\lst{(define (for r i) ...)}}"[env=E_0] ->
+          "\alt<+->{\lst{(for 1 2)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_1] ->
+          "\alt<+->{\lst{(for 2 3)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_2] ->
+          "\alt<+->{\lst{(for 6 4)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_3] ->
+          "\alt<+->{\lst{(for 24 5)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_4] ->
+          "\alt<+->{\lst{24}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_5];
+        }
+      \end{center}
     \end{column}
     \begin{column}{.37\textwidth}
       \tiny
@@ -709,28 +641,18 @@
   \scriptsize\lstscriptsize
   \begin{columns}[T,onlytextwidth]
     \begin{column}{.55\textwidth}
-      % TODO : да се реализира с TikZ
-      \begin{tabular}{rc}
-        \nxt{\inenv E&\lst{(dist 2 5 -1 9)}\\
-                     &\nxt{\bda\\
-        \inenv{E_1}&\begin{tabular}[t]{l}
-                      \lst{(let ((dx (- x2 x1))}\\
-                      \hskip 7ex\lst{(dy (- y2 y1)))}\\
-                      \hskip 2ex\lst{(sqrt (+ (sq dx) (sq dy))))}
-                    \end{tabular}\\
-                     &\nxt{\bda\\
-        \inenv{E_2}&\lst{(sqrt (+ (sq dx) (sq dy)))}\\
-                     &\nxt{\bda\\
-        \inenv{E_3}&\lst{(sqrt (+ (* x x) (sq dy)))}\\
-                     &\nxt{\bda\\
-        \inenv{E_4}&\lst{(sqrt (+ 9 (* x x)))}\\
-                     &\nxt{\bda\\
-        \inenv{E_2}&\lst{(sqrt (+ 9 16))}\\
-                     &\nxt{\bda\\
-        \inenv{E_2}&\lst{(sqrt 25)}\\
-                     &\nxt{\bda\\
-        \inenv{E_2}&\tt 5}}}}}}}}
-      \end{tabular}
+      \begin{center}
+        \evalchain{
+          "\lst{(dist 2 5 -1 9)}"[env=E] ->
+          "\lst{(let ((dx (- x2 x1))}\\\hskip 7ex\lst{(dy (- y2 y1)))}\\\hskip 2ex\lst{(sqrt (+ (sq dx) (sq dy))))}"[env=E_1,align=left] ->
+          "\lst{(sqrt (+ (sq dx) (sq dy)))}"[env=E_2] ->
+          "\lst{(sqrt (+ (* x x) (sq dy)))}"[env=E_3] ->
+          "\lst{(sqrt (+ 9 (* x x)))}"[env=E_4] ->
+          "\lst{(sqrt (+ 9 16))}"[env=E_2] ->
+          "\lst{(sqrt 25)}"[env=E_2] ->
+          "\tt 5"[env=E_2];
+        }
+      \end{center}
     \end{column}
     \begin{column}{.45\textwidth}
       \begin{tikzpicture}
@@ -808,28 +730,18 @@
   % TODO: примерът да бъде за area, понеже там се вижда разлика между let и let*
   \begin{columns}[T,onlytextwidth]
     \begin{column}{.55\textwidth}
-      % TODO : да се реализира с TikZ
-      \begin{tabular}{rc}
-        \nxt{\inenv E&\lst{(dist 2 5 -1 9)}\\
-                     &\nxt{\bda\\
-        \inenv{E_1}&\begin{tabular}[t]{l}
-                      \lst{(let* ((dx (- x2 x1))}\\
-                      \hskip 8ex\lst{(dy (- y2 y1)))}\\
-                      \hskip 2ex\lst{(sqrt (+ (sq dx) (sq dy))))}
-                    \end{tabular}\\
-                     &\nxt{\nxt{\bda\\
-        \inenv{E_3}&\lst{(sqrt (+ (sq dx) (sq dy)))}\\
-                     &\nxt{\bda\\
-        \inenv{E_4}&\lst{(sqrt (+ (* x x) (sq dy)))}\\
-                     &\nxt{\bda\\
-        \inenv{E_5}&\lst{(sqrt (+ 9 (* x x)))}\\
-                     &\nxt{\bda\\
-        \inenv{E_3}&\lst{(sqrt (+ 9 16))}\\
-                     &\nxt{\bda\\
-        \inenv{E_3}&\lst{(sqrt 25)}\\
-                     &\nxt{\bda\\
-        \inenv{E_3}&\tt5}}}}}}}}}
-      \end{tabular}
+      \begin{center}
+        \evalchain{
+          "\lst{(dist 2 5 -1 9)}"[env=E] ->[visible on=<+(-1)->]
+          "\lst{(let* ((dx (- x2 x1))}\\\hskip 8ex\lst{(dy (- y2 y1)))}\\\hskip 2ex\lst{(sqrt (+ (sq dx) (sq dy))))}"[env=E_1,align=left] ->
+          "\lst{(sqrt (+ (sq dx) (sq dy)))}"[env=E_3] ->
+          "\lst{(sqrt (+ (* x x) (sq dy)))}"[env=E_4] ->
+          "\lst{(sqrt (+ 9 (* x x)))}"[env=E_5] ->
+          "\lst{(sqrt (+ 9 16))}"[env=E_3] ->
+          "\lst{(sqrt 25)}"[env=E_3] ->
+          "\tt 5"[env=E_3];
+        }
+      \end{center}
     \end{column}
     \begin{column}{.45\textwidth}
       \begin{tikzpicture}
@@ -878,37 +790,24 @@
 
   \begin{center}
     \tiny
-    % TODO : да се реализира с TikZ
-    \begin{tabular}{c}
-      \tt{(pow 2 6)}\\
-      \nxt{\bda\\
-      \tt{(* 2 (pow 2 5))}\\
-      \nxt{\bda\\
-      \tt{(* 2 (* 2 (pow 2 4)))}\\
-      \nxt{\bda\\
-      \tt{(* 2 (* 2 (* 2 (pow 2 3))))}\\
-      \nxt{\bda\\
-      \tt{(* 2 (* 2 (* 2 (* 2 (pow 2 2)))))}\\
-      \nxt{\bda\\
-      \tt{(* 2 (* 2 (* 2 (* 2 (* 2 (pow 2 1))))))}\\
-      \nxt{\bda\\
-      \tt{(* 2 (* 2 (* 2 (* 2 (* 2 (* 2 (pow 2 0)))))))}\\
-      \nxt{\bda\\
-      \tt{(* 2 (* 2 (* 2 (* 2 (* 2 (* 2 1))))))}\\
-      \nxt{\bda\\
-      \tt{(* 2 (* 2 (* 2 (* 2 (* 2 2)))))}\\
-      \nxt{\bda\\
-      \tt{(* 2 (* 2 (* 2 (* 2 4))))}\\
-      \nxt{\bda\\
-      \tt{(* 2 (* 2 (* 2 8)))}\\
-      \nxt{\bda\\
-      \tt{(* 2 (* 2 16))}\\
-      \nxt{\bda\\
-      \tt{(* 2 32)}\\
-      \nxt{\bda\\
-      \tt{64}}}}}}}}}}}}}}
-    \end{tabular}
-  \end{center}\ \\
+    \evalchain{
+      "(pow 2 6)" ->
+      "(* 2 (pow 2 5))" ->
+      "(* 2 (* 2 (pow 2 4)))" ->
+      "(* 2 (* 2 (* 2 (pow 2 3))))" ->
+      "(* 2 (* 2 (* 2 (* 2 (pow 2 2)))))" ->
+      "(* 2 (* 2 (* 2 (* 2 (* 2 (pow 2 1))))))" ->
+      "(* 2 (* 2 (* 2 (* 2 (* 2 (* 2 (pow 2 0)))))))" ->
+      "(* 2 (* 2 (* 2 (* 2 (* 2 (* 2 1))))))" ->
+      "(* 2 (* 2 (* 2 (* 2 (* 2 2)))))" ->
+      "(* 2 (* 2 (* 2 (* 2 4))))" ->
+      "(* 2 (* 2 (* 2 8)))" ->
+      "(* 2 (* 2 16))" ->
+      "(* 2 32)" ->
+      "64";
+    }
+  \end{center}
+  \vspace{-4ex}
   \nxt{Линеен рекурсивен процес}
 \end{frame}
 
@@ -940,29 +839,20 @@
 
   \begin{center}
     \scriptsize
-    % TODO : да се реализира с TikZ
-    \begin{tabular}{c}
-      \tt{(qpow 2 6)}\\
-      \nxt{\bda\\
-      \tt{(sqr (qpow 2 3))}\\
-      \nxt{\bda\\
-      \tt{(sqr (* 2 (qpow 2 2)))}\\
-      \nxt{\bda\\
-      \tt{(sqr (* 2 (sqr (qpow 2 1))))}\\
-      \nxt{\bda\\
-      \tt{(sqr (* 2 (sqr (* 2 (qpow 2 0)))))}\\
-      \nxt{\bda\\
-      \tt{(sqr (* 2 (sqr (* 2 1))))}\\
-      \nxt{\bda\\
-      \tt{(sqr (* 2 (sqr 2)))}\\
-      \nxt{\bda\\
-      \tt{(sqr (* 2 4))}\\
-      \nxt{\bda\\
-      \tt{(sqr 8)}\\
-      \nxt{\bda\\
-      \tt{64}}}}}}}}}}
-    \end{tabular}
-  \end{center}\ \\
+    \evalchain{
+      "(qpow 2 6)" ->
+      "(sqr (qpow 2 3))" ->
+      "(sqr (* 2 (qpow 2 2)))" ->
+      "(sqr (* 2 (sqr (qpow 2 1))))" ->
+      "(sqr (* 2 (sqr (* 2 (qpow 2 0)))))" ->
+      "(sqr (* 2 (sqr (* 2 1))))" ->
+      "(sqr (* 2 (sqr 2)))" ->
+      "(sqr (* 2 4))" ->
+      "(sqr 8)" ->
+      "64";
+    }
+  \end{center}
+  \vspace{-1ex}
   \nxt{Логаритмичен рекурсивен процес}
 \end{frame}
 
@@ -992,19 +882,19 @@
   $f_{40} = ?$
 \end{frame}
 
-\begin{frame}<trans:5>
+\begin{frame}
   \frametitle{Дървовидна рекурсия}
 
   \begin{center}
     \only<1 |trans:0>{
-      \begin{forest} for tree={edge=->}
+      \begin{forest} for tree={edge=ptr}
         [\tt{(fib 2)}
         [\tt{(fib 1)} [\tt 1]] [\tt{(fib 0)}
         [\tt 0]]]
       \end{forest}
     }
     \only<2 |trans:0>{
-      \begin{forest} for tree={edge=->}
+      \begin{forest} for tree={edge=ptr}
       [\tt{(fib 3)}
       [\tt{(fib 2)}
       [\tt{(fib 1)} [\tt 1]]
@@ -1013,7 +903,7 @@
       \end{forest}
     }
     \only<3 |trans:0>{
-      \begin{forest} for tree={edge=->}
+      \begin{forest} for tree={edge=ptr}
       [\tt{(fib 4)}
       [\tt{(fib 3)}
       [\tt{(fib 2)}
@@ -1027,7 +917,7 @@
     }
     \only<4 |trans:0>{
       \scriptsize
-      \begin{forest} for tree={edge=->}
+      \begin{forest} for tree={edge=ptr}
       [\tt{(fib 5)}
       [\tt{(fib 4)}
       [\tt{(fib 3)}
@@ -1047,7 +937,7 @@
     }
     \only<5->{
     \tiny
-    \begin{forest} for tree={edge=->,s sep=1pt,inner sep=1pt}
+    \begin{forest} for tree={edge=ptr,s sep=1pt,inner sep=1pt}
       [\tt{(fib 6)}
       [\tt{(fib 5)}
       [\tt{(fib 4)}
@@ -1085,7 +975,7 @@
   \textbf{Решение №1: мемоизация}\\
   Да помним вече пресметнатите стойности, вместо да ги смятаме пак.\\
   \pause
-  \alert{За ефективна реализация обикновено са нужни странични ефекти.}\\[1em]
+  \alert{За ефективна реализация обикновено са нужни странични ефекти.}\\[2ex]
   \pause
   \textbf{Решение №2: динамично програмиране}\\
   Строим последователно всички числа на Фибоначи в нарастващ ред.\\
@@ -1107,26 +997,17 @@
 
   \small
   \begin{center}
-    % TODO : да се реализира с TikZ
-    \begin{tabular}{c}
-      \nxt{\tt{(fib 7)}\\
-      \nxt{\bda\\
-      \tt{(iter 1 1 0)}\\
-      \nxt{\bda\\
-      \tt{(iter 2 1 1)}\\
-      \nxt{\bda\\
-      \tt{(iter 3 2 1)}\\
-      \nxt{\bda\\
-      \tt{(iter 4 3 2)}\\
-      \nxt{\bda\\
-      \tt{(iter 5 5 3)}\\
-      \nxt{\bda\\
-      \tt{(iter 6 8 5)}\\
-      \nxt{\bda\\
-      \tt{(iter 7 13 8)}\\
-      \nxt{\bda\\
-      \tt{13}}}}}}}}}}
-    \end{tabular}
+    \evalchain{
+      "(fib 7)" ->
+      "(iter 1 1 0)" ->
+      "(iter 2 1 1)" ->
+      "(iter 3 2 1)" ->
+      "(iter 4 3 2)" ->
+      "(iter 5 5 3)" ->
+      "(iter 6 8 5)" ->
+      "(iter 7 13 8)" ->
+      "13";
+    }
   \end{center}
 \end{frame}
 
