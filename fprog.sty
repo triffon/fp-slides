@@ -36,8 +36,163 @@
   stringstyle=\color[rgb]{0.75,0.49,0.07}
 }
 
-% двойни разделителни черти в таблици
-\usepackage{hhline}
+%%% декларативна графика
+\usepackage{tikz}
+
+% стилове за стрелки, например Stealth
+\usetikzlibrary{arrows.meta}
+
+% геометрични фигури
+\usetikzlibrary{shapes.geometric}
+
+% нужно за ключа cross out за задраскване
+\usetikzlibrary{shapes.misc}
+
+% матрици
+\usetikzlibrary{matrix}
+
+% релативно позициониране
+\usetikzlibrary{positioning}
+
+% поддръжка на beamer overlays
+\usetikzlibrary{overlay-beamer-styles}
+
+% указател към #1 с име #2 на позиция #3
+\newcommand{\pointerto}[3]{
+  \node (x) [#3=of #1] {#2};
+  \draw[pointer] (x) to (#1);
+}
+
+% начална двойна клетка с данни
+\newcommand{\doublecell}[3][]{
+  \matrix (#2) [array,nodes={minimum width=6ex},#1] {
+    |(#2data)| #3 \& |(#2next)|\\
+  };
+}
+
+% следваща двойна клетка с данни
+\newcommand{\nextdoublecell}[3]{
+  \doublecell[right=4ex of #3next]{#1}{#2}
+  \draw[pointer] (#3next.center) to (#1data);
+}
+
+% зачертана кутия, означаваща NULL указател
+\newcommand{\nullptr}[1]{
+  \draw (#1.north east) to (#1.south west);
+}
+
+% стилове за диаграми
+\tikzset{
+  % стил за стрелка
+  pointer/.style={-{Stealth[length=1.5ex]}},
+  % стил за правоъгълна клетка на матрица
+  mtxnode/.style={
+    rectangle,
+    minimum width=1.5em,
+    minimum height=2ex,
+    text height=1.5ex,
+    text depth=0.25ex,
+    fill=diagramblue,
+    draw,
+  },
+  % базов стил за матрица
+  basematrix/.style={
+    ampersand replacement=\&,
+    nodes in empty cells,
+    % избягване на двойно дебели разделителни линии
+    column sep=-\pgflinewidth,
+    row sep=-\pgflinewidth,
+  },
+  % стил за матрица
+  % ключът matrix е запазен в TikZ, затова използваме mtx
+  mtx/.style={
+    basematrix,
+    matrix of nodes,
+    nodes=mtxnode,
+  },
+  % стил за квадратче на дъска за шах
+  chessnode/.style={
+    rectangle,
+    minimum width=3em,
+    minimum height=3em,
+    draw,
+    fill=white,
+    text height=2em,
+  },
+  % стил за дъска на шах
+  chessboard/.style={
+    mtx,
+    nodes=chessnode,
+  },
+  % стил за клетка на масив от формули
+  arraynode/.style={
+    mtxnode,
+    minimum width=3.5ex,
+    minimum height=1.5em,
+  },
+  % стил за масив от формули
+  array/.style={
+    basematrix,
+    matrix of math nodes,
+    nodes=arraynode,
+    inner sep=0pt,
+  },
+  % стил за широк масив от формули
+  widearray/.style={
+    array,
+    nodes={minimum width=3em},
+  },
+  % стил за зачеркната клетка
+  cross/.style={
+    cross out,
+    draw=red,
+    thick,
+    minimum width=5em,
+    minimum height=3em
+  },
+  % стилове за дъгообразни стрелка
+  bl/.style={bend left=15},
+  br/.style={bend right=15},
+}
+
+% връзка между символ и стойност в среда
+\newcommand{\kvx}[2]{%
+  \node[anchor=base east]{#1};\&%
+  \node[anchor=base]{:};\&%
+  #2\\}
+
+% обикновена стойност
+\newcommand{\kv}[2]{%
+  \kvx{#1}{\node[anchor=base west]{#2};}}
+
+% функционална стойност
+\newcommand{\kf}[4]{%
+  \kvx{#1}{%
+  \node[anchor=west,inner sep=.2em,font=\sffamily,draw,double]{%
+    \begin{tabular}{@{\hskip .5em}l@{\hskip .5em}c@{\hskip .5em}l@{\hskip .5em}}
+      Параметри&:&\tt{#2}\\
+      Тяло&:&\tt{#3}\\
+      Среда&:&\env{#4}
+    \end{tabular}};}}
+
+% среда за среда :)
+\newcommand{\envir}[3][]{%
+  \node (#2) [inner sep=0.2em,draw,rectangle split,rectangle split parts=2,rectangle split part fill={gray!20,white},#1] {
+    \env{#2}
+    \nodepart{two}
+    \begin{tikzpicture}[rectangle]
+      \matrix [inner sep=0.1em,ampersand replacement=\&,font=\ttfamily,row sep=.5ex] {%
+        #3\\};
+    \end{tikzpicture}};
+}
+
+% среда с указател към родителска среда
+\newcommand{\childenvir}[5][1-]{
+  \begin{scope}[visible on=<#1>]
+    \envir[#2 of #3]{#4}{#5}
+    \draw[pointer] (#4) to (#3);
+  \end{scope}
+}
 
 % зачертан текст
 \usepackage{soul}
@@ -173,28 +328,6 @@
 % списък
 \newcommand{\hlist}{\tuplelist[]}
 
-% оценка на функция в среда
-\newcommand{\funcenv}[3]{\begin{tabular}{||l@{\hskip 1ex}l@{\hskip 1ex}l||}%
-                           \hline
-                           Параметри&:&\tt{#1}\\
-                           Тяло&:&\tt{#2}\\
-                           Среда&:&\env{#3}\\
-                           \hline
-                         \end{tabular}
-                         \\[-0.5\normalbaselineskip] &&}
-
-% среда за среда :)
-\newenvironment{envir}[1]{
-  \begin{tabular}{|r@{\hskip 0.5ex}c@{\hskip 0.5ex}l|}
-    \hline \multicolumn{3}{|c|}{\env{#1}}
-}{
-  \\\hline
-  \end{tabular}
-}
-
-% двойна разделителна черта: слага се преди първия елемент в средата
-\newcommand{\firstinenv}{\hhline{|*3{=}|}}
-
 % откриване на въпрос
 \newcommand{\rvl}[1]{\alt<+->{#1}?}
 
@@ -232,3 +365,13 @@
 
 % creative commons признание
 \newcommand{\imageAttr}[4]{\scalebox{.4}{\textcolor{gray}{``#1'' от #2 (\url{#3}), #4}}}
+
+% съкратена команда за показване само на текущия слайд
+% слага се в преамбюла
+\newcommand{\crronly}{\includeonlyframes{current}}
+
+% смаляване на шрифта в листинг
+\newcommand{\lstsize}[1]{\lstset{basicstyle=#1\ttfamily}}
+\newcommand{\lstsmall}{\lstsize\small}
+\newcommand{\lstscriptsize}{\lstsize\scriptsize}
+\newcommand{\lsttiny}{\lstsize\tiny}

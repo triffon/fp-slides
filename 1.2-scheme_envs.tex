@@ -45,17 +45,14 @@
       \end{itemize}
     \end{column}
 
-    % TODO: да се реализира с TikZ
     \begin{column}{.5\textwidth}
-      \begin{envir}{E}
-        \\\firstinenv \tt a&:&8
-        \only<3->{
-          \\\tt r&:&\tt 5
+      \begin{tikzpicture}
+        \envir{E}{
+          \kv a8
+          \only<3->{\kv r5}
+          \only<5->{\kf fx{(* x r)}E}
         }
-        \only<5->{
-          \\\tt f&:&\funcenv x{(* x r)}E
-        }
-      \end{envir}
+      \end{tikzpicture}
     \end{column}
   \end{columns}
 \end{frame}
@@ -91,7 +88,7 @@
 \begin{frame}
   \frametitle{Извикване на дефинирана функция}
 
-  \begin{overlayarea}{\textwidth}{\textheight}
+  \begin{overlayarea}{\textwidth}{.8\textheight}
     \begin{columns}[T,onlytextwidth]
       \begin{column}{.5\textwidth}
         \begin{itemize}[<+->]
@@ -111,20 +108,15 @@
         \end{itemize}
       \end{column}
 
-      % TODO: да се реализира с TikZ
       \begin{column}{.5\textwidth}
-        \begin{tabular}{c}
-          \begin{envir}{E}
-            \\\firstinenv\tt r&:&\tt 5 \only<2->{\\\tt a&:&\tt 3}
-            \only<3->{\\\tt f&:&\funcenv x{(* x r)}E}
-          \end{envir}
-          \\
-          \only<6->{
-          \Bigg\uparrow\\
-          \begin{envir}{E_1}
-            \\\firstinenv\tt x&:&3
-          \end{envir}}
-        \end{tabular}
+        \begin{tikzpicture}
+          \envir{E}{
+            \kv r5
+            \only<2->{\kv a3}
+            \only<3->{\kf fx{(* x r)}E}
+          }
+          \childenvir[6-]{below=5em}E{E_1}{\kv x3}
+        \end{tikzpicture}
       \end{column}
     \end{columns}
   \end{overlayarea}
@@ -269,16 +261,13 @@
   \end{center}
 \end{frame}
 
-% временно смаляване на шрифта за листинги
-\lstset{basicstyle=\tiny\ttfamily}
-
 \begin{frame}
   \frametitle{Оценка на рекурсивна функция в среда}
 
   {
-  \tiny
-  \begin{columns}[t,onlytextwidth]
-    \begin{column}{.63\textwidth}
+  \tiny\lsttiny
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{.68\textwidth}
       \begin{tabular}{lc}
         \nxt{
         \inenv E&\lst{(fact 4)}\\
@@ -305,63 +294,20 @@
         &\phantom{\lst{(* 4 (* 3 (* 2 (* 1 (if (= n 0) 1 (* n (fact (- n 1))))))))}}
       \end{tabular}
     \end{column}
-    % TODO: да се реализира с TikZ
-    \begin{column}{.37\textwidth}
-      \begin{tabular}{*{8}{c@{}}c}
-        \multicolumn{9}c{
-        \begin{envir}{E}
-          \\\firstinenv &&\\[1pt]\hspace{6ex}\tt{fact}&:&\funcenv n\ldots E
-        \end{envir}}
-        \\
-        \multicolumn 2c{\visible<2->{\Bigg\uparrow}}&
-        \visible<8->{\Bigg\uparrow}&
-        \multicolumn 3c{\visible<4->{\Bigg\uparrow}}&
-        \visible<10->{\Bigg\uparrow}&
-        \multicolumn 2c{\visible<6->{\Bigg\uparrow}}\\
-        \multicolumn 2c{
-        \visible<2->{
-        \begin{envir}{E_1}
-          \\\firstinenv\tt n&:&4
-        \end{envir}}}&
-        \visible<8->{\Bigg\vert}&
-        \multicolumn 3c{
-        \visible<4->{
-        \begin{envir}{E_2}
-          \\\firstinenv\tt n&:&3
-        \end{envir}}}&
-        \visible<10->{\Bigg\vert}&
-        \multicolumn 2c{
-        \visible<6->{
-        \begin{envir}{E_3}
-          \\\firstinenv\tt n&:&2
-        \end{envir}}}\\
-        \multicolumn 2c{}&
-        \visible<8->{\Bigg\vert}&
-        \multicolumn 3c{}&
-        \visible<10->{\Bigg\vert}&
-        \multicolumn 2c{}\\
-        &
-        \multicolumn 3c{
-        \visible<8->{
-        \hspace{5ex}
-        \begin{envir}{E_4}
-          \\\firstinenv\tt n&:&1
-        \end{envir}}}&&
-        \multicolumn 3c{
-        \visible<10->{
-        \hspace{2ex}
-        \begin{envir}{E_5}
-          \\\firstinenv\tt n&:&0
-        \end{envir}}}&
-      \end{tabular}
+    \begin{column}{.32\textwidth}
+      \begin{tikzpicture}
+        \envir{E}{\kf{fact}n\ldots E}
+        \childenvir[2- ]{below left =2em and -2em}E{E_1}{\kv n4}
+        \childenvir[4- ]{below      =2em         }E{E_2}{\kv n3}
+        \childenvir[6- ]{below right=2em and -2em}E{E_3}{\kv n2}
+        \childenvir[8- ]{below left =7em and -3em}E{E_4}{\kv n1}
+        \childenvir[10-]{below right=7em and -3em}E{E_5}{\kv n0}
+      \end{tikzpicture}
     \end{column}
   \end{columns}
   }\ \\[1em]
   \nxt{Линеен рекурсивен процес}
 \end{frame}
-
-% възстановяване на шрифта за листинги
-\lstset{basicstyle=\ttfamily}
 
 \subsection{Итеративни процеси}
 
@@ -429,8 +375,8 @@
   \frametitle{Оценка на итеративен факториел със среди}
 
   \begin{columns}[T,onlytextwidth]
-    \begin{column}{.6\textwidth}
-      \scriptsize
+    \begin{column}{.62\textwidth}
+      \scriptsize\lstscriptsize
       \begin{tabular}{lc}
         \nxt{\inenv E&\lst{(fact 4)}\\
                      &\nxt{\bda\\
@@ -450,82 +396,20 @@
       \end{tabular}
     \end{column}
 
-    % TODO: да се реализира с TikZ
-    \begin{column}{.4\textwidth}
+    \begin{column}{.38\textwidth}
       \tiny
-      \begin{tabular}{*{8}{c@{}}c}
-        \multicolumn 9c{
-        \visible<2->{
-        \begin{envir}{E_0}
-          \\\firstinenv \tt n&:&4
-        \end{envir}}}
-        \\
-        \multicolumn 9c{\visible<2->{\big\downarrow}}\\
-        \multicolumn 9c{
-        \begin{envir}{E}
-          \\\firstinenv &&\\[1pt]\tt{fact}&:&\funcenv n{(for n 1 1)}E\\
-          \tt{for}&:&\funcenv{\alert<14>n r i}\ldots E
-        \end{envir}}
-        \\
-        \multicolumn 2c{\visible<4->\bua}&
-        \visible<10->\bua&
-        \multicolumn 3c{\visible<6->\bua}&
-        \visible<12->\bua&
-        \multicolumn 2c{\visible<8->\bua}\\
-        \multicolumn 2c{
-        \visible<4->{
-        \begin{envir}{E_1}
-          \\\firstinenv\alert<14>{\tt n}&\alert<14>:&\alert<14>4\\
-          \tt r&:&1\\
-          \tt i&:&1
-        \end{envir}}}&
-        \visible<10->{
-        \begin{tabular}{@{}c@{}}
-        \!\!\Bigg\vert\\[0pt]
-        \!\!\bigg\vert
-        \end{tabular}}&
-        \multicolumn 3c{
-        \visible<6->{
-        \begin{envir}{E_2}
-          \\\firstinenv\alert<14>{\tt n}&\alert<14>:&\alert<14>4\\
-          \tt r&:&1\\
-          \tt i&:&2
-        \end{envir}}}&
-        \visible<12->{
-        \begin{tabular}{@{}c@{}}
-        \!\!\Bigg\vert\\[0pt]
-        \!\!\bigg\vert
-        \end{tabular}}&
-        \multicolumn 2c{
-        \visible<8->{
-        \begin{envir}{E_3}
-          \\\firstinenv\alert<14>{\tt n}&\alert<14>:&\alert<14>4\\
-          \tt r&:&2\\
-          \tt i&:&3
-        \end{envir}}}\\
-        \multicolumn 2c{}&
-        \visible<10->{\big\vert}&
-        \multicolumn 3c{}&
-        \visible<12->{\big\vert}&
-        \multicolumn 2c{}\\
-        &
-        \multicolumn 3c{
-        \visible<10->{
-        \hspace{5ex}
-        \begin{envir}{E_4}
-          \\\firstinenv\alert<14>{\tt n}&\alert<14>:&\alert<14>4\\
-          \tt r&:&6\\
-          \tt i&:&4
-        \end{envir}}}&&
-        \multicolumn 3c{
-        \visible<12->{
-        \hspace{2ex}
-        \begin{envir}{E_5}
-          \\\firstinenv\alert<14>{\tt n}&\alert<14>:&\alert<14>4\\
-          \tt r&:&24\\
-          \tt i&:&5
-        \end{envir}}}&
-      \end{tabular}
+      \begin{tikzpicture}
+        \envir{E}{
+          \kf{fact}n{(for n 1 1)}E
+          \kf{for}{\alert<14>n r i}\ldots E
+        }
+        \childenvir[2- ]{above=1em}E{E_0}{\kv n4}
+        \childenvir[4- ]{below left =1em and -3em  }E{E_1}{\kv n4\kv r1   \kv i1}
+        \childenvir[6- ]{below      =1em           }E{E_2}{\kv n4\kv r1   \kv i2}
+        \childenvir[8- ]{below right=1em and -3em  }E{E_3}{\kv n4\kv r2   \kv i3}
+        \childenvir[10-]{below left =7em and -4.5em}E{E_4}{\kv n4\kv r6   \kv i4}
+        \childenvir[12-]{below right=7em and -4.5em}E{E_5}{\kv n4\kv r{24}\kv i5}
+      \end{tikzpicture}
     \end{column}
   \end{columns}
 \end{frame}
@@ -533,7 +417,7 @@
 \begin{frame}<1-2>[fragile,label=reciter]
   \frametitle{Рекурсивен и итеративен процес}
 
-  \begin{overlayarea}{\textwidth}{\textheight}
+  \begin{overlayarea}{\textwidth}{.85\textheight}
     \begin{columns}[T,onlytextwidth]
       \begin{column}{.5\textwidth}
         \begin{center}
@@ -646,8 +530,8 @@
 \begin{frame}
   \frametitle{Оценка на вложени функции}
 
-  \scriptsize
-  \begin{overlayarea}{\textwidth}{\textheight}
+  \scriptsize\lstscriptsize
+  \begin{overlayarea}{\textwidth}{.85\textheight}
     \begin{columns}[T,onlytextwidth]
       \begin{column}{.5\textwidth}
         \begin{tabular}{rc}
@@ -669,33 +553,21 @@
           \inenv{E_1}&\tt 5}}}}}}}}}}}
         \end{tabular}
       \end{column}
-      % TODO: да се реализира с TikZ
       \begin{column}{.5\textwidth}
-        \begin{tabular}{cc}
-          \multicolumn 2c{
-          \begin{envir}E
-            \\\firstinenv \tt{dist}&:&\funcenv{x1 y1 x2 y2}\ldots E
-          \end{envir}}
-          \\
-          \multicolumn 2c{\visible<2->\bua}
-          \\
-          \multicolumn 2c{\visible<2->{
-          \begin{envir}{E_1}
-            \\\firstinenv \tt{x1}&:&2 \\\tt{y1}&:&5 \\\tt{x2}&:&-1
-            \\\tt{y2}&:&9 \only<3->{\\\tt{dx}&:&-3}
-            \only<4->{\\\tt{dy}&:&4} \only<5->{\\\tt{sq}&:&\funcenv x{(*
-                x x)}{E_1}}
-          \end{envir}}}
-          \\
-          \only<7->\bua&\visible<8->\bua\\
-          \only<7->{
-          \begin{envir}{E_2}
-            \\\firstinenv \tt x&:&3
-          \end{envir}}& \only<8->{
-                        \begin{envir}{E_3}
-                          \\\firstinenv \tt x&:&4
-                        \end{envir}}
-        \end{tabular}
+        \begin{tikzpicture}
+          \envir{E}{\kf{dist}{x1 y1 x2 y2}\ldots E}
+          \childenvir[2-]{below=1em}E{E_1}{
+            \kv{x1}2
+            \kv{y1}5
+            \kv{x2}{-1}
+            \kv{y2}9
+            \only<3->{\kv{dx}{-3}}
+            \only<4->{\kv{dy}4}
+            \only<5->{\kf{sq}x{(* x x)}{E_1}}
+          }
+          \childenvir[7-]{below left =1em and -3em}{E_1}{E_2}{\kv x3}
+          \childenvir[8-]{below right=1em and -3em}{E_1}{E_3}{\kv x4}
+        \end{tikzpicture}
       \end{column}
     \end{columns}
   \end{overlayarea}
@@ -736,8 +608,8 @@
   \frametitle{Оценка на итеративен факториел с вложена функция}
 
   \begin{columns}[T,onlytextwidth]
-    \begin{column}{.6\textwidth}
-      \scriptsize
+    \begin{column}{.63\textwidth}
+      \scriptsize\lstscriptsize
       \begin{tabular}{lc}
         \nxt{\inenv E&\lst{(fact 4)}\\
                      &\nxt{\bda\\
@@ -757,78 +629,17 @@
         &\phantom{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}
       \end{tabular}
     \end{column}
-    % TODO: да се реализира с TikZ
-    \begin{column}{.4\textwidth}
+    \begin{column}{.37\textwidth}
       \tiny
-      \begin{tabular}{*{8}{c@{}}c}
-        \multicolumn 9c{
-        \begin{envir}{E}
-          \\\firstinenv &&\\[1pt]\tt{fact}&:&\funcenv n{(for 1 1)}E
-        \end{envir}}
-        \\
-        \multicolumn 9c{\visible<2->\bua}
-        \\
-        \multicolumn 9c{
-        \visible<2->{
-        \begin{envir}{E_0}
-          \\\firstinenv \tt n&:&4\\
-          \hspace{6ex}\tt{for}&:&\funcenv{r i}\ldots {\alert<2>{E_0}}
-        \end{envir}}}
-        \\
-        \multicolumn 2c{\visible<4->\bua}&
-        \visible<10->\bua&
-        \multicolumn 3c{\visible<6->\bua}&
-        \visible<12->\bua&
-        \multicolumn 2c{\visible<8->\bua}\\
-        \multicolumn 2c{
-        \visible<4->{
-        \begin{envir}{E_1}
-          \\\firstinenv\tt r&:&1\\
-          \tt i&:&1
-        \end{envir}}}&
-        \visible<10->{
-        \begin{tabular}{@{}c@{}}
-        \!\!\Bigg\vert\\[0pt]
-        \!\!\big\vert
-        \end{tabular}}&
-        \multicolumn 3c{
-        \visible<6->{
-        \begin{envir}{E_2}
-          \\\firstinenv\tt r&:&1\\
-          \tt i&:&2
-        \end{envir}}}&
-        \visible<12->{
-        \begin{tabular}{@{}c@{}}
-        \!\!\Bigg\vert\\[0pt]
-        \!\!\big\vert
-        \end{tabular}}&
-        \multicolumn 2c{
-        \visible<8->{
-        \begin{envir}{E_3}
-          \\\firstinenv\tt r&:&2\\
-          \tt i&:&3
-        \end{envir}}}\\
-        \multicolumn 2c{}&
-        \visible<10->{\big\vert}&
-        \multicolumn 3c{}&
-        \visible<12->{\big\vert}&
-        \multicolumn 2c{}\\
-        &
-        \multicolumn 3c{
-        \visible<10->{
-        \hspace{5ex}
-        \begin{envir}{E_4}
-          \\\firstinenv\tt r&:&6\\
-          \tt i&:&4
-        \end{envir}}}&&
-        \multicolumn 3c{
-        \visible<12->{
-        \hspace{2ex}
-        \begin{envir}{E_5}
-          \\\firstinenv\tt r&:&24\\
-          \tt i&:&5
-        \end{envir}}}&
-      \end{tabular}
+      \begin{tikzpicture}
+        \envir{E}{\kf{fact}n{(for 1 1)}E}
+        \childenvir[2- ]{below=2em}{E}{E_0}{\kv n4\kf{for}{r i}\ldots{\alert<2>{E_0}}}
+        \childenvir[4- ]{below left =2em and -2em}{E_0}{E_1}{\kv r1   \kv i1}
+        \childenvir[6- ]{below      =2em         }{E_0}{E_2}{\kv r1   \kv i2}
+        \childenvir[8- ]{below right=2em and -2em}{E_0}{E_3}{\kv r2   \kv i3}
+        \childenvir[10-]{below left =7em and -3em}{E_0}{E_4}{\kv r6   \kv i4}
+        \childenvir[12-]{below right=7em and -3em}{E_0}{E_5}{\kv r{24}\kv i5}
+      \end{tikzpicture}
     \end{column}
   \end{columns}
 \end{frame}
@@ -886,9 +697,9 @@
   \frametitle{Оценка на \tt{let}}
 
   % TODO: примерът да бъде за area, понеже там се вижда разлика между let и let*
-  \scriptsize
+  \scriptsize\lstscriptsize
   \begin{columns}[T,onlytextwidth]
-    \begin{column}{.5\textwidth}
+    \begin{column}{.55\textwidth}
       \begin{tabular}{rc}
         \nxt{\inenv E&\lst{(dist 2 5 -1 9)}\\
                      &\nxt{\bda\\
@@ -911,40 +722,22 @@
         \inenv{E_2}&\tt 5}}}}}}}}
       \end{tabular}
     \end{column}
-    % TODO: да се реализира с TikZ
-    \begin{column}{.5\textwidth}
-      \begin{tabular}{ccc}
-        \multicolumn 3c{
-        \begin{envir}E
-          \\\firstinenv \tt{dist}&:&\funcenv{x1 y1 x2 y2}\ldots E
-        \end{envir}}
-        \\
-        \onslide<4->{\bua}&\only<2->\bua&\onslide<5->{\bua}\\
-        \onslide<4->{
-        \begin{envir}{E_3}
-          \\\firstinenv \tt x&:&3
-          % фантомни редове за да няма дупки между стрелките и таблицата
-          \\&&\phantom{\tt y}
-          \\&&\phantom{\tt y}
-          \\&&\phantom{\tt y}
-        \end{envir}}& \onslide<2->{
-                      \begin{envir}{E_1}
-                        \\\firstinenv \tt{x1}&:&2 \\\tt{y1}&:&5
-                        \\\tt{x2}&:&-1 \\\tt{y2}&:&9
-                      \end{envir}}& \onslide<5->{
-                                    \begin{envir}{E_4}
-                                      \\\firstinenv \tt x&:&4
-                                      % фантомни редове за да няма дупки между стрелките и таблицата
-                                      \\&&\phantom{\tt y}
-                                      \\&&\phantom{\tt y}
-                                      \\&&\phantom{\tt y}
-                                    \end{envir}}\\
-        \multicolumn 3c{\visible<3->\bua}\\
-        \multicolumn 3c{\visible<3->{
-        \begin{envir}{E_2}
-          \\\firstinenv \tt{dx}&:&-3 \\\tt{dy}&:&4
-        \end{envir}}}
-      \end{tabular}
+    \begin{column}{.45\textwidth}
+      \begin{tikzpicture}
+        \envir{E}{\kf{dist}{x1 y1 x2 y2}\ldots E}
+        \childenvir[2-]{below=2em}E{E_1}{
+          \kv{x1}2
+          \kv{y1}5
+          \kv{x2}{-1}
+          \kv{y2}9
+        }
+        \childenvir[3-]{below=2em}{E_1}{E_2}{
+          \kv{dx}{-3}
+          \kv{dy}4
+        }
+        \childenvir[4-]{below left =2em and -4em}E{E_3}{\kv x3}
+        \childenvir[5-]{below right=2em and -4em}E{E_4}{\kv x4}
+      \end{tikzpicture}
     \end{column}
   \end{columns}
 \end{frame}
@@ -1001,10 +794,10 @@
 \begin{frame}
   \frametitle{Оценка на \tt{let*}}
 
-  \scriptsize
+  \scriptsize\lstscriptsize
   % TODO: примерът да бъде за area, понеже там се вижда разлика между let и let*
   \begin{columns}[T,onlytextwidth]
-    \begin{column}{.5\textwidth}
+    \begin{column}{.55\textwidth}
       \begin{tabular}{rc}
         \nxt{\inenv E&\lst{(dist 2 5 -1 9)}\\
                      &\nxt{\bda\\
@@ -1027,49 +820,20 @@
         \inenv{E_3}&\tt5}}}}}}}}}
       \end{tabular}
     \end{column}
-    % TODO: да се реализира с TikZ
-    \begin{column}{.5\textwidth}
-      \begin{tabular}{ccc}
-        \multicolumn 3c{
-        \begin{envir}E
-          \\\firstinenv \tt{dist}&:&\funcenv{x1 y1 x2 y2}\ldots E
-        \end{envir}}
-        \\
-        \onslide<5->{\bua}&\only<2->\bua&\onslide<6->{\bua}\\
-        \onslide<5->{
-        \begin{envir}{E_4}
-          \\\firstinenv \tt x&:&3
-          % фантомни редове за да няма дупки между стрелките и таблицата
-          \\&&\phantom{\tt y}
-          \\&&\phantom{\tt y}
-          \\&&\phantom{\tt y}
-        \end{envir}}&
-                      \onslide<2->{
-                      \begin{envir}{E_1}
-                        \\\firstinenv \tt{x1}&:&2
-                        \\\tt{y1}&:&5
-                        \\\tt{x2}&:&-1
-                        \\\tt{y2}&:&9
-                      \end{envir}}&
-                                    \onslide<6->{
-                                    \begin{envir}{E_5}
-                                      \\\firstinenv \tt x&:&4
-                                      % фантомни редове за да няма дупки между стрелките и таблицата
-                                      \\&&\phantom{\tt y}
-                                      \\&&\phantom{\tt y}
-                                      \\&&\phantom{\tt y}
-                                    \end{envir}}\\
-        \multicolumn 3c{\visible<3->\bua}\\
-        \multicolumn 3c{\visible<3->{
-        \begin{envir}{E_2}
-          \\\firstinenv \tt{dx}&:&-3
-        \end{envir}}}\\
-        \multicolumn 3c{\visible<4->\bua}\\
-        \multicolumn 3c{\visible<4->{
-        \begin{envir}{E_3}
-          \\\firstinenv \tt{dy}&:&4
-        \end{envir}}}
-      \end{tabular}
+    \begin{column}{.45\textwidth}
+      \begin{tikzpicture}
+        \envir{E}{\kf{dist}{x1 y1 x2 y2}\ldots E}
+        \childenvir[2-]{below=2em}E{E_1}{
+          \kv{x1}2
+          \kv{y1}5
+          \kv{x2}{-1}
+          \kv{y2}9
+        }
+        \childenvir[3-]{below=1.5em}{E_1}{E_2}{\kv{dx}{-3}}
+        \childenvir[4-]{below=1.5em}{E_2}{E_3}{\kv{dy}4}
+        \childenvir[5-]{below left =2em and -4em}E{E_4}{\kv x3}
+        \childenvir[6-]{below right=2em and -4em}E{E_5}{\kv x4}
+      \end{tikzpicture}
     \end{column}
   \end{columns}
 \end{frame}
