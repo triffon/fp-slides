@@ -317,18 +317,18 @@
 \begin{frame}[fragile]
   \frametitle{Факториел с цикъл}
 
+  \small
   \begin{overlayarea}{\textwidth}{.5\textheight}
-  % TODO: да се разреди текста, за да се предодврати подскачането
   \begin{columns}[T,onlytextwidth]
     \begin{column}{.5\textwidth}
       Факториел на C++\\
 %TODO: може ли да се използва lstlisting тук?
 \begin{semiverbatim}
-\only<3>\fbox{int fact(int n)} \{
-  \only<4>\fbox{int r = 1;}
-  for(\only<5>\fbox{int i = 1}; \only<6>\fbox{i <= n}; \only<7>\fbox{i++})
-    \only<8>\fbox{r *= i;}
-  \only<9>\fbox{return r;}
+\altbox<3>{int fact(int n)} \{
+  \altbox<4>{int r = 1;}
+  \altbox<0>{for(\altbox<5>{int i = 1};\altbox<6>{i <= n};\altbox<7>{i++})}
+    \altbox<8>{r *= i;}
+  \altbox<9>{return r;}
 \}
 \end{semiverbatim}
     \end{column}
@@ -337,13 +337,13 @@
       Превод на Scheme\\
 %TODO: може ли да се използва lstlisting тук?
 \begin{semiverbatim}
-(define (for n \only<4,8>\fbox{r} \only<5,7>\fbox{i})
-  (if \only<6>\fbox{(<= i n)}
-      (for n \only<8>\fbox{(* r i)} \only<7>\fbox{(+ i 1)})
-      \only<9>\fbox{r}))
+(define (for n \altbox<4,8>{r}\altbox<5,7>{i})
+  (if \altbox<6>{(<= i n)}
+      (for n \altbox<8>{(* r i)}\altbox<7>{(+ i 1)})
+      \altbox<9>{r}))
 
-\only<3>\fbox{(define (fact n)}
-  (for n \only<4>\fbox{1} \only<5>\fbox{1}))
+\altbox<3>{(define (fact n)}
+  (for n \altbox<4>{1}\altbox<5>{1}))
 \end{semiverbatim}
     \end{column}
   \end{columns}
@@ -454,7 +454,7 @@
 \begin{semiverbatim}
     (define (fact n)
       (if (= n 0) 1
-          \only<2>\fbox{(* n }(fact (- n 1)))))
+          \altbox<2>{(* n }(fact (- n 1)))))
 \end{semiverbatim}
       \end{column}
       \begin{column}{.5\textwidth}
