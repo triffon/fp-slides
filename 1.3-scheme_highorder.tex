@@ -3,7 +3,7 @@
 
 \title{Функции от по-висок ред}
 
-\date{17--31 октомври 2018 г.}
+\date{9 октомври 2019 г.}
 
 \lstset{language=Scheme}
 
@@ -141,13 +141,13 @@
     \prod_{\substack{i=a \\i \leftarrow next(i)}}^b term(i).
   \end{equation*}
   \pause
-  \newcommand{\fb}{\only<4>\fbox}
-\begin{lstlisting}[basicstyle=\linespread{1.2}\ttfamily]
+  \newcommand{\fb}{\altbox<4>}
+\begin{lstlisting}
 (define (prod a @\upper{b}@ @\term{term}@ @\nextf{next}@)
   (if (> a @\upper{b}@) @\fb1@ (@\fb*@ @\term{(term a)}@ (prod @\nextf{(next a)}@ @\upper{b}@ @\term{term}@ @\nextf{next}@))))
 \end{lstlisting}
 \pause
-\begin{lstlisting}[basicstyle=\linespread{1.2}\ttfamily]
+\begin{lstlisting}
 (define (sum a @\upper{b}@ @\term{term}@ @\nextf{next}@)
   (if (> a @\upper{b}@) @\fb0@ (@\fb+@ @\term{(term a)}@ (sum @\nextf{(next a)}@ @\upper{b}@ @\term{term}@ @\nextf{next}@))))
 \end{lstlisting}
