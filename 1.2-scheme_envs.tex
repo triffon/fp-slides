@@ -136,6 +136,7 @@
   \frametitle{Какво е рекурсия?}
 
   \begin{center}
+    % TODO: да се нарисува с TikZ и foreach
     \includegraphics[width=0.9\textwidth]{images/sierpinski.png}
   \end{center}
 \end{frame}
@@ -230,7 +231,9 @@
   \frametitle{Оценка на рекурсивна функция}
 
   \begin{center}
+    % TODO: макрос
     \scriptsize\lstscriptsize
+    % TODO: да се реализира с foreach
     \evalchain[(-1)]{
       "\lst{(fact 4)}" ->
       "\alt<+->{\lst{(* 4 (fact 3))}}
@@ -258,6 +261,7 @@
     \tiny\lsttiny
     \begin{column}{.68\textwidth}
       \begin{center}
+        % TODO: да се реализира с foreach
         \evalchain[(-1)]{
           "\lst{(fact 4)}"[env=E] ->
           "\alt<+->{\lst{(* 4 (fact 3))}}
@@ -334,6 +338,7 @@
   \begin{overlayarea}{\textwidth}{.62\textwidth}
     \begin{center}
       \small\lstsmall
+      % TODO: да се реализира с foreach
       \evalchain[(-1)]{
         "\lst{(fact 4)}" ->[v]
         "\lst{(for 4 1 1)}" ->
@@ -356,6 +361,7 @@
     \begin{column}{.62\textwidth}
       \scriptsize\lstscriptsize
       \begin{center}
+        % TODO: да се реализира с foreach
         \evalchain[(-1)]{
           "\lst{(fact 4)}"[env=E] ->
           "\alt<+->{\tt{(for \alert<14>4 1 1)}}{\lst{(for n 1 1)}}"[env=E_0] ->
@@ -392,6 +398,7 @@
     \begin{column}{.5\textwidth}
       \begin{center}
         \tiny
+        % TODO: да се реализира с foreach
         \evalchainx{
           "(fact 4)" ->
           "(* 4 (fact 3))" ->
@@ -415,6 +422,7 @@
     \begin{column}{.5\textwidth}
       \begin{center}
         \tiny
+        % TODO: да се реализира с foreach
         \evalchainx{
           "(fact 4)" ->
           "(for \alert<3> 4 1 1)" ->
@@ -559,6 +567,7 @@
     \begin{column}{.63\textwidth}
       \scriptsize\lstscriptsize
       \begin{center}
+        % TODO: да се реализира с foreach
         \evalchain[(-1)]{
           "\lst{(fact 4)}"[env=E] ->
           "\alt<+->{\lst{(for 1 1)}}{\lst{(define (for r i) ...)}}"[env=E_0] ->
@@ -790,6 +799,7 @@
 
   \begin{center}
     \tiny
+    % TODO: да се реализира с foreach
     \evalchain{
       "(pow 2 6)" ->
       "(* 2 (pow 2 5))" ->
@@ -839,6 +849,7 @@
 
   \begin{center}
     \scriptsize
+    % TODO: да се реализира с foreach
     \evalchain{
       "(qpow 2 6)" ->
       "(sqr (qpow 2 3))" ->
@@ -885,6 +896,7 @@
 \begin{frame}
   \frametitle{Дървовидна рекурсия}
 
+  % TODO: да се реализира с foreach
   \begin{center}
     \only<1 |trans:0>{
       \begin{forest} for tree={edge=ptr}
@@ -997,6 +1009,7 @@
 
   \small
   \begin{center}
+    % TODO: да се реализира с foreach
     \evalchain{
       "(fib 7)" ->
       "(iter 1 1 0)" ->
