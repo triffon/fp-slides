@@ -85,7 +85,7 @@
   \frametitle{Обобщена функция за сумиране}
   Да се напише функция от по-висок ред \tt{sum}, която пресмята сумата:
   \begin{equation*}
-    \sum_{\substack{i=a \\i \leftarrow next(i)}}^b term(i).
+    \sum_{\substack{i=a \\i \rightarrow next(i)}}^b term(i).
   \end{equation*}
   \pause
 \begin{lstlisting}
@@ -138,7 +138,7 @@
 
   Да се напише функция от по-висок ред \tt{product}, която пресмята:
   \begin{equation*}
-    \prod_{\substack{i=a \\i \leftarrow next(i)}}^b term(i).
+    \prod_{\substack{i=a \\i \rightarrow next(i)}}^b term(i).
   \end{equation*}
   \pause
   \newcommand{\fb}{\altbox<4>}

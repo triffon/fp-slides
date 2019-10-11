@@ -96,7 +96,7 @@
         \item \lst{(define a 3)}
         \item \lst{(define (f x) (* x r))}\\[2ex]
           \evalchain{
-            "(f 1)"[env=E] ->
+            "(f a)"[env=E] ->
             "(f 3)"[env=E] ->
             "(* x r)"[env=E_1] ->
             "15";
@@ -245,10 +245,10 @@
       "\alt<+->{\lst{(* 4 (* 3 (* 2 (* 1 (fact 0)))))}}
       {\lst{(* 4 (* 3 (* 2 (if (= 1 0) 1 (* 1 (fact (- 1 1)))))))}}" ->
       "\alt<+->{\lst{(* 4 (* 3 (* 2 (* 1 1))))}}
-      {\lst{(* 4 (* 3 (* 2 (* 1 (if (= 0 0) 1 (* 0 (fact (- 0 1))))))))}}" ->
-      "\lst{(* 4 (* 3 (* 2 1)))}" ->
-      "\lst{(* 4 (* 3 2))}" ->
-      "\lst{(* 4 6)}" ->
+      {\lst{(* 4 (* 3 (* 2 (* 1 (if (= 0 0) 1 (* 0 (fact (- 0 1))))))))}}" ->[v]
+      "\lst{(* 4 (* 3 (* 2 1)))}" ->[v]
+      "\lst{(* 4 (* 3 2))}" ->[v]
+      "\lst{(* 4 6)}" ->[v]
       24;
     }
   \end{center}
@@ -570,7 +570,8 @@
         % TODO: да се реализира с foreach
         \evalchain[(-1)]{
           "\lst{(fact 4)}"[env=E] ->
-          "\alt<+->{\lst{(for 1 1)}}{\lst{(define (for r i) ...)}}"[env=E_0] ->
+          "\lst{(define (for r i)...)}"[envv=E_0] ->[v]
+          "(for 1 1)"[envv=E_0] ->[v]
           "\alt<+->{\lst{(for 1 2)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_1] ->
           "\alt<+->{\lst{(for 2 3)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_2] ->
           "\alt<+->{\lst{(for 6 4)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_3] ->
@@ -600,7 +601,7 @@
   \frametitle{Специална форма \tt{let}}
 
   \begin{itemize}[<+->]
-  \item \tta{(let} \tta(\{\tta({}<символ> <израз>\tta)\}\tta) <тяло>\tt)
+  \item \tta{(let} \tta(\{\tta({}<символ> <израз>\tta)\}\tta) <тяло>\tta)
   \item \tta{(let ((}{}<символ$_1$> <израз$_1$>\tta)\\
     \tta{\hskip 7ex(}{}<символ$_2$> <израз$_2$>\tta)\\
     \hskip 7ex\ldots\\
@@ -687,7 +688,7 @@
   \frametitle{Специална форма \tt{let*}}
 
   \begin{itemize}[<+->]
-  \item \tta{(let*} \tta(\{\tta({}<символ> <израз>\tta)\}\tta) <тяло>\tt)
+  \item \tta{(let*} \tta(\{\tta({}<символ> <израз>\tta)\}\tta) <тяло>\tta)
   \item \tta{(let* ((}{}<символ$_1$> <израз$_1$>\tta)\\
     \tta{\hskip 8ex(}{}<символ$_2$> <израз$_2$>\tta)\\
     \hskip 7ex\ldots\\
