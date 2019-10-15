@@ -367,20 +367,20 @@
 
 \begin{frame}[fragile,label=filterex]
   \frametitle{Филтриране на списък (\tt{filter})}
-  \begin{overlayarea}{\textwidth}{\textheight}
+  \begin{fixedarea}
 \begin{lstlisting}
 (define (filter p? l)
    (cond ((null? l) l)
          ((p? (car l)) (cons (car l) (filter p? (cdr l))))
          (else (filter p? (cdr l)))))
 \end{lstlisting}
-  \begin{itemize}[<+->]
-  \item \evalstop{(filter odd? '(1 2 3 4 5))}{(1 3 5)}
-  \item \evalstop{(filter pair? '((a b) c () d (e)))}{((a b) (e))}
-  \item \evalstop{(map (lambda (x) (filter even? x)) '((1 2 3) (4 5 6) (7 8 9)))}{((2) (4 6) (8))}
-  \item \evalstop{(map (lambda (x) (map (lambda (f) (filter f x)) (list negative? zero? positive?))) '((-2 1 0) (1 4 -1) (0 0 1)))}{(((-2) (0) (1)) ((-1) () (1 4)) (() (0 0) (1)))}
-  \end{itemize}
-\end{overlayarea}
+    \begin{itemize}[<+->]
+    \item \evalstop{(filter odd? '(1 2 3 4 5))}{(1 3 5)}
+    \item \evalstop{(filter pair? '((a b) c () d (e)))}{((a b) (e))}
+    \item \evalstop{(map (lambda (x) (filter even? x)) '((1 2 3) (4 5 6) (7 8 9)))}{((2) (4 6) (8))}
+    \item \evalstop{(map (lambda (x) (map (lambda (f) (filter f x)) (list negative? zero? positive?))) '((-2 1 0) (1 4 -1) (0 0 1)))}{(((-2) (0) (1)) ((-1) () (1 4)) (() (0 0) (1)))}
+    \end{itemize}
+  \end{fixedarea}
 \end{frame}
 
 \begin{frame}[fragile,label=foldr]
@@ -392,7 +392,7 @@
   \end{equation*}\\[-1ex]
   \pause
   \begin{columns}[T,onlytextwidth]
-    \begin{column}{.2\textwidth}
+    \begin{column}{.25\textwidth}
       \begin{forest} for tree={edge=<-}
         [$\oplus$ [$a_1$]
         [$\oplus$ [$a_2$]
@@ -401,7 +401,7 @@
       \end{forest}
     \end{column}
     \pause
-    \begin{column}{.8\textwidth}
+    \begin{column}{.75\textwidth}
 \begin{lstlisting}
 (define (foldr op nv l)
         (if (null? l) nv
