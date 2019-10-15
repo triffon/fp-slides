@@ -66,17 +66,40 @@
   \draw[pointer] (x) to (#1);
 }
 
-% начална двойна клетка с данни
-\newcommand{\doublecell}[3][]{
-  \matrix (#2) [array,nodes={minimum width=6ex},#1] {
-    |(#2data)| #3 \& |(#2next)|\\
+% стойност в паметта
+\newcommand{\val}[3][] {
+  \node (#2) [draw,fill=diagramblue,#1] {$#3$};
+}
+
+% сочене към стойност в паметта
+\newcommand{\toval}[2]{
+  \val[below=2ex of #1]x{#2}
+  \draw[ptr] (#1) to (x);
+}
+
+% двойна клетка описваща точкова двойка
+\newcommand{\pointcell}[2][]{
+  \matrix (#2) [array,nodes={minimum width=5ex},#1] {
+    |(#2data)| \& |(#2next)|\\
   };
 }
 
+% двойна клетка описваща точкова двойка с една стойност
+\newcommand{\pointcellx}[3][]{
+  \pointcell[#1]{#2}
+  \toval{#2data}{#3}
+}
+
+% двойна клетка описваща точкова двойка с две стойности
+\newcommand{\pointcellxx}[4][]{
+  \pointcellx[#1]{#2}{#3}
+  \toval{#2next}{#4}
+}
+
 % следваща двойна клетка с данни
-\newcommand{\nextdoublecell}[3]{
-  \doublecell[right=4ex of #3next]{#1}{#2}
-  \draw[pointer] (#3next.center) to (#1data);
+\newcommand{\nextcell}[3]{
+  \pointcellx[right=2em of #3next]{#1}{#2}
+  \draw[ptr] (#3next.center) to (#1data);
 }
 
 % зачертана кутия, означаваща NULL указател
@@ -432,23 +455,6 @@
 
 % стрелка нагоре за вериги от среди
 \newcommand{\bua}{\big\uparrow}
-
-%%% диаграми
-
-% стрелка напред, сочеща следваща клетка
-\newcommand{\nextarrow}{\xrightarrow{\hspace{5ex}}}
-
-% двойна кутия за точкова двойка
-\newcommand{\pointcell}{\dualcell{\hspace*{2ex}}{\hspace*{2ex}}}
-
-% двойна кутия за свързани структури
-\newcommand{\dualcell}[2]{\multicolumn 1{|c|}{#1}&\multicolumn 1{c|}{#2}}
-
-% двойна кутия със указател към следващата
-\newcommand{\nextcell}{\pointcell&$\nextarrow$}
-
-% двойна кутия без указател към следващата
-\newcommand{\nilcell}{\dualcell{\hspace*{2ex}}{\scriptsize\diagbox[dir=SW]{\phantom a}{\phantom a}}}
 
 %%% среди
 
