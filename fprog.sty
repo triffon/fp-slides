@@ -182,7 +182,13 @@
 
 % среда за среда :)
 \newcommand{\envir}[3][]{%
-  \node (#2) [inner sep=0.2em,draw,rectangle split,rectangle split parts=2,rectangle split part fill={gray!20,white},#1] {
+  \node (#2) [
+  inner sep=0.2em,
+  draw,
+  rectangle split,
+  rectangle split parts=2,
+  rectangle split part fill={gray!20,white},
+  #1] {
     \env{#2}
     \nodepart{two}
     \begin{tikzpicture}[rectangle]
@@ -202,34 +208,57 @@
 % ограждане на текст с кутия на даден слайд
 \newcommand<>{\altbox}[1]{\alt#2{\fcolorbox{black}{white}{#1}}{\fcolorbox{white}{white}{#1}}}
 
-% вертикална верига от оценки с постъпково откриване
-% TODO: да се обобщи макрос
-\newcommand{\evalchain}[2][]{
-  \begin{tikzpicture}[
-    font=\ttfamily,
-    label distance=2em,label position=left,
-    env/.style args={##1}{label={[visible on=<.#1->] \inenv{##1}}},
-    v/.style={visible on=<.->},
-    vp/.style={visible on=<.(-1)->},
-    envv/.style args={##1}{label={[v] \inenv{##1}}}]
-    \graph[
+\tikzset{
+  % стил за графа, описващ верига от оценки
+  /evalchain/.style={
+    /tikz/font=\ttfamily,
+    /tikz/label distance=2em,
+    /tikz/label position=left,
     grow down sep=2ex,
-    nodes={visible on=<+->},
-    edges={ptr,visible on=<.#1->}]
-    {#2};
-  \end{tikzpicture}
+  },
 }
 
 % вертикална верига от оценки
 \newcommand{\evalchainx}[1]{
   \begin{tikzpicture}[
-    font=\ttfamily,
-    label distance=2em,label position=left,
+    % етикет за оценяване в среда
     env/.style args={##1}{label=\inenv{##1}}]
     \graph[
-    grow down sep=2ex,
+    evalchain,
     edges=ptr]
     {#1};
+  \end{tikzpicture}
+}
+
+% вертикална верига от оценки с постъпково откриване
+% аргументът по подразбиране обикновено е отрицателно число,
+% чиято абсолютна стойност е забавяне по подразбиране на всеки възел
+% използва се, например, когато искаме да правим трансформация на всеки възел с \alt<+->
+\newcommand{\evalchain}[2][]{
+  \begin{tikzpicture}[
+    % открий на текущия слайд, игнорирайки евентуалното забавяне
+    v/.style={visible on=<.->},
+    % открей на предишния слайд, игнорирайки евентуалното забавяне
+    vp/.style={visible on=<.(-1)->},
+    % етикет за оценяване в среда, показващ се синхронизиран с основния възел
+    % аргументът по подразбиране задава евентуално забавяне на етикета,
+    % използва се за синхронизиране с основния възел
+    env/.style args={##1}{label={[visible on=<.#1->] \inenv{##1}}},
+    % също като env, но показва на текущия слайд, игнорирайки забавянето
+    envv/.style args={##1}{label={[v] \inenv{##1}}},
+    % също като env, но показва на предишния слайд, игнорирайки забавянето
+    envp/.style args={##1}{label={[vp] \inenv{##1}}},
+    % добавяне на изкуствено допълнително забавяне към определен възел,
+    % използва се ако повечето възли нямат забавяне и искаме да сложим само на някои възли
+    skip/.code=\addtocounter{beamerpauses}{1},
+    ]
+    \graph[
+    /evalchain,
+    % beamerpauses се увеличава при показване на възела
+    nodes={visible on=<+->},
+    % ребрата се показват заедно със следващия възел, вземайки предвид евентуално глобално забавяне
+    edges={ptr,visible on=<.#1->}]
+    {#2};
   \end{tikzpicture}
 }
 

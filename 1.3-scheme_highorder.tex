@@ -303,7 +303,7 @@
 
 \section{\tt{lambda}}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Анонимни функции}
 
   Можем да конструираме параметрите на функциите от по-висок ред ``на място'', без да им даваме имена!\\[1ex]
@@ -317,9 +317,9 @@
     \item \evalsto{(lambda (x) (+ x 3))}{\#<procedure>}
     \item \evalsto{((lambda (x) (+ x 3)) 5)}8
     \item
-        \tt{(define (}<име> <параметри>\tt) <тяло>\tt)\\
+        \lst{(define (}<име> <параметри>\tt) <тяло>\tt)\\
         \eqv\\
-        \tt{(define }<име> \tt{(lambda (}<параметри>\tt) <тяло>\tt{))}
+        \lst{(define }<име> \tt{(lambda (}<параметри>\tt) <тяло>\tt{))}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -384,45 +384,38 @@
   \frametitle{Оценка на \tt{lambda}}
 
   \scriptsize\lstscriptsize
-  \begin{columns}[T,onlytextwidth]
-    \begin{column}{.5\textwidth}
-      \renewcommand{\arraystretch}{1.5}
-      \begin{tabular}{rc}
-        \nxt{\inenv E&
-                       \renewcommand{\arraystretch}{1}
-                       \begin{tabular}{l}
-                         \lst{(define (n+ n)}\\[0pt]
-                         \hskip2ex\lst{(lambda (i) (+ i n)))}
-                       \end{tabular}\\
-        \nxt{\inenv E&\lst{(define 1+ (n+ 1))}\\
-        \nxt{\nxt{\inenv E&\lst{(define 5+ (n+ 5))}\\
-        \nxt{\nxt{\inenv E&\tt{(1+ 7)}\\
-        \nxt{&\bda\\
-        \inenv{E_3}&\tt{(+ i n)}\\
-        \nxt{&\bda\\
-                     &\tt 8}\\
-        \nxt{\inenv E&\tt{(5+ 7)}\\
-        \nxt{&\bda\\
-        \inenv{E_4}&\tt{(+ i n)}\\
-        \nxt{&\bda\\
-                     &\tt{12}
-                       }}}}}}}}}}
-      \end{tabular}
-    \end{column}
-    \begin{column}{.5\textwidth}
-      \begin{tikzpicture}
-        \envir{E}{
-          \kf{n+}n{($\lambda$(i) (+ i n))}E
-          \only<3->{\kf{1+}i{(+ i n)}{E_1}}
-          \only<5->{\kf{5+}i{(+ i n)}{E_2}}
-        }
-        \childenvir[2- ]{below left =2em and -5em}E{E_1}{\kv n1}
-        \childenvir[4- ]{below right=2em and -5em}E{E_2}{\kv n5}
-        \childenvir[7- ]{below=2em}{E_1}{E_3}{\kv i7}
-        \childenvir[10-]{below=2em}{E_2}{E_4}{\kv i7}
-      \end{tikzpicture}
-    \end{column}
-  \end{columns}
+  \begin{fixedarea}
+    \begin{columns}[T,onlytextwidth]
+      \begin{column}{.5\textwidth}
+        \begin{center}
+          \evalchain{
+            "\lst{(define (n+ n)}\\[0pt]\hskip2ex\lst{(lambda (i) (+ i n)))}"[env=E,align=left] -!-
+            "\lst{(define 1+ (n+ 1))}"[envp=E,skip] -!-
+            "\lst{(define 5+ (n+ 5))}"[envp=E,skip] -!-
+            "\lst{(1+ 7)}"[env=E] ->
+            {[name=first]  "\lst{(+ i n)}"[env=E_3]} ->
+            "8" -!-
+            "\lst{(5+ 7)}"[env=E] ->
+            {[name=second] "\lst{(+ i n)}"[env=E_4]} ->
+            "12";
+          }
+        \end{center}
+      \end{column}
+      \begin{column}{.5\textwidth}
+        \begin{tikzpicture}
+          \envir{E}{
+            \kf{n+}n{($\lambda$(i) (+ i n))}E
+            \only<3->{\kf{1+}i{(+ i n)}{E_1}}
+            \only<5->{\kf{5+}i{(+ i n)}{E_2}}
+          }
+          \childenvir[2- ]{below left =2em and -5em}E{E_1}{\kv n1}
+          \childenvir[4- ]{below right=2em and -5em}E{E_2}{\kv n5}
+          \childenvir[7- ]{below=2em}{E_1}{E_3}{\kv i7}
+          \childenvir[10-]{below=2em}{E_2}{E_4}{\kv i7}
+        \end{tikzpicture}
+      \end{column}
+    \end{columns}
+  \end{fixedarea}
 \end{frame}
 
 \begin{frame}[fragile]
