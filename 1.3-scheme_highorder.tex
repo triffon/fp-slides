@@ -11,7 +11,7 @@
 \newcommand<>{\term}[1]{{\textcolor#2{green}{#1}}}
 \newcommand<>{\nextf}[1]{{\textcolor#2{blue}{#1}}}
 \newcommand{\pnx}{x^n + 2x^{n-1} + \ldots + (n-2)x^3 + (n-1)x^2 + nx + (n+1)}
-\newcommand{\pnxh}{\Bigg(\bigg(\Big(\ldots\big((x + 2)x + 3\big)x + \ldots\Big)x + (n-1)\bigg)x + n\Bigg)x + (n+1)}
+\newcommand{\pnxh}{\!\!\!\Bigg(\!\bigg(\!\Big(\ldots\big((x + 2)x + 3\big)x + \ldots\Big)x + (n-1)\bigg)x + n\Bigg)x + (n+1)}
 
 \begin{document}
 
@@ -24,7 +24,7 @@
 \begin{frame}[fragile]
   \frametitle{Подаване на функции като параметри}
 
-  В Scheme функциите са ``първокласни'' стойности.\\[1em]
+  В Scheme функциите са ``първокласни'' стойности.\\[2ex]
   \pause
   \textbf{Примери:}
   \begin{itemize}[<+->]
@@ -97,7 +97,7 @@
 \begin{frame}[fragile]
   \frametitle{Приложения на \tt{sum}}
 
-  \begin{overlayarea}{\textwidth}{.87\textheight}
+  \begin{fixedarea}
     Решение на задачите за суми чрез \tt{sum}:\\
     \begin{tabular}[t]{p{.26\textwidth}p{.66\textwidth}}
       \[\sum_{i=k}^{100} i^2\]%
@@ -107,7 +107,7 @@
 (define (square x) (* x x))
 (define (1+ x) (+ x 1))
 (define (sum1 k) (sum k 100 square 1+))
-\end{tabularlstlisting}\\
+\end{tabularlstlisting}\\[-4ex]
       \only<3->{%
       \[\only<5->{\Delta x\,}\sum_{\substack{i=a\\i\rightarrow i + \Delta x}}^b
       \only<-4>{\Delta x\,}f(i)\]}
@@ -118,17 +118,17 @@
   @\only<4>{(define (term x) (* dx (f x)))}@
   (define (next x) (+ x dx))
   @\only<5->{(* dx }@(sum a b @\alt<4>{term}f@ next))@\only<5->)@
-\end{tabularlstlisting}\\
+\end{tabularlstlisting}\\[-3ex]
       \only<6->{%
       \[\sum_{\substack{i=x\\i\rightarrow e^i}}^{10^{1000}} i\]}
       &
         \onslide<7->
 \begin{tabularlstlisting}
 (define (sum3 x)
-(sum x (expt 10 1000) id exp))
+  (sum x (expt 10 1000) id exp))
 \end{tabularlstlisting}
     \end{tabular}
-  \end{overlayarea}
+  \end{fixedarea}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -194,7 +194,8 @@
 (define (p n x)
   @\only<7->{(define (term i) (* (- (1+ n) i) (expt x i)))}@
   (accumulate @\rvl+ \rvl0 \rvl0 \rvl{n} \rvl{term} \rvl{1+}@))
-\end{lstlisting}\ \\[1em]
+\end{lstlisting}
+  \vspace{1ex}
   \onslide<+->
   \alert{Можем ли да решим задачата без да извикваме \tt{expt} на всяка стъпка?}
 \end{frame}
@@ -211,7 +212,7 @@
   \pause
   \textbf{Идея:} Да използваме операцията $u \oplus v := ux + v$.\\
   \pause
-  \alert{Коя е ``нулевата стойност''  $\bot$?}\\[0.5em]
+  \alert{Коя е ``нулевата стойност''  $\bot$?}\\[1ex]
   \pause
   \textbf{Решение №2:}
 \begin{lstlisting}
@@ -231,7 +232,7 @@
   Q_n(x) = x + 2x + 3x + \ldots + nx + (n+1)x= \frac{(n+1)(n+2)}2x.
 \end{equation*}
   \pause
-  \textbf{Идея:} Да използваме операцията $u \oplus v := u + vx$.\\[1em]
+  \textbf{Идея:} Да използваме операцията $u \oplus v := u + vx$.\\[2ex]
   \pause
   \textbf{Решение №3:}
 \begin{lstlisting}
@@ -290,7 +291,7 @@
     P_n(x) &=& \pnx\\
     &=& \pnxh
   \end{eqnarray*}
-  \textbf{Идея:} използваме \tt{accumulate-i} и $u \oplus v := ux + v$.\\[1em]
+  \textbf{Идея:} използваме \tt{accumulate-i} и $u \oplus v := ux + v$.\\[2ex]
   \pause
   \textbf{Решение №4:}
 \begin{lstlisting}
@@ -305,7 +306,7 @@
 \begin{frame}
   \frametitle{Анонимни функции}
 
-  Можем да конструираме параметрите на функциите от по-висок ред ``на място'', без да им даваме имена!\\[0.5em]
+  Можем да конструираме параметрите на функциите от по-висок ред ``на място'', без да им даваме имена!\\[1ex]
   \pause
   \begin{itemize}[<+->]
   \item \tta{(lambda (}\{<параметър>\}\tta) <тяло>\tta)
@@ -390,7 +391,7 @@
         \nxt{\inenv E&
                        \renewcommand{\arraystretch}{1}
                        \begin{tabular}{l}
-                         \lst{(define (n+ n)}\\[0em]
+                         \lst{(define (n+ n)}\\[0pt]
                          \hskip2ex\lst{(lambda (i) (+ i n)))}
                        \end{tabular}\\
         \nxt{\inenv E&\lst{(define 1+ (n+ 1))}\\
@@ -474,8 +475,8 @@
 \begin{frame}[fragile]
   \frametitle{$n$-та производна}
 
-  \begin{overlayarea}\textwidth\textheight
-  Да се намери $n$-та производна на дадена едноместна функция.\\[1em]
+  \begin{fixedarea}
+  Да се намери $n$-та производна на дадена едноместна функция.\\[2ex]
   \pause
   \textbf{Решение №1:} $f^{(0)} = f, f^{(n)} = (f^{(n-1)})'$\pause
 \begin{lstlisting}
@@ -495,22 +496,22 @@
   (@(\rvl{accumulate} \rvl{compose} \rvl{id} \rvl1 \rvl{n} \rvl{\\
 \hskip 15ex(lambda (i) (lambda (f) (derive f dx)))} \rvl{1+}) f))@
 \end{lstlisting}
-\end{overlayarea}
+\end{fixedarea}
 \end{frame}
 
-\section{All you need is $\lambda$}
+\section{All you need is \texorpdfstring{$\lambda$}{λ}}
 
 \begin{frame}
   \frametitle{All you need is $\lambda$ \only<2->{--- \tt{let}}}
 
-  Специалната форма \tt{lambda} е достатъчна за реализацията на (почти) всички конструкции в Scheme!\\[1em]
+  Специалната форма \tt{lambda} е достатъчна за реализацията на (почти) всички конструкции в Scheme!\\[2ex]
   \pause
   Симулация на \tt{let}:
   \begin{tabular}{c}
     \lst{(let ((}<символ> <израз>\tt{))} <тяло>\tt)\\
     \eqv\\
     \lst{((lambda (}<символ>\tt) <тяло>\tt) <израз>\tt)
-  \end{tabular}\\[1em]
+  \end{tabular}\\[2ex]
   \pause
   \begin{center}
     \begin{tabular}{r@{}l}
@@ -549,7 +550,7 @@
   \frametitle{All you need is $\lambda$ --- числа}
 
   Симулация на естествени числа (\emph{нумерали на Чърч})\\
-  \textbf{Идея:} представяне на числото $n$ като $\lambda{}f,x \;\;f^n(x)$\\[1em]
+  \textbf{Идея:} представяне на числото $n$ като $\lambda{}f,x \;\;f^n(x)$\\[2ex]
   \pause
   \begin{itemize}[<+->]
   \item \lst{(define c3 (lambda (f x) (f (f (f x)))))}
@@ -563,45 +564,46 @@
   \frametitle{All you need is $\lambda$ --- рекурсия}
 
   Рекурсивна дефиниция:
-  \begin{lstlisting}
-    (define f (gamma f))
-  \end{lstlisting}%
+\begin{lstlisting}
+(define f (gamma f))
+\end{lstlisting}%
   \pause
-  \textbf{Пример:}
-  \begin{overlayarea}{\textwidth}{0.3\textheight}
-  \begin{onlyenv}<+ |trans:0>
-    \begin{lstlisting}
-      (define (fact n)
-        (if (= n 0) 1 (* n (fact (- n 1)))))
-    \end{lstlisting}%
-  \end{onlyenv}
-  \begin{onlyenv}<+ |trans:0>
-    \begin{lstlisting}
-      (define fact
-        (lambda (n)
-          (if (= n 0) 1 (* n (fact (- n 1))))))
-    \end{lstlisting}%
-  \end{onlyenv}
-  \begin{onlyenv}<+ |trans:0>
-    \begin{lstlisting}
-      (define (fact n) ((gamma fact) n))
-      (define (gamma f)
-        (lambda (n)
-          (if (= n 0) 1 (* n (f (- n 1))))))
-    \end{lstlisting}%
-  \end{onlyenv}
-  \begin{onlyenv}<+->
-    \begin{lstlisting}
-      (define (fact n) ((gamma fact) n))
-      (define gamma
-        (lambda (f)
-          (lambda (n)
-            (if (= n 0) 1 (* n (f (- n 1)))))))
-          \end{lstlisting}%
-  \end{onlyenv}
-\end{overlayarea}
+  \textbf{Пример:}\\[-2ex]
+  \begin{overlayarea}{\textwidth}{.35\textheight}%
+    \begin{onlyenv}<+ |trans:0>%
+\begin{lstlisting}
+(define (fact n)
+  (if (= n 0) 1 (* n (fact (- n 1)))))
+\end{lstlisting}%
+    \end{onlyenv}%
+    \begin{onlyenv}<+ |trans:0>%
+\begin{lstlisting}
+(define fact
+  (lambda (n)
+    (if (= n 0) 1 (* n (fact (- n 1))))))
+\end{lstlisting}%
+    \end{onlyenv}%
+    \begin{onlyenv}<+ |trans:0>%
+\begin{lstlisting}
+(define (fact n) ((gamma fact) n))
+(define (gamma f)
+  (lambda (n)
+    (if (= n 0) 1 (* n (f (- n 1))))))
+\end{lstlisting}%
+    \end{onlyenv}%
+    \begin{onlyenv}<+->%
+\begin{lstlisting}
+(define (fact n) ((gamma fact) n))
+(define gamma
+  (lambda (f)
+    (lambda (n)
+      (if (= n 0) 1 (* n (f (- n 1)))))))
+\end{lstlisting}%
+    \end{onlyenv}%
+  \end{overlayarea}
+  \vspace{1ex}
   \onslide<+->
-  \lst{fact} е най-малка неподвижна точка на оператора \lst{gamma}.\\
+  \lst{fact} е най-малка неподвижна точка на оператора \lst{gamma}.\\[1ex]
   \onslide<+->
   Търсим \lst{fact} такова, че \lst{(fact n)} = \lst{((gamma fact) n)} = \lst{((gamma (gamma fact)) n)} = \lst{((gamma (gamma (gamma fact))) n)} = \ldots
 \end{frame}
@@ -610,14 +612,14 @@
   \frametitle{All you need is $\lambda$ --- намиране на неподвижна точка}
   \textbf{Идея №1:} \lst{(define fact (((repeated gamma ?) 'empty))}\\
   \pause
-  \textbf{Проблем №1:} Не знаем колко пъти да повторим \tt{gamma}\ldots\\[1em]
+  \textbf{Проблем №1:} Не знаем колко пъти да повторим \tt{gamma}\ldots\\[2ex]
   \pause
   \textbf{Идея №2:} Да повтаряме \tt{gamma} безкрайно!
   \begin{lstlisting}
     (define (gamma-inf) (lambda (n) ((gamma (gamma-inf)) n)))
     (define fact (gamma-inf))\end{lstlisting}%
   \pause
-  \textbf{Проблем №2:} \lst{gamma-inf} отново използва рекурсия\ldots\\[1em]
+  \textbf{Проблем №2:} \lst{gamma-inf} отново използва рекурсия\ldots\\[2ex]
   \pause
   \textbf{Идея №3:} Да подменим рекурсивното извикване с параметър:
   \begin{lstlisting}
@@ -633,31 +635,31 @@
   \frametitle{All you need is $\lambda$ --- комбинатор \tt Y}
   Да напишем функция, която намира неподвижната точка на произволен оператор \tt{gamma}:
   \begin{lstlisting}
-    (define (Y gamma)
-      (define (gamma-inf me) (lambda (n) ((gamma (me me)) n)))
-      (gamma-inf gamma-inf))\end{lstlisting}
+(define (Y gamma)
+  (define (gamma-inf me) (lambda (n) ((gamma (me me)) n)))
+  (gamma-inf gamma-inf))\end{lstlisting}
   \pause
-  А сега само с $\lambda$:
-  \begin{overlayarea}{\textwidth}{0.3\textheight}
-  \begin{onlyenv}<+ |trans:0>
-  \begin{lstlisting}
-    (define Y
-      (lambda (gamma)
-        ((lambda (gamma-inf) (gamma-inf gamma-inf))
-         (lambda (me) (lambda (n) ((gamma (me me) n)))))))
-   \end{lstlisting}
- \end{onlyenv}
- \begin{onlyenv}<+->
-  \begin{lstlisting}
-    (define Y
-      (lambda (gamma)
-        ((lambda (me) (lambda (n) ((gamma (me me) n))))
-         (lambda (me) (lambda (n) ((gamma (me me) n)))))))
-   \end{lstlisting}
- \end{onlyenv}
-\end{overlayarea}
-   \onslide<+->
-   \tt Y се нарича комбинатор за намиране на най-малка неподвижна точка (fixpoint combinator).
+  А сега само с $\lambda$:\\[-2ex]
+  \begin{overlayarea}{\textwidth}{0.3\textheight}%
+    \begin{onlyenv}<+ |trans:0>%
+\begin{lstlisting}
+(define Y
+  (lambda (gamma)
+    ((lambda (gamma-inf) (gamma-inf gamma-inf))
+     (lambda (me) (lambda (n) ((gamma (me me) n)))))))
+   \end{lstlisting}%
+    \end{onlyenv}%
+    \begin{onlyenv}<+->%
+\begin{lstlisting}
+(define Y
+  (lambda (gamma)
+    ((lambda (me) (lambda (n) ((gamma (me me) n))))
+     (lambda (me) (lambda (n) ((gamma (me me) n)))))))
+\end{lstlisting}
+    \end{onlyenv}
+  \end{overlayarea}
+  \onslide<+->
+  \tt Y се нарича комбинатор за намиране на най-малка неподвижна точка (fixpoint combinator).
 \end{frame}
 
 \end{document}
