@@ -383,7 +383,7 @@
 \begin{frame}
   \frametitle{Оценка на \tt{lambda}}
 
-  \scriptsize\lstscriptsize
+  \sizeboth\scriptsize
   \begin{fixedarea}
     \begin{columns}[T,onlytextwidth]
       \begin{column}{.5\textwidth}
@@ -562,7 +562,7 @@
 \end{lstlisting}%
   \pause
   \textbf{Пример:}\\[-2ex]
-  \begin{overlayarea}{\textwidth}{.35\textheight}%
+  \begin{fixedarea}[.35]%
     \begin{onlyenv}<+ |trans:0>%
 \begin{lstlisting}
 (define (fact n)
@@ -593,7 +593,7 @@
       (if (= n 0) 1 (* n (f (- n 1)))))))
 \end{lstlisting}%
     \end{onlyenv}%
-  \end{overlayarea}
+  \end{fixedarea}
   \vspace{1ex}
   \onslide<+->
   \lst{fact} е най-малка неподвижна точка на оператора \lst{gamma}.\\[1ex]
@@ -633,7 +633,7 @@
   (gamma-inf gamma-inf))\end{lstlisting}
   \pause
   А сега само с $\lambda$:\\[-2ex]
-  \begin{overlayarea}{\textwidth}{0.3\textheight}%
+  \begin{fixedarea}[.3]%
     \begin{onlyenv}<+ |trans:0>%
 \begin{lstlisting}
 (define Y
@@ -650,7 +650,7 @@
      (lambda (me) (lambda (n) ((gamma (me me) n)))))))
 \end{lstlisting}
     \end{onlyenv}
-  \end{overlayarea}
+  \end{fixedarea}
   \onslide<+->
   \tt Y се нарича комбинатор за намиране на най-малка неподвижна точка (fixpoint combinator).
 \end{frame}

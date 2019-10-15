@@ -224,7 +224,7 @@
     % етикет за оценяване в среда
     env/.style args={##1}{label=\inenv{##1}}]
     \graph[
-    evalchain,
+    /evalchain,
     edges=ptr]
     {#1};
   \end{tikzpicture}
@@ -316,25 +316,10 @@
 % машина на Тюринг по даден код
 \newcommand{\mt}[1]{\{#1\}}
 
-% стрелка надолу за вериги от оценки
-\newcommand{\bda}{\big\downarrow}
+%%% макроси за оценяване
 
-% стрелка нагоре за вериги от среди
-\newcommand{\bua}{\big\uparrow}
-
-% по-приличен pause (за математика и таблици)
-\newcommand{\nxt}[1]{\visible<+->{#1}}
-
-% \pause за таблици
-\newcommand{\tpause}{\noalign{\pause}}
-
-% среда
-\newcommand{\env}[1]{$\mathbf{#1}$}
-
-% оценка в среда
-\newcommand{\inenv}[1]{\{\env{#1}\}}
-
-%%% макроси
+% откриване на въпрос
+\newcommand{\rvl}[1]{\alt<+->{#1}?}
 
 % оценява се до...
 \newcommand{\evalstox}[1]{\lst!#1! \nolinebreak$\longrightarrow$}
@@ -375,6 +360,22 @@
 % два израза се оценяват до една и съща стойност с пауза за въпрос
 \newcommand{\evalstwop}[3]{\lst!#1! \nolinebreak$\longrightarrow$ \nolinebreak\rvl{#2} \nolinebreak$\longleftarrow$ \nolinebreak \lst!#3!}
 
+%%% макроси за Scheme
+
+% let in
+\newcommand{\lett}[2]{\textbf{let }#1\textbf{ in }#2}
+
+% where
+\newcommand{\where}{\,\textbf{where}\,}
+
+% среда
+\newcommand{\env}[1]{$\mathbf{#1}$}
+
+% оценка в среда
+\newcommand{\inenv}[1]{\{\env{#1}\}}
+
+%%% макроси за Haskell
+
 % има тип
 \newcommand{\typesto}[2]{\lst!#1 :: #2!}
 
@@ -396,11 +397,29 @@
 % списък
 \newcommand{\hlist}{\tuplelist[]}
 
-% откриване на въпрос
-\newcommand{\rvl}[1]{\alt<+->{#1}?}
+%%% други макроси и дефиниции
 
 % син цвят по подразбиране
 \colorlet{diagramblue}{blue!60!green!40}
+
+% creative commons признание
+\newcommand{\imageAttr}[4]{\scalebox{.4}{\textcolor{gray}{``#1'' от #2 (\url{#3}), #4}}}
+
+% съкратена команда за показване само на текущия слайд
+% слага се в преамбюла
+\newcommand{\crronly}{\includeonlyframes{current}}
+
+% смаляване на шрифта в листинг
+\newcommand{\lstsize}[1]{\lstset{basicstyle=#1\ttfamily}}
+\newcommand{\lstsmall}{\lstsize\small}
+\newcommand{\lstscriptsize}{\lstsize\scriptsize}
+\newcommand{\lstfootnotesize}{\lstsize\footnotesize}
+\newcommand{\lsttiny}{\lstsize\tiny}
+
+% едновременно смаляване на обикновения шрифт и на този в lstlisting
+\newcommand{\sizeboth}[1]{#1\lstsize{#1}}
+
+%%% съкращения на символи
 
 % еквивалентно на
 \newcommand{\eqv}{$\Longleftrightarrow$\xspace}
@@ -408,7 +427,13 @@
 % обикновени кавички
 \newcommand{\quot}{\textquotedbl}
 
-%% диаграми
+% стрелка надолу за вериги от оценки
+\newcommand{\bda}{\big\downarrow}
+
+% стрелка нагоре за вериги от среди
+\newcommand{\bua}{\big\uparrow}
+
+%%% диаграми
 
 % стрелка напред, сочеща следваща клетка
 \newcommand{\nextarrow}{\xrightarrow{\hspace{5ex}}}
@@ -425,31 +450,14 @@
 % двойна кутия без указател към следващата
 \newcommand{\nilcell}{\dualcell{\hspace*{2ex}}{\scriptsize\diagbox[dir=SW]{\phantom a}{\phantom a}}}
 
-% let in
-\newcommand{\lett}[2]{\textbf{let }#1\textbf{ in }#2}
-
-% where
-\newcommand{\where}{\,\textbf{where}\,}
-
-% creative commons признание
-\newcommand{\imageAttr}[4]{\scalebox{.4}{\textcolor{gray}{``#1'' от #2 (\url{#3}), #4}}}
-
-% съкратена команда за показване само на текущия слайд
-% слага се в преамбюла
-\newcommand{\crronly}{\includeonlyframes{current}}
-
-% смаляване на шрифта в листинг
-\newcommand{\lstsize}[1]{\lstset{basicstyle=#1\ttfamily}}
-\newcommand{\lstsmall}{\lstsize\small}
-\newcommand{\lstscriptsize}{\lstsize\scriptsize}
-\newcommand{\lstfootnotesize}{\lstsize\footnotesize}
-\newcommand{\lsttiny}{\lstsize\tiny}
+%%% среди
 
 % листинг в таблица
 % https://tex.stackexchange.com/a/392601
 \lstnewenvironment{tabularlstlisting}[1][]{}{}
 
-% overlayarea, която изпълва цялата област за текст за текущата тема
-\newenvironment{fixedarea}{%
-  \begin{overlayarea}\textwidth{.87\textheight}}{%
+% overlayarea, която по подразбиране изпълва цялата област за текст за текущата тема
+% може да се зададе като опционален параметър друга част от височината
+\newenvironment{fixedarea}[1][.87]{%
+  \begin{overlayarea}\textwidth{#1\textheight}}{%
   \end{overlayarea}}

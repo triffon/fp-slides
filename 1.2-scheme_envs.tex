@@ -88,7 +88,7 @@
 \begin{frame}
   \frametitle{Извикване на дефинирана функция}
 
-  \begin{overlayarea}{\textwidth}{.8\textheight}
+  \begin{fixedarea}
     \begin{columns}[T,onlytextwidth]
       \begin{column}{.5\textwidth}
         \begin{itemize}[<+->]
@@ -115,7 +115,7 @@
         \end{tikzpicture}
       \end{column}
     \end{columns}
-  \end{overlayarea}
+  \end{fixedarea}
 \end{frame}
 
 \section{Рекурсия}
@@ -231,8 +231,7 @@
   \frametitle{Оценка на рекурсивна функция}
 
   \begin{center}
-    % TODO: макрос
-    \scriptsize\lstscriptsize
+    \sizeboth\scriptsize
     % TODO: да се реализира с foreach
     \evalchain[(-1)]{
       "\lst{(fact 4)}" ->
@@ -258,7 +257,7 @@
   \frametitle{Оценка на рекурсивна функция в среда}
 
   \begin{columns}[T,onlytextwidth]
-    \tiny\lsttiny
+    \sizeboth\tiny
     \begin{column}{.68\textwidth}
       \begin{center}
         % TODO: да се реализира с foreach
@@ -293,7 +292,8 @@
     \end{column}
   \end{columns}
   \vspace{2ex}
-  \nxt{Линеен рекурсивен процес}
+  \onslide<+->
+  Линеен рекурсивен процес
 \end{frame}
 
 \subsection{Итеративни процеси}
@@ -335,9 +335,9 @@
 \begin{frame}
   \frametitle{Оценка на итеративен факториел}
 
-  \begin{overlayarea}{\textwidth}{.62\textwidth}
+  \begin{fixedarea}[.62]
     \begin{center}
-      \small\lstsmall
+      \sizeboth\small
       % TODO: да се реализира с foreach
       \evalchain[(-1)]{
         "\lst{(fact 4)}" ->[v]
@@ -350,8 +350,9 @@
       }
     \end{center}
     \vspace{2ex}
-    \nxt{Линеен итеративен процес}
-  \end{overlayarea}
+    \onslide<+->
+    Линеен итеративен процес
+  \end{fixedarea}
 \end{frame}
 
 \begin{frame}<1-13>[label=iterenv]
@@ -359,7 +360,7 @@
 
   \begin{columns}[T,onlytextwidth]
     \begin{column}{.62\textwidth}
-      \scriptsize\lstscriptsize
+      \sizeboth\scriptsize
       \begin{center}
         % TODO: да се реализира с foreach
         \evalchain[(-1)]{
@@ -492,8 +493,8 @@
 \begin{frame}
   \frametitle{Оценка на вложени функции}
 
-  \scriptsize\lstscriptsize
-  \begin{overlayarea}{\textwidth}{.85\textheight}
+  \sizeboth\scriptsize
+  \begin{fixedarea}
     \begin{columns}[T,onlytextwidth]
       \begin{column}{.5\textwidth}
         \evalchain{
@@ -526,14 +527,14 @@
         \end{tikzpicture}
       \end{column}
     \end{columns}
-  \end{overlayarea}
+  \end{fixedarea}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Вложена помощна итеративна функция}
 
   При итеративни функция е удобно помощната функция да е вложена.
-  \begin{overlayarea}{\textwidth}{.5\textheight}
+  \begin{fixedarea}[.5]
     \begin{onlyenv}<1| trans:0>
 \begin{lstlisting}
 (define (for n r i)
@@ -555,7 +556,7 @@
   (for 1 1))
 \end{lstlisting}
     \end{onlyenv}
-  \end{overlayarea}
+  \end{fixedarea}
   \onslide<3->
   Вложените дефиниции ``виждат'' символите на обхващащите им дефиниции.
 \end{frame}
@@ -565,7 +566,7 @@
 
   \begin{columns}[T,onlytextwidth]
     \begin{column}{.63\textwidth}
-      \scriptsize\lstscriptsize
+      \sizeboth\scriptsize
       \begin{center}
         % TODO: да се реализира с foreach
         \evalchain[(-1)]{
@@ -647,8 +648,7 @@
 \begin{frame}
   \frametitle{Оценка на \tt{let}}
 
-  % TODO: примерът да бъде за area, понеже там се вижда разлика между let и let*
-  \scriptsize\lstscriptsize
+  \sizeboth\scriptsize
   \begin{columns}[T,onlytextwidth]
     \begin{column}{.55\textwidth}
       \begin{center}
@@ -736,8 +736,7 @@
 \begin{frame}
   \frametitle{Оценка на \tt{let*}}
 
-  \scriptsize\lstscriptsize
-  % TODO: примерът да бъде за area, понеже там се вижда разлика между let и let*
+  \sizeboth\scriptsize
   \begin{columns}[T,onlytextwidth]
     \begin{column}{.55\textwidth}
       \begin{center}
@@ -819,7 +818,8 @@
     }
   \end{center}
   \vspace{-4ex}
-  \nxt{Линеен рекурсивен процес}
+  \onslide<+->
+  Линеен рекурсивен процес
 \end{frame}
 
 \begin{frame}[fragile]
@@ -865,7 +865,8 @@
     }
   \end{center}
   \vspace{-1ex}
-  \nxt{Логаритмичен рекурсивен процес}
+  \onslide<+->
+  Логаритмичен рекурсивен процес
 \end{frame}
 
 \subsection{Дървовидни рекурсивни процеси}

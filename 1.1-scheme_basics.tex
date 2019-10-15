@@ -56,7 +56,7 @@
     \item Низови константи (\lst{"Scheme"}, \lst{"hi "})
     \end{itemize}
   \item Символи (\lst{f}, \lst{square}, \lst{+}, \lst{find-min})
-  \item Комбинации\\[1em]
+  \item Комбинации\\[2ex]
     \alert({}<израз$_1$> <израз$_2$> \ldots <израз$_n$>\alert)
   \end{itemize}
 \end{frame}
@@ -86,7 +86,7 @@
 \begin{frame}
   \frametitle{Основно правило за оценяване}
 
-  Оценка на комбинация \textbf{(основно правило за оценяване)}\\[1em]
+  Оценка на комбинация \textbf{(основно правило за оценяване)}\\[2ex]
   \begin{equation*}
     \newcommand{\evals}{\text{\small се оценява до}}
     \underbrace{%
@@ -104,31 +104,33 @@
         \bda\\
         f(v_1,\ldots,v_n)
       \end{array}}
-  \end{equation*}\\[1em]
+  \end{equation*}\\[2ex]
   \pause
   Ако $f$ не е функция --- \alert{грешка!}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Пример за оценяване на комбинации}
-  \begin{equation*}
-    \underbrace{%
-      \begin{tabular}{cccc}
-        \tt{(+}&$\underbrace{\tt{(* 2 3)}}_{}$&$\underbrace{\tt{(- 14 6 5)}}_{}$&\tt)\\
-               &\bda&\bda&\\
-        \tt{(+}&\tt6&\tt3&\tt)
-      \end{tabular}
-    }_{%
-      \begin{tabular}{c}
-        \bda\\
-        \tt 9
-      \end{tabular}}
-  \end{equation*}\\[2em]
-  \pause
-  \onslide<+->
-  \begin{center}
-    \evalstoerrp {(1 2 3)}
-  \end{center}
+  \begin{fixedarea}[.7]
+    \begin{equation*}
+      \underbrace{%
+        \begin{tabular}{cccc}
+          \tt{(+}&$\underbrace{\tt{(* 2 3)}}_{}$&$\underbrace{\tt{(- 14 6 5)}}_{}$&\tt)\\
+                 &\bda&\bda&\\
+          \tt{(+}&\tt6&\tt3&\tt)
+        \end{tabular}
+      }_{%
+        \begin{tabular}{c}
+          \bda\\
+          \tt 9
+        \end{tabular}}
+    \end{equation*}\\[4ex]
+    \pause
+    \onslide<+->
+    \begin{center}
+      \evalstoerrp {(1 2 3)}
+    \end{center}
+  \end{fixedarea}
 \end{frame}
 
 \section{Дефиниции в Scheme}
@@ -219,21 +221,15 @@
 \begin{frame}
   \frametitle{Оценяване на комбинации с дефинирани функции}
   \begin{center}
-    \begin{tabular}{c}
-      \lst{(f 2 4)}\\
-      \pause\nxt{\bda\\
-      \lst{(+ (square (1+ 2)) (square 4) 5)}\\
-      \nxt{\bda\\
-      \lst{(+ (square (+ 2 1)) (square 4) 5)}\\
-      \nxt{\bda\\
-      \lst{(+ (square 3) (square 4) 5)}\\
-      \nxt{\bda\\
-      \lst{(+ (* 3 3) (* 4 4) 5)}\\
-      \nxt{\bda\\
-      \lst{(+ 9 16 5)}\\
-      \nxt{\bda\\
-      \lst{30}}}}}}}
-    \end{tabular}
+    \evalchain{
+      "(f 2 4)" ->
+      "(+ (square (1+ 2)) (square 4) 5)" ->
+      "(+ (square (+ 2 1)) (square 4) 5)" ->
+      "(+ (square 3) (square 4) 5)" ->
+      "(+ (* 3 3) (* 4 4) 5)" ->
+      "(+ 9 16 5)" ->
+      "30"
+    }
   \end{center}
 \end{frame}
 
@@ -392,7 +388,7 @@
     \lstinline!(and x y)! &\eqv& \lstinline!(if x y #f)!\\
     \lstinline!(or x y)! &\eqv& \lstinline!(if x #t y)!
   \end{tabular}
-\pause
+  \pause
 \begin{lstlisting}
 (define (divisible? a b)
   (= (remainder a b) 0))
