@@ -274,24 +274,15 @@
   \pause
   \begin{center}
     \begin{tikzpicture}
-      \matrix [
-      matrix of math nodes,
-      nodes={
-        rectangle,
-        minimum height=4ex,
-        minimum width=6.5ex,
-        text height=1ex,
-        text depth=0.25ex,
-        draw},
-      row sep=8ex] {
-        |(a1)| a_1 & |(a2)| a_2 & \ldots & |(an)| a_n \\
-        |(fa1)| f(a_1) & |(fa2)| f(a_2) &  \ldots & |(fan)| f(a_n) \\
+      \matrix [widearray,row sep=8ex] {
+        |(a1)| a_1 \& |(a2)| a_2 \& \ldots \& |(an)| a_n \\
+        |(fa1)| f(a_1) \& |(fa2)| f(a_2) \&  \ldots \& |(fan)| f(a_n) \\
       };
-      \graph[use existing nodes,edges={thick,>=stealth}] {
+      \graph[transform] {
         a1 -> fa1;
         a2 -> fa2;
         an -> fan; };
-      \node[ellipse,draw,fill={white},below=3.5ex of a2.east,minimum width=26ex] {$f$};
+      \node[ellipse,draw,fill=diagramblue,below=3.5ex of a2.east,minimum width=13em] {$f$};
     \end{tikzpicture}
   \end{center}
   \pause
@@ -327,20 +318,11 @@
 \pause
   \begin{center}
     \begin{tikzpicture}
-      \matrix [
-      matrix of math nodes,
-      nodes={
-        rectangle,
-        minimum height=4ex,
-        minimum width=6.5ex,
-        text height=1ex,
-        text depth=0.25ex,
-        draw},
-      row sep=7ex] {
-        |(a1)| a_1 & |(dots1)| \ldots & |(ai)| a_i & |(dots2)| \ldots & |(aj)| a_j & |(dots3)| \ldots & |(ak)| a_k & |(dots4)| \ldots & |(an)| a_n \\
-        && |(pa1)| a_1 & |(pai)| a_i &|(pak)| a_k& |(pdots)| \ldots \\
+      \matrix [widearray,row sep=7ex] {
+        |(a1)| a_1 \& |(dots1)| \ldots \& |(ai)| a_i \& |(dots2)| \ldots \& |(aj)| a_j \& |(dots3)| \ldots \& |(ak)| a_k \& |(dots4)| \ldots \& |(an)| a_n \\
+        \&\& |(pa1)| a_1 \& |(pai)| a_i \&|(pak)| a_k\& |(pdots)| \ldots \\
       };
-      \graph[use existing nodes,edges={thick,>=stealth}] {
+      \graph[transform] {
         a1.south -> pa1.north;
         ai.south -> pai.north;
         ak.south -> pak.north;
@@ -350,9 +332,16 @@
         dots3.south --[shorten >=5ex] pak.north west;
         dots4.south --[shorten >=6ex] pdots.north;
         an.south --[shorten >=9ex] pdots.north east;
-
       };
-      \node[trapezium,trapezium angle=98,trapezium stretches=true,right,draw,fill={white},below=4ex of a2.east,minimum width=50ex,minimum height=3ex] {$p$};
+      \node[trapezium,
+      trapezium angle=98,
+      trapezium stretches=true,
+      right,
+      draw,
+      fill=diagramblue,
+      below=2ex of aj,
+      minimum width=25em,
+      minimum height=3ex] {$p$};
     \end{tikzpicture}
   \end{center}
 \pause
@@ -709,27 +698,23 @@
   \item \tta{(map} <$n$-местна функция> $l_1 \ldots l_n$\tta)
   \item Конструира нов списък, като прилага <$n$-местна функция> над съответните поредни елементи на списъците $l_1, \ldots, l_n$\\
     \onslide<+->
-    \begin{tikzpicture}[
-      comb/.style={
-        circle,minimum size=4ex}]
+    \begin{tikzpicture}[comb/.style={circle,minimum size=1.5em}]
     \scriptsize
-       \matrix [
-      matrix of math nodes,
-      nodes={
-        rectangle,
-        minimum height=4ex,
-        minimum width=6.5ex,
-        text height=1ex,
-        text depth=0.25ex,
-        draw}] {
-        |(a1)| a_1 & |(a2)| a_2 & \ldots & |(ak)| a_k && |(b1)| b_1 & |(b2)| b_2 & \ldots & |(bk)| b_k\\[4.5ex]
-        &&|(pab1)[comb]| f & |(pab2)[comb]| f &  & |(pabk)[comb]| f \\[2ex]
-        &&|(fab1)| c_1 & |(fab2)| c_2 & \ldots & |(fabk)| c_k\\
+       \matrix [widearray,nodes in empty cells=false] {
+        |(a1)| a_1 \& |(a2)| a_2 \& \ldots \& |(ak)| a_k \&\& |(b1)| b_1 \& |(b2)| b_2 \& \ldots \& |(bk)| b_k\\[12ex]
+        \&\&|(pab1)[comb]| f \& |(pab2)[comb]| f \&  \& |(pabk)[comb]| f \\[2ex]
+        \&\&|(fab1)| c_1 \& |(fab2)| c_2 \& \ldots \& |(fabk)| c_k\\
       };
-      \graph[use existing nodes,edges={thick,>=stealth}] {
-        {a1.south, b1.south} -> pab1 -> fab1;
-        {a2.south, b2.south} -> pab2 -> fab2;
-        {ak.south, bk.south} -> pabk -> fabk;
+      \graph[transform] {
+        pab1 -> fab1;
+        pab2 -> fab2;
+        pabk -> fabk;
+        a1.south ->[bl] pab1;
+        a2.south ->[bl] pab2;
+        ak.south ->[bl] pabk;
+        b1.south ->[br] pab1;
+        b2.south ->[br] pab2;
+        bk.south ->[br] pabk;
       };
     \end{tikzpicture}
   \item \evalstop{(map + '(1 2 3) '(4 5 6))}{(5 7 9)}
