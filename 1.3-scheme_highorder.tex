@@ -3,7 +3,7 @@
 
 \title{Функции от по-висок ред}
 
-\date{9 октомври 2019 г.}
+\date{9--16 октомври 2019 г.}
 
 \lstset{language=Scheme}
 
@@ -35,7 +35,7 @@
   \item \alt<17>{\lst{(define (branch p? f g x) ((if (p? x) f g) x))}}
     {\lst{(define (branch p? f g x) (if (p? x) (f x) (g x)))}}
   \item \evalstop{(branch odd? exp fact 4)}{24}
-  \item \verb#(define (id x) x)#
+  \item \lst{(define (id x) x)}
   \item \evalstop{(branch number? log id \"1\")}{\"1\"}
   \item \evalstop{(branch string? number? procedure? symbol?)}{\#t}
   \end{itemize}
@@ -97,38 +97,36 @@
 \begin{frame}[fragile]
   \frametitle{Приложения на \tt{sum}}
 
-
-  \begin{overlayarea}{\textwidth}{.8\textheight}
-    Решение на задачите за суми чрез \tt{sum}:
-    \begin{tabular}[t]{p{.3\linewidth}p{.7\linewidth}}
+  \begin{overlayarea}{\textwidth}{.87\textheight}
+    Решение на задачите за суми чрез \tt{sum}:\\
+    \begin{tabular}[t]{p{.26\textwidth}p{.66\textwidth}}
       \[\sum_{i=k}^{100} i^2\]%
       &%
         \onslide<2->
-\vspace{-1em}
-\begin{lstlisting}
+\begin{tabularlstlisting}
 (define (square x) (* x x))
 (define (1+ x) (+ x 1))
 (define (sum1 k) (sum k 100 square 1+))
-\end{lstlisting}\\[-2em]
+\end{tabularlstlisting}\\
       \only<3->{%
       \[\only<5->{\Delta x\,}\sum_{\substack{i=a\\i\rightarrow i + \Delta x}}^b
       \only<-4>{\Delta x\,}f(i)\]}
       &%
         \onslide<4->%
-\begin{lstlisting}
+\begin{tabularlstlisting}
 (define (sum2 a b f dx)
   @\only<4>{(define (term x) (* dx (f x)))}@
   (define (next x) (+ x dx))
   @\only<5->{(* dx }@(sum a b @\alt<4>{term}f@ next))@\only<5->)@
-\end{lstlisting}\\[-2em]
+\end{tabularlstlisting}\\
       \only<6->{%
       \[\sum_{\substack{i=x\\i\rightarrow e^i}}^{10^{1000}} i\]}
       &
         \onslide<7->
-\begin{lstlisting}
+\begin{tabularlstlisting}
 (define (sum3 x)
 (sum x (expt 10 1000) id exp))
-\end{lstlisting}
+\end{tabularlstlisting}
     \end{tabular}
   \end{overlayarea}
 \end{frame}
@@ -381,7 +379,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[label=current]
+\begin{frame}
   \frametitle{Оценка на \tt{lambda}}
 
   \scriptsize\lstscriptsize

@@ -415,3 +415,11 @@
 \newcommand{\lstscriptsize}{\lstsize\scriptsize}
 \newcommand{\lstfootnotesize}{\lstsize\footnotesize}
 \newcommand{\lsttiny}{\lstsize\tiny}
+
+% листинг в таблица
+% https://tex.stackexchange.com/a/392601
+\lstnewenvironment{tabularlstlisting}[1][]
+{%
+  \lstset{aboveskip=-1.3ex,belowskip=-3.5ex,#1}%
+}
+{}
