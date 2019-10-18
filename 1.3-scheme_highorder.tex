@@ -387,19 +387,21 @@
   \begin{fixedarea}
     \begin{columns}[T,onlytextwidth]
       \begin{column}{.5\textwidth}
-        \begin{center}
-          \evalchain{
-            "\lst{(define (n+ n)}\\[0pt]\hskip2ex\lst{(lambda (i) (+ i n)))}"[env=E,align=left] -!-
-            "\lst{(define 1+ (n+ 1))}"[envp=E,skip] -!-
-            "\lst{(define 5+ (n+ 5))}"[envp=E,skip] -!-
-            "\lst{(1+ 7)}"[env=E] ->
-            {[name=first]  "\lst{(+ i n)}"[env=E_3]} ->
-            "8" -!-
-            "\lst{(5+ 7)}"[env=E] ->
-            {[name=second] "\lst{(+ i n)}"[env=E_4]} ->
-            "12";
-          }
-        \end{center}
+        \evalchain{
+          "\lst{(define (n+ n)}\\[0pt]\hskip2ex\lst{(lambda (i) (+ i n)))}"[env=E,align=left] -!-
+          "\lst{(define 1+ (n+ 1))}"[env=E] ->
+          % понеже низовете съвпадат е необходимо да се посочи изрично различно име за съответните възли
+          {[name=oneplus] "\lst{(lambda (i) (+ i n))}"[env=E_1]} -!-
+          "\lst{(define 5+ (n+ 5))}"[env=E] ->
+          {[name=fiveplus] "\lst{(lambda (i) (+ i n))}"[env=E_1]} -!-
+          "\lst{(1+ 7)}"[env=E] ->
+          % понеже низовете съвпадат е необходимо да се посочи изрично различно име за съответните възли
+          {[name=first]  "\lst{(+ i n)}"[env=E_3]} ->
+          "8" -!-
+          "\lst{(5+ 7)}"[env=E] ->
+          {[name=second] "\lst{(+ i n)}"[env=E_4]} ->
+          "12";
+        }
       \end{column}
       \begin{column}{.5\textwidth}
         \begin{tikzpicture}
