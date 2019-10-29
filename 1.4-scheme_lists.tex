@@ -3,7 +3,7 @@
 
 \title{Списъци}
 
-\date{23 октомври 2019 г.}
+\date{23--30 октомври 2019 г.}
 
 \lstset{language=Scheme}
 
@@ -623,10 +623,10 @@
   \onslide<+->
   \begin{visibleenv}<14>
 \begin{lstlisting}
-(define (rcons x l) (append l (list x)))\end{lstlisting}%
+(define (snoc x l) (append l (list x)))\end{lstlisting}%
   \end{visibleenv}%
 \begin{lstlisting}
-(define (deep-reverse l) (deep-foldr @\rvl{'()} \rvl{id} \rvl{rcons}@ l))
+(define (deep-reverse l) (deep-foldr @\rvl{'()} \rvl{id} \rvl{snoc}@ l))
 \end{lstlisting}
 \end{frame}
 
