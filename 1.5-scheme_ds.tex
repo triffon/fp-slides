@@ -257,8 +257,8 @@
   \frametitle{Аритметични операции}
 
   \small
-  \begin{columns}[t,onlytextwidth]
-    \begin{column}{0.3\textwidth}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.34\textwidth}
       \vspace{4ex}
       \begin{equation*}
         \frac{n_1}{d_1}\frac{n_2}{d_2} = \frac{n_1n_2}{d_1d_2}
@@ -277,20 +277,22 @@
       \end{uncoverenv}
     \end{column}
 
-    \begin{column}{0.7\textwidth}
+    \begin{column}{0.66\textwidth}
 \begin{lstlisting}
 (define (*rat p q)
-  (make-rat (* (get-numer p) (get-numer q))
-            (* (get-denom p) (get-denom q))))
+  (make-rat
+    (* (get-numer p) (get-numer q))
+    (* (get-denom p) (get-denom q))))
 \end{lstlisting}
       \begin{uncoverenv}<2->
 \begin{lstlisting}
 (define (+rat p q)
-  (make-rat (+ (* (get-numer p)
-                  (get-denom q))
-               (* (get-denom p)
-                  (get-numer q)))
-            (* (get-denom p) (get-denom q))))
+  (make-rat
+    (+ (* (get-numer p)
+          (get-denom q))
+       (* (get-denom p)
+          (get-numer q)))
+    (* (get-denom p) (get-denom q))))
 \end{lstlisting}
       \end{uncoverenv}
       \begin{uncoverenv}<3->
@@ -316,8 +318,9 @@
   \begin{overprint}
 \begin{semiverbatim}
 (define (my-exp x n)
-  (accumulate \rvl{+rat} \rvl{(make-rat 0 1)} 0 n
-              \rvl{(lambda (i) (make-rat (pow x i) (fact i)))} 1+))
+  (accumulate
+    \rvl{+rat} \rvl{(make-rat 0 1)} 0 n
+    \rvl{(lambda (i) (make-rat (pow x i) (fact i)))} 1+))
 \end{semiverbatim}
   \end{overprint}
 \end{frame}
@@ -364,6 +367,7 @@
     \end{tikzpicture}
   \end{center}
   \pause
+  \vspace{-.5ex}
 \begin{lstlisting}
 (define (make-rat n d)
   @\alert{(cons 'rat}@
@@ -840,7 +844,7 @@
   \frametitle{Абстракция за граф}
 
   Абстракция чрез капсулация
-  \small
+  \scriptsize
 \begin{lstlisting}
 (define (make-graph g)
   (define (self prop . params)
@@ -938,7 +942,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[t,fragile]
+\begin{frame}[fragile]
   \frametitle{Търсене на път в дълбочина}
 
   \textbf{Задача.} Да се намери път от \tt u до \tt v, ако такъв има.\\
@@ -950,7 +954,7 @@
   \end{itemize}
   \vspace{-2ex}
   \onslide<+-> \small
-    \begin{overlayarea}{\textwidth}{24ex}
+    \begin{overlayarea}{\textwidth}{26.5ex}
       \begin{onlyenv}<6->
 \begin{lstlisting}
 (define (dfs-path u v g)
@@ -982,7 +986,6 @@
 
 \begin{frame}[fragile]
   \frametitle{Схема на обхождане в ширина}
-
   \begin{onlyenv}<1-2>
     Обхождане, започващо от връх \tt u:
     \begin{itemize}
@@ -993,9 +996,9 @@
         ниво $n+1$
       \end{itemize}
     \end{itemize}
-  \end{onlyenv}
-  \begin{visibleenv}<2->
-\small
+  \end{onlyenv}%
+  \begin{visibleenv}<2->%
+    \small%
 \begin{lstlisting}
 (define (bfs u g)
   (define (bfs-level l)
@@ -1006,15 +1009,17 @@
   (bfs-level (list u)))
 \end{lstlisting}
   \end{visibleenv}
-  \begin{itemize}[<+(3)->]
-  \item \alert{Какво се случва ако графът е цикличен?}
-    \begin{itemize}
-    \item Ако има път: намира го.
-    \item Ако няма път: програмата зацикля! Как да се справим с този проблем?
-    \item Трябва да помним през кои върхове сме минали!
-    \item Нивото трябва да представлява \alert{списък от пътища}
+  \begin{onlyenv}<4->
+    \begin{itemize}[<+(4)->]
+    \item \alert{Какво се случва ако графът е цикличен?}
+      \begin{itemize}
+      \item Ако има път: намира го.
+      \item Ако няма път: програмата зацикля! Как да се справим с този проблем?
+      \item Трябва да помним през кои върхове сме минали!
+      \item Нивото трябва да представлява \alert{списък от пътища}
+      \end{itemize}
     \end{itemize}
-  \end{itemize}
+  \end{onlyenv}
 \end{frame}
 
 \begin{frame}[fragile]
