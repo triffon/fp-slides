@@ -96,10 +96,46 @@
   \toval{#2next}{#4}
 }
 
-% следваща двойна клетка с данни
-\newcommand{\nextcell}[3]{
-  \pointcellx[right=2em of #3next]{#1}{#2}
-  \draw[ptr] (#3next.center) to (#1data);
+% следваща двойна клетка
+\newcommand{\nextcell}[3][]{
+  \pointcell[right=2em of #3next,#1]{#2}
+  \draw[ptr] (#3next.center) to (#2data);
+}
+
+% следваща двойна клетка с една стойност
+\newcommand{\nextcellx}[4][]{
+  \pointcellx[right=2em of #4next,#1]{#2}{#3}
+  \draw[ptr] (#4next.center) to (#2data);
+}
+
+% следваща двойна клетка с две стойности
+\newcommand{\nextcellxx}[5][]{
+  \pointcellxx[right=2em of #5next,#1]{#2}{#3}{#4}
+  \draw[ptr] (#5next.center) to (#2data);
+}
+
+% многоточие в свързана верига
+\newcommand{\nextdots}[1]{
+  \node (dots) [right=1em of #1] {\ldots\hspace{1em}};
+  \draw[ptr] (#1next.center) to (dots);
+}
+
+% следваща клетка след многоточие
+\newcommand{\dotsnextcell}[2][]{
+  \pointcell[right=2em of dots,#1]{#2}
+  \draw[ptr] (dots.east) to (#2data);
+}
+
+% следваща клетка след многоточие с една стойност
+\newcommand{\dotsnextcellx}[3][]{
+  \pointcellx[right=2em of dots,#1]{#2}{#3}
+  \draw[ptr] (dots.east) to (#2data);
+}
+
+% следваща клетка след многоточие с две стойности
+\newcommand{\dotsnextcellxx}[4][]{
+  \pointcellxx[right=2em of dots,#1]{#2}{#3}{#4}
+  \draw[ptr] (dots.east) to (#2data);
 }
 
 % зачертана кутия, означаваща NULL указател

@@ -1,12 +1,30 @@
-\documentclass{beamer}
+\documentclass[alsotrans]{beamerswitch}
 \usepackage{fprog}
 
 \title{Структури от данни в Scheme}
 \subtitle{матрици, дървета, асоциативни списъци, графи}
 
-\date{7--14 ноември 2018 г.}
+\date{29 октомври 2019 г.}
 
 \lstset{language=Scheme}
+
+\newcommand{\samplegraph}{%
+\begin{tikzpicture}[>=stealth,every node/.style={draw,circle,fill=diagramblue},scale=1.2]
+  \node (1) at (1,2)     {1};
+  \node (2) at (3,2.2)   {2};
+  \node (3) at (2,1)     {3};
+  \node (4) at (0.8,0.2) {4};
+  \node (5) at (2.5,0)   {5};
+  \node (6) at (3.5,1.2)   {6};
+  \graph {
+    (1) -> {(2), (3)};
+    (2) -> {(3), (6)};
+    (3) -> {(4), (6)};
+    (4) -> {(1), (5)};
+    (5) -> (3);
+    (6) -> (5);
+  };
+\end{tikzpicture}}
 
 \begin{document}
 
@@ -33,11 +51,11 @@
       \end{equation*}
     \end{column}
     \begin{column}{0.5\textwidth}
-      \vspace{1em}
+      \vspace{2ex}
       \tt{((1 2 3) (4 5 6))}
     \end{column}
   \end{columns}
-  \vspace{1em}
+  \vspace{2ex}
   \pause
   Проверка за коректност:
   \pause
@@ -82,8 +100,7 @@
 \end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[fragile,fragile]
+\begin{frame}[fragile]
   \frametitle{Разширени операции}
 
   Намиране на ред и стълб по индекс
@@ -126,7 +143,7 @@
 (define (sum-matrices m1 m2) (map sum-vectors m1 m2))
 \end{lstlisting}
   \pause
-  \vspace{1em}
+  \vspace{2ex}
   Умножение на матрици \pause
   ($c_{i,j} = \vec a_i\cdot \vec b^T_j = \sum_{k=0}^n A_{i,k}B_{k,j}$)
   \pause
@@ -141,7 +158,6 @@
             m1)))
 \end{lstlisting}
 \end{frame}
-
 
 \section{Абстракция със структури от данни}
 
@@ -188,34 +204,24 @@
   \end{itemize}
 \end{frame}
 
-
 \begin{frame}
   \frametitle{Нива на абстракция}
 
-  \renewcommand{\bua}{\bigg\uparrow}
-
   \begin{center}
-    \begin{tabular}{|c|}
-      \hline
-      приложни програми\\
-      \\
-      \hline
-      \multicolumn 1c\bua\\
-      \hline
-      аритметични операции\\
-      (+, -, *, /, =, <, >, <=, >=)\\
-      \hline
-      \multicolumn 1c\bua\\
-      \hline
-      базови операции\\
-      (конструктор, селектори за числител и знаменател)\\
-      \hline
-      \multicolumn 1c\bua\\
-      \hline
-      физическо представяне\\
-      (наредена двойка от цели числа)\\
-      \hline
-    \end{tabular}
+    \begin{tikzpicture}
+      \graph[nodes={
+        draw,
+        minimum width=24em,
+        minimum height=5ex,
+        align=center},
+      edges={thick,>=stealth},
+      grow up sep=4ex] {
+      a[as={физическо представяне\\(наредена двойка от цели числа)}] ->
+      b[as={базови операции\\(конструктор, селектори за числител и знаменател)}] ->
+      c[as={аритметични операции\\(\tt+, \tt-, \tt*, \tt/, \tt=, \tt<, \tt>, \tt{<=}, \tt{>=})}] ->
+      d[as={приложни програми}]
+      };
+    \end{tikzpicture}
   \end{center}
 \end{frame}
 
@@ -224,15 +230,12 @@
 \begin{frame}[fragile]
   \frametitle{Рационални числа}
 
-  Физическо представяне\\[1em]
+  Физическо представяне\\[2ex]
   \begin{center}
-    \begin{tabular}{cc}
-      \hline
-      \pointcell\\
-      \hline
-      \bda&\bda\\
-      \fbox{числител} &\fbox{знаменател}
-    \end{tabular}\\[1em]
+    \small
+    \begin{tikzpicture}
+      \pointcellxx[nodes={minimum width=8em}] a{\text{числител}}{\text{знаменател}}
+    \end{tikzpicture}
   \end{center}
   \pause
   Базови операции
@@ -242,7 +245,7 @@
   \item \alt<+->{\lst{(define get-denom cdr)}}{\lst{(define (get-denom r) (cdr r))}}
   \end{itemize}
   \onslide<+->
-  \vspace{1em}
+  \vspace{2ex}
   По-добре:
 \begin{lstlisting}
 (define (make-rat n d)
@@ -256,17 +259,17 @@
   \small
   \begin{columns}[t,onlytextwidth]
     \begin{column}{0.3\textwidth}
-      \vspace{2em}
+      \vspace{4ex}
       \begin{equation*}
         \frac{n_1}{d_1}\frac{n_2}{d_2} = \frac{n_1n_2}{d_1d_2}
       \end{equation*}
-      \vspace{4em}
+      \vspace{8ex}
       \begin{uncoverenv}<2->
         \begin{equation*}
           \frac{n_1}{d_1} + \frac{n_2}{d_2} = \frac{n_1d_2 + n_2d_1}{d_1d_2}
         \end{equation*}
       \end{uncoverenv}
-      \vspace{4em}
+      \vspace{8ex}
       \begin{uncoverenv}<3->
         \begin{equation*}
           \frac{n_1}{d_1} < \frac{n_2}{d_2} \alt<3>{\leftrightarrow}{\alert{\nleftrightarrow}} n_1d_2 < n_2d_1
@@ -322,9 +325,9 @@
 \begin{frame}<1-2>[label=ratnorm,fragile]
   \frametitle{Нормализация}
 
-  \textbf{Проблем:} Числителят и знаменателят стават много големи!\\[1em]
+  \textbf{Проблем:} Числителят и знаменателят стават много големи!\\[2ex]
   \pause
-  \textbf{Проблем:} \evalsto{(<rat (make-rat 1 2) (make-rat 1 -2))}{\#t}\\[1em]
+  \textbf{Проблем:} \evalsto{(<rat (make-rat 1 2) (make-rat 1 -2))}{\#t}\\[2ex]
   \pause
   \textbf{Идея:} Да работим с \emph{нормализирани} дроби $\frac p q$, където $p \in \mathbb Z, q \in \mathbb N^+$ и $gcd(p,q) = 1$.
   \pause
@@ -355,13 +358,10 @@
   \textbf{Идея:} Да добавим ``етикет'' на обекта
   \small
   \begin{center}
-    \begin{tabular}{cc@{}c@{}cc}
-      \cline{1-2}\cline{4-5}
-      \pointcell&$\nextarrow$&\pointcell\\
-      \cline{1-2}\cline{4-5}
-      \bda&&&\bda&\bda\\
-      \fbox{\tt{rat}}&&&\fbox{числител}&\fbox{знаменател}
-    \end{tabular}
+    \begin{tikzpicture}
+      \pointcellx a{\texttt{rat}}
+      \nextcellxx[nodes={minimum width=8em}] b{\text{числител}}{\text{знаменател}}a
+    \end{tikzpicture}
   \end{center}
   \pause
 \begin{lstlisting}
@@ -406,7 +406,7 @@
 \begin{frame}[fragile]
   \frametitle{Капсулация на базови операции}
 
-  \textbf{Проблем:} операциите над СД са видими глобално\\[1em]
+  \textbf{Проблем:} операциите над СД са видими глобално\\[2ex]
   \pause
   \textbf{Идея:} да ги направим ``private''
   \pause
@@ -508,7 +508,7 @@
 \begin{frame}[fragile]
   \frametitle{Представяне на двоични дървета}
 
-  Представяме двоични дървета като вложени списъци от три елемента:\\[1em]
+  Представяме двоични дървета като вложени списъци от три елемента:\\[2ex]
   \begin{columns}[t,onlytextwidth]
     \begin{column}{0.5\textwidth}
       \centering
@@ -521,7 +521,7 @@
     \end{column}
   \end{columns}
   \pause
-  \vspace{1em}
+  \vspace{2ex}
   Пример:
   \begin{columns}[t,onlytextwidth]
     \begin{column}{0.5\textwidth}
@@ -616,25 +616,30 @@
 
 \subsection{Дефиниция}
 
-\begin{frame}
+\begin{frame}[label=current]
   \frametitle{Асоциативни списъци}
 
   \begin{definition}
     Асоциативните списъци (още: речник, хеш, map) са списъци от наредени двойки \tt(<ключ> \tt. <стойност>\tt). <ключ> и <стойност> може да са произволни S-изрази.
   \end{definition}
-  \vspace{1em}
-  \tt{((}$K_1$ \tt. $V_1$\tt) \tt($K_1$ \tt. $V_2$\tt) \ldots \tt($K_n$ \tt. $V_n$\tt{))}\\[1em]
-  \begin{tabular}{*2{cc@{}c@{}}@{\hskip 1ex}cc@{}cc}
-    \cline{1-2}\cline{4-5}\cline{9-10}
-    \nextcell&\nextcell&\ldots&$\nextarrow$&\nilcell\\
-    \cline{1-2}\cline{4-5}\cline{9-10}
-    \bda&&&\bda&&&&&\bda\\
-    \cline{1-2}\cline{4-5}\cline{9-10}
-    \pointcell&&\pointcell&&&&\pointcell\\
-    \cline{1-2}\cline{4-5}\cline{9-10}
-    \bda&\bda&&\bda&\bda&&&&\bda&\bda\\
-    \fbox{$K_1$}&\fbox{$V_1$}&&\fbox{$K_2$}&\fbox{$V_2$}&&&&\fbox{$K_n$}&\fbox{$V_n$}
-  \end{tabular}
+  \vspace{2ex}
+  \tt{((}$K_1$ \tt. $V_1$\tt) \tt($K_1$ \tt. $V_2$\tt) \ldots \tt($K_n$ \tt. $V_n$\tt{))}\\[2ex]
+  \begin{tikzpicture}
+    \pointcell{a1}
+    \nextcell{a2}{a1}
+    \nextdots{a2}
+    \dotsnextcell{an}
+    \nullptr{annext}
+
+    \pointcellxx[below=2ex of a1]{kv1}{K_1}{V_1}
+    \draw[ptr] (a1data) to (kv1data);
+    
+    \pointcellxx[below=2ex of a2]{kv2}{K_2}{V_2}
+    \draw[ptr] (a2data) to (kv2data);
+    
+    \pointcellxx[below=2ex of an]{kvn}{K_n}{V_n}
+    \draw[ptr] (andata) to (kvndata);
+  \end{tikzpicture}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -646,7 +651,7 @@
   \item \tt{((l1 1 8) (l2 10 1 2) (l3))}
   \item \tt{((al1 (1 . 2) (2 . 3)) (al2 (b)) (al3 (a . b) (c . d)))}
   \end{itemize}
-  \vspace{1em}
+  \vspace{2ex}
   \onslide<+->
   \textbf{Пример:}
   Създаване на асоциатвен списък по списък от ключове и функция:
@@ -759,13 +764,13 @@
   \pause
   \textbf{Формула:} $\{f(x)\,|\,x \in l \}$\\
   \pause
-  \textbf{Решение:} \lst{(map f l)}\\[1em]
+  \textbf{Решение:} \lst{(map f l)}\\[2ex]
   \pause
   \textbf{Задача.} Да се изберат тези елементи от l, които удовлетворяват p.\\
   \pause
   \textbf{Формула:} $\{x\,|\,x \in l \wedge p(x) \}$\\
   \pause
-  \textbf{Решение:} \lst{(filter p l)}\\[1em]
+  \textbf{Решение:} \lst{(filter p l)}\\[2ex]
   \pause
   \textbf{Задача.} Да се провери дали всички елементи на l удовлетворяват p.\\
   \pause
@@ -779,26 +784,6 @@
 \end{frame}
 
 \section{Графи}
-
-\usetikzlibrary{graphs,arrows.meta}
-
-\newcommand{\samplegraph}{%
-\begin{tikzpicture}[>=LaTeX,every node/.style={draw,circle,fill=diagramblue},scale=1.2]
-  \node (1) at (1,2)     {1};
-  \node (2) at (3,2.2)   {2};
-  \node (3) at (2,1)     {3};
-  \node (4) at (0.8,0.2) {4};
-  \node (5) at (2.5,0)   {5};
-  \node (6) at (3.5,1.2)   {6};
-  \graph {
-    (1) -> {(2), (3)};
-    (2) -> {(3), (6)};
-    (3) -> {(4), (6)};
-    (4) -> {(1), (5)};
-    (5) -> (3);
-    (6) -> (5);
-  };
-\end{tikzpicture}}
 
 \subsection{Представяне}
 
@@ -827,7 +812,7 @@
  \end{semiverbatim}
     \end{column}
   \end{columns}
-  \vspace{1em}
+  \vspace{2ex}
   Асоциативен списък, в който \alert{ключовете} са върховете, а \alert{стойностите} са списъци от техните деца.
 \end{frame}
 
@@ -891,7 +876,7 @@
   (filter (lambda (v) (null? (children v g))) (vertices g)))
 \end{lstlisting}
   \pause
-  \vspace{1em}
+  \vspace{2ex}
   \textbf{Задача. }Да се намерят родителите на даден връх.\\
   \pause
   \textbf{Решение. }\tt{parents(v, g)} $ = \{u\;|\;u \rightarrow v \}$
@@ -963,9 +948,9 @@
   \item \tt u = \tt v, или
   \item има дете \tt w $\leftarrow$ \tt u, така че има път от \tt w до \tt v
   \end{itemize}
-  \vspace{-1em}
+  \vspace{-2ex}
   \onslide<+-> \small
-    \begin{overlayarea}{\textwidth}{12em}
+    \begin{overlayarea}{\textwidth}{24ex}
       \begin{onlyenv}<6->
 \begin{lstlisting}
 (define (dfs-path u v g)

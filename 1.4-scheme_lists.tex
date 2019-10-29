@@ -152,13 +152,9 @@
   \pause
   \begin{tikzpicture}
     \pointcellx{a1}{a_1}
-    \nextcell{a2}{a_2}{a1}
-
-    \node (dots) [right=1em of a2] {\ldots\hspace{1em}};
-    \draw[ptr] (a2next.center) to (dots.west);
-
-    \pointcellx[right=2em of dots]{an}{a_n}
-    \draw[ptr] (dots.east) to (andata);
+    \nextcellx{a2}{a_2}{a1}
+    \nextdots{a2}
+    \dotsnextcellx{an}{a_n}
     \nullptr{annext}
   \end{tikzpicture}\\[3ex]
   \tt{($a_1$ . ($a_2$ . ( \ldots ( $a_n$ . () ) ) ) ) \eqv\ ($a_1$ $a_2$ \ldots\ $a_n$)}
