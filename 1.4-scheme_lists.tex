@@ -535,6 +535,7 @@
 \begin{frame}[fragile]
   \frametitle{Работа с дълбоки списъци}
 
+% TODO диаграма на списъка с наредени двойки
 \begin{verbatim}
 ((1 (2)) (((3) 4) (5 (6)) () (7)) 8)
 \end{verbatim}
@@ -595,6 +596,7 @@
 \end{lstlisting}
 \end{frame}
 
+% TODO: диаграма на дълбок списък без наредени двойки
 \begin{frame}[fragile]
   \frametitle{Свиване на дълбоки списъци}
 
@@ -680,7 +682,7 @@
   \item \evalstop{(maximum 7 3 10 2)}{10}
   \item \evalstop{(maximum 100)}{100}
   \item \evalstoerrp{(maximum)}
-  \item \lst{(define (g x y . l) (append (append x l) (append y l)))}
+  \item \lst{(define (g x y . l) (append x l y l))}
   \item \evalstop{(g '(1 2 3) '(4 5 6)))}{(1 2 3 4 5 6)}
   \item \evalstop{(g '(1 2 3) '(4 5 6) 7 8))}{(1 2 3 7 8 4 5 6 7 8)}
   \end{itemize}
