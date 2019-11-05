@@ -3,7 +3,7 @@
 
 \title{Мутиращи операции}
 
-\date{14 ноември 2018 г.}
+\date{5 ноември 2019 г.}
 
 \lstset{language=Scheme}
 
@@ -16,7 +16,7 @@
 \begin{frame}
   \frametitle{Мутиращи операции в Scheme}
 
-  Мутиращите операции в Scheme позволяват въвеждането на \alert{странични ефекти}.\\[2em]
+  Мутиращите операции в Scheme позволяват въвеждането на \alert{странични ефекти}.\\[4ex]
   \pause
   \textbf{Преглед:}
   \begin{itemize}[<+->]
@@ -40,8 +40,8 @@
     \end{itemize}
   \item Примери:
     \begin{itemize}
-    \item \lst{(define a 2)}\hspace{5ex}\evalsto{a}2
-    \item \lst{(set! a 5)}\hspace{7ex}\evalsto{a}5
+    \item \lst{(define a 2)}\hspace{3em}\evalsto{a}2
+    \item \lst{(set! a 5)}\hspace{4em}\evalsto{a}5
     \item \lst{(define (sum x)}\only<-.>{\tt{ (begin }}\lst{ (set! a (+ a x)) a}\only<-.>{\tt)}\tt)\pause
     \item \evalsto{(sum 10)}{15}
     \item \evalsto{(sum 10)}{25}
