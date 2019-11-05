@@ -641,15 +641,15 @@
 (define Y
   (lambda (gamma)
     ((lambda (gamma-inf) (gamma-inf gamma-inf))
-     (lambda (me) (lambda (n) ((gamma (me me) n)))))))
+     (lambda (me) (lambda (n) ((gamma (me me)) n))))))
    \end{lstlisting}%
     \end{onlyenv}%
     \begin{onlyenv}<+->%
 \begin{lstlisting}
 (define Y
   (lambda (gamma)
-    ((lambda (me) (lambda (n) ((gamma (me me) n))))
-     (lambda (me) (lambda (n) ((gamma (me me) n)))))))
+    ((lambda (me) (lambda (n) ((gamma (me me)) n)))
+     (lambda (me) (lambda (n) ((gamma (me me)) n))))))
 \end{lstlisting}
     \end{onlyenv}
   \end{fixedarea}
