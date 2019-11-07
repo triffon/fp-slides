@@ -4,7 +4,7 @@
 \title{Структури от данни в Scheme}
 \subtitle{матрици, дървета, асоциативни списъци, графи}
 
-\date{5 ноември 2019 г.}
+\date{6 ноември 2019 г.}
 
 \lstset{language=Scheme}
 
@@ -709,6 +709,9 @@
 (define (add-assoc key value alist)
   (cons (cons key value) (del-assoc key alist)))
 \end{lstlisting}
+    \begin{itemize}
+    \item А ако искаме да запазим реда на ключовете?
+    \end{itemize}
   \end{itemize}
 \end{frame}
 \begin{comment}
@@ -721,8 +724,7 @@
 (define (add-key-value key value alist)
    (let ((new-kv (cons key value)))
         (cond ((null? alist) (list new-kv))
-              ((eqv? (caar alist) key)
-               (cons new-kv (cdr alist)))
+              ((eqv? (caar alist) key) (cons new-kv (cdr alist)))
               (else (cons (car alist)
                     (add-key-value key value (cdr alist))))))
 \end{lstlisting}
