@@ -683,8 +683,8 @@
   \item \evalstop{(maximum 100)}{100}
   \item \evalstoerrp{(maximum)}
   \item \lst{(define (g x y . l) (append x l y l))}
-  \item \evalstop{(g '(1 2 3) '(4 5 6)))}{(1 2 3 4 5 6)}
-  \item \evalstop{(g '(1 2 3) '(4 5 6) 7 8))}{(1 2 3 7 8 4 5 6 7 8)}
+  \item \evalstop{(g '(1 2 3) '(4 5 6))}{(1 2 3 4 5 6)}
+  \item \evalstop{(g '(1 2 3) '(4 5 6) '(7 8))}{(1 2 3 7 8 4 5 6 7 8)}
   \end{itemize}
 \end{frame}
 
