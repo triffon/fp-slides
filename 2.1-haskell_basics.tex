@@ -1,4 +1,4 @@
-\documentclass[handout]{beamer}
+\documentclass[alsotrans]{beamerswitch}
 \usepackage{fprog}
 
 \title{Основни понятия в Haskell}
@@ -48,7 +48,8 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
 \begin{lstlisting}
 @студенти@ = [("@Иван@", 40000, 3.5), ("@Мария@", 60001, 5.5),
             ("@Петър@", 40002, 5.0), ("@Галя@", 40003, 4.75)]
-@избрани@ = foldr1 (++) [ ' ':@име@ | (@име,фн,оценка@) <- @студенти@,
+@избрани@ = foldr1 (++)
+                   [ ' ':@име@ | (@име,фн,оценка@) <- @студенти@,
                                   @оценка@ > 4.5, @фн@ < 60000 ]
 \end{lstlisting}
 \end{frame}
@@ -182,17 +183,17 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
 
   \tt{+}, \tt{-}, \tt{*}, \tt{/}, \tt{\^{}}, \tt{\^{}\^{}}
 
-  \vspace{1em}
+  \vspace{2ex}
   Други числови функции
 
   \lst{div}, \lst{mod}, \lst{max}, \lst{min}, \lst{gcd}, \lst{lcm}
 
-  \vspace{1em}
+  \vspace{2ex}
   Функции за преобразуване
 
   \lst{fromIntegral}, \lst{fromInteger}, \lst{toInteger}, \lst{realToFrac}, \lst{fromRational}, \lst{toRational}, \lst{round}, \lst{ceiling}, \lst{floor}
 
-  \vspace{1em}
+  \vspace{2ex}
   Функции над дробни числа
 
   \lst{exp}, \lst{log}, \lst{sin}, \lst{cos}, \lst{tan}, \lst{asin}, \lst{acos}, \lst{atan}, \lst{sqrt}, \lst{**}
@@ -205,7 +206,7 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
 
   \tt{<}, \tt{>}, \tt{==}, \tt{/=}, \tt{<=}, \tt{>=}, \lst{odd}, \lst{even}
 
-  \vspace{1em}
+  \vspace{2ex}
   Булеви операции
 
   \tt{\&\&}, \tt{||}, \lst{not}
