@@ -338,6 +338,14 @@
 % дървета
 \usepackage{forest}
 
+% прехвърляне на стила visible on върху дървета
+% източник: https://tex.stackexchange.com/a/112471
+\forestset{
+  visible on/.style={
+    for tree={
+      /tikz/visible on={#1},
+      edge+={/tikz/visible on={#1}}}}}
+
 % коментари
 \usepackage{comment}
 

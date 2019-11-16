@@ -1033,19 +1033,28 @@
   \end{visibleenv} 
   \begin{onlyenv}<3->
     \begin{fixedarea}[.45]
-      \begin{onlyenv}<4-5>
+      \begin{onlyenv}<4-8>
         \begin{center}
           \samplegraph \hspace{5em}
           \onslide<5->
           \small
           \begin{forest}
             for tree={graphnode,edge=-Stealth}
-            [1 [2 [3 [4] [5]]] [3 [4] [5 [2] [6]]]]
+            [1
+            [2,visible on=<6->
+            [3,visible on=<7->
+            [4,visible on=<8->]
+            [5,visible on=<8->]]]
+            [3,visible on=<6->
+            [4,visible on=<7->]
+            [5,visible on=<7->
+            [2,visible on=<8->]
+            [6,visible on=<8->]]]]
           \end{forest}
         \end{center}
       \end{onlyenv}
-      \begin{onlyenv}<6->
-        \begin{itemize}[<+(5)->]
+      \begin{onlyenv}<9->
+        \begin{itemize}[<+(8)->]
         \item \alert{Какво се случва ако графът е цикличен?}
           \begin{itemize}
           \item Ако има път: намира го.
