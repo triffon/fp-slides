@@ -8,26 +8,35 @@
 
 \lstset{language=Scheme}
 
-\newcommand{\samplegraph}{%
+\newcommand{\samplegraph}[1][1.2]{%
   \begin{tikzpicture}
     [>=stealth,
-    every node/.style={draw,circle,fill=diagramblue},
-    scale=1.2]
-    \node (1) at (1.4,2.4) {1};
+    every node/.style=graphnode,
+    scale=#1]
+    \node (1) at (1,2) {1};
     \node (2) at (3,2.2)   {2};
-    \node (3) at (2,1)     {3};
-    \node (4) at (0.6,1.3) {4};
+    \node (3) at (1.9,1.2)     {3};
+    \node (4) at (0.8,0.3) {4};
     \node (5) at (2.5,0)   {5};
     \node (6) at (3.5,1.2) {6};
     \graph {
       (1) -> {(2), (3)};
-      (2) -> {(3), (6)};
-      (3) -> {(4), (6)};
-      (4) -> {(2), (5)};
-      (5) -> (3);
-      (6) -> (5);
+      (2) -> (3);
+      (3) -> {(4), (5)};
+      (5) -> {(2), (4) ,(6)};
+      (6) -> (2);
     };
   \end{tikzpicture}}
+
+% изисквания към графа:
+% да не е силно свързан (т.е. да има недостижим връх)
+%% 1
+% да има път, който се намира само след backtracking
+%% 1 -> 2 -> 3 -> 4 <- 3 -> 5
+% да има път, който минава през цикъл при първо минаване и пътят се намира едва след backtracking
+%% 1 -> 2 -> 3 -> 5 -> 2 -> ... <- 5 -> 6
+% да има път, който минава през цикъл, но в цикъла се влиза чак след backtracking, при първо минаване се намира пътя
+%% 1 -> 2 -> 3 -> 4 <- 3 -> 5 -> 2 -> ...
 
 \begin{document}
 
@@ -808,16 +817,16 @@
     \begin{column}{0.3\textwidth}
 \begin{semiverbatim}
 \alt<2>{((1 2 3)
- (2 3 6)
- (3 4 6)
- (4 2 5)
- (5 3)
- (6 5))}{((1 . (2 3))
- (2 . (3 6))
- (3 . (4 6))
- (4 . (2 5))
- (5 . (3))
- (6 . (5)))}
+ (2 3)
+ (3 4 5)
+ (4)
+ (5 2 4 6)
+ (6 2))}{((1 . (2 3))
+ (2 . (3))
+ (3 . (4 5))
+ (4 . ())
+ (5 . (2 4 6))
+ (6 . (2)))}
  \end{semiverbatim}
     \end{column}
   \end{columns}
@@ -916,9 +925,9 @@
 \begin{frame}[fragile]
   \frametitle{Схема на обхождане в дълбочина}
 
-  Обхождане на връх \tt v:
+  Обхождане на връх \tt u:
   \begin{itemize}
-  \item Обходи последователно всички наследници на \tt v
+  \item Обходи последователно всички наследници \tt v на \tt u
   \end{itemize}
   \pause
 {\small
@@ -950,17 +959,25 @@
 \begin{frame}[fragile]
   \frametitle{Търсене на път в дълбочина}
 
-  \textbf{Задача.} Да се намери път от \tt u до \tt v, ако такъв има.\\
-  \pause\onslide<+->
-  \textbf{Решение.} Има път от \tt u до \tt v, ако:
-  \begin{itemize}
-  \item \tt u = \tt v, или
-  \item има дете \tt w $\leftarrow$ \tt u, така че има път от \tt w до \tt v
-  \end{itemize}
+  \begin{columns}
+    \begin{column}{.75\textwidth}
+      \textbf{Задача.} Да се намери път от \tt u до \tt v, ако такъв има.\\
+      \pause\onslide<+->
+      \textbf{Решение.} Има път от \tt u до \tt v, ако:
+      \begin{itemize}
+      \item \tt u = \tt v, или
+      \item има дете \tt w $\leftarrow$ \tt u, така че има път от \tt w до \tt v
+      \end{itemize}
+    \end{column}
+    \begin{column}{.25\textwidth}
+      \small
+      \samplegraph[.8]
+    \end{column}
+  \end{columns}
   \vspace{-2ex}
   \onslide<+-> \small
-    \begin{overlayarea}{\textwidth}{26.5ex}
-      \begin{onlyenv}<6->
+  \begin{overlayarea}{\textwidth}{26.5ex}
+    \begin{onlyenv}<6->
 \begin{lstlisting}
 (define (dfs-path u v g)
   (define (dfs-search path)
@@ -971,20 +988,20 @@
                     (lambda (w) (dfs-search (cons w path))) g))))
   (dfs-search (list u)))
 \end{lstlisting}
-      \end{onlyenv}
-      \begin{onlyenv}<-5 |handout:0>
+    \end{onlyenv}
+    \begin{onlyenv}<-5 |trans:0>
 \begin{lstlisting}
 (define (dfs-path u v g)
   (if (eqv? u v) (list u)
       (search-child u (lambda (w)
                          (cons#f u (dfs-path w v g))) g)))
 \end{lstlisting}
-      \end{onlyenv}
-    \end{overlayarea}
-    \onslide<+->
-    \alert{Директно рекурсивно решение, работи само за ацикличен граф!}\\
-    \onslide<+->
-    Итеративното натрупване на пътя позволява да правим проверки за цикъл.
+    \end{onlyenv}
+  \end{overlayarea}
+  \onslide<+->
+  \alert{Директно рекурсивно решение, работи само за ацикличен граф!}\\
+  \onslide<+->
+  Итеративното натрупване на пътя позволява да правим проверки за цикъл.
 \end{frame}
 
 \subsection{Търсене в ширина}
@@ -997,7 +1014,7 @@
     \item Маркира се \tt u за обхождане на ниво 1
     \item За всеки връх \tt v избран за обхождане на ниво $n$:
       \begin{itemize}
-      \item Маркират се всички деца \tt s на \tt v за обхождане на
+      \item Маркират се всички деца \tt w на \tt v за обхождане на
         ниво $n+1$
       \end{itemize}
     \end{itemize}
@@ -1013,17 +1030,32 @@
                                   l))))
   (bfs-level (list u)))
 \end{lstlisting}
-  \end{visibleenv}
+  \end{visibleenv} 
   \begin{onlyenv}<3->
-    \begin{itemize}[<+(3)->]
-    \item \alert{Какво се случва ако графът е цикличен?}
-      \begin{itemize}
-      \item Ако има път: намира го.
-      \item Ако няма път: програмата зацикля! Как да се справим с този проблем?
-      \item Трябва да помним през кои върхове сме минали!
-      \item Нивото трябва да представлява \alert{списък от пътища}
-      \end{itemize}
-    \end{itemize}
+    \begin{fixedarea}[.45]
+      \begin{onlyenv}<4-5>
+        \begin{center}
+          \samplegraph \hspace{5em}
+          \onslide<5->
+          \small
+          \begin{forest}
+            for tree={graphnode,edge=-Stealth}
+            [1 [2 [3 [4] [5]]] [3 [4] [5 [2] [6]]]]
+          \end{forest}
+        \end{center}
+      \end{onlyenv}
+      \begin{onlyenv}<6->
+        \begin{itemize}[<+(5)->]
+        \item \alert{Какво се случва ако графът е цикличен?}
+          \begin{itemize}
+          \item Ако има път: намира го.
+          \item Ако няма път: програмата зацикля! Как да се справим с този проблем?
+          \item Трябва да помним през кои върхове сме минали!
+          \item Нивото трябва да представлява \alert{списък от пътища}
+          \end{itemize}
+        \end{itemize}
+      \end{onlyenv}
+    \end{fixedarea}
   \end{onlyenv}
 \end{frame}
 
@@ -1037,12 +1069,12 @@
   \pause
   \begin{columns}[T]
     \begin{column}{0.65\textwidth}
-      \evalsto{(extend '(2 1))}{((3 2 1) (6 2 1))}
+      \evalsto{(extend '(3 1))}{((4 3 1) (5 3 1))}
       \pause
 \begin{lstlisting}
 (define (extend path)
   (map-children (car path)
-     (lambda (u) (cons u path)) g))
+     (lambda (w) (cons w path)) g))
 \end{lstlisting}
       \pause
       Трябва да филтрираме циклите:
