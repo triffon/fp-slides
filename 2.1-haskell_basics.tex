@@ -3,7 +3,7 @@
 
 \title{Основни понятия в Haskell}
 
-\date{15 ноември 2018 г.}
+\date{27 ноември 2019 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -103,7 +103,7 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
   \item Запазени операции: \tt{..} \tt: \tt{::} \tt= \tt\textbackslash \tt| \tt{<-} \tt{->} \tt@ \tt\~ \tt{=>}
   \item Специални символи: \tt( \tt) \tt, \tt; \tt[ \tt] \tt` \tt\{ \tt\}
   \item Знаци: \lst{'a'}, \lst{'\n'}, \lst{'+'}
-  \item Низове: \lst{"Hello, world!"}, \lst{"проижзволен низ"}
+  \item Низове: \lst{"Hello, world!"}, \lst{"произволен низ"}
   \end{itemize}
 \end{frame}
 
@@ -171,8 +171,8 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
   \item \tta{import} <модул> [\tta(<име>\{,<име>\}\tta)]
   \item внася дефинициите <име> от <модул>
   \item ако <име> не е указано, внася всички дефиниции
-  \item стандартната библиотека в Haskell се съдържа в модула \lst{Prelude}
-  \item всички дефиниции от \lst{Prelude} се внасят автоматично във всяко програма
+  \item модулът \lst{Prelude} съдържа набор от често използвани стандартни функции
+  \item всички дефиниции от \lst{Prelude} се внасят автоматично във всяка програма
   \end{itemize}
 \end{frame}
 
