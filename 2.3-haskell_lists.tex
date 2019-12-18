@@ -389,7 +389,7 @@ reverse a
   \begin{itemize}[<+->]
   \item \evalstop{[ 2 * x | x <- [1..5] ]}{[2,4,6,8,10]}
   \item \evalstop{[ x^2 | x <- [1..10], odd x]}{[1,9,25,49,81]}
-  \item \lst{[ fn | (\_, fn, grade) <- students, grade >= 2 ]}
+  \item \lst{[ fn | (\_, fn, grade) <- students, grade >= 3 ]}
   \item \lst{[ x^2 + y^2 | (x, y) <- vectors, x >= 0, y >= 0]}
   \item Ако имаме повече от един генератор, се генерират всички възможни комбинации от елементи (декартово произведение)
   \item \evalstopnl{[ x++(' ':y) | x<-["green","blue"],y<-["sky","grass"]]}{["green sky","green grass","blue sky","blue grass"]}
@@ -482,7 +482,7 @@ reverse a
   \item
     \begin{tabular}[t]{ll}
       &\tt\textbackslash $x_1\;x_2\;\ldots\;x_n$ \tt{->} <тяло>\\
-      \eqv &\tt\textbackslash $x_1$ \tt{-> \textbackslash} $x_2$ \tt{->} \ldots \tt\textbackslash $x_n$ \tt{->}
+      \eqv &\tt\textbackslash $x_1$ \tt{-> \textbackslash}$x_2$ \tt{->} \ldots \tt\textbackslash $x_n$ \tt{->}
              <тяло>
     \end{tabular}
   \item
