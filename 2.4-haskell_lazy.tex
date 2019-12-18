@@ -3,7 +3,7 @@
 
 \title[Лениво оценяване]{Лениво оценяване и програмиране от по-висок ред}
 
-\date{5--12 декември 2018 г.}
+\date{11--18 декември 2019 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -126,16 +126,18 @@ g l   = f (head l) (head (tail l))
 
 Ако $g(z) = z^2 + z$, $g(g(g(2))) = ?$
 \pause
+{\small
 \begin{equation*}
   \begin{array}{rl}
   g(g(g(2))) \pause &\mapsto g(g(2))^2 + g(g(2)) \pause\mapsto (g(2)^2+ g(2))^2 + g(2)^2 + g(2) \pause\mapsto\\
   &\mapsto ((2^2+2)^2+2^2+2)+(2^2+2)^2 + 2^2+2 \mapsto \ldots
   \end{array}
-\end{equation*}\pause
+\end{equation*}}\pause
 Времето и паметта нарастват експоненциално!\\
 \pause
 \fbox{\textbf{Идея:} $(\lambda x\,E_1)(E_2) \mapsto \lett{x = E_2}{E_1}$}
 \pause
+{\small
 \begin{equation*}
   \begin{array}{rl}
     g(g(g(2))) \pause &\mapsto \lett{x = g(g(2))}{x^2 + x}\pause \mapsto\\
@@ -144,7 +146,7 @@ g l   = f (head l) (head (tail l))
     &\mapsto \lett{y=6}{\lett{x = y^2+y}{x^2 + x}} \pause \mapsto\\
     &\mapsto \lett{x=42}{x^2 + x} \mapsto 1806
   \end{array}
-\end{equation*}\pause\vspace{-1.5em}
+\end{equation*}}\pause\vspace{-1.5em}
 \begin{itemize}[<+->]
 \item Избягва се повторението чрез споделяне на общи подизрази
 \item Заместването се извършва чак когато е \alert{абсолютно наложително}
@@ -200,7 +202,7 @@ g l   = f (head l) (head (tail l))
   \item ако \tt{$p \equiv\,$\tuple p}
     \begin{itemize}
     \item преминава се към оценката на $e$
-    \item ако се установи, че тя е от вида \tuple e, преминава се към оценката на израза \tt{(\textbackslash $p_1\,p_2\,\ldots\,p_n$ -> $t$) $e_1\,e_2\,\ldots\,e_n$}
+    \item като се установи, че тя е от вида \tuple e, преминава се към оценката на израза \tt{(\textbackslash $p_1\,p_2\,\ldots\,p_n$ -> $t$) $e_1\,e_2\,\ldots\,e_n$}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -246,45 +248,48 @@ sumFirst (x:xs) (y:ys) = x + y
 \begin{frame}
   \frametitle{Оценяване в Haskell: пример 2}
 
-\begin{tabular}{r@{ }l@{ }l}
-  &\multicolumn 2l{\tt{(filter isPrime [4..1000]) \underline{!!} 1}}\\\pause
-  \lra&\multicolumn 2l{\tt{(\textbackslash(x:xs) n -> xs !! (n-1)) \underline{(filter isPrime [4..1000])} 1}}\\
-  \lra&\multicolumn 2l{\tt{(\textbackslash(x:xs) n -> xs !! (n-1)) (\underline{filter} isPrime [4..1000]) 1}}\\
-  \lra&\ldots\tt{\underline{(\textbackslash p (z:zs) ->}}&\underline{\tt{if p z then z:filter p zs}}\\
-  &&\tt{\underline{else filter p zs) isPrime} [4..1000]}\ldots\\
-  \lra&\ldots\tt{\lett{p=isPrime}{}}&\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}\\
-  &&\tt{else filter p zs) \underline{[4..1000]}}\ldots\\
-  \lra&\ldots\tt{\lett{p=isPrime}{}}&\underline{\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}}\\
-  &&\underline{\tt{else filter p zs) (4:[5..1000]))}}\ldots\\
-  \lra&\multicolumn 2{@{}l}{\ldots\tt{\lett{p=isPrime; z=4; zs=[5..1000]}{}}}\\
-  &\multicolumn 2{@{}l}{\tt{if \underline{p z} then z:filter p zs else filter p zs}\ldots}\\
-  \lra&\multicolumn 2{@{}l}{\ldots\tt{\lett{p=isPrime; z=4; zs=[5..1000]}{}}}\\
-  &\multicolumn 2{@{}l}{\tt{if False then z:filter p zs else \underline{filter p zs}}\ldots}\\
-\end{tabular}
+  \small
+  \begin{tabular}{r@{ }l@{ }l}
+    &\multicolumn 2l{\tt{(filter isPrime [4..1000]) \underline{!!} 1}}\\\pause
+    \lra&\multicolumn 2l{\tt{(\textbackslash(x:xs) n -> xs !! (n-1)) \underline{(filter isPrime [4..1000])} 1}}\\
+    \lra&\multicolumn 2l{\tt{(\textbackslash(x:xs) n -> xs !! (n-1)) (\underline{filter} isPrime [4..1000]) 1}}\\
+    \lra&\ldots\tt{\underline{(\textbackslash p (z:zs) ->}}&\underline{\tt{if p z then z:filter p zs}}\\
+    &&\tt{\underline{else filter p zs) isPrime} [4..1000]}\ldots\\
+    \lra&\ldots\tt{\lett{p=isPrime}{}}&\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}\\
+    &&\tt{else filter p zs) \underline{[4..1000]}}\ldots\\
+    \lra&\ldots\tt{\lett{p=isPrime}{}}&\underline{\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}}\\
+    &&\underline{\tt{else filter p zs) (4:[5..1000]))}}\ldots\\
+    \lra&\multicolumn 2{@{}l}{\ldots\tt{\lett{p=isPrime; z=4; zs=[5..1000]}{}}}\\
+    &\multicolumn 2{@{}l}{\tt{if \underline{p z} then z:filter p zs else filter p zs}\ldots}\\
+    \lra&\multicolumn 2{@{}l}{\ldots\tt{\lett{p=isPrime; z=4; zs=[5..1000]}{}}}\\
+    &\multicolumn 2{@{}l}{\tt{if False then z:filter p zs else \underline{filter p zs}}\ldots}\\
+  \end{tabular}
 \end{frame}
 
 \begin{frame}
   \frametitle{Оценяване в Haskell: пример 2}
 
-\begin{tabular}{r@{ }l@{ }l}
-  \lra&\ldots\tt{\underline{(\textbackslash p (z:zs) ->}}&\underline{\tt{if p z then z:filter p zs}}\\
-  &&\tt{\underline{else filter p zs) isPrime} [5..1000]}\ldots\\
-  \lra&\ldots\tt{\lett{p=isPrime}{}}&\underline{\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}}\\
-  &&\underline{\tt{else filter p zs) (5:[6..1000])}}\ldots\\
-  \lra&\multicolumn 2{@{}l}{\tt{\ldots \lett{p=isPrime; z=5; zs=[6..1000]}{}}}\\
-  &\multicolumn 2{@{}l}{\tt{if \underline{p z} then z:filter p zs else filter p zs}\ldots}\\
-  \lra&\multicolumn 2{@{}l}{\tt{\ldots \lett{p=isPrime; z=5; zs=[6..1000]}{}}}\\
-  &\multicolumn 2{@{}l}{\tt{if True then \underline{z:filter p zs} else filter p zs}\ldots}\\
-  \lra&\multicolumn 2{@{}l}{\tt{\underline{(\textbackslash(x:xs) n -> xs !! (n-1)) (5:filter isPrime [6..1000])} 1}}\\
-  \lra&\multicolumn 2{@{}l}{\tt{\lett{xs=filter isPrime [6..1000]}{}}\underline{\tt{(\textbackslash n -> xs !! (n-1)) 1}}}\\
-  \lra&\multicolumn 2{@{}l}{\tt{\lett{xs=filter isPrime [6..1000]; n=1}{xs \underline{!!} (n-1)}}}\\
-  \lra&\multicolumn 2{@{}l}{\tt{\underline{(\textbackslash (y:\_) 0 -> y) (filter isPrime [6..1000])} 0}}
-\end{tabular}
+  \small
+  \begin{tabular}{r@{ }l@{ }l}
+    \lra&\ldots\tt{\underline{(\textbackslash p (z:zs) ->}}&\underline{\tt{if p z then z:filter p zs}}\\
+        &&\tt{\underline{else filter p zs) isPrime} [5..1000]}\ldots\\
+    \lra&\ldots\tt{\lett{p=isPrime}{}}&\underline{\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}}\\
+        &&\underline{\tt{else filter p zs) (5:[6..1000])}}\ldots\\
+    \lra&\multicolumn 2{@{}l}{\tt{\ldots \lett{p=isPrime; z=5; zs=[6..1000]}{}}}\\
+        &\multicolumn 2{@{}l}{\tt{if \underline{p z} then z:filter p zs else filter p zs}\ldots}\\
+    \lra&\multicolumn 2{@{}l}{\tt{\ldots \lett{p=isPrime; z=5; zs=[6..1000]}{}}}\\
+        &\multicolumn 2{@{}l}{\tt{if True then \underline{z:filter p zs} else filter p zs}\ldots}\\
+    \lra&\multicolumn 2{@{}l}{\tt{\underline{(\textbackslash(x:xs) n -> xs !! (n-1)) (5:filter isPrime [6..1000])} 1}}\\
+    \lra&\multicolumn 2{@{}l}{\tt{\lett{xs=filter isPrime [6..1000]}{}}\underline{\tt{(\textbackslash n -> xs !! (n-1)) 1}}}\\
+    \lra&\multicolumn 2{@{}l}{\tt{\lett{xs=filter isPrime [6..1000]; n=1}{xs \underline{!!} (n-1)}}}\\
+    \lra&\multicolumn 2{@{}l}{\tt{\underline{(\textbackslash (y:\_) 0 -> y) (filter isPrime [6..1000])} 0}}
+  \end{tabular}
 \end{frame}
 
 \begin{frame}
   \frametitle{Оценяване в Haskell: пример 2}
 
+\small
 \begin{tabular}{r@{ }l@{ }l}
   \lra&\ldots\tt{\underline{(\textbackslash p (z:zs) ->}}&\underline{\tt{if p z then z:filter p zs}}\\
   &&\tt{\underline{else filter p zs) isPrime} [6..1000]}\ldots\\
@@ -308,7 +313,7 @@ sumFirst (x:xs) (y:ys) = x + y
 
 \begin{tabular}{r@{ }l@{ }l}
   \lra&\multicolumn 2{@{}l}{\ldots\tt{\lett{p=isPrime; z=7; zs=[8..1000]}{}}}\\
-  &\multicolumn 2{@{}l}{\tt{if True then \underline{z:filter p} zs else filter p zs} \ldots}\\
+  &\multicolumn 2{@{}l}{\tt{if True then \underline{z:filter p zs} else filter p zs} \ldots}\\
   \lra&\multicolumn 2{@{}l}{\underline{\tt{(\textbackslash (y:\_) 0 -> y) (7:filter isPrime [8..1000]) 0}}}\\
   \lra&\multicolumn 2{@{}l}{\tt{\lett{y=7}y}}\\
   \lra&\tt 7
