@@ -3,7 +3,7 @@
 
 \title{Типове и класове в Haskell}
 
-\date{12--19 декември 2018 г.}
+\date{18 декември 2019 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -110,8 +110,8 @@
 \begin{frame}[fragile]
   \frametitle{Дефиниране на класове от типове}
   \tta{class} <клас> <типова-променлива>\tta{ where}\\
-  \hspace{2ex}\{<метод>\{,<метод>\} \tta{::} <тип>\}\\
-  \hspace{2ex}\{<метод> \tta{=} <реализация-по-подразбиране>\}\\[2em]
+  \hspace{1em}\{<метод>\{,<метод>\} \tta{::} <тип>\}\\
+  \hspace{1em}\{<метод> \tta{=} <реализация-по-подразбиране>\}\\[4ex]
   \pause
   \textbf{Примери:}\\
 \begin{lstlisting}
@@ -135,7 +135,7 @@ class Measurable a where
     Ако \tt{C} e клас, а \tt{t} е типова променлива, то \tt{C t} наричаме \textbf{класово ограничение}. \pause Множество от класови ограничения наричаме \textbf{контекст}.
   \end{definition}
   \pause
-  Класовите ограничения ни дават възможност да дефинираме претоварени функции.\\[1em]
+  Класовите ограничения ни дават възможност да дефинираме претоварени функции.\\[2ex]
   \pause
   \textbf{Примери:}
   \begin{itemize}[<+->]
@@ -154,16 +154,16 @@ class Measurable a where
   \end{definition}
   \pause
   \tta{instance} <клас> <тип> \tta{where}\\
-  \hspace{2ex} \{<дефиниция-на-метод>\}\\[1em]
+  \hspace{1em} \{<дефиниция-на-метод>\}\\[1ex]
   \pause
-  \textbf{Примери:}
+  \textbf{Примери:}%
+  \vspace{-1ex}
 \begin{lstlisting}
 instance Eq Bool where
   True  == True  = True
   False == False = True
   _     == _     = False
-\end{lstlisting}
-  \pause
+\end{lstlisting}\pause%
 \begin{lstlisting}
 instance Measurable Integer where
   size 0 = 0
@@ -175,7 +175,7 @@ instance Measurable Integer where
   \frametitle{Екземпляри с контекст}
   Можем да добавяме контекст в дефиницията за екземпляри:\\
   \tta{instance} [<контекст> \tta{=>}] <клас> <тип> \tta{where}\\
-  \hspace{2ex} \{<дефиниция-на-метод>\}\\[1em]
+  \hspace{1em} \{<дефиниция-на-метод>\}\\[2ex]
   \pause
   \textbf{Примери:}
 \small
@@ -229,7 +229,7 @@ class  (Eq a) => Ord a  where
 
 \begin{frame}[fragile]
   \frametitle{Множествено наследяване}
-  Даден клас може да наследява едновременно няколко родителски класа.\\[1em]
+  Даден клас може да наследява едновременно няколко родителски класа.\\[2ex]
   \textbf{Примери:}
 \begin{lstlisting}
 class (Ord a, Num a) => Real a where
@@ -271,7 +271,7 @@ class (Ord a, Measurable a) => OrdMeasurable a where
 
 \begin{frame}
   \frametitle{Потребителски дефинирани типове}
-  В Haskell имаме възможност да дефинираме нови типове данни.\\[1em]
+  В Haskell имаме възможност да дефинираме нови типове данни.\\[2ex]
   \begin{itemize}[<+->]
   \item \tta{data} <тип> [<параметри>] \tta= <дефиниция>
   \item{} <тип> трябва да започва с главна буква
@@ -291,7 +291,7 @@ class (Ord a, Measurable a) => OrdMeasurable a where
 
 \begin{frame}
   \frametitle{Изброени типове}
-  Най-простият вид потребителски дефинирани типове са \alert{изброените типове}.\\[1em]
+  Най-простият вид потребителски дефинирани типове са \alert{изброените типове}.\\[2ex]
   \pause
   \textbf{Примери:}
   \begin{itemize}[<+->]
@@ -356,7 +356,7 @@ better (Player name1 score1) (Player name2 score2)
   \textbf{Примери:}
   \begin{itemize}[<+->]
   \item \lst!data Shape = Circle { radius :: Double } !\\
-    \hspace{10ex}\lst!| Rectangle { width :: Double, height :: Double}!
+    \hspace{4em}\lst!| Rectangle { width :: Double, height :: Double}!
   \item \lst{circle :: Shape}
   \item<.-> \lst{circle = Circle 2.3}
   \item \lst{rect :: Shape}
@@ -407,7 +407,7 @@ instance Show Shape where
   \item \tta{data} <тип> [<параметри>] \tta= <дефиниция> \tta{deriving} <класове>
   \item{} <класове> е кортеж от стандартни класове, екземпляри за които искаме автоматично да бъдат изведени
   \item \lst{data Weekday = Mon | Tue | Wed | Thu | Fri | Sat | Sun}\\
-    \hspace{10ex}\lst{deriving (Eq, Ord, Enum, Show, Read)}
+    \hspace{5em}\lst{deriving (Eq, Ord, Enum, Show, Read)}
   \item \lst{Eq}: два елемента се считат равни, ако имат равни конструктори с равни параметри
   \item \lst{Ord}: елементите се сравняват лексикографски, като конструкторите се считат наредени в реда, в който са дефинирани
   \item \lst{Enum}: позволено само за изброени типове
@@ -422,7 +422,7 @@ instance Show Shape where
   \textbf{Примери:}
   \begin{itemize}[<+->]
   \item \lst{data Maybe a = Nothing | Just a}\\
-      \hspace{10ex}\lst{deriving (Eq, Ord, Show, Read)}
+      \hspace{5em}\lst{deriving (Eq, Ord, Show, Read)}
   \item \typestop{Just 5}{Maybe Int}
   \item \typestop{Just "wow"}{Maybe String}
   \item \typestop{Nothing}{Maybe a}
@@ -438,7 +438,7 @@ instance Show Shape where
   \frametitle{Сума на типове}
   \begin{itemize}[<+->]
   \item \lst{data Either a b = Left a | Right b}\\
-      \hspace{10ex}\lst{deriving (Eq, Ord, Show, Read)}
+      \hspace{5em}\lst{deriving (Eq, Ord, Show, Read)}
   \item \typestop{Left 3}{Either Int b}
   \item \typestop{Right 'a'}{Either a Char}
   \end{itemize}
@@ -459,7 +459,7 @@ searchBest players
 
 \begin{frame}[fragile]
   \frametitle{Рекурсивни алгебрични типове}
-  Можем да дефинираме типове, позовавайки се на самите тях \alert{рекурсивно}.\\[1em]
+  Можем да дефинираме типове, позовавайки се на самите тях \alert{рекурсивно}.\\[2ex]
   \pause
   \textbf{Пример:}
   \lst{data Nat = Zero | Succ Nat deriving (Eq, Ord, Show, Read)}
@@ -506,8 +506,8 @@ data List a = Nil | Cons a (List a)
   \item \lst{l = Cons 1 $ Cons 2 $ Cons 3 $ Nil}
   \item можем да използваме синтаксиса за записи:\\
     \lst!data List a = Nil | Cons { listHead :: a,!\\
-      \hspace{31ex}\lst!listTail :: List a }!\\
-    \hspace{10ex}\lst{deriving (Eq, Ord, Show, Read)}
+      \hspace{15.5em}\lst!listTail :: List a }!\\
+    \hspace{5em}\lst{deriving (Eq, Ord, Show, Read)}
   \item \evalstop{listHead l}1
   \item \lst{fromList :: List a -> [a]}
   \item \lst{fromList Nil = []}
@@ -550,7 +550,7 @@ mapBinTree _ Empty        = Empty
 mapBinTree f (Node x l r) = Node (f x) (mapBinTree f l)
                                        (mapBinTree f r)
 \end{lstlisting}
-  \vspace{2em}
+  \vspace{4ex}
   \pause
   Свиване на двоично дърво (\lst{foldr}):
 \begin{lstlisting}
