@@ -3,7 +3,7 @@
 
 \title{Функтори и монади}
 
-\date{16 януари 2019 г.}
+\date{8--15 януари 2020 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -103,10 +103,10 @@ instance Functor Pill where
 \begin{frame}
   \frametitle{Функторни закони}
   \begin{definition}
-    \emph{Функтор} наричаме екземпляр на класа \emph{Functor} такъв, че:
+    \emph{Функтор} наричаме екземпляр на класа \lst{Functor} такъв, че:
     \begin{enumerate}
     \item \lst{fmap id} \eqv \lst{id} (запазване на идентитета)
-    \item \lst{fmap f . fmap g} \eqv {fmap (f . g)} (дистрибутивност относно композиция)
+    \item \lst{fmap f . fmap g} \eqv \lst{fmap (f . g)} (дистрибутивност относно композиция)
     \end{enumerate}
   \end{definition}
   \pause
@@ -152,9 +152,8 @@ class (Functor f) => Applicative f where
   pure  :: a -> f a
   (<*>) :: f (a -> b) -> f a -> f b
 \end{lstlisting}
-  % TODO съкращаване на a и f
-  \pause
-  Можем да дефинираме \lst{fmap f a = pure f <*> a}.\\
+  \onslide<+->
+  Можем да дефинираме \alt<+->{\alt<+->{\alt<+->{\lst{fmap = (<*>) . pure}}{\lst{fmap f = (<*>) (pure f)}}}{\lst{fmap f a = (<*>) (pure f) a}}}{\lst{fmap f a = pure f <*> a}}.\\
   \pause
   \textbf{Примери за апликативни функтори:}
   \begin{itemize}[<+->]
@@ -279,34 +278,33 @@ liftM2 f m1 m2 = m1 <<= (\x1 ->
 
 \begin{frame}[fragile]
   \frametitle{Монадни функции (2)}
-  \begin{overlayarea}{\textwidth}{\textheight}
-  \begin{itemize}[<+->]
-  \item \lst{join :: (Monad m) => m (m a) -> m a}
-    \begin{itemize}
-    \item ``слива'' двойната опаковка в единична
-      % TODO: съкращаване на mm
-    \item \lst{join mm = mm >>= id}
-    \item Можем да дефинираме \lst{(>>=)} чрез \lst{join} и \lst{fmap}:
-    \item<.-> \lst{m >>= f = join (fmap f m)} 
+  \begin{fixedarea}
+    \begin{itemize}[<+->]
+    \item \lst{join :: (Monad m) => m (m a) -> m a}
+      \begin{itemize}
+      \item ``слива'' двойната опаковка в единична
+      \item \alt<+->{\alt<+->{\lst{join = (>>= id)}}{\lst{join mm = (>>= id) mm}}}{\lst{join mm = mm >>= id}}
+      \item Можем да дефинираме \lst{(>>=)} чрез \lst{join} и \lst{fmap}:
+      \item<.-> \lst{m >>= f = join (fmap f m)} 
+      \end{itemize}
+    \item \lst{filterM :: (Monad m) => (a -> m Bool) -> [a] -> m [a]}
+      \begin{itemize}
+      \item Филтрира с предикат, връщащ ``опаковани'' булеви стойности
+      \item Резултатът е ``опакованите'' елементи на списъка
+      \item \lst{powerset = filterM (\x -> [True,False])}
+      \end{itemize}
+    \item \lst{foldM :: (Monad m) => (a -> b -> m a) -> a -> [b] -> m a}
+      \begin{itemize}
+      \item Натрупва елементи от списък с монадна операция
+      \item Натрупването е ляво (итеративен процес, подобно на \lst{foldl})
+      \item
+        \lst!boundSum lim = foldM (\x y -> if x+y < lim!\\
+        \hspace{30ex}\lst{then Just (x+y) else Nothing) 0}
+      \item \evalstop{boundSum 60 [1..10]}{Just 55}
+      \item \evalstop{boundSum 50 [1..10]}{Nothing}
+      \end{itemize}
     \end{itemize}
-  \item \lst{filterM :: (Monad m) => (a -> m Bool) -> [a] -> m [a]}
-    \begin{itemize}
-    \item Филтрира с предикат, връщащ ``опаковани'' булеви стойности
-    \item Резултатът е ``опакованите'' елементи на списъка
-    \item \lst{powerset = filterM (\x -> [True,False])}
-    \end{itemize}
-  \item \lst{foldM :: (Monad m) => (a -> b -> m a) -> a -> [b] -> m a}
-    \begin{itemize}
-    \item Натрупва елементи от списък с монадна операция
-    \item Натрупването е ляво (итеративен процес, подобно на \lst{foldl})
-    \item
-\lst!boundSum lim = foldM (\x y -> if x+y < lim!\\
-\hspace{30ex}\lst{then Just (x+y) else Nothing) 0}
-    \item \evalstop{boundSum 60 [1..10]}{Just 55}
-    \item \evalstop{boundSum 50 [1..10]}{Nothing}
-    \end{itemize}
-  \end{itemize}
-\end{overlayarea}
+  \end{fixedarea}
 \end{frame}
 
 \begin{frame}[fragile]
