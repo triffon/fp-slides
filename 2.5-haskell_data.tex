@@ -3,7 +3,7 @@
 
 \title{Типове и класове в Haskell}
 
-\date[18.12.2019--8.01.2020]{18 декември 2019 г. -- 8 януари 2020 г.}
+\date[18.12.2019--15.01.2020]{18 декември 2019 г. -- 15 януари 2020 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -590,14 +590,13 @@ levelTrees _ None           = []
 levelTrees k (SubTree t ts) = level k t ++ levelTrees k ts
 \end{lstlisting}
 \end{frame}
-\end{document}
 
 \begin{frame}[fragile]
   \frametitle{Полиморфни списъци}
 \small
 \begin{lstlisting}
-data SExpr = SBool Bool | SChar Char | SInt Int | SDouble Double |
-             SList { getList :: [SExpr] }
+data SExpr = SBool Bool | SChar Char | SInt Int |
+             SDouble Double | SList { list :: [SExpr] }
              deriving (Eq, Ord, Show, Read)
 \end{lstlisting}
   \ \pause
@@ -614,7 +613,7 @@ countAtoms _           = 1
   \pause
 \begin{lstlisting}
 flatten :: SExpr -> SExpr@\pause@
-flatten (SList sls) = SList $ concat $ map (getList . flatten) sls
+flatten (SList sls) = SList $ concat $ map (list . flatten) sls
 flatten x           = SList [x]
 \end{lstlisting}
 \end{frame}

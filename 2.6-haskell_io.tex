@@ -3,7 +3,7 @@
 
 \title{Входно-изходни операции в Haskell}
 
-\date{8 януари 2020 г.}
+\date{15 януари 2020 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -34,7 +34,7 @@
       (8,-1) .. controls +(-2,-1.5) and +(2,1.5) .. (0,-1) -- (0,1);
       \path (0,0) .. controls +(2,1.5) and +(-2,-1.5) .. (8,0)
       \foreach \p in {.1,.2,...,.9} {
-        node[circle,inner sep=0,minimum size=6,draw=black,fill=yellow!40!white,pos=\p]
+        node[circle,inner sep=0,minimum size=6,draw=black,fill=yellow!40!white,pos=\p] {}
       };
     \end{tikzpicture} $\longrightarrow$ консуматор
   \end{center}
@@ -141,6 +141,7 @@ main = do line <- getLine
   \end{itemize}
   \onslide<+->
   \textbf{Пример:}
+  \vspace{-.5ex}
 \begin{lstlisting}
 main = do putStrLn "Моля, въведете палиндром: "
           line <- getLine
@@ -177,7 +178,7 @@ findAverage :: IO Double@\pause@
 findAverage = do putStr "Моля, въведете брой: "
                  n <- getInt
                  s <- readAndSum n
-                 return $ (fromIntegral s) / (fromIntegral n)
+                 return $ fromIntegral s / fromIntegral n
 @\pause@
 readAndSum :: Int -> IO Int@\pause@
 readAndSum 0 = return 0
@@ -203,8 +204,7 @@ main = do avg <- findAverage
   \item \lst{sequence :: [IO a] -> IO [a]}
     \begin{itemize}
     \item композира трансформации и събира резултатите им в списък
-    \item \lst!getInts n = sequence $ replicate n getInt! % поправка на оцветяването $
-    \item \lst!getInts = sequence . (`replicate` getInt)!
+    \item \alt<+->{\lst!getInts = sequence . (`replicate` getInt)!}{\lst!getInts n = sequence $ replicate n getInt!} % поправка на оцветяването $
     \end{itemize}
   \item \lst{mapM :: (a -> IO b) -> [a] -> IO [b]}
     \begin{itemize}
@@ -238,9 +238,9 @@ readInt s = do putStr $ "Моля, въведете " ++ s ++ ": "
 
 findAverage :: IO Double
 findAverage = do n <- readInt "брой"
-                 l <- mapM (readInt . ("число #"++) . show) [1..n]
+                 l <- mapM (readInt.("число #"++).show) [1..n]
                  let s = sum l
-                 return $ (fromIntegral s) / (fromIntegral n)
+                 return $ fromIntegral s / fromIntegral n
 
 main = forever $
        do avg <- findAverage
@@ -284,6 +284,7 @@ noSpaces = interact $ filter (/=' ')
   \item Има варианти на функциите за вход/изход, които работят с \lst{Handle}
   \item \lst{hGetLine}, \lst{hGetChar}, \lst{hPutStr}, \lst{hPutStrLn}, \lst{hGetContents}\ldots
   \item \textbf{Пример:}
+    \vspace{-1ex}
 \begin{lstlisting}
 encrypt cypher inFile outFile =
   do h1 <- openFile inFile ReadMode
@@ -336,7 +337,7 @@ encrypt cypher inFile outFile =
   \frametitle{Императивен стил чрез монади}
 
   \small
-  \begin{overlayarea}{\textwidth}{\textheight}
+  \begin{fixedarea}
     \begin{itemize}[<+->]
     \item \lst{do} всъщност е синтактична захар за поредица от ``свързвания``
     \item \textbf{Примери:}
@@ -348,7 +349,7 @@ main = do line <- getLine
       \end{onlyenv}
       \begin{onlyenv}<3>
 \begin{lstlisting}
-main = getLine >>= (\line -> putStrLn $ "Въведохте: " ++ line)
+main = getLine >>= (\line -> putStrLn $ "Въведохте " ++ line)
 \end{lstlisting}
       \end{onlyenv}
       \begin{onlyenv}<4->
@@ -361,7 +362,7 @@ main = getLine >>= putStrLn . ("Въведохте: " ++)
 findAverage = do putStr "Моля, въведете брой: "
                  n <- getInt
                  s <- readAndSum n
-                 return $ (fromIntegral s) / (fromIntegral n)
+                 return $ fromIntegral s / fromIntegral n
 \end{lstlisting}
       \end{onlyenv}
       \begin{onlyenv}<6->
@@ -369,14 +370,14 @@ findAverage = do putStr "Моля, въведете брой: "
 findAverage = putStr "Моля, въведете брой: " >>=
                (\_ -> getInt >>=
                (\n -> readAndSum n >>=
-               (\s -> return $ (fromIntegral s) /
-                               (fromIntegral n)))
+               (\s -> return $ fromIntegral s /
+                               fromIntegral n))
 \end{lstlisting}
       \end{onlyenv}
     \item<7-> работи за произволни монади, не само за \lst{IO}!
     \item<8-> позволява абстрахиране от страничните ефекти и моделиране на поредица от инструкции
     \item<9-> императивен стил във функционалното програмиране
     \end{itemize}
-  \end{overlayarea}
+  \end{fixedarea}
 \end{frame}
 \end{document}
