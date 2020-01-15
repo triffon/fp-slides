@@ -282,7 +282,7 @@ class (Ord a, Measurable a) => OrdMeasurable a where
     \end{itemize}
   \item{} <елемент> ::= <конструктор> \{ <тип-на-параметър> \}
     \begin{itemize}
-    \item всеки вид елемент на типа се описва с уникален <конструктор>
+    \item всеки вариант за елемент на типа се описва с уникален <конструктор>
     \item{} <конструктор> трябва да започва с главна буква
     \item{} <конструктор> може да има произволен брой параметри, чиито типове се задават в дефиницията
     \end{itemize}
@@ -360,7 +360,7 @@ better (Player name1 score1) (Player name2 score2)
   \item \lst{circle :: Shape}
   \item<.-> \lst{circle = Circle 2.3}
   \item \lst{rect :: Shape}
-  \item<.-> \lst{rect = Rectanlge 3.5 1.8}
+  \item<.-> \lst{rect = Rectangle 3.5 1.8}
   \item \lst{area :: Shape -> Double}
   \item \lst{area (Circle r) = pi * r^2}
   \item<.-> \lst{area (Rectangle w h) = w * h}
@@ -566,7 +566,7 @@ foldrBinTree op nv (Node x l r) =
 \small
   Можем да правим \alert{взаимнорекурсивни} дефиниции:
 \begin{lstlisting}
-data Tree a =  Tree { root :: a, subtrees :: TreeList a }
+data Tree a =  Tree { rootTree :: a, subtrees :: TreeList a }
 data TreeList a = None | SubTree { firstTree :: Tree a,
                                    restTrees :: TreeList a }
 \end{lstlisting}
