@@ -3,7 +3,7 @@
 
 \title{Функтори и монади}
 
-\date{8--15 януари 2020 г.}
+\date{10 февруари 2020 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -154,7 +154,7 @@ class (Functor f) => Applicative f where
 \end{lstlisting}
   \onslide<+->
   Можем да дефинираме \alt<+->{\alt<+->{\alt<+->{\lst{fmap = (<*>) . pure}}{\lst{fmap f = (<*>) (pure f)}}}{\lst{fmap f a = (<*>) (pure f) a}}}{\lst{fmap f a = pure f <*> a}}.\\
-  \pause
+  \onslide<+->
   \textbf{Примери за апликативни функтори:}
   \begin{itemize}[<+->]
   \item \lst{Maybe}
@@ -247,7 +247,7 @@ class (Applicative m) => Monad m where
   \item \lst{IO}
   \end{itemize}
   \onslide<+->
-  \lst{do} синтаксисът работи за всички екземпляри на \lst{Monad}!
+  Синтаксисът \lst{do} работи за всички екземпляри на \lst{Monad}!
 \end{frame}
 
 \begin{frame}[fragile]
@@ -333,3 +333,6 @@ f <=< g   =   \x -> g x >>= f
   \end{enumerate}
 \end{frame}
 \end{document}
+
+% LocalWords:  BinTree BluePill RedPill ZipList liftA sequenceA xs ap
+% LocalWords:  liftM mf filterM foldM boundSum lim
