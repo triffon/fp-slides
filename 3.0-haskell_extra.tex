@@ -1,0 +1,143 @@
+\documentclass[alsotrans]{beamerswitch}
+\usepackage{fprog}
+
+\title{Типове, видове, функтори и монади}
+
+\date{20 януари 2020 г.}
+
+\lstset{language=Haskell,style=Haskell}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Въведение}
+
+\begin{frame}[fragile]
+  \frametitle{Три свята}
+  Във вселената на Haskell живеят всякакви интересни обитатели.\\
+  Можете ли да назовете някои от тях?\pause\\[2ex]
+  Обитателите са разпределени в три свята:\pause
+  \begin{enumerate}[<+->]
+    \small
+  \item Светът на \textbf{стойностите}
+    \begin{itemize}
+    \item числови (\lst{1}, \lst{2.34}) 
+    \item булеви (\lst{False}, \lst{True})
+    \item списъчни и низови (\lst{[1, 2, 3]}, \lst{"Haskell"}, \lst{[]})
+    \item функционални (\lst{sqrt}, \lst{(+)}, \lst{map}, \lst{\x -> x + 1})
+    \end{itemize}
+  \item Светът на \textbf{типовете}
+    \begin{itemize}
+    \item скаларни (\lst{Int}, \lst{Integer}, \lst{Float}, \lst{Bool})
+    \item съставни (\lst{[Int]}, \lst{String}, \lst{[[Float]]})
+    \item потребителски (\lst{Figure})
+    \item функционални (\lst{Int -> Int}, \lst{(Int -> Bool) -> [Int] -> [Int]})
+    \end{itemize}
+  \item Светът на \textbf{видовете}
+    \begin{itemize}
+    \item \alert{?}
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Правилата на вселената}
+  \begin{itemize}[<+->]
+    \small
+  \item Световете са разделени на етажи (редове)
+  \item Базовите стойности живеят на ред 0 в някой базов тип
+    \begin{itemize}
+    \item \lst{False :: Bool}
+    \end{itemize}
+  \item Функциите над стойности от ред $n$ са от ред $n+1$
+    \begin{itemize}
+    \item \lst!\f -> f 0 > 3!
+    \end{itemize}
+  \item Функциите над стойности живеят във функционални типове
+    \begin{itemize}
+    \item \lst{(Int -> Int) -> Bool}
+    \end{itemize}
+  \item Всички типове живеят на ред 0 във вида \lst{*}
+    \begin{itemize}
+    \item \lst{Bool :: *}
+    \end{itemize}
+  \item Функциите над типове от ред $n$ са от ред $n+1$
+    \begin{itemize}
+    \item \lst{[]}, \lst{[1, 2, 3] :: [Int] = ([] Int)}
+    \item \lst{Tree}, \lst{Tree (Leaf 1.23) Empty :: (Tree Float)}
+    \end{itemize}
+  \item Функциите над типове живеят във функционални видове
+    \begin{itemize}
+    \item \lst{[], Tree :: * -> *}
+    \item \lst{Container :: * -> * -> *}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{На сафари}
+  \small
+  Видяхте ли къде са...
+  \begin{itemize}[<+->]
+  \item потребителските типове (\lst{Figure})?
+    \begin{itemize}
+    \item типове от ред 0 във вида \lst{*}
+    \end{itemize}
+  \item потребителските конструктори (\lst{Circle})?
+    \begin{itemize}
+    \item стойности във функционален тип (\lst{Float -> Figure})
+    \end{itemize}
+  \item инстанциите (\lst{Eq Figure})?
+    \begin{itemize}
+    \item живеят в специалния вид \lst{Constraint}
+    \end{itemize}
+  \item класовете (\lst{Eq})?
+    \begin{itemize}
+    \item функции с един типов аргумент във вида \lst{* -> Constraint}
+    \end{itemize}
+  \item параметричните типове (\lst{Tree}, \lst{PairsList})?
+    \begin{itemize}
+    \item функции над типове в някой функционален вид (\lst{* -> *}, \lst{* -> * -> *})
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Разновидности алгебрични типове}
+  \small
+  \begin{itemize}[<+->]
+  \item Изброени типове (още: enums)
+    \begin{itemize}
+    \item \lst{data Bool = False | True}
+    \item \lst{data Compare = LT | EQ | GT}
+    \end{itemize}
+  \item Записи (още: структури, records)
+    \begin{itemize}
+    \item \lst{data Player = Player String Int}
+    \end{itemize}
+  \item Алтернативи (още: обединения, unions, суми)
+    \begin{itemize}
+    \item \lst{data Figure = Circle Float | Rectangle Float Float}
+    \end{itemize}
+  \item Параметризирани типове (още: типови функции)
+    \begin{itemize}
+    \item \lst{data Container a = Empty | Box a}
+    \item \lst{data Maybe a = None | Just a}
+    \item \lst{data Either a b = Left a | Right b}
+    \end{itemize}
+  \item Рекурсивни типове (още: неподвижни точки)
+    \vspace{-1ex}
+    \begin{itemize}
+    \item
+\begin{lstlisting}
+data Tree a = Empty | Leaf a |
+              Tree { root :: a, left :: Tree a,
+                                right :: Tree a}
+\end{lstlisting}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+\end{document}
