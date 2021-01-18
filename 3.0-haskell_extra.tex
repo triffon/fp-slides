@@ -24,7 +24,7 @@
     \small
   \item Светът на \textbf{стойностите}
     \begin{itemize}
-    \item числови (\lst{1}, \lst{2.34}) 
+    \item числови (\lst{1}, \lst{2.34})
     \item булеви (\lst{False}, \lst{True})
     \item списъчни и низови (\lst{[1, 2, 3]}, \lst{"Haskell"}, \lst{[]})
     \item функционални (\lst{sqrt}, \lst{(+)}, \lst{map}, \lst{\x -> x + 1})
@@ -138,6 +138,24 @@ data Tree a = Empty | Leaf a |
                                 right :: Tree a}
 \end{lstlisting}
     \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section{Функтори}
+
+\begin{frame}[fragile]
+  \frametitle{Класове от по-висок ред}
+
+  \begin{itemize}[<+->]
+  \item Вече познаваме \emph{класове} от типове, които имат
+    сходно поведение (\lst{Eq}, \lst{Read}, \lst{Show}, \lst{Enum}, \ldots).
+  \item
+    Знаем, че има и \emph{типови конструктори}, които позволяват дефиниране на параметризирани (генерични) типове (\lst{[]}, \lst{Maybe}, \lst{Tree}, \lst{PairsList}, \ldots).
+  \item
+    Нека да разгледаме \emph{клас от типови конструктори}, които имат някаква обща характеристика.
+  \item
+    \textbf{Пример:} Има ли нещо общо, което можем да правим с \lst{[]} и \lst{Tree}?
+  \item Нещо, което не зависи от \emph{типа} на елементите в тези контейнери?
   \end{itemize}
 \end{frame}
 \end{document}
