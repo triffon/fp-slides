@@ -13,7 +13,7 @@
   \titlepage
 \end{frame}
 
-\section{Въведение}
+\section{Стойности, типове и видове}
 
 \begin{frame}[fragile]
   \frametitle{Три свята}
@@ -32,7 +32,7 @@
   \item Светът на \textbf{типовете}
     \begin{itemize}
     \item скаларни (\lst{Int}, \lst{Integer}, \lst{Float}, \lst{Bool})
-    \item съставни (\lst{[Int]}, \lst{String}, \lst{[[Float]]})
+    \item съставни (\lst{[Int]}, \lst{String}, \lst{([Float],Bool)})
     \item потребителски (\lst{Figure})
     \item функционални (\lst{Int -> Int}, \lst{(Int -> Bool) -> [Int] -> [Int]})
     \end{itemize}
@@ -72,7 +72,7 @@
   \item Функциите над типове живеят във функционални видове
     \begin{itemize}
     \item \lst{[], Tree :: * -> *}
-    \item \lst{Container :: * -> * -> *}
+    \item \lst{PairsList :: * -> * -> *}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -80,7 +80,7 @@
 \begin{frame}
   \frametitle{На сафари}
   \small
-  Видяхте ли къде са...
+  Видяхте ли къде са...\pause
   \begin{itemize}[<+->]
   \item потребителските типове (\lst{Figure})?
     \begin{itemize}
