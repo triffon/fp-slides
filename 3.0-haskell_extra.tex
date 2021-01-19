@@ -143,6 +143,36 @@ data Tree a = Empty | Leaf a |
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Адашите}
+  Можем да имаме обитатели с еднакви имена, които живеят в различни светове!\\\pause
+  \small
+  \textbf{Примери:}
+  \begin{itemize}[<+->]
+  \item \lst{data Player = Player String Int}
+    \begin{itemize}
+    \item \lst{Player :: *} и \lst{Player :: String -> Int -> Player}
+    \end{itemize}
+  \item \lst{data Tree a = Empty | Leaf a | Tree a (Tree a) (Tree a)}
+    \begin{itemize}
+    \item \lst{Tree :: * -> *} и \lst{Tree :: a -> Tree a -> Tree a -> Tree a}
+    \end{itemize}
+  \item \lst{() :: ()} и \lst{() :: *}
+  \item \lst{[] :: [a]} $\equiv$ \lst{([] a)}
+    \begin{itemize}
+    \item \lst{[] :: * -> *} и \lst{[] :: [a]}
+    \end{itemize}
+  \item \lst{((,) 1 2)} $\equiv$ \lst{(1,2) :: (Int,Int)} $\equiv$ \lst{((,) Int Int)}
+    \begin{itemize}
+    \item \lst{(,) :: * -> * -> *} и \lst{(,) :: a -> b -> (a,b)}
+    \end{itemize}
+   \item \lst{Int -> Bool} $\equiv$ \lst{((->) Int Bool)}
+     \begin{itemize}
+     \item \lst{(->) :: * -> * -> *}
+     \end{itemize}
+  \end{itemize}
+\end{frame}
+
 \section{Функтори}
 
 \begin{frame}[fragile]
@@ -160,4 +190,513 @@ data Tree a = Empty | Leaf a |
   \item Нещо, което не зависи от \emph{типа} на елементите в тези контейнери?
   \end{itemize}
 \end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Примери за класове от конструктори}
+  \begin{itemize}[<+->]
+  \item
+    \textbf{Пример:} Има ли нещо общо, което можем да правим с \lst{[]} и \lst{Tree}?
+  \item Можем да намираме брой елементи
+\begin{lstlisting}
+class Countable c where
+  count :: c a -> Integer
+\end{lstlisting}
+  \item Можем да намерим списък от всички елементи
+\begin{lstlisting}
+class Listable c where
+  elements :: c a -> [a]
+\end{lstlisting}
+  \item Можем да приложим функция над всеки елемент
+\begin{lstlisting}
+class Functor f where
+  fmap :: (a -> b) -> f a -> f b
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Функтори}
+  \begin{definition}
+    Класът \lst{Functor} в Haskell се състои от типовите конструктори $f$, за които може да се дефинира \lst{fmap :: (a -> b) -> f a -> f b}.
+  \end{definition}
+  \pause
+  За удобство операцията \lst!<$>! е инфиксен вариант на \lst{fmap}.\\ % $ за поправка на оцветяването
+  \pause
+  \textbf{Примери за функтори:}
+  \begin{itemize}[<+->]
+  \item \lst{Maybe}
+  \item \lst{(,) a}  
+  \item \lst{Either a}
+  \item \lst{[]}
+  \item \lst{Tree}
+  \item \lst{(->) r}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Странни функторни екземпляри}
+  \textbf{Пример:} да разгледаме екземпляра
+\begin{lstlisting}
+data Pill a = BluePill a | RedPill a
+instance Functor Pill where
+  fmap f (BluePill x) = RedPill (f x)
+  fmap f (RedPill  x) = BluePill (f x)
+\end{lstlisting}
+  \pause
+  \textbf{Проблем №1:}
+  \begin{itemize}[<+->]
+  \item \lst{fmap id (BluePill 2) = RedPill 2}
+  \item \lst{fmap} с ``празна'' функция променя структурата на функтора!
+  \end{itemize}
+  \onslide<+->
+  \textbf{Проблем №2:}
+  \begin{itemize}[<+->]
+  \item \lst{fmap (+3) (BluePill 3) = RedPill 6}
+  \item \lst{fmap (+1) (fmap (+2) (BluePill 3)) = BluePill 6}
+  \item Има значение колко поред функции ще приложим!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Функторни закони}
+  \begin{definition}
+    \emph{Функтор} наричаме екземпляр на класа \lst{Functor} такъв, че:
+    \begin{enumerate}
+    \item \lst{fmap id} \eqv \lst{id} (запазване на идентитета)
+    \item \lst{fmap f . fmap g} \eqv \lst{fmap (f . g)} (дистрибутивност относно композиция)
+    \end{enumerate}
+  \end{definition}
+  \pause
+  Функторните закони ни дават гаранция, че реализацията на \lst{fmap} е ``неутрална'' към функтора и променя стойностите в него само и единствено на базата на подадената функция \lst{f}.\\
+  \pause
+  Всички примерни екземпляри (освен \lst{Pill}) удовлетворяват функторните закони.\\
+  \pause
+  Можем да мислим, че \lst{fmap} ``повдига'' функцията \lst{f} от елементи към функтори.
+\end{frame}
+
+\section{Апликативни функтори}
+
+\begin{frame}
+  \frametitle{\tt{fmap} с двуаргументни функции}
+  Можем ли да използваме \tt{fmap} за ``повдигане'' на двуаргументна функция?\\
+  \pause
+  \onslide<+->
+  \textbf{Пример:} \evalstoerrp{fmap (+) (Just 3) (Just 5)}\\
+  \onslide<+->
+  \textbf{Проблем:} \typestop{fmap (+) (Just 3)}{Maybe (Int -> Int)}\\
+  \onslide<+->
+  Получаваме функтор над функция, която не можем директно да приложим над функтор над стойност!\\
+  \onslide<+->
+  \textbf{Идея:} Да разбием \lst{fmap} на две части:
+  \begin{itemize}[<+->]
+  \item повдигане на функтор над функция към функция над функтори
+    \begin{itemize}
+    \item \lst{f (a -> b) -> f a -> f b}
+    \end{itemize}
+  \item повдигане на обикновена функция към функтор над функция
+    \begin{itemize}
+    \item \lst{(a -> b) -> f (a -> b)} 
+    \end{itemize}
+  \end{itemize}
+  \onslide<+->
+  Функторите, които поддържат такова разлагане на \lst{fmap} наричаме \emph{апликативни}.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Класът \tt{Applicative}}
+\begin{lstlisting}
+class (Functor f) => Applicative f where
+  pure  :: a -> f a
+  (<*>) :: f (a -> b) -> f a -> f b
+\end{lstlisting}
+  \onslide<+->
+  Можем да дефинираме \alt<+->{\alt<+->{\alt<+->{\lst{fmap = (<*>) . pure}}{\lst{fmap f = (<*>) (pure f)}}}{\lst{fmap f a = (<*>) (pure f) a}}}{\lst{fmap f a = pure f <*> a}}.\\
+  \onslide<+->
+  \textbf{Примери за апликативни функтори:}
+  \begin{itemize}[<+->]
+  \item \lst{Maybe}
+  \item \lst{Either a}
+  \item \lst{[]}
+  \item \lst{ZipList}
+  \item \lst{(->) r}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Функции за апликативни функтори}
+  \begin{itemize}[<+->]
+  \item \lst!liftA2 :: (Applicative f) => !\\
+    \hspace{10ex}\lst{(a -> b -> c) -> f a -> f b -> f c}
+    \begin{itemize}
+    \item повдига двуаргументна функция над функтор
+    \item \lst!liftA2 f a b = f <$> a <*> b!   % $ оцветяване на синтаксиса
+    \item \textbf{Пример:}\\\evalstop{liftA2 (+) [2,3] [10,20,30]}{[12,22,32,13,23,33]}
+    \end{itemize}
+  \item \lst{sequenceA :: (Applicative f) => [f a] -> f [a]}
+    \begin{itemize}
+    \item повдига списък от функтори до функтор над списък
+    \item     \lst{sequenceA []     = pure []}
+    \item<.-> \lst{sequenceA (x:xs) = liftA2 (:) x (sequenceA xs)}
+    \item     \lst{sequenceA = foldr (liftA2 (:)) (pure [])}
+    \item \textbf{Пример:}\\\evalstop{sequenceA [Just 2, Just 3, Just 5]}{Just [2,3,5]}
+    \item \textbf{Пример:} \evalstop{sequenceA [Just 2, Nothing, Just 5]}{Nothing}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Закони за апликативни функтори}
+  \begin{definition}
+    \emph{Апликативен функтор} наричаме екземпляр на класа \lst{Applicative}, за който:
+    \begin{enumerate}[<+->]
+    \item \lst{pure f <*> x} \eqv \lst{fmap f x}
+    \item \lst{pure id <*> v} \eqv \lst{v}
+    \item \lst{pure (.) <*> u <*> v <*> w} \eqv \lst{u <*> (v <*> w)}
+    \item \lst{pure f <*> pure x} \eqv \lst{pure (f x)}
+    \item \lst{u <*> pure y} \eqv \lst{pure ($ y) <*> u} % $ оцветяване на синтаксис
+    \end{enumerate}
+  \end{definition}
+\end{frame}
+
+\section{Монади}
+
+\begin{frame}
+  \frametitle{Операцията ``свързване'' (bind)}
+  
+  \begin{itemize}[<+->]
+  \item Функторите ни позволяваха да превърнем \emph{функция над елементи} във функция над функтори:
+    \begin{itemize}
+    \item \evalsto{(+3) <$> [1,2]}{[4,5]} % $ оцветяване на синтаксиса
+    \end{itemize}
+  \item Апликативните функтори ни позволяваха да превърнем \emph{функтор над функция} към функция над функтори
+    \begin{itemize}
+    \item \evalsto{(+) <$> [1,2] <*> [10,20]}{[11,12,21,22]} % $ оцветяване на синтаксиса
+    \end{itemize}
+  \item Но как можем да превърнем \emph{функция, връщаща функтор} във функция над функтори?
+    \begin{itemize}
+    \item \evalsto{(\\x -> [1..x]) =<< [3,4]}{[1,2,3,1,2,3,4]} % >> оцветяване на синтаксиса
+    \item Искаме структурата на функтора-резултат да може да зависи от стойността във функтора-параметър!
+    \item \lst!(=<<) :: (a -> f b) -> f a -> f b!  % >> оцветяване на синтаксиса
+    \item По-често се използва операцията ``свързване'' (bind) с разменени аргументи:
+    \item \lst!(>>=) :: f a -> (a -> f b) -> f b!
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Класът \tt{Monad}}
+\begin{lstlisting}
+class (Applicative m) => Monad m where  
+  return :: a -> m a  
+  return = pure     
+  
+  (>>=) :: m a -> (a -> m b) -> m b
+  (>>)  :: m a -> m b -> m b  
+  x >> y   =   x >>= \_ -> y  
+\end{lstlisting}
+  \pause
+  \textbf{Примери за монади:}
+  \begin{itemize}[<+->]
+  \item \lst{Maybe}
+  \item \lst{[]}
+  \item \lst{(->) r}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Монадни функции (1)}
+  \begin{itemize}[<+->]
+  \item \lst{liftM :: (Monad m) => (a -> b) -> m a -> m b}
+    \begin{itemize}
+    \item \lst{fmap} за монади
+    \item \lst!liftM f m = m >>= (\x -> return $ f x)! % $ оцветяване на синтаксиса
+    \end{itemize}
+  \item \lst{ap :: (Monad m) => m (a -> b) -> m a -> m b}
+    \begin{itemize}
+    \item \lst{<*>} за монади
+    \item \lst!ap mf m = mf >>= (\f -> m >>= (\x -> return $ f x))! % $ оцветяване на синтаксиса
+    \end{itemize}
+  \item \lst{liftM2::(Monad m) => (a -> b -> c) -> m a -> m b -> m c}
+    \begin{itemize}
+    \item \lst{liftA2} за монади
+\onslide<+->
+\begin{lstlisting}
+liftM2 f m1 m2 = m1 <<= (\x1 ->
+                 m2 <<= (\x2 ->
+                 return $ f x1 x2))
+\end{lstlisting}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Монадни функции (2)}
+  \begin{fixedarea}
+    \begin{itemize}[<+->]
+    \item \lst{join :: (Monad m) => m (m a) -> m a}
+      \begin{itemize}
+      \item ``слива'' двойната опаковка в единична
+      \item \alt<+->{\alt<+->{\lst{join = (>>= id)}}{\lst{join mm = (>>= id) mm}}}{\lst{join mm = mm >>= id}}
+      \item Можем да дефинираме \lst{(>>=)} чрез \lst{join} и \lst{fmap}:
+      \item<.-> \lst{m >>= f = join (fmap f m)} 
+      \end{itemize}
+    \item \lst{filterM :: (Monad m) => (a -> m Bool) -> [a] -> m [a]}
+      \begin{itemize}
+      \item Филтрира с предикат, връщащ ``опаковани'' булеви стойности
+      \item Резултатът е ``опакованите'' елементи на списъка
+      \item \lst{powerset = filterM (\x -> [True,False])}
+      \end{itemize}
+    \item \lst{foldM :: (Monad m) => (a -> b -> m a) -> a -> [b] -> m a}
+      \begin{itemize}
+      \item Натрупва елементи от списък с монадна операция
+      \item Натрупването е ляво (итеративен процес, подобно на \lst{foldl})
+      \item
+        \lst!boundSum lim = foldM (\x y -> if x+y < lim!\\
+        \hspace{30ex}\lst{then Just (x+y) else Nothing) 0}
+      \item \evalstop{boundSum 60 [1..10]}{Just 55}
+      \item \evalstop{boundSum 50 [1..10]}{Nothing}
+      \end{itemize}
+    \end{itemize}
+  \end{fixedarea}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Монадни закони}
+  \begin{definition}
+    \emph{Монада} наричаме инстанция на класа \lst{Monad}, за която:
+    \small
+    \begin{enumerate}[<+->]
+    \item \lst{return x >>= f} \eqv \lst{f x} (ляв идентитет)
+    \item \lst{m >>= return}   \eqv \lst{m}   (десен идентитет)
+    \item \lst{(m >>= f) >>= g} \eqv \lst{m >>= (\x -> f x >>= g)} (асоциативност)
+    \end{enumerate}
+  \end{definition}
+  \onslide<+->
+  Композиция на монадни функции:\\
+\begin{lstlisting}
+(<=<) :: (Monad m) => (b -> m c) -> (a -> m b) -> (a -> m c)  
+f <=< g   =   \x -> g x >>= f
+\end{lstlisting}
+  \onslide<+->
+  Монадните закони чрез композиция:
+  \begin{enumerate}
+  \item \lst{f <=< return} \eqv \lst{f} (ляв идентитет)
+  \item \lst{return <=< f} \eqv \lst{f} (десен идентитет)
+  \item \lst{f <=< (g <=< h)} \eqv \lst{(f <=< g) <=< h} (асоциативност)
+  \end{enumerate}
+\end{frame}
+
+\section{Странични ефекти чрез монади}
+
+\begin{frame}
+  \frametitle{Монадите като опаковки}
+  Монадите са конструкции, които ``опаковат'' обекти от даден тип.\pause\\[2ex]
+  \textbf{Примери:}
+  \begin{itemize}[<+->]
+  \item \lst{Maybe} опакова стойност с ``флаг'' дали стойността съществува
+  \item \lst{[a]} опакова няколко ``алтернативни'' стойности в едно
+  \item \lst{r -> a} опакова стойност от тип \lst{a} в ``машинка'', която я пресмята при подаден параметър от тип \lst{r}
+  \item \lst{s -> (a,s)} опакова стойност от тип \lst{a} в ``действие'', което променя дадено състояние от тип \lst{s}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Монадни операции}
+
+  \begin{itemize}[<+->]
+  \item ``Опаковката'' често е \alert{еднопосочна}: един път опакована, не можем да извадим стойността извън опаковката\ldots
+  \item \ldots но можем да я преопаковаме!
+  \item \lst{(>>=) :: Monad m => m a -> (a -> m b) -> m b}
+  \item оператор за ``свързване'' на опаковани стойности
+  \item \lst{b = a >>= f}:
+    \begin{itemize}
+    \item поглеждаме стойността \lst{x} в опаковката \lst{a}
+    \item прилагаме функцията \lst{f} над \lst{x}
+    \item и получаваме нова опакована стойност \lst{b}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Входно-изходи операции в Haskell}
+
+  \begin{itemize}[<+->]
+  \item Функциите в Haskell нямат странични ефекти
+  \item Но входно-изходните операции по природа са странични ефекти!
+  \item Как можем да се справим с този парадокс?
+  \item \textbf{Идея:} Можем да си мислим за входно-изходните операции като поточна обработка на данни
+  \end{itemize}
+  \onslide<+->
+  \begin{center}
+    производител
+    $\longrightarrow$
+    \begin{tikzpicture}[scale=.7,baseline={(0,0)}]
+      \filldraw[draw=black,fill=diagramblue]
+      (0,1) .. controls +(2,1.5) and +(-2,-1.5) .. (8,1) --
+      (8,-1) .. controls +(-2,-1.5) and +(2,1.5) .. (0,-1) -- (0,1);
+      \path (0,0) .. controls +(2,1.5) and +(-2,-1.5) .. (8,0)
+      \foreach \p in {.1,.2,...,.9} {
+        node[circle,inner sep=0,minimum size=6,draw=black,fill=yellow!40!white,pos=\p] {}
+      };
+    \end{tikzpicture} $\longrightarrow$ консуматор
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Поточна обработка}
+  \textbf{Задача.} Да се въведат \tt{n} числа и да се изведе тяхното средно аритметично.\\
+  \pause
+  \textbf{Решение:} Дефинираме трансформация над стандартните вход и изход, която:
+  \begin{itemize}[<+->]
+  \item приема \tt{n} като параметър
+  \item трансформира входния поток, като \alert{консумира} от него \tt{n} числа, записвайки ги в списък
+  \item пресмята средното аритметично \tt{avg} на числата в списъка
+  \item трансформира изходния поток, като \alert{произвежда} върху него низовото представяне на \tt{avg}
+  \end{itemize}
+  \onslide<+->
+  \textbf{Трансформирането} на входно-изходните потоци несъмнено е страничен ефект, но \textbf{конструирането на трансформацията} няма нужда от странични ефекти!\\
+  \onslide<+->
+  \alert{Функциите, които работят с вход и изход, по същество дефинират композиция на входно-изходни трансформации.}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Типът \tt{IO a}}
+
+  Стандартният генеричен тип \lst{IO a} задава тип на входно/изходна трансформация, резултатът от която е от тип \tt{a}.\\
+  \pause
+  \textbf{Частен случай:} \lst{IO ()} задава трансформация, която връща празен резултат.\\[1em]
+  \pause
+  \textbf{Входни трансформации:}
+  \begin{itemize}
+  \item \lst{getChar :: IO Char} --- връща символ, прочетен от входа
+  \item \lst{getLine :: IO String} --- връща ред, прочетен от входа
+  \end{itemize}
+  \pause
+  \textbf{Изходни трансформации:}
+  \begin{itemize}
+  \item \lst{putChar :: Char -> IO ()} --- извежда символ на изхода
+  \item \lst{putStr :: String -> IO ()} --- извежда низ на изхода
+  \item \lst{putStrLn :: String -> IO ()} --- извежда ред на изхода
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Главна функция \tt{main}}
+
+  \begin{itemize}[<+->]
+  \item Функцията \lst{main :: IO ()} от модула \lst{Main} в Haskell е
+    специална: тя е входната точка на компилираната програма.
+  \item По същество тя дефинира входно-изходна трансформация, която се прилага към стандартния вход и изход при изпълнение на програмата.
+  \item \textbf{Пример:} \lst^main = putStrLn "Hello, world!"^
+  \item Можем ли да дефинираме \lst!main = putStrLn $ "Въведохте: " ++ getLine!? % поправка на оцветяването на синтаксис$
+  \item \alert{Не!} \hspace{5ex} \lst{getLine :: }\tta{IO} \lst{String}
+  \item Композицията на входно-изходни трансформации не работи като композицията на функции
+  \item Низът, който връща \lst{getLine} е ``замърсен'' от входно-изходна операция
+  \item Как да композираме трансформации?
+  \end{itemize}
+\end{frame}
+
+\section{Синтаксис за вход/изход}
+
+\begin{frame}[fragile]
+  \frametitle{Конструкцията \lst{do}}
+
+  В Haskell има специален синтаксис за композиране на трансформации:\\[1em]
+  \tta{do} \{ <трансформация> \}\\[1em]
+  \pause
+  <трансформация> може да бъде:
+  \begin{itemize}[<+->]
+  \item произволен израз от тип \lst{IO a}
+  \item{} <име> \tta{<-} <трансформация>
+    \begin{itemize}
+    \item{} <трансформация> е от тип \lst{IO a}
+    \item резултатът от <трансформация> се свързва с <име>
+    \end{itemize}
+  \item \tta{return} <израз>
+    \begin{itemize}
+    \item празна трансформация, която връща <израз> като резултат
+    \item \lst{return :: a -> IO a}
+    \end{itemize}
+  \item резултатът от цялата конструкция \tt{do} е резултатът от последната трансформация в композицията
+  \end{itemize}
+  \onslide<+->
+\begin{lstlisting}
+main = do line <- getLine
+          putStrLn $ "Въведохте: " ++ line
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Пример: средно аритметично на редица от числа}
+\begin{lstlisting}
+findAverage :: IO Double@\pause@
+findAverage = do putStr "Моля, въведете брой: "
+                 n <- getInt
+                 s <- readAndSum n
+                 return $ fromIntegral s / fromIntegral n
+@\pause@
+readAndSum :: Int -> IO Int@\pause@
+readAndSum 0 = return 0
+readAndSum n = do putStr "Моля, въведете число: "
+                  x <- getInt
+                  s <- readAndSum $ n - 1
+                  return $ x + s
+@\pause@
+main = do avg <- findAverage
+          putStrLn $ "Средното аритметично е: " ++ show avg
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Императивен стил чрез монади}
+
+  \small
+  \begin{fixedarea}
+    \begin{itemize}[<+->]
+    \item \lst{do} всъщност е синтактична захар за поредица от ``свързвания``
+    \item \textbf{Примери:}
+      \begin{onlyenv}<2>
+\begin{lstlisting}
+main = do line <- getLine
+          putStrLn $ "Въведохте: " ++ line
+\end{lstlisting}
+      \end{onlyenv}
+      \begin{onlyenv}<3>
+\begin{lstlisting}
+main = getLine >>= (\line -> putStrLn $ "Въведохте " ++ line)
+\end{lstlisting}
+      \end{onlyenv}
+      \begin{onlyenv}<4->
+\begin{lstlisting}
+main = getLine >>= putStrLn . ("Въведохте: " ++)
+\end{lstlisting}
+      \end{onlyenv}
+      \begin{onlyenv}<5>
+\begin{lstlisting}
+findAverage = do putStr "Моля, въведете брой: "
+                 n <- getInt
+                 s <- readAndSum n
+                 return $ fromIntegral s / fromIntegral n
+\end{lstlisting}
+      \end{onlyenv}
+      \begin{onlyenv}<6->
+\begin{lstlisting}
+findAverage = putStr "Моля, въведете брой: " >>=
+               (\_ -> getInt >>=
+               (\n -> readAndSum n >>=
+               (\s -> return $ fromIntegral s /
+                               fromIntegral n))
+\end{lstlisting}
+      \end{onlyenv}
+    \item<7-> работи за произволни монади, не само за \lst{IO}!
+    \item<8-> позволява абстрахиране от страничните ефекти и моделиране на поредица от инструкции
+    \item<9-> императивен стил във функционалното програмиране
+    \end{itemize}
+  \end{fixedarea}
+\end{frame}
 \end{document}
+
+\end{document}
+
+% LocalWords:  BinTree BluePill RedPill ZipList liftA sequenceA xs ap
+% LocalWords:  liftM mf filterM foldM boundSum lim
