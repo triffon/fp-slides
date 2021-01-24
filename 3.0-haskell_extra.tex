@@ -203,8 +203,8 @@ class Countable c where
 \end{lstlisting}
   \item Можем да намерим списък от всички елементи
 \begin{lstlisting}
-class Listable c where
-  elements :: c a -> [a]
+class Collectable c where
+  collect :: c a -> [a]
 \end{lstlisting}
   \item Можем да приложим функция над всеки елемент
 \begin{lstlisting}
@@ -310,7 +310,7 @@ class (Functor f) => Applicative f where
   (<*>) :: f (a -> b) -> f a -> f b
 \end{lstlisting}
   \onslide<+->
-  Можем да дефинираме \alt<+->{\alt<+->{\alt<+->{\lst{fmap = (<*>) . pure}}{\lst{fmap f = (<*>) (pure f)}}}{\lst{fmap f a = (<*>) (pure f) a}}}{\lst{fmap f a = pure f <*> a}}.\\
+  Можем да дефинираме \alt<+->{\alt<+->{\alt<+->{\lst{fmap = (<*>) . pure}}{\lst{fmap f = (<*>) (pure f)}}}{\lst{fmap f x = (<*>) (pure f) x}}}{\lst{fmap f x = pure f <*> x}}.\\
   \onslide<+->
   \textbf{Примери за апликативни функтори:}
   \begin{itemize}[<+->]
@@ -404,7 +404,7 @@ class (Applicative m) => Monad m where
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Монадни функции (1)}
+  \frametitle{Монадни функции}
   \begin{itemize}[<+->]
   \item \lst{liftM :: (Monad m) => (a -> b) -> m a -> m b}
     \begin{itemize}
@@ -429,7 +429,7 @@ liftM2 f m1 m2 = m1 <<= (\x1 ->
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<all:0>[fragile]
   \frametitle{Монадни функции (2)}
   \begin{fixedarea}
     \begin{itemize}[<+->]
@@ -558,6 +558,7 @@ f <=< g   =   \x -> g x >>= f
   \onslide<+->
   \alert{Функциите, които работят с вход и изход, по същество дефинират композиция на входно-изходни трансформации.}
 \end{frame}
+\end{document}
 
 \begin{frame}
   \frametitle{Типът \tt{IO a}}
@@ -699,4 +700,5 @@ findAverage = putStr "Моля, въведете брой: " >>=
 \end{document}
 
 % LocalWords:  BinTree BluePill RedPill ZipList liftA sequenceA xs ap
-% LocalWords:  liftM mf filterM foldM boundSum lim
+% LocalWords:  liftM mf filterM foldM boundSum lim PairsList enums
+% LocalWords:  getChar getLine putChar putStr putStrLn

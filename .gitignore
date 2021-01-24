@@ -6,5 +6,6 @@ _region_.tex
 *.pdf
 !images/*.pdf
 *.xoj
+*.xopp
 auto/
 out/
