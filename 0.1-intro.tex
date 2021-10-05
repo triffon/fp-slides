@@ -7,7 +7,7 @@
 \newcommand{\scheme}{\lang{Scheme}}
 \newcommand{\haskell}{\lang{Haskell}}
 
-\date{2 октомври 2019 г.}
+\date{6 октомври 2021 г.}
 
 \begin{document}
 
@@ -20,11 +20,11 @@
 \begin{frame}
   \frametitle{Императивен стил}
 
-  Описваме последователно изчислителните стъпки.\\[1em]
+  Описваме последователно изчислителните стъпки.\\[2ex]
   \begin{columns}[t,onlytextwidth]
 
     \column{0.5\textwidth}
-    \textbf{Неструктурирано\\програмиране}\\[1em]
+    \textbf{Неструктурирано\\програмиране}\\[2ex]
     \begin{enumerate}
     \item Въведи \tt a, \tt b
     \item Ако \tt{a $=$ b}, към 6.
@@ -36,7 +36,7 @@
     \end{enumerate}
 
     \column{0.5\textwidth}
-    \textbf{Структурирано\\програмиране}\\[1em]
+    \textbf{Структурирано\\програмиране}\\[2ex]
     \begin{itemize}
     \item Въведи \tt a, \tt b
     \item Докато \tt{a $\neq$ b}
@@ -59,7 +59,7 @@
 \begin{frame}
   \frametitle{Декларативен стил}
 
-  Описваме свойствата на желания резултат.\\[1em]
+  Описваме свойствата на желания резултат.\\[2ex]
   \textbf{Програмиране с ограничения}
   \begin{itemize}
   \item Дадени са \tt a и \tt b.
@@ -83,7 +83,7 @@
 \begin{frame}
   \frametitle{Декларативен стил (2)}
 
-  Описваме свойствата на желания резултат.\\[1em]
+  Описваме свойствата на желания резултат.\\[2ex]
   \textbf{Логическо програмиране}
   \begin{itemize}
   \item Описваме релацията над естествени числа $gcd(a,b,c)$
@@ -102,7 +102,7 @@
 
 \begin{frame}
   \frametitle{Декларативен стил (3)}
-  Описваме свойствата на желания резултат.\\[1em]
+  Описваме свойствата на желания резултат.\\[2ex]
   \textbf{Функционално програмиране}
   \begin{itemize}
   \item Функцията над естествени числа $gcd(a,b)$ притежава следните свойства:
@@ -121,7 +121,7 @@
 \begin{frame}
   \frametitle{Още един пример}
 
-  Да се намери сумата на квадратите на нечетните числа в списъка \tt l.\\[1em]
+  Да се намери сумата на квадратите на нечетните числа в списъка \tt l.\\[2ex]
   \begin{columns}[t,onlytextwidth]
     \column{0.5\textwidth}
     \textbf{Императивен стил}
@@ -159,9 +159,9 @@ for(int i = 0; i < sizeof(l); i++)
 cout << s;
 \end{verbatim}
   \pause
-  \textbf{Scheme:} \tt{(apply + (map square (filter odd? l)))}\\[1em]
+  \textbf{Scheme:} \tt{(apply + (map square (filter odd? l)))}\\[2ex]
   \pause
-  \textbf{Haskell:} \tt{foldr1 (+) [ x\^{}2 | x <- l, odd x ]}\\[1em]
+  \textbf{Haskell:} \tt{foldr1 (+) [ x\^{}2 | x <- l, odd x ]}\\[2ex]
   \pause
   \textbf{Haskell:} \tt{sum . map (\^{}2) . filter odd}
 \end{frame}
@@ -171,13 +171,13 @@ cout << s;
 \begin{frame}
   \frametitle{Какво може да се сметне с компютър?}
 
-  Нека $f:\mathbb N\to\mathbb N$ е функция над естествени числа.\\[1em]
+  Нека $f:\mathbb N\to\mathbb N$ е функция над естествени числа.\\[2ex]
 
-  \textbf{Примери:} $f(x) = x^2$, $f(x) = x$-тото число на Фибоначи.\\[2em]
+  \textbf{Примери:} $f(x) = x^2$, $f(x) = x$-тото число на Фибоначи.\\[4ex]
   \pause
-  \textbf{Въпрос 1:} Какво означава да изчислим $f$ с компютър?\\[2em]
+  \textbf{Въпрос 1:} Какво означава да изчислим $f$ с компютър?\\[4ex]
   \pause
-  \textbf{Въпрос 2:} Какво означава ``алгоритъм'' или ``програма''?\\[2em]
+  \textbf{Въпрос 2:} Какво означава ``алгоритъм'' или ``програма''?\\[4ex]
   \pause
   \textbf{Въпрос 3:} Има ли функции, които не могат да бъдат изчислени с компютър?
 \end{frame}
@@ -259,7 +259,7 @@ cout << s;
 \begin{frame}
   \frametitle{$\lambda$-смятане}
 
-  Нека разполагаме с изброимо много променливи $x,y,z,\ldots$\\[1em]
+  Нека разполагаме с изброимо много променливи $x,y,z,\ldots$\\[2ex]
   Три вида $\lambda$-изрази ($E$)
   \begin{itemize}
   \item $x$ (променлива)
@@ -267,7 +267,7 @@ cout << s;
   \item $\lambda x \, E$ (абстракция, конструиране на функция)
   \end{itemize}
   \vspace{1em}
-  \textbf{Примери:} $\lambda x\, x, \quad (\lambda x\, x)(z), \quad \lambda f\lambda x\, f(f(f(x)))$\\[1em]
+  \textbf{Примери:} $\lambda x\, x, \quad (\lambda x\, x)(z), \quad \lambda f\lambda x\, f(f(f(x)))$\\[2ex]
   \pause
   Едно изчислително правило:
   \begin{equation*}
@@ -291,7 +291,7 @@ cout << s;
     \end{tabular}
   \end{center}
   \pause
-  \textbf{Факт: }Практически всички съвременни езици за програмиране са със същата изчислителна сила като на машините на Turing.\\[1em]
+  \textbf{Факт: }Практически всички съвременни езици за програмиране са със същата изчислителна сила като на машините на Turing.\\[2ex]
   \pause
   \textbf{Тезис на Church-Turing:} Всяка функция, чието изчисление може да се автоматизира, може да бъде пресметната с машина на Turing.
 \end{frame}
