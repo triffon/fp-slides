@@ -193,12 +193,12 @@
       (* n (fact (- n 1)))))
 \end{lstlisting}
   \pause
-  Кое е \textbf{най-малкото решение} на уравнението $F(x) = 1 + F(x-1)$?
+  Кое е \textbf{най-малкото решение} на уравнението $F(x) = F(x+1) - 1$?
   \pause
-\lstinline{(define (f x) (+ 1 (f (- x 1)))}\\
+\lstinline{(define (g x) (- 1 (g (+ x 1)))}\\
 \evalsto{(f 0)}?\\
   \pause
-  $f$ е ``празната функция'', т.е. $\mathrm{dom}(f) = \emptyset$.
+  $g$ е ``празната функция'', т.е. $\mathrm{dom}(g) = \emptyset$.
 \end{frame}
 
 \begin{frame}
