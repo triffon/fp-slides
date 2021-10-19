@@ -335,7 +335,7 @@
 \begin{frame}
   \frametitle{Оценка на итеративен факториел}
 
-  \begin{fixedarea}[.62]
+  \begin{fixedarea}
     \begin{center}
       \sizeboth\small
       % TODO: да се реализира с foreach
@@ -478,7 +478,8 @@
   \begin{itemize}[<+->]
   \item \tta{(define (}<функция> \{<параметър\}\tta) \{<дефиниция>\} <тяло>\tta)
   \item При извикване на <функция> първо се оценяват всички <дефиниция> и след това се оценява <тяло>
-  \item Вложените дефиниции се оценяват и записват в средата, която се \textbf{оценява} функцията, а не в средата, в която е \textbf{дефинирана}
+  \item Вложените дефиниции се \alert{оценяват} в средата, в която се \textbf{оценява} функцията, а не в средата, в която е \textbf{дефинирана}
+  \item Вложените дефиниции се \alert{записват} в \textbf{нова среда}, разширяваща тази, в която се оценяват.
   \item \textbf{Пример:}\\
 \begin{lstlisting}
 (define (dist x1 y1 x2 y2)
@@ -502,12 +503,12 @@
           "\lst{(define dx (- x2 x1))}"[env=E_1] -!-
           "\lst{(define dy (- y2 y1))}"[env=E_1] -!-
           "\lst{(define (sq x) (* x x))}"[env=E_1] -!-
-          "\lst{(sqrt (+ (sq dx) (sq dy)))}"[env=E_1] ->
-          "\lst{(sqrt (+ (* x x) (sq dy)))}"[env=E_2] ->
-          "\lst{(sqrt (+ 9 (* x x)))}"[env=E_3] ->
-          "\lst{(sqrt (+ 9 16))}"[env=E_1] ->
-          "\lst{(sqrt 25)}"[env=E_1] ->
-          "\tt 5"[env=E_1];
+          "\lst{(sqrt (+ (sq dx) (sq dy)))}"[env=E_2] ->
+          "\lst{(sqrt (+ (* x x) (sq dy)))}"[env=E_3] ->
+          "\lst{(sqrt (+ 9 (* x x)))}"[env=E_4] ->
+          "\lst{(sqrt (+ 9 16))}"[env=E_2] ->
+          "\lst{(sqrt 25)}"[env=E_2] ->
+          "\tt 5"[env=E_2];
         }
       \end{column}
       \begin{column}{.5\textwidth}
@@ -518,12 +519,14 @@
             \kv{y1}5
             \kv{x2}{-1}
             \kv{y2}9
+          }
+          \childenvir[3-]{below=1em}{E_1}{E_2}{
             \only<3->{\kv{dx}{-3}}
             \only<4->{\kv{dy}4}
             \only<5->{\kf{sq}x{(* x x)}{E_1}}
           }
-          \childenvir[7-]{below left =1em and -3em}{E_1}{E_2}{\kv x3}
-          \childenvir[8-]{below right=1em and -3em}{E_1}{E_3}{\kv x4}
+          \childenvir[7-]{above left =1em and -3em}{E_2}{E_3}{\kv x3}
+          \childenvir[8-]{above right=1em and -3em}{E_2}{E_4}{\kv x4}
         \end{tikzpicture}
       \end{column}
     \end{columns}
@@ -570,14 +573,14 @@
       \begin{center}
         % TODO: да се реализира с foreach
         \evalchain[(-1)]{
-          "\lst{(fact 4)}"[env=E] ->
+          "\lst{(fact 4)}\only<+->{}"[label={[vp] \inenv E}] ->
           "\lst{(define (for r i)...)}"[envv=E_0] ->[v]
-          "(for 1 1)"[envv=E_0] ->[v]
-          "\alt<+->{\lst{(for 1 2)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_1] ->
-          "\alt<+->{\lst{(for 2 3)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_2] ->
-          "\alt<+->{\lst{(for 6 4)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_3] ->
-          "\alt<+->{\lst{(for 24 5)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_4] ->
-          "\alt<+->{\lst{24}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_5];
+          "(for 1 1)"[envv=E_1] ->[v]
+          "\alt<+->{\lst{(for 1 2)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_2] ->
+          "\alt<+->{\lst{(for 2 3)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_3] ->
+          "\alt<+->{\lst{(for 6 4)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_4] ->
+          "\alt<+->{\lst{(for 24 5)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_5] ->
+          "\alt<+->{\lst{24}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_6];
         }
       \end{center}
     \end{column}
@@ -585,12 +588,13 @@
       \tiny
       \begin{tikzpicture}
         \envir{E}{\kf{fact}n{(for 1 1)}E}
-        \childenvir[2- ]{below=2em}{E}{E_0}{\kv n4\kf{for}{r i}\ldots{\alert<2>{E_0}}}
-        \childenvir[4- ]{below left =2em and -2em}{E_0}{E_1}{\kv r1   \kv i1}
-        \childenvir[6- ]{below      =2em         }{E_0}{E_2}{\kv r1   \kv i2}
-        \childenvir[8- ]{below right=2em and -2em}{E_0}{E_3}{\kv r2   \kv i3}
-        \childenvir[10-]{below left =7em and -3em}{E_0}{E_4}{\kv r6   \kv i4}
-        \childenvir[12-]{below right=7em and -3em}{E_0}{E_5}{\kv r{24}\kv i5}
+        \childenvir[2- ]{below=1em}{E}{E_0}{\kv n4}
+        \childenvir[3- ]{below=1em}{E_0}{E_1}{\kf{for}{r i}\ldots{\alert<2>{E_0}}}
+        \childenvir[5- ]{below left =2em and -2em}{E_1}{E_2}{\kv r1   \kv i1}
+        \childenvir[7- ]{below      =2em         }{E_1}{E_3}{\kv r1   \kv i2}
+        \childenvir[9- ]{below right=2em and -2em}{E_1}{E_4}{\kv r2   \kv i3}
+        \childenvir[11-]{below left =7em and -3em}{E_1}{E_5}{\kv r6   \kv i4}
+        \childenvir[13-]{below right=7em and -3em}{E_1}{E_6}{\kv r{24}\kv i5}
       \end{tikzpicture}
     \end{column}
   \end{columns}
@@ -619,9 +623,6 @@
     \item Връща се оценката на <тяло> в средата \env{E_1}
     \end{itemize}
   \item \alert{\tt{let} няма странични ефекти върху средата!}
-    \begin{itemize}
-    \item за разлика от \tt{define}
-    \end{itemize}
   \end{itemize}
 \end{frame}
 
