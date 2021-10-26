@@ -3,7 +3,7 @@
 
 \title{Функции от по-висок ред}
 
-\date{20 октомври 2021 г.}
+\date{20--27 октомври 2021 г.}
 
 \lstset{language=Scheme}
 
@@ -436,7 +436,7 @@
   \item \lst{(define 2* (derive square 0.01))}
   \item \evalsto{(2* 5)}{10.009999999999764}
   \item \evalsto{((derive square 0.0000001) 5)}{10.000000116860974}
-  \item \evalstop{((derive (derive (lambda (x) (* x x x)) 0.001) 0.001) 3)}{18.006000004788802}
+  \item \evalstopnl{((derive (derive (lambda (x) (* x x x)) 0.001) 0.001) 3)}{18.006000004788802}
   \end{itemize}
 \end{frame}
 
