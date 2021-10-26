@@ -478,9 +478,18 @@
   \begin{itemize}[<+->]
   \item \tta{(define (}<функция> \{<параметър\}\tta) \{<дефиниция>\} <тяло>\tta)
   \item При извикване на <функция> първо се оценяват всички <дефиниция> и след това се оценява <тяло>
-  \item Вложените дефиниции се \alert{оценяват} в средата, в която се \textbf{оценява} функцията, а не в средата, в която е \textbf{дефинирана}
-  \item Вложените дефиниции се \alert{записват} в \textbf{нова среда}, разширяваща тази, в която се оценяват.
-  \item \textbf{Пример:}\\
+    \begin{itemize}
+    \item Първо се създава среда $E_1$, в която формалните параметри се свързват с оценките на фактическите
+    \item След това се създава среда $E_2$, която разширява $E_1$, за вложените дефиниции
+    \end{itemize}
+  \item Вложените дефиниции\ldots
+    \begin{itemize}
+    \item \ldots на обикновени стойности се \textbf{оценяват} в $E_1$
+    \item \ldots на функции се \textbf{оценяват} в $E_2$
+    \item \ldots се \textbf{свързват} с оценките си в $E_2$
+    \end{itemize}
+  \item \textbf{Пример:}\\[-.3ex]
+    \lstsmall
 \begin{lstlisting}
 (define (dist x1 y1 x2 y2)
   (define dx (- x2 x1))
@@ -502,7 +511,7 @@
           "\lst{(dist 2 5 -1 9)}\only<+->{}"[label={[vp] \inenv E}] ->
           "\lst{(define dx (- x2 x1))}"[env=E_1] -!-
           "\lst{(define dy (- y2 y1))}"[env=E_1] -!-
-          "\lst{(define (sq x) (* x x))}"[env=E_1] -!-
+          "\lst{(define (sq x) (* x x))}"[env={\alert{E_2}}] -!-
           "\lst{(sqrt (+ (sq dx) (sq dy)))}"[env=E_2] ->
           "\lst{(sqrt (+ (* x x) (sq dy)))}"[env=E_3] ->
           "\lst{(sqrt (+ 9 (* x x)))}"[env=E_4] ->
@@ -523,9 +532,9 @@
           \childenvir[3-]{below=1em}{E_1}{E_2}{
             \only<3->{\kv{dx}{-3}}
             \only<4->{\kv{dy}4}
-            \only<5->{\kf{sq}x{(* x x)}{E_1}}
+            \only<5->{\kf{sq}x{(* x x)}{E_2}}
           }
-          \childenvir[7-]{above left =1em and -3em}{E_2}{E_3}{\kv x3}
+          \childenvir[7-]{above left =1em and -3em}{E_2}{E_3}{\kv x{-3}}
           \childenvir[8-]{above right=1em and -3em}{E_2}{E_4}{\kv x4}
         \end{tikzpicture}
       \end{column}
@@ -574,7 +583,7 @@
         % TODO: да се реализира с foreach
         \evalchain[(-1)]{
           "\lst{(fact 4)}\only<+->{}"[label={[vp] \inenv E}] ->
-          "\lst{(define (for r i)...)}"[envv=E_0] ->[v]
+          "\lst{(define (for r i)...)}"[envv={\alert{E_1}}] ->[v]
           "(for 1 1)"[envv=E_1] ->[v]
           "\alt<+->{\lst{(for 1 2)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_2] ->
           "\alt<+->{\lst{(for 2 3)}}{\lst{(if (<= i n) (for (* r i) (+ i 1)) r)}}"[env=E_3] ->
@@ -589,7 +598,7 @@
       \begin{tikzpicture}
         \envir{E}{\kf{fact}n{(for 1 1)}E}
         \childenvir[2- ]{below=1em}{E}{E_0}{\kv n4}
-        \childenvir[3- ]{below=1em}{E_0}{E_1}{\kf{for}{r i}\ldots{\alert<2>{E_0}}}
+        \childenvir[3- ]{below=1em}{E_0}{E_1}{\kf{for}{r i}\ldots{\alert<3>{E_1}}}
         \childenvir[5- ]{below left =2em and -2em}{E_1}{E_2}{\kv r1   \kv i1}
         \childenvir[7- ]{below      =2em         }{E_1}{E_3}{\kv r1   \kv i2}
         \childenvir[9- ]{below right=2em and -2em}{E_1}{E_4}{\kv r2   \kv i3}
@@ -678,7 +687,7 @@
           \kv{dx}{-3}
           \kv{dy}4
         }
-        \childenvir[4-]{below left =2em and -4em}E{E_3}{\kv x3}
+        \childenvir[4-]{below left =2em and -4em}E{E_3}{\kv x{-3}}
         \childenvir[5-]{below right=2em and -4em}E{E_4}{\kv x4}
       \end{tikzpicture}
     \end{column}
@@ -764,7 +773,7 @@
         }
         \childenvir[3-]{below=1.5em}{E_1}{E_2}{\kv{dx}{-3}}
         \childenvir[4-]{below=1.5em}{E_2}{E_3}{\kv{dy}4}
-        \childenvir[5-]{below left =2em and -4em}E{E_4}{\kv x3}
+        \childenvir[5-]{below left =2em and -4em}E{E_4}{\kv x{-3}}
         \childenvir[6-]{below right=2em and -4em}E{E_5}{\kv x4}
       \end{tikzpicture}
     \end{column}
