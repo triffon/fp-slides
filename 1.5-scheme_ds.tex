@@ -733,17 +733,17 @@
 \small
   \textbf{Вариант №1 (грозен и по-бърз):}
 \begin{lstlisting}
-(define (add-key-value key value alist)
+(define (add-assoc key value alist)
    (let ((new-kv (cons key value)))
         (cond ((null? alist) (list new-kv))
               ((eqv? (caar alist) key) (cons new-kv (cdr alist)))
               (else (cons (car alist)
-                    (add-key-value key value (cdr alist))))))
+                    (add-assoc key value (cdr alist))))))
 \end{lstlisting}
   \pause
   \textbf{Вариант №2 (красив и по-бавен):}
 \begin{lstlisting}
-(define (add-key-value key value alist)
+(define (add-assoc key value alist)
   (let ((new-kv (cons key value)))
        (if (assq key alist)
            (map (lambda (kv) (if (eq? (car kv) key)
