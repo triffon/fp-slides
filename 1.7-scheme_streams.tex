@@ -158,9 +158,9 @@
   \pause
   \textbf{Решение:}
 \begin{lstlisting}
-(define (first n s)
+(define (take n s)
   (if (or (empty-stream? s) (= n 0)) '()
-      (cons (head s) (first (- n 1) (tail s)))))
+      (cons (head s) (take (- n 1) (tail s)))))
 \end{lstlisting}
 \end{frame}
 
@@ -291,7 +291,7 @@
     \end{onlyenv}
     \begin{onlyenv}<5->
 \begin{lstlisting}
-(define nats (cons-stream 0 (zip-streams + ones nats)))
+(define nats (cons-stream 0 (map-stream + ones nats)))
 \end{lstlisting}
     \end{onlyenv}
   \end{fixedarea}
@@ -307,7 +307,7 @@
 \begin{lstlisting}
 (define fibs (cons-stream 0
                (cons-stream 1
-                 (zip-streams + fibs (tail fibs)))))
+                 (map-stream + fibs (tail fibs)))))
 \end{lstlisting}
 \end{frame}
 
