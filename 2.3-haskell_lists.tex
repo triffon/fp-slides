@@ -3,7 +3,7 @@
 
 \title{Кортежи и списъци}
 
-\date{3 декември 2021 г.}
+\date{3--15 декември 2021 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -392,7 +392,7 @@ reverse a
   \item \lst{[ fn | (\_, fn, grade) <- students, grade >= 3 ]}
   \item \lst{[ x^2 + y^2 | (x, y) <- vectors, x >= 0, y >= 0]}
   \item Ако имаме повече от един генератор, се генерират всички възможни комбинации от елементи (декартово произведение)
-  \item \evalstopnl{[ x++(' ':y) | x<-["green","blue"],y<-["sky","grass"]]}{["green sky","green grass","blue sky","blue grass"]}
+  \item \evalstopnl{[ x++(' ':y) | x<-["green","blue"],y<-["grass","sky"]]}{["green grass","green sky","blue grass","blue sky"]}
   \item \evalstopnl{[ (x,y) | x <- [1,2,3], y <- [5,6,7], x + y <= 8 ]}{[(1,5),(1,6),(1,7),(2,5),(2,6),(3,5)]}
   \item \textbf{Задача.} Да се генерират всички Питагорови тройки в даден интервал.
   \end{itemize}
