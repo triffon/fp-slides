@@ -276,16 +276,19 @@ betterStudent s1@(_, _, grade1) s2@(_, _, grade2)
     \begin{itemize}[<.->]
     \item  \evalsto{[1..3] ++ [5..7]}{[1,2,3,5,6,7]}
     \end{itemize}
-  \item \lst{a ++ b = if null a then b else head a : tail a ++ b}
+    \onslide<+->
+\begin{lstlisting}
+[]     ++ ys = ys
+(x:xs) ++ ys = x:xs ++ ys
+\end{lstlisting}
   \item \lst{reverse :: [a] -> [a]} ---  обръща списък
     \begin{itemize}[<.->]
     \item \evalsto{reverse [1..5]}{[5,4,3,2,1]}
     \end{itemize}
     \onslide<+->
 \begin{lstlisting}
-reverse a
- | null a    = a
- | otherwise = reverse (tail a) ++ [head a]
+reverse []     = []
+reverse (x:xs) = reverse xs ++ [x]
 \end{lstlisting}
 \item \lst{(!!) :: [a] -> Int -> a} --- елемент с пореден номер (от 0)
     \begin{itemize}[<.->]
