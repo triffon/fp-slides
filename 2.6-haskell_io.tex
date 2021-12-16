@@ -161,7 +161,7 @@ main = do putStrLn "Моля, въведете палиндром: "
   \begin{itemize}[<+->]
   \item \lst{show :: (Show a) => a -> String}
   \item \lst{print :: (Show a) => a -> IO ()}
-  \item \lst{print = putStr . show}
+  \item \lst{print = putStrLn . show}
   \item \lst{read :: (Read a) => String -> a}
   \item \evalstoerrp{read "1.23"}
   \item Haskell не може да познае типа на резултата, понеже е генеричен!
