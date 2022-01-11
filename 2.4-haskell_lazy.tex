@@ -240,7 +240,7 @@ sumFirst (x:xs) (y:ys) = x + y
   \lra& \tt{\underline{(\textbackslash(x:xs) -> \textbackslash(y:ys) -> x + y) (1:[2..10])} [5..50]}\\
   \lra& \tt{\lett{x=1; xs=[2..10]}{(\textbackslash(y:ys) -> x + y) \underline{[5..50]}}}\\
   \lra& \tt{\lett{x=1; xs=[2..10]}{\underline{(\textbackslash(y:ys) -> x + y) (5:[6..50])}}}\\
-  \lra& \tt{\lett{x=1; xs=[2..10]; y=5; ys=[6..50]}{\underline x+\underline y}}\\
+  \lra& \tt{\lett{x=1; xs=[2..10]; y=5; ys=[6..50]}{\underline x + \underline y}}\\
   \lra& \tt{\underline{1 + 5}} \lra\;\tt 6
 \end{tabular}
 \end{frame}
@@ -398,7 +398,7 @@ sumFirst (x:xs) (y:ys) = x + y
     Отделянето на списъци работи и за безкрайни списъци.\pause
     \begin{itemize}[<+->]
     \item \tt{oddSquares = \rvl{[ x\^{}2 | x <- [1,3..] ]}}
-    \item {\small\tt{twins = \rvl{[ (x,x+2) | x <- [1..], isPrime x, isPrime
+    \item {\small\tt{twins = \rvl{[ (x,x+2) | x <- [3..], isPrime x, isPrime
           (x+2) ]}}}
     \item \tt{pairs = \rvl{[ (x,y) | x <- [0..], y <- [0..x - 1] ]}}
     \item \tt{pythagoreanTriples = \rvl{
@@ -603,7 +603,7 @@ sumFirst (x:xs) (y:ys) = x + y
   \item оценява първия си аргумент и връща втория като резултат
   \item \textbf{Примери:}
     \begin{itemize}
-    \item \lst{second x y = y}
+    \item \lst{second _ y = y}
     \item \evalsto{second (10^10^10) 2}{2}
     \item \lst{seq (10^10^10) 2} $\xrightarrow{\hspace{35ex}}$ \tt2
     \item \lst{f x = seq x (f (1-x))}
