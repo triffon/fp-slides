@@ -139,10 +139,10 @@ class Measurable a where
   \pause
   \textbf{Примери:}
   \begin{itemize}[<+->]
-  \item \lst{elem :: (Eq a) => a -> [a] -> Bool}
-  \item \lst{maximum :: (Ord a) => [a] -> a}
+  \item \lst{elem :: Eq a => a -> [a] -> Bool}
+  \item \lst{maximum :: Ord a => [a] -> a}
   \item \lst{(^) :: (Integral b, Num a) => a -> b -> a}
-  \item \lst{larger :: (Measurable a) => a -> a -> Bool}
+  \item \lst{larger :: Measurable a => a -> a -> Bool}
   \item<.-> \lst{larger x y = size x > size y}
   \end{itemize}
 \end{frame}
@@ -209,7 +209,7 @@ instance Measurable a => Measurable [a] where
 \begin{frame}[fragile]
   \frametitle{Пример: Стандартен клас Ord}
 \begin{lstlisting}
-class  (Eq a) => Ord a  where
+class Eq a => Ord a  where
   (<), (<=), (>=), (>)  :: a -> a -> Bool
   max, min              :: a -> a -> a
   compare               :: a -> a -> Ordering
@@ -217,13 +217,13 @@ class  (Eq a) => Ord a  where
     | x == y    = EQ
     | x < y     = LT
     | otherwise = GT
-  x < y  == compare x y == LT
-  x > y  == compare x y == GT
-  x == y == compare x y == EQ
-  x <= y == compare x y /= GT
-  x >= y == compare x y /= LT
-  max x y == if x > y then x else y
-  min x y == if x < y then x else y
+  x < y  = compare x y == LT
+  x > y  = compare x y == GT
+  x == y = compare x y == EQ
+  x <= y = compare x y /= GT
+  x >= y = compare x y /= LT
+  max x y = if x > y then x else y
+  min x y = if x < y then x else y
 \end{lstlisting}
 \end{frame}
 
