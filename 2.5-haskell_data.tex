@@ -3,7 +3,7 @@
 
 \title{Типове и класове в Haskell}
 
-\date{5--12 януари 2022 г.}
+\date{5--19 януари 2022 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -320,9 +320,9 @@ class (Ord a, Measurable a) => OrdMeasurable a where
     \end{itemize}
   \item \lst{katniss :: Player}
   \item<.-> \lst{katniss = Player "Katniss Everdeen" 45}
-  \item \lst{getName :: Player -> String}
+  \item \lst{getName :: Player -> Name}
   \item<.-> \lst{getName (Player name _) = name}
-  \item \lst{better :: Player -> Player -> String}
+  \item \lst{better :: Player -> Player -> Name}
     \begin{lstlisting}
 better (Player name1 score1) (Player name2 score2)
   | score1 > score2  = name1
@@ -338,13 +338,13 @@ better (Player name1 score1) (Player name2 score2)
   \item ...които по същество са декартово произведение на типове
   \item Би било удобно, ако имахме имена на всяко от полетата
   \item В Haskell има специален синтаксис:
-  \item<.-> \tta{\{} <поле>\tta{::}<тип> \{, <поле>\tta{::}<тип> \}\tta{\}}
+  \item<.-> \tta{\{} <поле>\{, <поле>\}\tta{::}<тип> \{, <поле>\{, <поле>\}\tta{::}<тип> \}\tta{\}}
   \item за всяко от полетата автоматично се дефинира функция селектор
   \item \textbf{Пример:}
     \begin{itemize}
-    \item \lst!data Player = Player { name :: String, score :: Int }!
-    \item \lst{name :: Player -> String}
-    \item<.-> \lst{score :: Player -> Int}
+    \item \lst!data Player = Player { name :: Name, score :: Score }!
+    \item \lst{name :: Player -> Name}
+    \item<.-> \lst{score :: Player -> Score}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -356,7 +356,7 @@ better (Player name1 score1) (Player name2 score2)
   \textbf{Примери:}
   \begin{itemize}[<+->]
   \item \lst!data Shape = Circle { radius :: Double } !\\
-    \hspace{4em}\lst!| Rectangle { width :: Double, height :: Double}!
+    \hspace{4em}\lst!| Rectangle { width, height :: Double}!
   \item \lst{circle :: Shape}
   \item<.-> \lst{circle = Circle 2.3}
   \item \lst{rect :: Shape}
@@ -446,7 +446,7 @@ instance Show Shape where
   \textbf{Задача.} Да се напише функция, която по даден списък от играчи намира най-добрия резултат, ако е постигнат от единствен играч, или списък от имената на играчите, които са постигнали най-добър резултат.
   \onslide<+->
 \begin{lstlisting}
-searchBest :: [Player] -> Either Int [String]@\onslide<+->@
+searchBest :: [Player] -> Either Score [Name]@\onslide<+->@
 searchBest players
  | length bestPlayers == 1 = Left best
  | otherwise = Right $ map name bestPlayers
@@ -489,7 +489,7 @@ data Bin = One | BitZero Bin | BitOne Bin
   \item \lst{succBin :: Bin -> Bin}
   \item \lst{succBin One = BitZero One}
   \item<.-> \lst{succBin (BitZero b) = BitOne b}
-  \item<.-> \lst{succBin (BitOne b) = BitZero (succBin b)}
+  \item<.-> \lst{succBin (BitOne b) = BitZero $ succBin b}
   \item \evalsto{fromBin \$ succBin \$ succBin six}8
   \end{itemize}
 \end{frame}
@@ -506,7 +506,7 @@ data List a = Nil | Cons a (List a)
   \item \lst{l = Cons 1 $ Cons 2 $ Cons 3 $ Nil}
   \item можем да използваме синтаксиса за записи:\\
     \lst!data List a = Nil | Cons { listHead :: a,!\\
-      \hspace{15.5em}\lst!listTail :: List a }!\\
+      \hspace{14em}\lst!listTail :: List a }!\\
     \hspace{5em}\lst{deriving (Eq, Ord, Show, Read)}
   \item \evalstop{listHead l}1
   \item \lst{fromList :: List a -> [a]}
@@ -522,8 +522,7 @@ data List a = Nil | Cons a (List a)
   \frametitle{Двоични дървета}
 \begin{lstlisting}
 data BinTree a = Empty | Node { root :: a,
-                                left :: BinTree a,
-                                right :: BinTree a }
+                                left, right :: BinTree a }
                  deriving (Eq, Ord, Show, Read)
 \end{lstlisting}
   \textbf{Примери:}
