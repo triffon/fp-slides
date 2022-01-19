@@ -47,9 +47,9 @@
     \end{itemize}
   \item \alert{генерични функции}, при които една и съща имплементация работи за различни типове
     \begin{itemize}
-    \item \lst{length :: [a] -> Int}
+    \item \lst{length :: [a] -> Integer}
     \item \lst{map :: (a -> b) -> [a] -> [b]}
-    \item \lst{repeated :: Int -> UnaryFunction a -> UnaryFunction a}
+    \item \lst{repeated :: Integer -> UnaryFunction a -> UnaryFunction a}
     \item \lst{transpose :: Matrix a -> Matrix a}
     \item \lst{keys :: Dictionary k v -> [k]}
     \item \lst{[] :: [a]}
@@ -123,7 +123,7 @@ class Eq a where
 \pause
 \begin{lstlisting}
 class Measurable a where
-   size :: a -> Int
+   size :: a -> Integer
    empty :: a -> Bool
    empty x = size x == 0
 \end{lstlisting}
@@ -427,7 +427,7 @@ instance Show Shape where
   \item \typestop{Just "wow"}{Maybe String}
   \item \typestop{Nothing}{Maybe a}
   \item \typestop{Just Nothing}{Maybe (Maybe a)}
-  \item \lst{getAt :: Int -> [a] -> Maybe a}
+  \item \lst{getAt :: Integer -> [a] -> Maybe a}
   \item \lst{getAt _ []  = Nothing}
   \item<.-> \lst{getAt 0 (x:_) = Just x}
   \item<.-> \lst{getAt n (_:xs) = getAt (n-1) xs}
@@ -465,7 +465,7 @@ searchBest players
   \lst{data Nat = Zero | Succ Nat deriving (Eq, Ord, Show, Read)}
   \begin{itemize}[<+->]
   \item \lst{five = Succ $ Succ $ Succ $ Succ $ Succ Zero}
-  \item \lst{fromNat :: Nat -> Int}
+  \item \lst{fromNat :: Nat -> Integer}
   \item \lst{fromNat Zero = 0}
   \item<.-> \lst{fromNat (Succ n) = fromNat n + 1}
   \item \evalsto{fromNat five}5
@@ -482,7 +482,7 @@ data Bin = One | BitZero Bin | BitOne Bin
   \pause
   \begin{itemize}[<+->]
   \item \lst{six = BitZero $ BitOne $ One}
-  \item \lst{fromBin :: Bin -> Int}
+  \item \lst{fromBin :: Bin -> Integer}
   \item \lst{fromBin One = 1}
   \item<.-> \lst{fromBin (BitZero b) = 2 * fromBin b}
   \item<.-> \lst{fromBin (BitOne b) = 2 * fromBin b + 1}
@@ -528,7 +528,7 @@ data BinTree a = Empty | Node { root :: a,
   \textbf{Примери:}
   \begin{itemize}[<+->]
   \item \lst{t = Node 3 (Node 1 Empty Empty) (Node 5 Empty Empty)}
-  \item \lst{depth :: BinTree a -> Int}
+  \item \lst{depth :: BinTree a -> Integer}
   \item \lst{depth Empty = 0}
   \item<.-> \lst{depth (Node x l r) = max (depth l) (depth r) + 1}
   \item \lst{leaves :: BinTree a -> [a]}
@@ -578,13 +578,13 @@ tree = Tree 1 $ SubTree (leaf 2)
 \end{lstlisting}
 \pause
 \begin{lstlisting}
-level :: Int -> Tree a -> [a]@\pause@
+level :: Integer -> Tree a -> [a]@\pause@
 level 0 (Tree x _)     = [x]
 level k (Tree _ ts)    = levelTrees (k - 1) ts
 \end{lstlisting}
 \pause
 \begin{lstlisting}
-levelTrees :: Int -> TreeList a -> [a]@\pause@
+levelTrees :: Integer -> TreeList a -> [a]@\pause@
 levelTrees _ None           = []
 levelTrees k (SubTree t ts) = level k t ++ levelTrees k ts
 \end{lstlisting}
@@ -605,7 +605,7 @@ sexpr = SList [SInt 2, SChar 'a',
 \end{lstlisting}
   \pause
 \begin{lstlisting}
-countAtoms :: SExpr -> Int@\pause@
+countAtoms :: SExpr -> Integer@\pause@
 countAtoms (SList sls) = sum $ map countAtoms sls
 countAtoms _           = 1
 \end{lstlisting}

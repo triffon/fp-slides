@@ -159,10 +159,10 @@ main = do putStrLn "Моля, въведете палиндром: "
   \pause
   На помощ идват класовете \lst{Show} и \lst{Read}:
   \begin{itemize}[<+->]
-  \item \lst{show :: (Show a) => a -> String}
-  \item \lst{print :: (Show a) => a -> IO ()}
+  \item \lst{show :: Show a => a -> String}
+  \item \lst{print :: Show a => a -> IO ()}
   \item \lst{print = putStrLn . show}
-  \item \lst{read :: (Read a) => String -> a}
+  \item \lst{read :: Read a => String -> a}
   \item \evalstoerrp{read "1.23"}
   \item Haskell не може да познае типа на резултата, понеже е генеричен!
   \item \lst{getInt :: IO Int}
