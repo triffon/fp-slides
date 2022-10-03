@@ -1,3 +1,4 @@
+\PassOptionsToClass{aspectratio=169}{beamer}
 \documentclass[alsotrans]{beamerswitch}
 \usepackage{fprog}
 
@@ -7,7 +8,7 @@
 \newcommand{\scheme}{\lang{Scheme}}
 \newcommand{\haskell}{\lang{Haskell}}
 
-\date{6 октомври 2021 г.}
+\date{4 октомври 2022 г.}
 
 \begin{document}
 
@@ -96,7 +97,7 @@
   \pause
   \textbf{Пример:}
   Нека $a = 8, b = 12$. Тогава:\\
-  $\xrightarrow{\text{факт}} gcd(4,4,4) \xrightarrow{\text{правило 1}} gcd(8,4,4) \xrightarrow{\text{правило 2}} gcd(8,12,\mathbf4)$
+  $\xrightarrow{\text{факт}} gcd(4,4,4) \xrightarrow{\text{правило 1}} gcd(8,4,4) \xrightarrow{\text{правило 2}} gcd(8,12,4)$
 \end{frame}
 
 
@@ -186,8 +187,12 @@ cout << s;
   \frametitle{Машина на Turing}
 
   % TODO: да се нарисува с TikZ
-  \includegraphics[width=0.9\textwidth]{images/turing.pdf}\\
+  \vspace*{-4ex}
+  \begin{center}
+    \includegraphics[width=0.75\textwidth]{images/turing.pdf}
+  \end{center}
   \pause
+  \vspace*{-1ex}
   \textbf{$M$ изчислява функцията $f_M$}, ако при лента с числото $n$ машината $M$ завършва и записва върху лентата числото $f_M(n)$.\\
   \pause
   Ако $M$ не завърши за някое $n$, казваме, че \textbf{$f_M(n)$ не е дефинирана}.
@@ -212,7 +217,7 @@ cout << s;
   \frametitle{Стоп проблем}
 
   \small
-  Нека с $\mt n$ означаваме машината на Turing с код $n$.\\
+  Нека с $\mt n$ означаваме машината на Turing с код $n$.
   Разглеждаме функцията:
   \begin{equation*}
     halts(n) =
@@ -225,8 +230,8 @@ cout << s;
   \alert{$halts$ не е изчислима!}\\
   \pause
   \begin{proof}
-    Да допуснем, че $halts$ се изчислява от машина на Turing $H$.\\
-    Дефинираме нова машина на Turing $D$:\\
+    Да допуснем, че $halts$ се изчислява от машина на Turing $H$.
+    Дефинираме нова машина $D$:\\
     \setlength{\leftmargini}{30pt}
     \begin{enumerate}
       \setbeamertemplate{enumerate items}[default]
