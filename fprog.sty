@@ -481,7 +481,31 @@
 \colorlet{diagramblue}{blue!60!green!40}
 
 % creative commons признание
-\newcommand{\imageAttr}[4]{\scalebox{.4}{\textcolor{gray}{``#1'' от #2 (\url{#3}), #4}}}
+\newcommand{\imageUntitledAttr}[4][.4]{\scalebox{#1}{\textcolor{lightgray}{От #2 (\url{#3}), #4}}}
+\newcommand{\imageAttr}[5][.4]{\scalebox{#1}{\textcolor{lightgray}{``#2'' от #3 (\url{#4}), #5}}}
+\newcommand{\imageBased}[5][.4]{\scalebox{#1}{\textcolor{lightgray}{Базирано на ``#2'' от #3 (\url{#4}), #5}}}
+
+\usepackage{anyfontsize}
+\usepackage{copyrightbox}
+\makeatletter
+\renewcommand{\CRB@setcopyrightfont}{%
+  \fontseries{m}\fontshape{it}\fontsize{3}{3}\selectfont
+  \color{gray!40}
+}
+\makeatother
+
+\newcommand{\imageWithAttrX}[8]{\copyrightbox[b]{\href{#7}{\hspace{#2}\includegraphics[width=#3]{#4}\hspace{#2}}}{#1``\href{#7}{#5}'' от #6, #8}}
+\newcommand{\imageWithAttr}[1][0pt]{\imageWithAttrX{}{#1}}
+\newcommand{\basedOnImageWithAttr}[1][0pt]{\imageWithAttrX{Базирано на }{#1}}
+\newcommand{\untitledImageWithAttr}[6][0pt]{\copyrightbox[b]{\href{#5}{\hspace{#1}\includegraphics[width=#2]{#3}\hspace{#1}}}{От \href{#5}{#4}, #6}}
+
+\newcommand{\CCBY}[1]{\href{https://creativecommons.org/licenses/by/#1/}{CC~BY~#1}}
+\newcommand{\CCBYSA}[1]{\href{https://creativecommons.org/licenses/by-sa/#1/}{CC~BY~SA-#1}}
+\newcommand{\CCBYNC}[1]{\href{https://creativecommons.org/licenses/by-nc/#1/}{CC~BY-NC~#1}}
+\newcommand{\CCBYNCSA}[1]{\href{https://creativecommons.org/licenses/by-nc-sa/#1/}{CC~BY-NC~SA-#1}}
+\newcommand{\CCBYNCND}[1]{\href{https://creativecommons.org/licenses/by-nc-nd/#1/}{CC~BY-NC-ND~#1}}
+\newcommand{\PDWC}[1]{Обществено достояние чрез Общомедия}
+\newcommand{\CCZWC}[1]{\href{https://creativecommons.org/publicdomain/zero/1.0/}{CC0} чрез Общомедия}
 
 % съкратена команда за показване само на текущия слайд
 % слага се в преамбюла
@@ -519,6 +543,6 @@
 
 % overlayarea, която по подразбиране изпълва цялата област за текст за текущата тема
 % може да се зададе като опционален параметър друга част от височината
-\newenvironment{fixedarea}[1][.87]{%
+\newenvironment{fixedarea}[1][.85]{%
   \begin{overlayarea}\textwidth{#1\textheight}}{%
   \end{overlayarea}}

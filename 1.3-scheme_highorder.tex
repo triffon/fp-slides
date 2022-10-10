@@ -1,9 +1,11 @@
+\PassOptionsToClass{aspectratio=169}{beamer}
 \documentclass[alsotrans]{beamerswitch}
+
 \usepackage{fprog}
 
 \title{Функции от по-висок ред}
 
-\date{20--27 октомври 2021 г.}
+\date{11 октомври 2022 г.}
 
 \lstset{language=Scheme}
 
@@ -393,15 +395,26 @@
           % понеже низовете съвпадат е необходимо да се посочи изрично различно име за съответните възли
           {[name=oneplus] "\lst{(lambda (i) (+ i n))}"[env=E_1]} -!-
           "\lst{(define 5+ (n+ 5))}"[env=E] ->
-          {[name=fiveplus] "\lst{(lambda (i) (+ i n))}"[env=E_2]} -!-
-          "\lst{(1+ 7)}"[env=E] ->
-          % понеже низовете съвпадат е необходимо да се посочи изрично различно име за съответните възли
-          {[name=first]  "\lst{(+ i n)}"[env=E_3]} ->
-          "8" -!-
-          "\lst{(5+ 7)}"[env=E] ->
-          {[name=second] "\lst{(+ i n)}"[env=E_4]} ->
-          "12";
+          {[name=fiveplus] "\lst{(lambda (i) (+ i n))}"[env=E_2]}
         }
+        \vspace{2ex}
+        \begin{columns}[T]
+          \begin{column}{12em}
+            \evalchain{
+              "\lst{(1+ 7)}"[env=E] ->
+              % понеже низовете съвпадат е необходимо да се посочи изрично различно име за съответните възли
+              {[name=first]  "\lst{(+ i n)}"[env=E_3]} ->
+              "8";
+            }
+          \end{column}
+          \begin{column}{12em}
+            \evalchain{
+              "\lst{(5+ 7)}"[env=E] ->
+              {[name=second] "\lst{(+ i n)}"[env=E_4]} ->
+              "12";
+            }
+          \end{column}
+        \end{columns}
       \end{column}
       \begin{column}{.5\textwidth}
         \begin{tikzpicture}
@@ -410,10 +423,10 @@
             \only<3->{\kf{1+}i{(+ i n)}{E_1}}
             \only<5->{\kf{5+}i{(+ i n)}{E_2}}
           }
-          \childenvir[2- ]{below left =2em and -5em}E{E_1}{\kv n1}
-          \childenvir[4- ]{below right=2em and -5em}E{E_2}{\kv n5}
-          \childenvir[7- ]{below=2em}{E_1}{E_3}{\kv i7}
-          \childenvir[10-]{below=2em}{E_2}{E_4}{\kv i7}
+          \childenvir[2- ]{below left =1em and -5em}E{E_1}{\kv n1}
+          \childenvir[4- ]{below right=1em and -5em}E{E_2}{\kv n5}
+          \childenvir[7- ]{below=1em}{E_1}{E_3}{\kv i7}
+          \childenvir[10-]{below=1em}{E_2}{E_4}{\kv i7}
         \end{tikzpicture}
       \end{column}
     \end{columns}
@@ -448,6 +461,7 @@
     f^n(x) = \underbrace{f(f(f(\ldots(f}_n(x))\ldots)))
   \end{equation*}
   \pause
+  \vspace{-.5ex}
   \textbf{Решение №1:} $f^0(x) = x, f^n(x) = f(f^{n-1}(x))$ \pause
 \begin{lstlisting}
 (define (repeated f n)
@@ -461,6 +475,7 @@
 \end{lstlisting}
   \pause
   \textbf{Решение №3:} $f^n = \underbrace{f \circ f \circ \ldots \circ f}_n \circ  id$ \pause
+\vspace{-.3ex}
 \begin{lstlisting}
 (define (repeated f n)
   (@\rvl{accumulate} \rvl{compose} \rvl{id} \rvl1 \rvl{n} \rvl{(lambda (i) f)} \rvl{1+}@))
@@ -470,8 +485,9 @@
 \begin{frame}[fragile]
   \frametitle{$n$-та производна}
 
+  \small
   \begin{fixedarea}
-  Да се намери $n$-та производна на дадена едноместна функция.\\[2ex]
+  Да се намери $n$-та производна на дадена едноместна функция.\\[1.5ex]
   \pause
   \textbf{Решение №1:} $f^{(0)} = f, f^{(n)} = (f^{(n-1)})'$\pause
 \begin{lstlisting}
@@ -479,13 +495,15 @@
   (if (= n 0) f (derive (derive-n f (- n 1) dx) dx)))
 \end{lstlisting}
   \pause
+  \vspace{-.5ex}
   \textbf{Решение №2:} $f^{(n)} = f\overbrace{''''{}^{\ldots}{}''}^n$\pause
 \begin{lstlisting}
 (define (derive-n f n dx)
   @\only<7->((\rvl{repeated} \rvl{(lambda (f) (derive f dx))} n)\only<7->{ f)})@
 \end{lstlisting}
 \pause
-  \textbf{Решение №3:} $^{(n)} = \underbrace{{}'{}^\circ{}'{}^{\circ\ldots\circ}{}'}_n$
+\textbf{Решение №3:} $^{(n)} = \underbrace{{}'{}^\circ{}'{}^{\circ\ldots\circ}{}'}_n$
+\vspace{-.5ex}
 \begin{lstlisting}
 (define (derive-n f n dx)
   (@(\rvl{accumulate} \rvl{compose} \rvl{id} \rvl1 \rvl{n} \rvl{\\
@@ -499,7 +517,7 @@
 \begin{frame}
   \frametitle{All you need is $\lambda$ \only<2->{--- \tt{let}}}
 
-  Специалната форма \tt{lambda} е достатъчна за реализацията на (почти) всички конструкции в Scheme!\\[2ex]
+  Специалната форма \tt{lambda} е достатъчна за реализацията на (почти) всички конструкции в Scheme!\\[1ex]
   \pause
   Симулация на \tt{let}:
   \begin{tabular}{c}
@@ -628,15 +646,16 @@
 
 \begin{frame}[fragile]
   \frametitle{All you need is $\lambda$ --- комбинатор \tt Y}
+  \begin{fixedarea}
   Да напишем функция, която намира неподвижната точка на произволен оператор \tt{gamma}:
   \begin{lstlisting}
 (define (Y gamma)
   (define (gamma-inf me) (lambda (n) ((gamma (me me)) n)))
-  (gamma-inf gamma-inf))\end{lstlisting}
-  \pause
-  А сега само с $\lambda$:\\[-2ex]
-  \begin{fixedarea}[.3]%
-    \begin{onlyenv}<+ |trans:0>%
+  (gamma-inf gamma-inf))
+\end{lstlisting}
+\pause
+  А сега само с $\lambda$:\\
+  \begin{onlyenv}<+ |trans:0>%
 \begin{lstlisting}
 (define Y
   (lambda (gamma)
@@ -650,11 +669,11 @@
   (lambda (gamma)
     ((lambda (me) (lambda (n) ((gamma (me me)) n)))
      (lambda (me) (lambda (n) ((gamma (me me)) n))))))
-\end{lstlisting}
+\end{lstlisting}%
     \end{onlyenv}
-  \end{fixedarea}
-  \onslide<+->
+\onslide<+->
   \tt Y се нарича комбинатор за намиране на най-малка неподвижна точка (fixpoint combinator).
+\end{fixedarea}
 \end{frame}
 
 \end{document}

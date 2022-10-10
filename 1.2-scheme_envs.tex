@@ -1,9 +1,10 @@
+\PassOptionsToClass{aspectratio=169}{beamer}
 \documentclass[alsotrans]{beamerswitch}
 \usepackage{fprog}
 
 \title[Среди и процеси]{Модел на средите и изчислителни процеси}
 
-\date{13--20 октомври 2021 г.}
+\date{11 октомври 2022 г.}
 
 \lstset{language=Scheme}
 
@@ -111,7 +112,7 @@
             \only<2->{\kv a3}
             \only<3->{\kf fx{(* x r)}E}
           }
-          \childenvir[6-]{below=5em}E{E_1}{\kv x3}
+          \childenvir[6-]{below=4em}E{E_1}{\kv x3}
         \end{tikzpicture}
       \end{column}
     \end{columns}
@@ -127,8 +128,7 @@
 
   \pause
   \begin{center}
-    \includegraphics[width=0.7\textwidth]{images/matroska.jpg}\\
-    \imageAttr{Matryoshka dolls}{User:Fanghong (оригинал) и User:Gnomz007 (производна)}{https://commons.wikimedia.org/wiki/File:Russian-Matroshka_no_bg.jpg}{CC BY-SA 3.0}
+    \imageWithAttr{0.5\textwidth}{images/matroska.jpg}{Matryoshka dolls}{User:Fanghong (оригинал) и User:Gnomz007 (производна)}{https://commons.wikimedia.org/wiki/File:Russian-Matroshka_no_bg.jpg}{\CCBYSA{3.0}}
   \end{center}
 \end{frame}
 
@@ -137,7 +137,7 @@
 
   \begin{center}
     % TODO: да се нарисува с TikZ и foreach
-    \includegraphics[width=0.9\textwidth]{images/sierpinski.png}
+    \imageWithAttr{.9\textwidth}{images/sierpinski.png}{Sierpinski triangle, the evolution in five iterations}{Solkoll}{https://commons.wikimedia.org/wiki/File:Sierpinsky_triangle_(evolution).png}{\PDWC}
   \end{center}
 \end{frame}
 
@@ -488,15 +488,17 @@
     \item \ldots на функции се \textbf{оценяват} в $E_2$
     \item \ldots се \textbf{свързват} с оценките си в $E_2$
     \end{itemize}
-  \item \textbf{Пример:}\\[-.3ex]
-    \lstsmall
-\begin{lstlisting}
+  \item \textbf{Пример:}\hspace{5ex}
+    \begin{minipage}[t]{.5\textwidth}
+      \lstsmall
+\begin{lstlisting}[aboveskip=-1.4\medskipamount]
 (define (dist x1 y1 x2 y2)
   (define dx (- x2 x1))
   (define dy (- y2 y1))
   (define (sq x) (* x x))
   (sqrt (+ (sq dx) (sq dy))))
 \end{lstlisting}
+    \end{minipage}
   \end{itemize}
 \end{frame}
 
@@ -765,16 +767,16 @@
     \begin{column}{.45\textwidth}
       \begin{tikzpicture}
         \envir{E}{\kf{dist}{x1 y1 x2 y2}\ldots E}
-        \childenvir[2-]{below=2em}E{E_1}{
+        \childenvir[2-]{below=1.5em}E{E_1}{
           \kv{x1}2
           \kv{y1}5
           \kv{x2}{-1}
           \kv{y2}9
         }
-        \childenvir[3-]{below=1.5em}{E_1}{E_2}{\kv{dx}{-3}}
-        \childenvir[4-]{below=1.5em}{E_2}{E_3}{\kv{dy}4}
-        \childenvir[5-]{below left =2em and -4em}E{E_4}{\kv x{-3}}
-        \childenvir[6-]{below right=2em and -4em}E{E_5}{\kv x4}
+        \childenvir[3-]{below=1em}{E_1}{E_2}{\kv{dx}{-3}}
+        \childenvir[4-]{below=1em}{E_2}{E_3}{\kv{dy}4}
+        \childenvir[5-]{below left =1.5em and -4em}E{E_4}{\kv x{-3}}
+        \childenvir[6-]{below right=1.5em and -4em}E{E_5}{\kv x4}
       \end{tikzpicture}
     \end{column}
   \end{columns}
@@ -806,10 +808,11 @@
 
 \begin{frame}
   \frametitle{Оценка на степенуване}
-
   \begin{center}
     \tiny
+    \vspace{-2ex}
     % TODO: да се реализира с foreach
+    \tikzset{/evalchain/.append style={grow down sep=1.5ex}}
     \evalchain{
       "(pow 2 6)" ->
       "(* 2 (pow 2 5))" ->
@@ -874,7 +877,7 @@
       "64";
     }
   \end{center}
-  \vspace{-1ex}
+  \vspace{-4ex}
   \onslide<+->
   Логаритмичен рекурсивен процес
 \end{frame}
@@ -1019,7 +1022,7 @@
 \begin{frame}
   \frametitle{Итеративно генериране на числата на Фибоначи}
 
-  \small
+  \footnotesize
   \begin{center}
     % TODO: да се реализира с foreach
     \evalchain{
