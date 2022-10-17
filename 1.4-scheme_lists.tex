@@ -1,9 +1,10 @@
+\PassOptionsToClass{aspectratio=169}{beamer}
 \documentclass[alsotrans]{beamerswitch}
 \usepackage{fprog}
 
 \title{Списъци}
 
-\date[27.10--10.11.2021 г.]{27 октомври -- 10 ноември 2021 г.}
+\date{18 октомври 2022 г.}
 
 \lstset{language=Scheme}
 
@@ -362,8 +363,8 @@
     \begin{itemize}[<+->]
     \item \evalstop{(filter odd? '(1 2 3 4 5))}{(1 3 5)}
     \item \evalstop{(filter pair? '((a b) c () d (e)))}{((a b) (e))}
-    \item \evalstop{(map (lambda (x) (filter even? x)) '((1 2 3) (4 5 6) (7 8 9)))}{((2) (4 6) (8))}
-    \item \evalstop{(map (lambda (x) (map (lambda (f) (filter f x)) (list negative? zero? positive?))) '((-2 1 0) (1 4 -1) (0 0 1)))}{(((-2) (0) (1)) ((-1) () (1 4)) (() (0 0) (1)))}
+    \item \evalstopnl{(map (lambda (x) (filter even? x)) '((1 2 3) (4 5 6) (7 8 9)))}{((2) (4 6) (8))}
+    \item \evalstopnl{(map (lambda (x) (map (lambda (f) (filter f x)) (list negative? zero? positive?))) '((-2 1 0) (1 4 -1) (0 0 1)))}{(((-2) (0) (1)) ((-1) () (1 4)) (() (0 0) (1)))}
     \end{itemize}
   \end{fixedarea}
 \end{frame}
