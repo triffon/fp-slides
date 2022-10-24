@@ -1,10 +1,11 @@
+\PassOptionsToClass{aspectratio=169}{beamer}
 \documentclass[alsotrans]{beamerswitch}
 \usepackage{fprog}
 
 \title{Структури от данни в Scheme}
 \subtitle{матрици, дървета, асоциативни списъци, графи}
 
-\date{10--24 ноември 2021 г.}
+\date{25 октомври 2022 г.}
 
 \lstset{language=Scheme}
 
@@ -139,8 +140,7 @@
   \begin{overprint}
 \begin{lstlisting}
 (define (transpose m)
-  (accumulate @\rvl{cons} \rvl{'()} \rvl0 \rvl{(- (get-columns m) 1)}@
-              @\rvl{(lambda (i) (get-column i m))} \rvl{1+}@))
+  (accumulate @\rvl{cons} \rvl{'()} \rvl0 \rvl{(- (get-columns m) 1)}@ @\rvl{(lambda (i) (get-column i m))} \rvl{1+}@))
 \end{lstlisting}
   \end{overprint}
 \end{frame}
@@ -268,7 +268,7 @@
 \begin{frame}<1-3>[label=ratarith,fragile]
   \frametitle{Аритметични операции}
 
-  \small
+  \sizeboth\footnotesize
   \begin{columns}[T,onlytextwidth]
     \begin{column}{0.34\textwidth}
       \vspace{4ex}
@@ -368,10 +368,10 @@
 \begin{frame}[fragile]
   \frametitle{Сигнатура}
 
+  \sizeboth\footnotesize
   \textbf{Проблем:} Не можем да различим СД с еднакви представяния! (рационално число, комплексно число, точка в равнината)\\
   \pause
   \textbf{Идея:} Да добавим ``етикет'' на обекта
-  \small
   \begin{center}
     \begin{tikzpicture}
       \pointcellx a{\texttt{rat}}
@@ -406,7 +406,7 @@
        (= (gcd (cadr p) (cddr p)) 1)))
 \end{lstlisting}
   \pause
-  Можем да добавим проверка за коретност:
+  Можем да добавим проверка за коректност:
 \begin{lstlisting}
 (define (check-rat f)
   (lambda (p)
@@ -469,7 +469,7 @@
 \begin{frame}[fragile]
   \frametitle{Капсулация на операции с аргументи}
 
-\small
+  \lstsize\footnotesize
 \begin{lstlisting}
 (define (make-rat n d)
   (let* ((g (gcd n d))
@@ -514,7 +514,7 @@
    @\alert{self}@))
 \end{lstlisting}
   \pause
-  Извикването на метод на обект чрез референция към себе си \tt{self} или \tt{this} се нарича \alert{отворена рекурсия}.
+  Извикването на метод на обект чрез препратка \tt{self} или \tt{this} се нарича \alert{отворена рекурсия}.
 \end{frame}
 
 \section{Двоични дървета}
@@ -632,7 +632,7 @@
 
 \subsection{Дефиниция}
 
-\begin{frame}[label=current]
+\begin{frame}
   \frametitle{Асоциативни списъци}
 
   \begin{definition}
@@ -649,10 +649,10 @@
 
     \pointcellxx[below=2ex of a1]{kv1}{K_1}{V_1}
     \draw[ptr] (a1data) to (kv1data);
-    
+
     \pointcellxx[below=2ex of a2]{kv2}{K_2}{V_2}
     \draw[ptr] (a2data) to (kv2data);
-    
+
     \pointcellxx[below=2ex of an]{kvn}{K_n}{V_n}
     \draw[ptr] (andata) to (kvndata);
   \end{tikzpicture}
@@ -670,7 +670,7 @@
   \vspace{2ex}
   \onslide<+->
   \textbf{Пример:}
-  Създаване на асоциатвен списък по списък от ключове и функция:
+  Създаване на асоциативен списък по списък от ключове и функция:
 \begin{lstlisting}
 (define (make-alist f keys)
   (map (lambda (x) (cons x (f x))) keys))
@@ -857,8 +857,9 @@
 \begin{frame}[fragile]
   \frametitle{Абстракция за граф}
 
+  \sizeboth\footnotesize
   Абстракция чрез капсулация
-  \scriptsize
+  \vspace{-.3ex}
 \begin{lstlisting}
 (define (make-graph g)
   (define (self prop . params)
@@ -959,24 +960,25 @@
 \begin{frame}[fragile]
   \frametitle{Търсене на път в дълбочина}
 
+  \sizeboth\small
   \begin{columns}
     \begin{column}{.75\textwidth}
       \textbf{Задача.} Да се намери път от \tt u до \tt v, ако такъв има.\\
       \pause\onslide<+->
-      \textbf{Решение.} Има път от \tt u до \tt v, ако:
+      \textbf{Решение.} Има път от \tt u до \tt v, ако:\\[-1ex]
       \begin{itemize}
+      \setlength{\itemsep}{0pt}
       \item \tt u = \tt v, или
       \item има дете \tt w $\leftarrow$ \tt u, така че има път от \tt w до \tt v
       \end{itemize}
     \end{column}
     \begin{column}{.25\textwidth}
-      \small
       \samplegraph[.8]
     \end{column}
   \end{columns}
-  \vspace{-2ex}
-  \onslide<+-> \small
-  \begin{overlayarea}{\textwidth}{26.5ex}
+  \vspace{-4ex}
+  \onslide<+->
+  \begin{fixedarea}[.51]
     \begin{onlyenv}<6->
 \begin{lstlisting}
 (define (dfs-path u v g)
@@ -997,7 +999,7 @@
                          (cons#f u (dfs-path w v g))) g)))
 \end{lstlisting}
     \end{onlyenv}
-  \end{overlayarea}
+  \end{fixedarea}
   \onslide<+->
   \alert{Директно рекурсивно решение, работи само за ацикличен граф!}\\
   \onslide<+->
@@ -1030,7 +1032,7 @@
                                   l))))
   (bfs-level (list u)))
 \end{lstlisting}
-  \end{visibleenv} 
+  \end{visibleenv}
   \begin{onlyenv}<3->
     \begin{fixedarea}[.45]
       \begin{onlyenv}<4-8>
@@ -1106,11 +1108,11 @@
 \begin{frame}[fragile]
   \frametitle{Търсене на път в ширина}
 
+  \sizeboth\footnotesize
   \textbf{Задача.} Да се намери \alert{най-краткият} път от \tt u до \tt v, ако такъв има.\\
   \pause
   \textbf{Решение.} Обхождаме в ширина от \tt u докато намерим ниво, в което има път, завършващ във върха  \tt v.
   \pause
-  \small
 \begin{lstlisting}
 (define (bfs-path u v g)
   @\textcolor{black!20}{(define (extend path) ...)}@
