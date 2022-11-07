@@ -481,12 +481,9 @@
     \begin{itemize}
     \item Първо се създава среда $E_1$, в която формалните параметри се свързват с оценките на фактическите
     \item След това се създава среда $E_2$, която разширява $E_1$, за вложените дефиниции
-    \end{itemize}
-  \item Вложените дефиниции\ldots
-    \begin{itemize}
-    \item \ldots на обикновени стойности се \textbf{оценяват} в $E_1$
-    \item \ldots на функции се \textbf{оценяват} в $E_2$
-    \item \ldots се \textbf{свързват} с оценките си в $E_2$
+    \item В средата $E_2$ се записват всички символи от вложени дефиниции \alert{без стойности}
+    \item Всички вложени дефиниции се \textbf{оценяват} в $E_2$
+    \item Накрая получените оценки се \textbf{свързват} със съответните си символи в $E_2$
     \end{itemize}
   \item \textbf{Пример:}\hspace{5ex}
     \begin{minipage}[t]{.5\textwidth}
@@ -511,9 +508,9 @@
       \begin{column}{.5\textwidth}
         \evalchain{
           "\lst{(dist 2 5 -1 9)}\only<+->{}"[label={[vp] \inenv E}] ->
-          "\lst{(define dx (- x2 x1))}"[env=E_1] -!-
-          "\lst{(define dy (- y2 y1))}"[env=E_1] -!-
-          "\lst{(define (sq x) (* x x))}"[env={\alert{E_2}}] -!-
+          "\lst{(define dx (- x2 x1))}"[env=E_2] -!-
+          "\lst{(define dy (- y2 y1))}"[env=E_2] -!-
+          "\lst{(define (sq x) (* x x))}"[env={E_2}] -!-
           "\lst{(sqrt (+ (sq dx) (sq dy)))}"[env=E_2] ->
           "\lst{(sqrt (+ (* x x) (sq dy)))}"[env=E_3] ->
           "\lst{(sqrt (+ 9 (* x x)))}"[env=E_4] ->
@@ -532,9 +529,9 @@
             \kv{y2}9
           }
           \childenvir[3-]{below=1em}{E_1}{E_2}{
-            \only<3->{\kv{dx}{-3}}
-            \only<4->{\kv{dy}4}
-            \only<5->{\kf{sq}x{(* x x)}{E_2}}
+            \only<3->{\kv{dx}{\only<6->{-3}}}
+            \only<4->{\kv{dy}{\only<6->{4}}}
+            \only<5->{\alt<5>{\kv{sq}{}}{\kf{sq}x{(* x x)}{E_2}}}
           }
           \childenvir[7-]{above left =1em and -3em}{E_2}{E_3}{\kv x{-3}}
           \childenvir[8-]{above right=1em and -3em}{E_2}{E_4}{\kv x4}
