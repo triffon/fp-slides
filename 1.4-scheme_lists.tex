@@ -605,27 +605,27 @@
   \pause
   \onslide<+->
 \begin{lstlisting}
-(define (deep-foldr nv term op l)
+(define (deep-foldr op term nv l)
   (cond ((null? l) @\hzero{nv}@)
         ((atom? l) @\vzero{(term l)}@)
-        (else (op @\vstep{(deep-foldr nv term op (car l))}@
-                  @\hstep{(deep-foldr nv term op (cdr l))}@))))
+        (else (op @\vstep{(deep-foldr op term nv (car l))}@
+                  @\hstep{(deep-foldr op term nv (cdr l))}@))))
 \end{lstlisting}
   \onslide<+->
 \begin{lstlisting}
-(define (count-atoms l) (deep-foldr @\rvl0 \rvl{(lambda (x) 1)} \rvl+@ l))
+(define (count-atoms l) (deep-foldr @\rvl+ \rvl{(lambda (x) 1)} \rvl0@ l))
 \end{lstlisting}
   \onslide<+->
 \begin{lstlisting}
-(define (flatten l) (deep-foldr @\rvl{'()} \rvl{list} \rvl{append}@ l))
+(define (flatten l) (deep-foldr @\rvl{append} \rvl{list} \rvl{'()}@ l))
 \end{lstlisting}
   \onslide<+->
-  \begin{visibleenv}<14>
+  \begin{visibleenv}<12->
 \begin{lstlisting}
 (define (snoc x l) (append l (list x)))\end{lstlisting}%
   \end{visibleenv}%
 \begin{lstlisting}
-(define (deep-reverse l) (deep-foldr @\rvl{'()} \rvl{id} \rvl{snoc}@ l))
+(define (deep-reverse l) (deep-foldr @\rvl{snoc} \rvl{id} \rvl{'()}@ l))
 \end{lstlisting}
 \end{frame}
 
@@ -644,21 +644,21 @@
   \onslide<+->
 \begin{lstlisting}
 (define (branch p? f g) (lambda (x) (p? x) (f x) (g x)))
-(define (deep-foldr nv term op l)
+(define (deep-foldr op term nv l)
   (foldr @\hstep{op} \hzero{nv}@
    (map (branch atom?
                 @\vzero{term}@
-                @\vstep{(lambda (l) (deep-foldr nv term op l))}@
+                @\vstep{(lambda (l) (deep-foldr op term nv l))}@
         l)))
 \end{lstlisting}
   \onslide<+->
  \textbf{Задача.} Реализирайте функция за ляво свиване на дълбоки списъци \tt{deep-foldl}.
 \end{frame}
 
-\section{Функции с произволен брой аргументи}
+\section{Вариадични функции}
 
 \begin{frame}
-  \frametitle{Приемане на произволен брой аргументи}
+  \frametitle{Вариадични функции ---  приемащи произволен брой аргументи}
 
   \begin{itemize}[<+->]
   \item \tta{(lambda} <списък> <тяло>\tta)
@@ -670,8 +670,7 @@
     \lst{(define} <функция> \tt{(lambda }<списък> <тяло>\tt{))}
   \item \tta{(define (}<функция> \{<параметър>\}$^+$ \tta. <списък>\tta) <тяло>\tta)
   \item еквивалентно на \\
-    \lst{(define} <функция>\\
-    \hspace{5em}\lst{(lambda (}\{<параметър>\}$^+$ \tt. <списък>\tt) <тяло>\tt{))}
+    \lst{(define} <функция> \lst{(lambda (}\{<параметър>\}$^+$ \tt. <списък>\tt) <тяло>\tt{))}
   \end{itemize}
 \end{frame}
 
@@ -689,8 +688,31 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile,label=mapl]
-  \frametitle{\lst{map} с произволен брой аргументи}
+\begin{frame}[fragile]
+  \frametitle{Прилагане на функция над списък от параметри (\tt{apply})}
+
+  \begin{itemize}[<+->]
+  \item \tta{(apply} <функция> <списък>\tta)
+  \item прилага <функция> над <списък> от параметри
+  \item \textbf{Примери:}
+  \item \evalsto{(apply + '(1 2 3 4 5))}{15}
+  \item \evalstop{(apply append '((1 2) (3 4) (5 6)))}{(1 2 3 4 5 6)}
+  \item \evalstop{(apply list '(1 2 3 4))}{(1 2 3 4)}
+  \end{itemize}
+  \onslide<+->
+\small
+\begin{lstlisting}
+(define (append . l)
+   (cond ((null? l) '())
+         ((null? (car l)) (apply append (cdr l)))
+         (else (cons (caar l)
+                     (apply append (cons (cdar l) (cdr l)))))))
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Вариадичен \lst{map}}
 
   \begin{itemize}[<+->]
   \item Функцията \lst{map} може да се използва с произволен брой списъци!
@@ -720,28 +742,6 @@
   \item \evalstop{(map list '(1 2 3) '(4 5 6))}{((1 4) (2 5) (3 6))}
   \item \small \evalstop{(map foldr (list * +) '(1 0) '((1 2 3) (4 5 6)))}{(6 15)}
 \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Прилагане на функция над списък от параметри (\tt{apply})}
-
-  \begin{itemize}[<+->]
-  \item \tta{(apply} <функция> <списък>\tta)
-  \item прилага <функция> над <списък> от параметри
-  \item \textbf{Примери:}
-  \item \evalsto{(apply + '(1 2 3 4 5))}{15}
-  \item \evalstop{(apply append '((1 2) (3 4) (5 6)))}{(1 2 3 4 5 6)}
-  \item \evalstop{(apply list '(1 2 3 4))}{(1 2 3 4)}
-  \end{itemize}
-  \onslide<+->
-\small
-\begin{lstlisting}
-(define (append . l)
-   (cond ((null? l) '())
-         ((null? (car l)) (apply append (cdr l)))
-         (else (cons (caar l)
-                     (apply append (cons (cdar l) (cdr l)))))))
-\end{lstlisting}
 \end{frame}
 
 \begin{frame}
