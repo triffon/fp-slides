@@ -1,9 +1,10 @@
+\PassOptionsToClass{aspectratio=169}{beamer}
 \documentclass[alsotrans]{beamerswitch}
 \usepackage{fprog}
 
 \title{Потоци}
 
-\date{1 декември 2021 г.}
+\date{22 ноември 2022 г.}
 
 \lstset{language=Scheme}
 
@@ -333,9 +334,7 @@
 
 (define (sieve stream)
   (cons-stream (head stream)
-               (sieve (filter-stream
-                        (notdivides (head stream))
-                        (tail stream)))))@\pause@
+               (sieve (filter-stream (notdivides (head stream)) (tail stream)))))@\pause@
 
 (define primes (sieve (from 2)))
 \end{lstlisting}
