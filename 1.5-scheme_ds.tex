@@ -447,11 +447,14 @@
 \begin{frame}[fragile]
   \frametitle{Нормализация при капсулация}
 
+\sizeboth\small
 \begin{lstlisting}
 (define (make-rat n d)
-  @\alert{(let* ((g (gcd n d))}@
-         @\alert{(numer (quotient n g))}@
-         @\alert{(denom (quotient d g)))}@
+  @\alert{(let* ((d (if (= 0 d) 1 d))}@
+         @\alert{(sign (if (> 0 d) 1 -1))}@
+         @\alert{(g (gcd n d))}@
+         @\alert{(numer (* sign (quotient n g)))}@
+         @\alert{(denom (* sign (quotient d g))))}@
    (lambda (prop)
     (case prop
       ('get-numer numer)
@@ -469,20 +472,21 @@
 \begin{frame}[fragile]
   \frametitle{Капсулация на операции с аргументи}
 
-  \lstsize\footnotesize
+\sizeboth\footnotesize
 \begin{lstlisting}
 (define (make-rat n d)
   (let* ((g (gcd n d))
-         (numer (quotient n g))
-         (denom (quotient d g)))
+         (d (if (= 0 d) 1 d))
+         (sign (if (> 0 d) 1 -1))
+         (numer (* sign (quotient n g)))
+         (denom (* sign (quotient d g))))
    (lambda (prop . params)
      (case prop
        ('get-numer numer)
        ('get-denom denom)
        ('print (cons numer denom))
-       @\alert{('* (let ((r (car params)))}@
-            @\alert{(make-rat (* numer (r 'get-numer))}@
-                      @\alert{(* denom (r 'get-denom)))))}@
+       @\alert{('* (let ((r (car params))) (make-rat (* numer (r 'get-numer))}@
+                                             @\alert{(* denom (r 'get-denom)))))}@
        (else 'unknown-prop))))
 \end{lstlisting}
   \pause
@@ -496,12 +500,14 @@
 \begin{frame}[fragile,fragile]
   \frametitle{Извикване на собствени операции}
 
-  \small
+\sizeboth\footnotesize
 \begin{lstlisting}
 (define (make-rat n d)
   (let* ((g (gcd n d))
-         (numer (quotient n g))
-         (denom (quotient d g)))
+         (d (if (= 0 d) 1 d))
+         (sign (if (> 0 d) 1 -1))
+         (numer (* sign (quotient n g)))
+         (denom (* sign (quotient d g))))
    @\alert{(define (self prop . params)}@
      (case prop
        ('get-numer numer)
@@ -602,6 +608,7 @@
   \pause
   Намиране на поддърво:
   \pause
+\begin{onlyenv}<4>
 \begin{lstlisting}
 (define (memv-tree x t)
   (cond ((empty-tree? t) #f)
@@ -609,6 +616,16 @@
         (else (or (memv-tree x (left-tree t))
                   (memv-tree x (right-tree t))))))
 \end{lstlisting}
+\end{onlyenv}
+\begin{onlyenv}<5->
+\begin{lstlisting}  
+(define (memv-tree x t)
+  (and (not (empty-tree? t))
+       (or (and (eqv? x (root-tree t)) t)
+           (memv-tree x (left-tree t))
+           (memv-tree x (right-tree t)))))
+\end{lstlisting}
+\end{onlyenv}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -616,6 +633,7 @@
 
   \textbf{Задача:} Да се намери в дървото път от корена до даден възел \tt x.
   \pause
+  \begin{onlyenv}<2>
 \begin{lstlisting}
 (define (path-tree x t)
   (cond ((empty-tree? t) #f)
@@ -626,6 +644,19 @@
 
 (define (cons#f h t) (and t (cons h t)))
 \end{lstlisting}
+  \end{onlyenv}
+  \begin{onlyenv}<3->
+\begin{lstlisting}
+(define (path-tree x t)
+  (and (not (empty-tree? t))
+       (or (and (eqv? x (root-tree t)) (list x))
+           (cons#f (root-tree t)
+                   (or (path-tree x (left-tree t))
+                       (path-tree x (right-tree t)))))))
+
+(define (cons#f h t) (and t (cons h t)))
+\end{lstlisting}
+  \end{onlyenv}
 \end{frame}
 
 \section{Асоциативни списъци}
@@ -745,7 +776,7 @@
 \begin{lstlisting}
 (define (add-assoc key value alist)
   (let ((new-kv (cons key value)))
-       (if (assq key alist)
+       (if (assv key alist)
            (map (lambda (kv) (if (eq? (car kv) key)
                                  new-kv kv)) alist)
            (cons new-kv alist))))
@@ -771,8 +802,8 @@
   \pause
   \textbf{Пример:}
 \begin{lstlisting}
-(define (assq key al)
-  (search (lambda (kv) (and (eq? (car kv) key) kv)) al))
+(define (assv key al)
+  (search (lambda (kv) (and (eqv? (car kv) key) kv)) al))
 \end{lstlisting}
 \end{frame}
 
@@ -796,8 +827,8 @@
   \pause
   \textbf{Решение:}
 \begin{lstlisting}
-(define (all? p l)
-  (not (search (lambda (x) (not (p x))) l)))
+(define (all? p? l)
+  (not (search (lambda (x) (not (p? x))) l)))
 \end{lstlisting}
 \end{frame}
 
@@ -928,7 +959,7 @@
 
   Обхождане на връх \tt u:
   \begin{itemize}
-  \item Обходи последователно всички наследници \tt v на \tt u
+  \item Обходи последователно всички деца \tt v на \tt u
   \end{itemize}
   \pause
 {\small
@@ -942,7 +973,7 @@
   \begin{itemize}[<+->]
   \item \alert{Имаме ли дъно?}
     \begin{itemize}
-    \item Да:  при празен списък от наследници няма рекурсивно извикване!
+    \item Да: при празен списък от деца няма рекурсивно извикване!
     \end{itemize}
   \item \alert{Какво се случва ако графът е цикличен?}
     \begin{itemize}
@@ -1117,15 +1148,15 @@
 (define (bfs-path u v g)
   @\textcolor{black!20}{(define (extend path) ...)}@
   @\textcolor{black!20}{(define (extend-acyclic path) ...)}@
-  (define (extend-level level)
-    (apply append (map extend-acyclic level)))
-  (define (target-path path)
-    (and (eqv? (car path) v) path))
+  (define (extend-level level)@\pause@
+    (apply append (map extend-acyclic level)))@\pause@
+  (define (target-path path)@\pause@
+    (and (eqv? (car path) v) path))@\pause@
 
-  (define (bfs-level level)
+  (define (bfs-level level)@\pause@
     (and (not (null? level))
          (or (search target-path level)
-             (bfs-level (extend-level level)))))
+             (bfs-level (extend-level level)))))@\pause@
 
   (bfs-level (list (list u))))
 \end{lstlisting}
