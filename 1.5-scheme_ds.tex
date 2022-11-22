@@ -608,7 +608,7 @@
   \pause
   Намиране на поддърво:
   \pause
-\begin{onlyenv}<4>
+\begin{onlyenv}<4 |trans:0>
 \begin{lstlisting}
 (define (memv-tree x t)
   (cond ((empty-tree? t) #f)
@@ -633,7 +633,7 @@
 
   \textbf{Задача:} Да се намери в дървото път от корена до даден възел \tt x.
   \pause
-  \begin{onlyenv}<2>
+  \begin{onlyenv}<2 |trans:0>
 \begin{lstlisting}
 (define (path-tree x t)
   (cond ((empty-tree? t) #f)
@@ -1041,7 +1041,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Схема на обхождане в ширина}
-  \begin{onlyenv}<1-2>
+  \begin{onlyenv}<1-2| trans:1>
     Обхождане, започващо от връх \tt u:
     \begin{itemize}
     \item Маркира се \tt u за обхождане на ниво 1
@@ -1052,7 +1052,7 @@
       \end{itemize}
     \end{itemize}
   \end{onlyenv}%
-  \begin{visibleenv}<2->%
+  \begin{visibleenv}<2-| trans:1-2>%
     \small%
 \begin{lstlisting}
 (define (bfs u g)
@@ -1064,9 +1064,9 @@
   (bfs-level (list u)))
 \end{lstlisting}
   \end{visibleenv}
-  \begin{onlyenv}<3->
+  \begin{onlyenv}<3- | trans:2-3>
     \begin{fixedarea}[.45]
-      \begin{onlyenv}<4-8>
+      \begin{onlyenv}<4-8| trans:3>
         \begin{center}
           \samplegraph \hspace{5em}
           \onslide<5->
@@ -1086,7 +1086,7 @@
           \end{forest}
         \end{center}
       \end{onlyenv}
-      \begin{onlyenv}<9->
+      \begin{onlyenv}<9-| trans:2>
         \begin{itemize}[<+(8)->]
         \item \alert{Какво се случва ако графът е цикличен?}
           \begin{itemize}
