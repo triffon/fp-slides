@@ -1,9 +1,10 @@
+\PassOptionsToClass{aspectratio=169}{beamer}
 \documentclass[alsotrans]{beamerswitch}
 \usepackage{fprog}
 
 \title{Основни понятия в Haskell}
 
-\date{1--3 декември 2021 г.}
+\date{29 ноември 2022 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -48,9 +49,8 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
 \begin{lstlisting}
 @студенти@ = [("@Иван@", 40000, 3.5), ("@Мария@", 60001, 5.5),
             ("@Петър@", 40002, 5.0), ("@Галя@", 40003, 4.75)]
-@избрани@ = foldr1 (++)
-                   [ ' ':@име@ | (@име,фн,оценка@) <- @студенти@,
-                                  @оценка@ > 4.5, @фн@ < 60000 ]
+@избрани@ = foldr1 (++) [ ' ':@име@ | (@име,курс,оценка@) <- @студенти@,
+                                  @оценка@ > 4.5, @курс@ <= 3 ]
 \end{lstlisting}
 \end{frame}
 
