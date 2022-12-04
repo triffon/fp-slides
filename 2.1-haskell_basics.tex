@@ -8,6 +8,8 @@
 
 \lstset{language=Haskell,style=Haskell}
 
+\hypersetup{colorlinks,urlcolor=blue,linkcolor=white}
+
 \begin{document}
 
 \begin{frame}
@@ -47,8 +49,8 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
 \end{lstlisting}
   \pause
 \begin{lstlisting}
-@студенти@ = [("@Иван@", 40000, 3.5), ("@Мария@", 60001, 5.5),
-            ("@Петър@", 40002, 5.0), ("@Галя@", 40003, 4.75)]
+@студенти@ = [("@Иван@", 3, 3.5), ("@Мария@", 4, 5.5),
+            ("@Петър@", 3, 5.0), ("@Галя@", 2, 4.75)]
 @избрани@ = foldr1 (++) [ ' ':@име@ | (@име,курс,оценка@) <- @студенти@,
                                   @оценка@ > 4.5, @курс@ <= 3 ]
 \end{lstlisting}
@@ -74,8 +76,14 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
   \begin{enumerate}
   \item S. Thompson. Haskell: The Craft of Functional Programming (2nd ed.). Addison-Wesley, 1999.
   \item P. Hudak, Peterson J., Fasel J. A Gentle Introduction to Haskell 98, 1999 (Internet, 2008).
-  \item Haskell Wiki: \url{https://wiki.haskell.org/Haskell}
-  \item Haskell Platform: \url{https://www.haskell.org/platform/}
+  \item \href{https://wiki.haskell.org/Haskell}{Haskell Wiki}
+  \item \href{https://hackage.haskell.org/}{Hackage} --- централно хранилище с пакети
+  \item \href{https://www.haskell.org/ghcup/}{GHCup} --- инсталатор на Haskell
+    \begin{itemize}
+    \item инсталирайте Haskell Language Server (HLS) за работа с Visual Studio Code
+    \item използвайте GHC 9.0.2 вместо актуалната GHC 9.2.x
+    \item инсталирайте разширението \href{https://marketplace.visualstudio.com/items?itemName=haskell.haskell}{Haskell} за Visual Studio Code
+    \end{itemize}
   \end{enumerate}
 \end{frame}
 
@@ -101,7 +109,7 @@ quickSort (x:xs) = quickSort less ++ [x] ++ quickSort more
     \item всички операции с изключение на унарния \tt- са инфиксни
     \end{itemize}
   \item Запазени операции: \tt{..} \tt: \tt{::} \tt= \tt\textbackslash \tt| \tt{<-} \tt{->} \tt@ \tt\~ \tt{=>}
-  \item Специални символи: \tt( \tt) \tt, \tt; \tt[ \tt] \tt` \tt\{ \tt\}
+  \item Специални знаци: \tt( \tt) \tt, \tt; \tt[ \tt] \tt` \tt\{ \tt\}
   \item Знаци: \lst{'a'}, \lst{'\n'}, \lst{'+'}
   \item Низове: \lst{"Hello, world!"}, \lst{"произволен низ"}
   \end{itemize}

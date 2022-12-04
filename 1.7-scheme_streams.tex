@@ -173,10 +173,10 @@
   \pause
   \textbf{Решение.}
 \begin{lstlisting}
-(define (search-stream p? s)
+(define (find-stream p? s)
   (cond ((empty-stream? s) #f)
         ((p? (head s)) s)
-        (else (search-stream p? (tail s)))))
+        (else (find-stream p? (tail s)))))
 \end{lstlisting}
   \pause
   \textbf{Задача.} Да се намери второто по големина просто число след 10000 със сума на цифрите кратна на 5.\\
@@ -186,8 +186,8 @@
 (define (prime-5? n) (and (prime? n)
                           (= (remainder (sum-digits n) 5) 0)))
 (define second-prime-5
-  (head (search-stream prime-5?
-          (tail (search-stream prime-5?
+  (head (find-stream prime-5?
+          (tail (find-stream prime-5?
                   (enum 10000 100000)))))
 \end{lstlisting}
 \end{frame}
@@ -264,7 +264,7 @@
     \begin{itemize}
     \item еквивалентно на \lst{zip-streams}
     \end{itemize}
-  \item \evalsto{(map-stream list nats (map-stream + nats nats ones))}{(0 1) (1 3) (2 5) (3 7) ...}
+  \item \evalsto{(map-stream list nats (map-stream + nats nats fibs))}{(0 0) (1 3) (2 5) (3 8) ...}
   \end{itemize}
 \end{frame}
 
@@ -330,11 +330,11 @@
   Ще реализираме решетото над потенциално безкраен поток от числа:
   \pause
 \begin{lstlisting}
-(define (notdivides d) (lambda (n) (> (remainder n d) 0)))@\pause@
+(define (nondivisor d) (lambda (n) (> (remainder n d) 0)))@\pause@
 
 (define (sieve stream)
   (cons-stream (head stream)
-               (sieve (filter-stream (notdivides (head stream)) (tail stream)))))@\pause@
+               (sieve (filter-stream (nondivisor (head stream)) (tail stream)))))@\pause@
 
 (define primes (sieve (from 2)))
 \end{lstlisting}
