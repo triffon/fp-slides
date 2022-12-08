@@ -89,11 +89,11 @@
   \item \lst{addVectors (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)}
   \item \lst{fst (x,_) = x}
   \item<.-> \lst{snd (_,y) = y}
-  \item \lst{getFN :: Student -> Int}
-  \item<.-> \lst{getFN (_, fn, _) = fn}
+  \item \lst{getYear :: Student -> Int}
+  \item<.-> \lst{getYear (_, year, _) = year}
   \item образците на кортежи могат да се използват за ``разглобяване'' на кортежи при дефиниция
   \item \lst{(x,y) = (3.5, 7.8)}
-  \item \lst{let (_, fn, grade) = student in (fn, min (grade + 1) 6)}
+  \item \lst{let (name, _, grade) = student in (name, min (grade + 1) 6)}
   \end{itemize}
 \end{frame}
 
@@ -103,9 +103,9 @@
   \begin{itemize}[<+->]
   \item намиране на студент с по-висока оценка
 \begin{lstlisting}
-betterStudent (name1, fn1, grade1) (name2, fn2, grade2)
- | grade1 > grade2 = (name1, fn1, grade1)
- | otherwise       = (name2, fn2, grade2)
+betterStudent (name1, year1, grade1) (name2, year2, grade2)
+ | grade1 > grade2 = (name1, year1, grade1)
+ | otherwise       = (name2, year2, grade2)
 \end{lstlisting}
   \item ами ако имахме 10 полета?
   \item удобно е да използваме \alert{именувани образци}
@@ -393,7 +393,7 @@ reverse (x:xs) = reverse xs ++ [x]
   \begin{itemize}[<+->]
   \item \evalstop{[ 2 * x | x <- [1..5] ]}{[2,4,6,8,10]}
   \item \evalstop{[ x^2 | x <- [1..10], odd x]}{[1,9,25,49,81]}
-  \item \lst{[ fn | (\_, fn, grade) <- students, grade >= 3 ]}
+  \item \lst{[ name | (name, \_, grade) <- students, grade >= 3 ]}
   \item \lst{[ x^2 + y^2 | (x, y) <- vectors, x >= 0, y >= 0]}
   \item Ако имаме повече от един генератор, се генерират всички възможни комбинации от елементи (декартово произведение)
   \item \evalstopnl{[ x++(' ':y) | x<-["green","blue"],y<-["grass","sky"]]}{["green grass","green sky","blue grass","blue sky"]}
