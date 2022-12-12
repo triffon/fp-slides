@@ -1,9 +1,10 @@
+\PassOptionsToClass{aspectratio=169}{beamer}
 \documentclass[alsotrans]{beamerswitch}
 \usepackage{fprog}
 
 \title[Лениво оценяване]{Лениво оценяване и програмиране от по-висок ред}
 
-\date[22.12.2021--5.01.2022]{22 декември 2021 г. -- 5 януари 2022 г.}
+\date{13 декември 2022 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -355,7 +356,7 @@ sumFirst (x:xs) (y:ys) = x + y
     \end{itemize}
   \item Синтактична захар за \tt{enumFrom from}
     \pause
-  \item \tta[$a$\tta, $a+\Delta x$ \tta{..}\tta] $\rightarrow$ \tta[$a$\tta, $a+\Delta x$\tta, $a + 2\Delta x$\tta, \ldots \tta, \tta]
+  \item \tta[$a$\tta, $a+\Delta x$ \tta{..}\tta] $\rightarrow$ \tta[$a$\tta, $a+\Delta x$\tta, $a + 2\Delta x$\tta, \ldots \tta]
   \item \textbf{Примери:}
     \begin{itemize}
     \item \tt{evens = [0,2..]}
@@ -373,7 +374,7 @@ sumFirst (x:xs) (y:ys) = x + y
   \item \lst{repeat :: a -> [a]}
     \begin{itemize}
     \item създава безкрайния списък \lst{[x,x,...]}
-%    \item \lst{repeat x = [x,x..]}
+    \item \lst{repeat x = [x,x..]}
     \item \lst{repeat x = x : repeat x}
     \item \lst{replicate n x = take n (repeat x)}
     \end{itemize}

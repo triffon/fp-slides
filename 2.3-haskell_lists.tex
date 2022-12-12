@@ -4,7 +4,7 @@
 
 \title{Кортежи и списъци}
 
-\date{6 декември 2022 г.}
+\date{6--13 декември 2022 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -396,7 +396,7 @@ reverse (x:xs) = reverse xs ++ [x]
   \item \lst{[ name | (name, \_, grade) <- students, grade >= 3 ]}
   \item \lst{[ x^2 + y^2 | (x, y) <- vectors, x >= 0, y >= 0]}
   \item Ако имаме повече от един генератор, се генерират всички възможни комбинации от елементи (декартово произведение)
-  \item \evalstopnl{[ x++(' ':y) | x<-["green","blue"],y<-["grass","sky"]]}{["green grass","green sky","blue grass","blue sky"]}
+  \item \evalstopnl{[ x++(' ':y) | x <- ["green", "blue"],y <- ["grass", "sky"]]}{["green grass", "green sky", "blue grass", "blue sky"]}
   \item \evalstopnl{[ (x,y) | x <- [1,2,3], y <- [5,6,7], x + y <= 8 ]}{[(1,5),(1,6),(1,7),(2,5),(2,6),(3,5)]}
   \item \textbf{Задача.} Да се генерират всички Питагорови тройки в даден интервал.
   \end{itemize}
@@ -530,7 +530,7 @@ reverse (x:xs) = reverse xs ++ [x]
     \item \evalstop{map (^2) [1,2,3]}{[1,4,9]}
     \item \evalstop{map (\!\!1) [[1,2,3],[4,5,6],[7,8,9]]}{[2,5,8]}
     \item \evalstop{map sum [[1,2,3],[4,5,6],[7,8,9]]}{[6,15,24]}
-    \item \evalstopnl{map ("a "++) ["cat","dog","pig"]}{["a cat","a dog","a pig"]}
+    \item \evalstop{map ("a "++) ["cat", "dog", "pig"]}{["a cat", "a dog", "a pig"]}
     \item \evalstop{map (\\f -> f 2) [(^2),(1+),(*3)]}{[4,3,6]}
     \end{itemize}
   \end{itemize}
@@ -560,7 +560,7 @@ filter p (x:xs)
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}<1-6>
   \frametitle{Отделяне на списъци с \tt{map} и \tt{filter}}
 
   Отделянето на списъци е синтактична захар за \lst{map} и \lst{filter}\pause
@@ -581,9 +581,9 @@ filter p (x:xs)
   \item \begin{tabular}[t]{l}
       \tt[<израз>\tt|<образец$_1$> \tt{<-} <списък$_1$>\tt,<образец$_2$> \tt{<-} <списък$_2$>\tt]\\
       $\longleftrightarrow$\\
-      \lst{concat (map (\\}<образец$_1$> \tt{->}\\
+      \temporal<5>{\lst{concat (map (\\}}{\tta{concat}\tt{ }\lst{(map (\\}}{\lst{concatMap (\\}}<образец$_1$> \tt{->}\\
       \hspace{15ex}\lst{map (\\} <образец$_2$> \tt{->} <израз>\tt) <списък$_2$>\tt)\\
-      \hspace{10ex} <списък$_1$>\tt)
+      \hspace{10ex} <списък$_1$>\only<4-5>{\tt)}
     \end{tabular}
   \end{itemize}
 \end{frame}
