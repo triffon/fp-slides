@@ -1,3 +1,4 @@
+\PassOptionsToClass{aspectratio=169}{beamer}
 \documentclass[alsotrans]{beamerswitch}
 \usepackage{fprog}
 
@@ -111,7 +112,7 @@
   \frametitle{Дефиниране на класове от типове}
   \tta{class} <клас> <типова-променлива>\tta{ where}\\
   \hspace{1em}\{<метод>\{,<метод>\} \tta{::} <тип>\}\\
-  \hspace{1em}\{<метод> \tta{=} <реализация-по-подразбиране>\}\\[4ex]
+  \hspace{1em}\{<метод> \tta{=} <реализация-по-подразбиране>\}\\[3ex]
   \pause
   \textbf{Примери:}\\
 \begin{lstlisting}
@@ -150,7 +151,7 @@ class Measurable a where
 \begin{frame}[fragile]
   \frametitle{Дефиниране на екземпляри на клас}
   \begin{definition}
-    \textbf{Екземпляр} (инстанция) на клас наричаме тип, за който са дефинирани методите на класа.
+    \textbf{Екземпляр} (инстанция) на клас е тип, за който са дефинирани методите на класа.
   \end{definition}
   \pause
   \tta{instance} <клас> <тип> \tta{where}\\
@@ -208,6 +209,7 @@ instance Measurable a => Measurable [a] where
 
 \begin{frame}[fragile]
   \frametitle{Пример: Стандартен клас Ord}
+\lstsmall
 \begin{lstlisting}
 class Eq a => Ord a  where
   (<), (<=), (>=), (>)  :: a -> a -> Bool
@@ -505,8 +507,7 @@ data List a = Nil | Cons a (List a)
   \begin{itemize}[<+->]
   \item \lst{l = Cons 1 $ Cons 2 $ Cons 3 $ Nil}
   \item можем да използваме синтаксиса за записи:\\
-    \lst!data List a = Nil | Cons { listHead :: a,!\\
-      \hspace{14em}\lst!listTail :: List a }!\\
+    \lst!data List a = Nil | Cons { listHead :: a, listTail :: List a }!\\
     \hspace{5em}\lst{deriving (Eq, Ord, Show, Read)}
   \item \evalstop{listHead l}1
   \item \lst{fromList :: List a -> [a]}
@@ -521,8 +522,7 @@ data List a = Nil | Cons a (List a)
 \begin{frame}[fragile]
   \frametitle{Двоични дървета}
 \begin{lstlisting}
-data BinTree a = Empty | Node { root :: a,
-                                left, right :: BinTree a }
+data BinTree a = Empty | Node { root :: a, left, right :: BinTree a }
                  deriving (Eq, Ord, Show, Read)
 \end{lstlisting}
   \textbf{Примери:}
@@ -546,8 +546,7 @@ data BinTree a = Empty | Node { root :: a,
 \begin{lstlisting}
 mapBinTree :: (a -> b) -> BinTree a -> BinTree b
 mapBinTree _ Empty        = Empty
-mapBinTree f (Node x l r) = Node (f x) (mapBinTree f l)
-                                       (mapBinTree f r)
+mapBinTree f (Node x l r) = Node (f x) (mapBinTree f l) (mapBinTree f r)
 \end{lstlisting}
   \vspace{4ex}
   \pause
@@ -566,8 +565,7 @@ foldrBinTree op nv (Node x l r) =
   Можем да правим \alert{взаимнорекурсивни} дефиниции:
 \begin{lstlisting}
 data Tree a =  Tree { rootTree :: a, subtrees :: TreeList a }
-data TreeList a = None | SubTree { firstTree :: Tree a,
-                                   restTrees :: TreeList a }
+data TreeList a = None | SubTree { firstTree :: Tree a, restTrees :: TreeList a }
 \end{lstlisting}
 \pause
 \begin{lstlisting}
@@ -600,8 +598,7 @@ data SExpr = SBool Bool | SChar Char | SInt Int |
 \end{lstlisting}
   \ \pause
 \begin{lstlisting}
-sexpr = SList [SInt 2, SChar 'a',
-                       SList [SBool True, SDouble 1.2, SList []]]
+sexpr = SList [SInt 2, SChar 'a', SList [SBool True, SDouble 1.2, SList []]]
 \end{lstlisting}
   \pause
 \begin{lstlisting}
@@ -612,7 +609,7 @@ countAtoms _           = 1
   \pause
 \begin{lstlisting}
 flatten :: SExpr -> SExpr@\pause@
-flatten (SList sls) = SList $ concat $ map (list . flatten) sls
+flatten (SList sls) = SList $ concatMap (list . flatten) sls
 flatten x           = SList [x]
 \end{lstlisting}
 \end{frame}
