@@ -703,7 +703,7 @@ foldr1 op (x:xs) = x `op` foldr1 op xs
   \item \lst{zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]}
     \begin{itemize}
     \item ``съшива'' два списъка с дадена двуместна операция
-    \item \evalstos{\lst{zipWith op} \hlist x \hlist y}{\tt[$x_1$\tt{ `op` }$y_1$\tt, $x_2$\tt{ `op` } $y_2$\tt, \ldots\tt, $x_n$\tt{ `op` }$y_n$]}
+    \item \evalstos{\lst{zipWith op} \hlist x \hlist y}{\tt{[op} $x_1$ $y_1$\tt{, op} $x_2$ $y_2$\tt, \ldots\tt{, op} $x_n$ $y_n$\tt]}
     \end{itemize}
   \item \textbf{Примери:}
     \begin{itemize}

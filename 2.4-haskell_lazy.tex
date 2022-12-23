@@ -4,7 +4,7 @@
 
 \title[Лениво оценяване]{Лениво оценяване и програмиране от по-висок ред}
 
-\date{20 декември 2022 г.}
+\date[20.12.2022 г. -- 3.01.2023 г.]{20 декември 2022 г. -- 3 януари 2023 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -113,8 +113,8 @@ g l   = f (head l) (head (tail l))
   \item нещо повече:
   \end{itemize}
   \onslide<.->
-  \begin{theorem}[за нормализация, Church-Rosser]
-    Ако има някакъв ред на оценяване на програмата, който достига до резултат, то и с нормална стратегия на оценяване ще достигнем до някакъв резултат.
+  \begin{theorem}[за нормализация, Curry]
+    Ако има някакъв ред на оценяване на програмата, който достига до резултат, то и с нормална стратегия на оценяване ще достигнем до същия резултат.
   \end{theorem}
   \onslide<+->
   \begin{corollary}
@@ -232,11 +232,11 @@ g l   = f (head l) (head (tail l))
   \frametitle{Оценяване в Haskell: пример 1}
 
 \begin{lstlisting}
-sumFirst (x:xs) (y:ys) = x + y
+sumHeads (x:xs) (y:ys) = x + y
 \end{lstlisting}
 \pause
 \begin{tabular}{rl}
-  &\tt{\underline{sumFirst} [1..10] [5..50]}\\\pause
+  &\tt{\underline{sumHeads} [1..10] [5..50]}\\\pause
   \lra& \tt{(\textbackslash(x:xs) -> \textbackslash(y:ys) -> x + y) \underline{[1..10]} [5..50]}\\
   \lra& \tt{\underline{(\textbackslash(x:xs) -> \textbackslash(y:ys) -> x + y) (1:[2..10])} [5..50]}\\
   \lra& \tt{\lett{x=1; xs=[2..10]}{(\textbackslash(y:ys) -> x + y) \underline{[5..50]}}}\\
@@ -407,7 +407,8 @@ sumFirst (x:xs) (y:ys) = x + y
             [ (a,b,c) | &c <- [1..],\\
                         &b <- [1..c-1],\\
                         &a <- [1..b-1],\\
-                        &a\^{}2 + b\^{}2 == c\^{}2 ]
+                        &a\^{}2 + b\^{}2 == c\^{}2,\\
+                        &gcd a b == 1]
           \end{tabular}}}
     \end{itemize}
   \end{overlayarea}
