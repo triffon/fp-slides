@@ -4,7 +4,7 @@
 
 \title{Типове и класове в Haskell}
 
-\date{5--19 януари 2022 г.}
+\date{3 януари 2023 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -301,7 +301,7 @@ class (Ord a, Measurable a) => OrdMeasurable a where
   \item \lst{data Compare = LT | EQ | GT}
   \item \lst{data Weekday = Mon | Tue | Wed | Thu | Fri | Sat | Sun}
   \item \lst{today :: Weekday}
-  \item<.-> \lst{today = Thu}
+  \item<.-> \lst{today = Tue}
   \item \lst{isWeekend :: Weekday -> Bool}
   \item<.-> \lst{isWeekend Sat = True}
   \item<.-> \lst{isWeekend Sun = True}
@@ -453,7 +453,7 @@ searchBest players
  | length bestPlayers == 1 = Left best
  | otherwise = Right $ map name bestPlayers
    where best = maximum $ map score players
-         bestPlayers = filter ((==best).score) players
+         bestPlayers = filter ((==best) . score) players
 \end{lstlisting}
 \end{frame}
 
