@@ -1,9 +1,10 @@
+\PassOptionsToClass{aspectratio=169}{beamer}
 \documentclass[alsotrans]{beamerswitch}
 \usepackage{fprog}
 
 \title{Входно-изходни операции в Haskell}
 
-\date{10 януари 2022 г.}
+\date{10--17 януари 2022 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -47,9 +48,9 @@
   \textbf{Решение:} Дефинираме трансформация над стандартните вход и изход, която:
   \begin{itemize}[<+->]
   \item приема \tt{n} като параметър
-  \item трансформира входния поток, като \alert{консумира} от него \tt{n} числа, записвайки ги в списък
+  \item трансформира входния поток, като \alert{консумира} от него \tt{n} числа и връща списък, който ги съдържа
   \item пресмята средното аритметично \tt{avg} на числата в списъка
-  \item трансформира изходния поток, като \alert{произвежда} върху него низовото представяне на \tt{avg}
+  \item трансформира изходния поток, като \alert{произвежда} върху него низовото представяне на числото \tt{avg}
   \end{itemize}
   \onslide<+->
   \textbf{Трансформирането} на входно-изходните потоци несъмнено е страничен ефект, но \textbf{конструирането на трансформацията} няма нужда от странични ефекти!\\
@@ -64,7 +65,7 @@
 
   Стандартният генеричен тип \lst{IO a} задава тип на входно/изходна трансформация, резултатът от която е от тип \tt{a}.\\
   \pause
-  \textbf{Частен случай:} \lst{IO ()} задава трансформация, която връща празен резултат.\\[1em]
+  \textbf{Частен случай:} \lst{IO ()} задава трансформация, която връща празен резултат.\\[2ex]
   \pause
   \textbf{Входни трансформации:}
   \begin{itemize}
@@ -89,8 +90,8 @@
   \item По същество тя дефинира входно-изходна трансформация, която се прилага към стандартния вход и изход при изпълнение на програмата.
   \item \textbf{Пример:} \lst^main = putStrLn "Hello, world!"^
   \item Можем ли да дефинираме \lst!main = putStrLn $ "Въведохте: " ++ getLine!? % поправка на оцветяването на синтаксис$
-  \item \alert{Не!} \hspace{5ex} \lst{getLine :: }\tta{IO} \lst{String}
-  \item Композицията на входно-изходни трансформации не работи като композицията на функции
+  \item \alert{Не!} \hspace{3em} \lst{getLine :: }\tta{IO} \lst{String}
+  \item Композицията на входно-изходни трансформации работи по различен начин от композицията на функции
   \item Низът, който връща \lst{getLine} е ``замърсен'' от входно-изходна операция
   \item Как да композираме трансформации?
   \end{itemize}
@@ -101,8 +102,8 @@
 \begin{frame}[fragile]
   \frametitle{Конструкцията \lst{do}}
 
-  В Haskell има специален синтаксис за композиране на трансформации:\\[1em]
-  \tta{do} \{ <трансформация> \}\\[1em]
+  В Haskell има специален \alert{двумерен} синтаксис за композиране на трансформации:\\[1ex]
+  \tta{do} \{ <трансформация> \}\\[1ex]
   \pause
   <трансформация> може да бъде:
   \begin{itemize}[<+->]
@@ -120,6 +121,7 @@
   \item резултатът от цялата конструкция \tt{do} е резултатът от последната трансформация в композицията
   \end{itemize}
   \onslide<+->
+  \vspace{-.5ex}
 \begin{lstlisting}
 main = do line <- getLine
           putStrLn $ "Въведохте: " ++ line
@@ -135,13 +137,13 @@ main = do line <- getLine
   \item \lst{return} фиктивно ``замърсява'' резултат от тип \tt{a} за да стане от тип \lst{IO a}
   \item Какъв е ефектът от <име> \lst{<- return} <израз> в \lst{do} конструкция?
   \item Създава се локалната дефиниция <име> = <израз>!
-  \item Алтернативно, локални дефиниции могат да се създават и чрез:\\
-    \lst{let} <име> \tta= <израз>
+  \item Алтернативно, локални дефиниции могат да се създават и чрез: \lst{let} <име> \tta= <израз>
   \item Да не се бърка с \lst{let} <име> \tt= <израз> \tta{in} <израз>!
   \end{itemize}
   \onslide<+->
   \textbf{Пример:}
   \vspace{-.5ex}
+  \lstfootnotesize
 \begin{lstlisting}
 main = do putStrLn "Моля, въведете палиндром: "
           line <- getLine
@@ -155,7 +157,7 @@ main = do putStrLn "Моля, въведете палиндром: "
 \begin{frame}
   \frametitle{Вход и изход на данни}
 
-  Как можем да извеждаме и въвеждаме данни от типове различни от \lst{Char} и \tt{String}?\\[1em]
+  Как можем да извеждаме и въвеждаме данни от типове различни от \lst{Char} и \tt{String}?\\[2ex]
   \pause
   На помощ идват класовете \lst{Show} и \lst{Read}:
   \begin{itemize}[<+->]
@@ -167,12 +169,13 @@ main = do putStrLn "Моля, въведете палиндром: "
   \item Haskell не може да познае типа на резултата, понеже е генеричен!
   \item \lst{getInt :: IO Int}
   \item \lst{getInt = do line <- getLine}\\
-    \hspace{15ex}\lst{return \$ read line}
+    \hspace{7em}\lst{return \$ read line}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Пример: средно аритметично на редица от числа}
+\lstsmall
 \begin{lstlisting}
 findAverage :: IO Double@\pause@
 findAverage = do putStr "Моля, въведете брой: "
@@ -220,8 +223,7 @@ main = do avg <- findAverage
     \end{itemize}
   \item \lst{forever :: IO a -> IO b}
     \begin{itemize}
-    \item безкрайна композиция на една и съща трансформация
-    \item както \lst{repeat} за списъци
+    \item безкрайна композиция на една и съща трансформация (както \lst{repeat} за списъци)
     \item \lst{forever \$ do line <- getLine; putStrLn line}
     \end{itemize}
   \end{itemize}

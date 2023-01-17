@@ -1,9 +1,10 @@
+\PassOptionsToClass{aspectratio=169}{beamer}
 \documentclass[alsotrans]{beamerswitch}
 \usepackage{fprog}
 
 \title{Функтори и монади}
 
-%\date{10 февруари 2020 г.}
+\date{17 януари 2022 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -57,12 +58,14 @@ class Functor f where
 
 \begin{frame}
   \frametitle{Функтори}
+  \small
   \begin{definition}
     Класът \lst{Functor} в Haskell се състои от типовите конструктори $f$, за които може да се дефинира \lst{fmap :: (a -> b) -> f a -> f b}.
   \end{definition}
   \pause
   За удобство операцията \lst!<$>! е инфиксен вариант на \lst{fmap}.\\ % $ за поправка на оцветяването
   \pause
+  \footnotesize
   \textbf{Примери за функтори:}
   \begin{itemize}[<+->]
   \item \lst{Maybe}
@@ -169,14 +172,14 @@ class (Functor f) => Applicative f where
 \begin{frame}
   \frametitle{Функции за апликативни функтори}
   \begin{itemize}[<+->]
-  \item \lst!liftA2 :: (Applicative f) => !\\
+  \item \lst!liftA2 :: Applicative f => !\\
     \hspace{10ex}\lst{(a -> b -> c) -> f a -> f b -> f c}
     \begin{itemize}
     \item повдига двуаргументна функция над функтор
     \item \lst!liftA2 f a b = f <$> a <*> b!   % $ оцветяване на синтаксиса
     \item \textbf{Пример:}\\\evalstop{liftA2 (+) [2,3] [10,20,30]}{[12,22,32,13,23,33]}
     \end{itemize}
-  \item \lst{sequenceA :: (Applicative f) => [f a] -> f [a]}
+  \item \lst{sequenceA :: Applicative f => [f a] -> f [a]}
     \begin{itemize}
     \item повдига списък от функтори до функтор над списък
     \item     \lst{sequenceA []     = pure []}
@@ -230,7 +233,7 @@ class (Functor f) => Applicative f where
 \begin{frame}[fragile]
   \frametitle{Класът \tt{Monad}}
 \begin{lstlisting}
-class (Applicative m) => Monad m where  
+class Applicative m => Monad m where  
   return :: a -> m a  
   return = pure     
   
@@ -253,17 +256,17 @@ class (Applicative m) => Monad m where
 \begin{frame}[fragile]
   \frametitle{Монадни функции (1)}
   \begin{itemize}[<+->]
-  \item \lst{liftM :: (Monad m) => (a -> b) -> m a -> m b}
+  \item \lst{liftM :: Monad m => (a -> b) -> m a -> m b}
     \begin{itemize}
     \item \lst{fmap} за монади
     \item \lst!liftM f m = m >>= (\x -> return $ f x)! % $ оцветяване на синтаксиса
     \end{itemize}
-  \item \lst{ap :: (Monad m) => m (a -> b) -> m a -> m b}
+  \item \lst{ap :: Monad m => m (a -> b) -> m a -> m b}
     \begin{itemize}
     \item \lst{<*>} за монади
     \item \lst!ap mf m = mf >>= (\f -> m >>= (\x -> return $ f x))! % $ оцветяване на синтаксиса
     \end{itemize}
-  \item \lst{liftM2::(Monad m) => (a -> b -> c) -> m a -> m b -> m c}
+  \item \lst{liftM2::Monad m => (a -> b -> c) -> m a -> m b -> m c}
     \begin{itemize}
     \item \lst{liftA2} за монади
 \onslide<+->
@@ -280,26 +283,24 @@ liftM2 f m1 m2 = m1 <<= (\x1 ->
   \frametitle{Монадни функции (2)}
   \begin{fixedarea}
     \begin{itemize}[<+->]
-    \item \lst{join :: (Monad m) => m (m a) -> m a}
+    \item \lst{join :: Monad m => m (m a) -> m a}
       \begin{itemize}
       \item ``слива'' двойната опаковка в единична
       \item \alt<+->{\alt<+->{\lst{join = (>>= id)}}{\lst{join mm = (>>= id) mm}}}{\lst{join mm = mm >>= id}}
-      \item Можем да дефинираме \lst{(>>=)} чрез \lst{join} и \lst{fmap}:
-      \item<.-> \lst{m >>= f = join (fmap f m)} 
+      \item Можем да дефинираме \lst{(>>=)} чрез \lst{join} и \lst{fmap}: \lst{m >>= f = join (fmap f m)} 
       \end{itemize}
-    \item \lst{filterM :: (Monad m) => (a -> m Bool) -> [a] -> m [a]}
+    \item \lst{filterM :: Monad m => (a -> m Bool) -> [a] -> m [a]}
       \begin{itemize}
       \item Филтрира с предикат, връщащ ``опаковани'' булеви стойности
       \item Резултатът е ``опакованите'' елементи на списъка
       \item \lst{powerset = filterM (\x -> [True,False])}
       \end{itemize}
-    \item \lst{foldM :: (Monad m) => (a -> b -> m a) -> a -> [b] -> m a}
+    \item \lst{foldM :: Monad m => (a -> b -> m a) -> a -> [b] -> m a}
       \begin{itemize}
       \item Натрупва елементи от списък с монадна операция
       \item Натрупването е ляво (итеративен процес, подобно на \lst{foldl})
       \item
-        \lst!boundSum lim = foldM (\x y -> if x+y < lim!\\
-        \hspace{30ex}\lst{then Just (x+y) else Nothing) 0}
+        \lst!boundSum lim = foldM (\x y -> if x+y < lim then Just (x+y) else Nothing) 0!
       \item \evalstop{boundSum 60 [1..10]}{Just 55}
       \item \evalstop{boundSum 50 [1..10]}{Nothing}
       \end{itemize}
@@ -311,7 +312,6 @@ liftM2 f m1 m2 = m1 <<= (\x1 ->
   \frametitle{Монадни закони}
   \begin{definition}
     \emph{Монада} наричаме инстанция на класа \lst{Monad}, за която:
-    \small
     \begin{enumerate}[<+->]
     \item \lst{return x >>= f} \eqv \lst{f x} (ляв идентитет)
     \item \lst{m >>= return}   \eqv \lst{m}   (десен идентитет)
@@ -319,12 +319,13 @@ liftM2 f m1 m2 = m1 <<= (\x1 ->
     \end{enumerate}
   \end{definition}
   \onslide<+->
-  Композиция на монадни функции:\\
+  Композиция на монадни функции:
 \begin{lstlisting}
-(<=<) :: (Monad m) => (b -> m c) -> (a -> m b) -> (a -> m c)  
+(<=<) :: Monad m => (b -> m c) -> (a -> m b) -> (a -> m c)  
 f <=< g   =   \x -> g x >>= f
 \end{lstlisting}
   \onslide<+->
+  \vspace{-.5ex}
   Монадните закони чрез композиция:
   \begin{enumerate}
   \item \lst{f <=< return} \eqv \lst{f} (ляв идентитет)
