@@ -766,7 +766,7 @@
   \frametitle{Примери за \tt{eval}}
 
   \begin{itemize}[<+->]
-  \item \evalstop{(evali (list '+ 5 7 a))}{14}
+  \item \evalstop{(evali (list '+ 5 7 'a))}{14}
   \item \evalstoerrp{(evali (list 'define b 5))}
   \item \lst{(evali (list 'define 'b 5))} \eqv\ \lst{(define b 5)}
   \item \evalsto{b}5
