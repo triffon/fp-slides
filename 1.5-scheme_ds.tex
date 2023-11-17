@@ -152,8 +152,8 @@
   Събиране на матрици
   \pause
 \begin{lstlisting}
-(define (sum-vectors v1 v2) (map + v1 v2))
-(define (sum-matrices m1 m2) (map sum-vectors m1 m2))
+(define (+vectors v1 v2) (map + v1 v2))
+(define (+matrices m1 m2) (map +vectors m1 m2))
 \end{lstlisting}
   \pause
   \vspace{2ex}
@@ -162,11 +162,11 @@
   \pause
   \small
 \begin{lstlisting}
-(define (mult-vectors v1 v2) (apply + (map * v1 v2)))@\pause@
-(define (mult-matrices m1 m2)
+(define (*vectors v1 v2) (apply + (map * v1 v2)))@\pause@
+(define (*matrices m1 m2)
   (let ((m2t (transpose m2)))
        (map (lambda (row)
-              (map (lambda (column) (mult-vectors row column))
+              (map (lambda (column) (*vectors row column))
                    m2t))
             m1)))
 \end{lstlisting}
