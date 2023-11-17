@@ -132,8 +132,8 @@
 \begin{lstlisting}
 (define (transpose m)
   (if (null? (get-first-row m)) '()
-      (cons (get-first-col m)
-            (transpose (del-first-col m)))))
+      (cons (get-first-column m)
+            (transpose (del-first-column m)))))
 \end{lstlisting}
   \onslide<+->
 
