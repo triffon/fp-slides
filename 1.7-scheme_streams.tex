@@ -241,7 +241,7 @@
 \begin{lstlisting}
 (define (zip-streams op s1 s2)
   (cons-stream (op (head s1) (head s2))
-               (zip-streams (tail s1) (tail s2))))
+               (zip-streams op (tail s1) (tail s2))))
 \end{lstlisting}
 \end{frame}
 
