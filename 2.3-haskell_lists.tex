@@ -394,9 +394,9 @@ reverse (x:xs) = reverse xs ++ [x]
   \item \evalstop{[ 2 * x | x <- [1..5] ]}{[2,4,6,8,10]}
   \item \evalstop{[ x^2 | x <- [1..10], odd x]}{[1,9,25,49,81]}
   \item \lst{[ name | (name, \_, grade) <- students, grade >= 3 ]}
-  \item \lst{[ x^2 + y^2 | (x, y) <- vectors, x >= 0, y >= 0]}
+  \item \lst{[ x^2 + y^2 | (x, y) <- vectors, x >= 0, y >= 0 ]}
   \item Ако имаме повече от един генератор, се генерират всички възможни комбинации от елементи (декартово произведение)
-  \item \evalstopnl{[ x++(' ':y) | x <- ["green", "blue"],y <- ["grass", "sky"]]}{["green grass", "green sky", "blue grass", "blue sky"]}
+  \item \evalstopnl{[ x++(' ':y) | x <- ["green", "blue"], y <- ["grass", "sky"]]}{["green grass", "green sky", "blue grass", "blue sky"]}
   \item \evalstopnl{[ (x,y) | x <- [1,2,3], y <- [5,6,7], x + y <= 8 ]}{[(1,5),(1,6),(1,7),(2,5),(2,6),(3,5)]}
   \item \textbf{Задача.} Да се генерират всички Питагорови тройки в даден интервал.
   \end{itemize}
