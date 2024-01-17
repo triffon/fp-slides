@@ -82,7 +82,7 @@
     \begin{itemize}
     \item \tt{elem} може да търси елемент в списък от сравними елементи
     \item \tt{show} може да извежда елемент, който има низово представяне
-    \item \tt{[from..to]} може да генерира списък от елементи от тип, в който имаме линейна наредба
+    \item \tt{[from..to]} може да генерира списък от последователни елементи от тип, в който имаме операции за следващ и предишен елемент
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -358,7 +358,7 @@ better (Player name1 score1) (Player name2 score2)
   \textbf{Примери:}
   \begin{itemize}[<+->]
   \item \lst!data Shape = Circle { radius :: Double } !\\
-    \hspace{4em}\lst!| Rectangle { width, height :: Double}!
+    \hspace{4em}\lst!| Rectangle { width, height :: Double }!
   \item \lst{circle :: Shape}
   \item<.-> \lst{circle = Circle 2.3}
   \item \lst{rect :: Shape}

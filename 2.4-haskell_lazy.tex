@@ -252,8 +252,8 @@ sumHeads (x:xs) (y:ys) = x + y
   \small
   \begin{tabular}{r@{ }l@{ }l}
     &\multicolumn 2l{\tt{(filter isPrime [4..1000]) \underline{!!} 1}}\\\pause
-    \lra&\multicolumn 2l{\tt{(\textbackslash(x:xs) n -> xs !! (n-1)) \underline{(filter isPrime [4..1000])} 1}}\\
-    \lra&\multicolumn 2l{\tt{(\textbackslash(x:xs) n -> xs !! (n-1)) (\underline{filter} isPrime [4..1000]) 1}}\\
+    \lra&\multicolumn 2l{\tt{(\textbackslash(\_:xs) n -> xs !! (n-1)) \underline{(filter isPrime [4..1000])} 1}}\\
+    \lra&\multicolumn 2l{\tt{(\textbackslash(\_:xs) n -> xs !! (n-1)) (\underline{filter} isPrime [4..1000]) 1}}\\
     \lra&\ldots\tt{\underline{(\textbackslash p (z:zs) ->}}&\underline{\tt{if p z then z:filter p zs}}\\
     &&\tt{\underline{else filter p zs) isPrime} [4..1000]}\ldots\\
     \lra&\ldots\tt{\lett{p=isPrime}{}}&\tt{(\textbackslash (z:zs) -> if p z then z:filter p zs}\\
@@ -280,7 +280,7 @@ sumHeads (x:xs) (y:ys) = x + y
         &\multicolumn 2{@{}l}{\tt{if \underline{p z} then z:filter p zs else filter p zs}\ldots}\\
     \lra&\multicolumn 2{@{}l}{\tt{\ldots \lett{p=isPrime; z=5; zs=[6..1000]}{}}}\\
         &\multicolumn 2{@{}l}{\tt{if True then \underline{z:filter p zs} else filter p zs}\ldots}\\
-    \lra&\multicolumn 2{@{}l}{\tt{\underline{(\textbackslash(x:xs) n -> xs !! (n-1)) (5:filter isPrime [6..1000])} 1}}\\
+    \lra&\multicolumn 2{@{}l}{\tt{\underline{(\textbackslash(\_:xs) n -> xs !! (n-1)) (5:filter isPrime [6..1000])} 1}}\\
     \lra&\multicolumn 2{@{}l}{\tt{\lett{xs=filter isPrime [6..1000]}{}}\underline{\tt{(\textbackslash n -> xs !! (n-1)) 1}}}\\
     \lra&\multicolumn 2{@{}l}{\tt{\lett{xs=filter isPrime [6..1000]; n=1}{xs \underline{!!} (n-1)}}}\\
     \lra&\multicolumn 2{@{}l}{\tt{\underline{(\textbackslash (y:\_) 0 -> y) (filter isPrime [6..1000])} 0}}
