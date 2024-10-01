@@ -1,5 +1,4 @@
-\PassOptionsToClass{aspectratio=169}{beamer}
-\documentclass[alsotrans]{beamerswitch}
+\documentclass[alsotrans,beameroptions={aspectratio=169}]{beamerswitch}
 \usepackage{fprog}
 
 \title[Какво е ФП?]{Какво е функционално програмиране?}
@@ -7,6 +6,11 @@
 \newcommand{\lang}[1]{\onslide<2->{\hspace{2ex}[\textbf{#1}]}}
 \newcommand{\scheme}{\lang{Scheme}}
 \newcommand{\haskell}{\lang{Haskell}}
+
+\newbooltrue{turing}
+\newbooltrue{noncomputable}
+\newbooltrue{halting}
+\newbooltrue{computable}
 
 \date{2 октомври 2024 г.}
 
@@ -183,6 +187,7 @@ cout << s;
   \textbf{Въпрос 3:} Има ли функции, които не могат да бъдат изчислени с компютър?
 \end{frame}
 
+\ifbool{turing}{
 \begin{frame}
   \frametitle{Машина на Turing}
 
@@ -197,7 +202,9 @@ cout << s;
   \pause
   Ако $M$ не завърши за някое $n$, казваме, че \textbf{$f_M(n)$ не е дефинирана}.
 \end{frame}
+}{}
 
+\ifbool{noncomputable}{
 \begin{frame}
   \frametitle{Има неизчислими функции!}
 
@@ -212,7 +219,9 @@ cout << s;
   \item \alert{Но кои са те?}
   \end{itemize}
 \end{frame}
+}{}
 
+\ifbool{halting}{
 \begin{frame}
   \frametitle{Стоп проблем}
 
@@ -243,7 +252,9 @@ cout << s;
     Нека $D = \mt d$. Завършва ли $D$ над $d$?
   \end{proof}
 \end{frame}
+}{}
 
+\ifbool{computable}{
 \begin{frame}
   \frametitle{Въпроси за изчислимост}
 
@@ -260,6 +271,7 @@ cout << s;
   \item $f_9(n) = $ машините $\mt n$ и $\mt{2n}$ изчисляват еднакви функции
   \end{itemize}
 \end{frame}
+}{}
 
 \begin{frame}
   \frametitle{$\lambda$-смятане}
