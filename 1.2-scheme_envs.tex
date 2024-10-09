@@ -3,6 +3,10 @@
 
 \title[Среди и процеси]{Модел на средите и изчислителни процеси}
 
+\newbooltrue{receqs}
+\newbooltrue{fixpoint}
+\newboolfalse{semantics}
+
 \date{9 октомври 2024 г.}
 
 \lstset{language=Scheme}
@@ -161,8 +165,7 @@
   \end{itemize}
 \end{frame}
 
-
-\begin{frame}
+\begin{frame}<\switch{receqs}>
   \frametitle{Рекурсивни уравнения}
 
   Какво означава ``да дефинираме функция чрез себе си''?\\[2ex]
@@ -179,7 +182,7 @@
   \alert{$n!$ е ``най-малкото'' решение на уравнението $F = \Gamma(F)$.}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{fixpoint}>[fragile]
   \frametitle{Най-малка неподвижна точка}
 
   \begin{theorem}[Knaster-Tarski]
@@ -195,12 +198,12 @@
   Кое е \textbf{най-малкото решение} на уравнението $F(x) = F(x+1) - 1$?
   \pause
 \lstinline{(define (g x) (- 1 (g (+ x 1)))}\\
-\evalsto{(f 0)}?\\
+\evalsto{(g 0)}?\\
   \pause
   $g$ е ``празната функция'', т.е. $\mathrm{dom}(g) = \emptyset$.
 \end{frame}
 
-\begin{frame}
+\begin{frame}<\switch{semantics}>
   \frametitle{Операционна и денотационна семантика}
 
   Два подхода за описание на смисъла на функциите в Scheme.\\

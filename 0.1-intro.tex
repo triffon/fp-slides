@@ -187,8 +187,7 @@ cout << s;
   \textbf{Въпрос 3:} Има ли функции, които не могат да бъдат изчислени с компютър?
 \end{frame}
 
-\ifbool{turing}{
-\begin{frame}
+\begin{frame}<\switch{turing}>
   \frametitle{Машина на Turing}
 
   % TODO: да се нарисува с TikZ
@@ -202,10 +201,8 @@ cout << s;
   \pause
   Ако $M$ не завърши за някое $n$, казваме, че \textbf{$f_M(n)$ не е дефинирана}.
 \end{frame}
-}{}
 
-\ifbool{noncomputable}{
-\begin{frame}
+\begin{frame}<\switch{noncomputable}>
   \frametitle{Има неизчислими функции!}
 
   \begin{itemize}[<+->]
@@ -219,10 +216,8 @@ cout << s;
   \item \alert{Но кои са те?}
   \end{itemize}
 \end{frame}
-}{}
 
-\ifbool{halting}{
-\begin{frame}
+\begin{frame}<\switch{halting}>
   \frametitle{Стоп проблем}
 
   \small
@@ -252,10 +247,8 @@ cout << s;
     Нека $D = \mt d$. Завършва ли $D$ над $d$?
   \end{proof}
 \end{frame}
-}{}
 
-\ifbool{computable}{
-\begin{frame}
+\begin{frame}<\switch{computable}>
   \frametitle{Въпроси за изчислимост}
 
   Според вас изчислими ли са следните функции?
@@ -271,7 +264,6 @@ cout << s;
   \item $f_9(n) = $ машините $\mt n$ и $\mt{2n}$ изчисляват еднакви функции
   \end{itemize}
 \end{frame}
-}{}
 
 \begin{frame}
   \frametitle{$\lambda$-смятане}
