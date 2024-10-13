@@ -27,7 +27,7 @@
 \begin{frame}[fragile]
   \frametitle{Подаване на функции като параметри}
 
-  В Scheme функциите са ``първокласни'' стойности.\\[2ex]
+  В Scheme функциите са „първокласни“ стойности.\\[2ex]
   \pause
   \textbf{Примери:}
   \begin{itemize}[<+->]
@@ -166,7 +166,7 @@
     term(a) \oplus \bigg(term\big(next(a)\big) \oplus \Big(\ldots \oplus \big(term(b) \oplus \bot\big) \ldots\Big)\bigg),
   \end{equation*}
   където $\oplus$ е двуместна операция,\\
-  а $\bot$ е нейната ``нулева стойност'', т.е. $x\oplus\bot = x$.
+  а $\bot$ е нейната „нулева стойност“, т.е. $x\oplus\bot = x$.
   \pause
   \small
 \begin{lstlisting}
@@ -217,7 +217,7 @@
   \pause
   \textbf{Идея:} Да използваме операцията $u \oplus v := ux + v$.\\
   \pause
-  \alert{Коя е ``нулевата стойност''  $\bot$?}\\[1ex]
+  \alert{Коя е „нулевата стойност“  $\bot$?}\\[1ex]
   \pause
   \textbf{Решение №2:}
 \begin{lstlisting}
@@ -313,7 +313,7 @@
 \begin{frame}[fragile]
   \frametitle{Анонимни функции}
 
-  Можем да конструираме параметрите на функциите от по-висок ред ``на място'', без да им даваме имена!\\[1ex]
+  Можем да конструираме параметрите на функциите от по-висок ред „на място“, без да им даваме имена!\\[1ex]
   \pause
   \begin{itemize}[<+->]
   \item \tta{(lambda (}\{<параметър>\}\tta) <тяло>\tta)
@@ -501,7 +501,7 @@
 \end{lstlisting}
   \pause
   \vspace{-.5ex}
-  \textbf{Решение №2:} $f^{(n)} = f\overbrace{''''{}^{\ldots}{}''}^n$\pause
+  \textbf{Решение №2:} $f^{(n)} = f\overbrace{“''{}^{\ldots}{}''}^n$\pause
 \begin{lstlisting}
 (define (derive-n f n dx)
   @\only<7->((\rvl{repeated} \rvl{(lambda (f) (derive f dx))} n)\only<7->{ f)})@

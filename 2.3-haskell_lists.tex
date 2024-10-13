@@ -22,7 +22,7 @@
   \item \textbf{Примери:} \lst{(1,2)}, \lst{(3.5,'A',False)}, \lst{(("square",(^2)),1.0)}
   \item Тип кортеж от $n$ елемента: \tuple t
   \item Стойности: наредени $n$-торки от вида \tuple x, където $x_i$ е от тип $t_i$
-  \item Позволяват ``пакетиране"' на няколко стойности в една
+  \item Позволяват „пакетиране"' на няколко стойности в една
   \item Операции за наредени двойки:
     \begin{itemize}
     \item \lst{(,) :: a -> b -> (a,b)} --- конструиране на наредена двойка
@@ -70,7 +70,7 @@
     \end{itemize}
   \item \lst{((a,b),c)} $\neq$ \lst{(a,(b,c))} $\neq$ \lst{(a,b,c)}
   \item Няма специален тип кортеж от един елемент\ldots
-  \item \ldots но има тип ``празен кортеж'' \lst{()} с единствен елемент \lst{()}
+  \item \ldots но има тип „празен кортеж“ \lst{()} с единствен елемент \lst{()}
     \begin{itemize}
     \item в други езици такъв тип се нарича \lst{unit}
     \item използва се за означаване на липса на информация
@@ -90,7 +90,7 @@
   \item<.-> \lst{snd (_,y) = y}
   \item \lst{getYear :: Student -> Int}
   \item<.-> \lst{getYear (_, year, _) = year}
-  \item образците на кортежи могат да се използват за ``разглобяване'' на кортежи при дефиниция
+  \item образците на кортежи могат да се използват за „разглобяване“ на кортежи при дефиниция
   \item \lst{(x,y) = (3.5, 7.8)}
   \item \lst{let (name, _, grade) = student in (name, min (grade + 1) 6)}
   \end{itemize}
@@ -327,7 +327,7 @@ reverse (x:xs) = reverse xs ++ [x]
   \item \lst{Eq} е \alert{клас от типове}
   \item \lst{Eq} е класът на тези типове, за които има операции \lst{==} и \lst{/=}
     \begin{itemize}
-    \item можем да си мислим за класовете от типове като за ``интерфейси''
+    \item можем да си мислим за класовете от типове като за „интерфейси“
     \end{itemize}
   \item \lst{Eq t} наричаме \alert{класово ограничение} за типа \tt t (class constraint)
   \item множеството от всички класови ограничения наричаме \alert{контекст}
@@ -701,7 +701,7 @@ foldr1 op (x:xs) = x `op` foldr1 op xs
     \end{itemize}
   \item \lst{zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]}
     \begin{itemize}
-    \item ``съшива'' два списъка с дадена двуместна операция
+    \item „съшива“ два списъка с дадена двуместна операция
     \item \evalstos{\lst{zipWith op} \hlist x \hlist y}{\tt{[op} $x_1$ $y_1$\tt{, op} $x_2$ $y_2$\tt, \ldots\tt{, op} $x_n$ $y_n$\tt]}
     \end{itemize}
   \item \textbf{Примери:}
