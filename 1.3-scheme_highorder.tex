@@ -4,6 +4,8 @@
 
 \title{Функции от по-висок ред}
 
+\newboolfalse{horner}
+
 \date{18--25 октомври 2023 г.}
 
 \lstset{language=Scheme}
@@ -179,9 +181,11 @@
 \end{lstlisting}
 \end{frame}
 
+\ifbool{horner}{
 \subsection{Пример: правило на Хорнер}
+}{}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{horner}>[fragile]
   \frametitle{Задача: пресмятане на полином}
 
   Да се пресметне стойността на полинома
@@ -201,7 +205,7 @@
   \alert{Можем ли да решим задачата без да извикваме \tt{expt} на всяка стъпка?}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{horner}>[fragile]
   \frametitle{Правило на Хорнер}
 
   \begin{eqnarray*}
@@ -225,7 +229,7 @@
   \alert{Не смята правилно!}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{horner}>[fragile]
   \frametitle{Правило на Хорнер}
 
 Всъщност пресметнахме:
@@ -245,7 +249,7 @@
   \alert{Пак не смята правилно!!!}
 \end{frame}
 
-\begin{frame}
+\begin{frame}<\switch{horner}>
   \frametitle{Ляво и дясно натрупване}
 
   Всъщност пресметнахме:
@@ -262,9 +266,11 @@
   \alert{За неасоциативни операции $\oplus$ има значение в какъв ред са скобите!}
 \end{frame}
 
+\ifbool{horner}{
 \subsection{Ляво натрупване}
+}{}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{horner}>[fragile]
   \frametitle{Обобщена функция за ляво натрупване}
 
   Да се напише функция, която пресмята \textbf{ляво натрупване}:
@@ -285,7 +291,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{horner}>[fragile]
   \frametitle{Правило на Хорнер}
 
   \begin{eqnarray*}
