@@ -1,10 +1,25 @@
 \documentclass[alsotrans,beameroptions={aspectratio=169}]{beamerswitch}
-
 \usepackage{fprog}
 
-\title{Функции от по-висок ред}
+\newbooltrue{parts}
+
+\ifbool{parts}{
+    \newbool{part1}
+    \newbool{part2}
+    \IfEndWith*{\JobName}{part1}{\booltrue{part1}}{
+      \IfEndWith*{\JobName}{part1-trans}{\booltrue{part1}}{
+        \IfEndWith*{\JobName}{part2}{\booltrue{part2}}{
+          \IfEndWith*{\JobName}{part2-trans}{\booltrue{part2}}{
+            \IfEndWith*{\JobName}{-trans}{}{
+              \BeamerswitchSpawn{-part1}
+              \BeamerswitchSpawn{-part1-trans}
+              \BeamerswitchSpawn{-part2}
+              \BeamerswitchSpawn{-part2-trans}}
+            \stop}}}}}{}
 
 \newboolfalse{horner}
+  
+\title{Функции от по-висок ред\ifbool{parts}{ -- част \ifbool{part1}{1}{}\ifbool{part2}{2}{}}{}}
 
 \date{18--25 октомври 2023 г.}
 
@@ -15,6 +30,7 @@
 \newcommand<>{\nextf}[1]{{\textcolor#2{blue}{#1}}}
 \newcommand{\pnx}{x^n + 2x^{n-1} + \ldots + (n-2)x^3 + (n-1)x^2 + nx + (n+1)}
 \newcommand{\pnxh}{\!\!\!\Bigg(\!\bigg(\!\Big(\ldots\big((x + 2)x + 3\big)x + \ldots\Big)x + (n-1)\bigg)x + n\Bigg)x + (n+1)}
+
 
 \begin{document}
 
