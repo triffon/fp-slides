@@ -528,7 +528,7 @@
 \end{lstlisting}
   \pause
   \vspace{-.5ex}
-  \textbf{Решение №2:} $f^{(n)} = f\overbrace{“''{}^{\ldots}{}''}^n$\pause
+  \textbf{Решение №2:} $f^{(n)} = f\overbrace{''''{}^{\ldots}{}''}^n$\pause
 \begin{lstlisting}
 (define (derive-n f n dx)
   @\only<7->((\rvl{repeated} \rvl{(lambda (f) (derive f dx))} n)\only<7->{ f)})@
