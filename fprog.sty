@@ -530,6 +530,12 @@
 % превключване между активиране и деактивиране на фрейм
 \newcommand{\switch}[1]{\ifbool{#1}{all:1-}{all:0}}
 
+% превключване с конюнкция
+\newcommand{\switchand}[2]{\ifbool{#1}{\ifbool{#2}{all:1-}{all:0}}{all:0}}
+
+% превключване с дизюнкция
+\newcommand{\switchor}[2]{\ifbool{#1}{all:1-}\ifbool{#2}{all:1-}{all:0}}
+    
 %%% съкращения на символи
 
 % еквивалентно на

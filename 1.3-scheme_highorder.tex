@@ -1,6 +1,13 @@
 \documentclass[alsotrans,beameroptions={aspectratio=169}]{beamerswitch}
 \usepackage{fprog}
 
+% пример за правило на Хорнер и ляво натрупване
+\newboolfalse{horner}
+
+% извеждане на Y комбинатора
+\newboolfalse{ycomb}
+
+% компилация по части
 \newbooltrue{parts}
 
 \ifbool{parts}{
@@ -11,17 +18,21 @@
         \IfEndWith*{\JobName}{part2}{\booltrue{part2}}{
           \IfEndWith*{\JobName}{part2-trans}{\booltrue{part2}}{
             \IfEndWith*{\JobName}{-trans}{}{
+              % в общия случай пускаме компилация на частите
               \BeamerswitchSpawn{-part1}
               \BeamerswitchSpawn{-part1-trans}
               \BeamerswitchSpawn{-part2}
               \BeamerswitchSpawn{-part2-trans}}
-            \stop}}}}}{}
+            % приключваме с текущата обработка, частите вече са компилирани
+            \stop}}}}}{
+    % включване и на двете части
+    \newbooltrue{part1}
+    \newbooltrue{part2}
+  }
 
-\newboolfalse{horner}
-  
 \title{Функции от по-висок ред\ifbool{parts}{ -- част \ifbool{part1}{1}{}\ifbool{part2}{2}{}}{}}
 
-\date{18--25 октомври 2023 г.}
+\date{\ifbool{part1}{16 октомври 2024 г.}{}}
 
 \lstset{language=Scheme}
 
@@ -40,7 +51,7 @@
 
 \section{Функциите като параметри}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part1}>[fragile]
   \frametitle{Подаване на функции като параметри}
 
   В Scheme функциите са „първокласни“ стойности.\\[2ex]
@@ -60,7 +71,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}<\switch{part1}>
   \frametitle{Функции от по-висок ред}
 
   \begin{definition}
@@ -74,7 +85,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part1}>[fragile]
   \frametitle{Задачи за сумиране}
 
   \textbf{Задача:} Да се пресметнат следните суми:
@@ -100,7 +111,7 @@
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part1}>[fragile]
   \frametitle{Обобщена функция за сумиране}
   Да се напише функция от по-висок ред \tt{sum}, която пресмята сумата:
   \begin{equation*}
@@ -113,7 +124,7 @@
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part1}>[fragile]
   \frametitle{Приложения на \tt{sum}}
 
   \begin{fixedarea}
@@ -150,7 +161,7 @@
   \end{fixedarea}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part1}>[fragile]
   \frametitle{Обобщена функция за произведение}
 
   Да се напише функция от по-висок ред \tt{product}, която пресмята:
@@ -174,7 +185,7 @@
 
 \subsection{Дясно натрупване}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part1}>[fragile]
   \frametitle{Обобщена функция за натрупване}
 
   Да се напише функция, която пресмята
@@ -201,7 +212,7 @@
 \subsection{Пример: правило на Хорнер}
 }{}
 
-\begin{frame}<\switch{horner}>[fragile]
+\begin{frame}<\switchand{part1}{horner}>[fragile]
   \frametitle{Задача: пресмятане на полином}
 
   Да се пресметне стойността на полинома
@@ -221,7 +232,7 @@
   \alert{Можем ли да решим задачата без да извикваме \tt{expt} на всяка стъпка?}
 \end{frame}
 
-\begin{frame}<\switch{horner}>[fragile]
+\begin{frame}<\switchand{part1}{horner}>[fragile]
   \frametitle{Правило на Хорнер}
 
   \begin{eqnarray*}
@@ -245,7 +256,7 @@
   \alert{Не смята правилно!}
 \end{frame}
 
-\begin{frame}<\switch{horner}>[fragile]
+\begin{frame}<\switchand{part1}{horner}>[fragile]
   \frametitle{Правило на Хорнер}
 
 Всъщност пресметнахме:
@@ -265,7 +276,7 @@
   \alert{Пак не смята правилно!!!}
 \end{frame}
 
-\begin{frame}<\switch{horner}>
+\begin{frame}<\switchand{part1}{horner}>
   \frametitle{Ляво и дясно натрупване}
 
   Всъщност пресметнахме:
@@ -286,7 +297,7 @@
 \subsection{Ляво натрупване}
 }{}
 
-\begin{frame}<\switch{horner}>[fragile]
+\begin{frame}<\switchand{part1}{horner}>[fragile]
   \frametitle{Обобщена функция за ляво натрупване}
 
   Да се напише функция, която пресмята \textbf{ляво натрупване}:
@@ -307,7 +318,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}<\switch{horner}>[fragile]
+\begin{frame}<\switchand{part1}{horner}>[fragile]
   \frametitle{Правило на Хорнер}
 
   \begin{eqnarray*}
@@ -326,7 +337,7 @@
 
 \section{\tt{lambda}}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part1}>[fragile]
   \frametitle{Анонимни функции}
 
   Можем да конструираме параметрите на функциите от по-висок ред „на място“, без да им даваме имена!\\[1ex]
@@ -347,7 +358,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part1}>[fragile]
   \frametitle{Примери}
 
 \begin{lstlisting}
@@ -372,7 +383,7 @@
 
 \section{Функциите като върнат резултат}
 
-\begin{frame}
+\begin{frame}<\switch{part2}>
   \frametitle{Функции, които връщат функции}
 
   Да разгледаме функция, която прилага дадена функция два пъти над аргумент.
@@ -387,7 +398,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}<switch{part2}>
   \frametitle{Примери}
 
   \begin{itemize}[<+->]
@@ -403,7 +414,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}<\switch{part2}>
   \frametitle{Оценка на \tt{lambda}}
 
   \sizeboth\scriptsize
@@ -454,7 +465,7 @@
   \end{fixedarea}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part2}>[fragile]
   \frametitle{Намиране на производна}
 
   \begin{equation*}
@@ -474,7 +485,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part2}>[fragile]
   \frametitle{Повторено прилагане}
 
   Да се намери $n$-кратното прилагане на дадена едноместна функция.
@@ -503,7 +514,7 @@
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part2}>[fragile]
   \frametitle{$n$-та производна}
 
   \small
@@ -535,7 +546,7 @@
 
 \section{All you need is \texorpdfstring{$\lambda$}{λ}}
 
-\begin{frame}
+\begin{frame}<\switch{part2}>
   \frametitle{All you need is $\lambda$ \only<2->{--- \tt{let}}}
 
   Специалната форма \tt{lambda} е достатъчна за реализацията на (почти) всички конструкции в Scheme!\\[1ex]
@@ -561,7 +572,7 @@
   \end{center}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part2}>[fragile]
   \frametitle{All you need is $\lambda$ --- булева логика}
 
 Симулация на булеви стойности и \lst{if}:
@@ -580,7 +591,7 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part2}>[fragile]
   \frametitle{All you need is $\lambda$ --- числа}
 
   Симулация на естествени числа (\emph{нумерали на Чърч})\\
@@ -594,7 +605,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switchand{part2}{ycomb}>[fragile]
   \frametitle{All you need is $\lambda$ --- рекурсия}
 
   Рекурсивна дефиниция:
@@ -642,7 +653,7 @@
   Търсим \lst{fact} такова, че \lst{(fact n)} = \lst{((gamma fact) n)} = \lst{((gamma (gamma fact)) n)} = \lst{((gamma (gamma (gamma fact))) n)} = \ldots
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switchand{part2}{ycomb}>[fragile]
   \frametitle{All you need is $\lambda$ --- намиране на неподвижна точка}
   \textbf{Идея №1:} \lst{(define fact (((repeated gamma ?) 'empty))}\\
   \pause
@@ -665,7 +676,7 @@
     (define fact (gamma-inf gamma-inf))\end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switchand{part2}{ycomb}>[fragile]
   \frametitle{All you need is $\lambda$ --- комбинатор \tt Y}
   \begin{fixedarea}
   Да напишем функция, която намира неподвижната точка на произволен оператор \tt{gamma}:
