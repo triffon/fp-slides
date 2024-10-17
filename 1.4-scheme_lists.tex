@@ -3,14 +3,16 @@
 
 \title{Списъци}
 
-\date[25.10--15.11.2023 г.]{25 октомври--15 ноември 2023 г.}
-
+\date{16 октомври 2024 г.}
 \lstset{language=Scheme}
 
 \newcommand{\hzero}{\textcolor{red}}
 \newcommand{\vzero}{\textcolor{orange}}
 \newcommand{\hstep}{\textcolor{green}}
 \newcommand{\vstep}{\textcolor{cyan}}
+
+% взели ли сме вече функции връщащи функции?
+\newboolfalse{highorder}
 
 \begin{document}
 
@@ -113,7 +115,7 @@
   С тяхна помощ могат да се дефинират произволно сложни структури от данни.
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{highorder}>[fragile]
   \frametitle{All you need is $\lambda$ --- наредени двойки}
 
   Можем да симулираме \tt{cons}, \tt{car} и \tt{cdr} чрез \tt{lambda}!\\[2ex]

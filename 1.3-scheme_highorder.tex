@@ -10,6 +10,9 @@
 % компилация по части
 \newbooltrue{parts}
 
+% взели ли сме вече наредени двойки?
+\newbooltrue{pairs}
+
 \ifbool{parts}{
     \newbool{part1}
     \newbool{part2}
@@ -208,9 +211,7 @@
 \end{lstlisting}
 \end{frame}
 
-\ifbool{horner}{
 \subsection{Пример: правило на Хорнер}
-}{}
 
 \begin{frame}<\switchand{part1}{horner}>[fragile]
   \frametitle{Задача: пресмятане на полином}
@@ -293,9 +294,7 @@
   \alert{За неасоциативни операции $\oplus$ има значение в какъв ред са скобите!}
 \end{frame}
 
-\ifbool{horner}{
 \subsection{Ляво натрупване}
-}{}
 
 \begin{frame}<\switchand{part1}{horner}>[fragile]
   \frametitle{Обобщена функция за ляво натрупване}
@@ -365,12 +364,14 @@
 (define (integral a b f dx)
    (* dx (accumulate + 0 a b f (lambda (x) (+ x dx)))))
 \end{lstlisting}
+\ifbool{horner}{
 \pause
 \begin{lstlisting}
 (define (p n x)
    (accumulate-i (lambda (u v) (+ (* u x) v)) 0
                  1 (+ n 1) id (lambda (i) (+ i 1))))
 \end{lstlisting}
+}{}
 \pause
 \textbf{Задача:} Как можем да реализираме с accumulate:
 \begin{itemize}[<+->]
@@ -604,6 +605,27 @@
   \item \lst{(define c+ (lambda (a b) (lambda (f x) (a f (b f x)))))}
   \end{itemize}
 \end{frame}
+
+\begin{frame}<\switchand{part2}{pairs}>[fragile]
+  \frametitle{All you need is $\lambda$ --- наредени двойки}
+
+  Можем да симулираме \tt{cons}, \tt{car} и \tt{cdr} чрез \tt{lambda}!\\[2ex]
+  \pause
+  \textbf{Вариант №1:}
+\begin{lstlisting}
+(define (lcons x y) (lambda (p) (if p x y)))
+(define (lcar z) (z #t))
+(define (lcdr z) (z #f))
+\end{lstlisting}
+  \pause
+  \textbf{Вариант №2:}
+\begin{lstlisting}
+(define (lcons x y) (lambda (p) (p x y)))
+(define (lcar z) (z (lambda (x y) x)))
+(define (lcdr z) (z (lambda (x y) y)))
+\end{lstlisting}
+\end{frame}
+
 
 \begin{frame}<\switchand{part2}{ycomb}>[fragile]
   \frametitle{All you need is $\lambda$ --- рекурсия}
