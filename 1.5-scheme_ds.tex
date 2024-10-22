@@ -1,10 +1,33 @@
 \documentclass[alsotrans,beameroptions={aspectratio=169}]{beamerswitch}
 \usepackage{fprog}
 
-\title{Структури от данни в Scheme}
-\subtitle{матрици, дървета, асоциативни списъци, графи}
+%% кои теми да се включат
 
-\date{15--29 ноември 2023 г.}
+% матрици
+\newboolfalse{matrices}
+
+% капсулация чрез функционални обекти
+\newbooltrue{encapsulation}
+
+% алтернативна реализация на add-assoc
+\newboolfalse{altaddassoc}
+
+% дълбоки списъци
+\newbooltrue{deeplists}
+
+% графи
+\newboolfalse{graphs}
+
+% допълнителни съкратени команди за дълбоките списъци
+\newcommand{\hzero}{\textcolor{red}}
+\newcommand{\vzero}{\textcolor{orange}}
+\newcommand{\hstep}{\textcolor{green}}
+\newcommand{\vstep}{\textcolor{cyan}}
+
+\title{Структури от данни в Scheme}
+\subtitle{\ifbool{matrices}{матрици, }асоциативни списъци, дървета\ifbool{deeplists}{, дълбоки списъци}{}\ifbool{graphs}{, графи}{}}
+
+\date{25 октомври  2024 г.}
 
 \lstset{language=Scheme}
 
@@ -48,7 +71,7 @@
 
 \subsection{Представяне}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{matrices}>[fragile]
   \frametitle{Представяне на матрици}
   Можем да представим матрица като списък от списък от елементи:\\
   \begin{columns}[T,onlytextwidth]
@@ -86,7 +109,7 @@
 
 \subsection{Операции}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{matrices}>[fragile]
   \frametitle{Базови операции}
 
   Брой редове и стълбове
@@ -112,7 +135,7 @@
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{matrices}>[fragile]
   \frametitle{Разширени операции}
 
   Намиране на ред и стълб по индекс
@@ -145,7 +168,7 @@
   \end{overprint}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{matrices}>[fragile]
   \frametitle{Аритметични операции}
 
   Събиране на матрици
@@ -419,7 +442,7 @@
 
 \subsection{Капсулация}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{encapsulation}>[fragile]
   \frametitle{Капсулация на базови операции}
 
   \textbf{Проблем:} операциите над СД са видими глобално\\[2ex]
@@ -444,7 +467,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{encapsulation}>[fragile]
   \frametitle{Нормализация при капсулация}
 
 \sizeboth\small
@@ -469,7 +492,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{encapsulation}>[fragile]
   \frametitle{Капсулация на операции с аргументи}
 
 \sizeboth\footnotesize
@@ -489,6 +512,7 @@
                                              @\alert{(* denom (r 'get-denom)))))}@
        (else 'unknown-prop))))
 \end{lstlisting}
+\vspace*{-.5ex}
   \pause
   \begin{itemize}
   \item \lst{(define r1 (make-rat 3 5))}
@@ -497,7 +521,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile,fragile]
+\begin{frame}<\switch{encapsulation}>[fragile]
   \frametitle{Извикване на собствени операции}
 
 \sizeboth\footnotesize
@@ -521,142 +545,6 @@
 \end{lstlisting}
   \pause
   Извикването на метод на обект чрез препратка \tt{self} или \tt{this} се нарича \alert{отворена рекурсия}.
-\end{frame}
-
-\section{Двоични дървета}
-
-\subsection{Представяне}
-
-\begin{frame}[fragile]
-  \frametitle{Представяне на двоични дървета}
-
-  Представяме двоични дървета като вложени списъци от три елемента:\\[2ex]
-  \begin{columns}[t,onlytextwidth]
-    \begin{column}{0.5\textwidth}
-      \centering
-      \begin{forest} baseline
-        [корен [ляво] [дясно]]
-      \end{forest}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-      \tt(<корен> <ляво> <дясно>\tt)
-    \end{column}
-  \end{columns}
-  \pause
-  \vspace{2ex}
-  Пример:
-  \begin{columns}[t,onlytextwidth]
-    \begin{column}{0.5\textwidth}
-      \centering
-      \begin{forest} baseline, for tree={circle,draw}
-        [1 [2] [3 [4] [5]]]
-      \end{forest}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-\begin{verbatim}
-(1 (2 () ())
-   (3 (4 () ())
-      (5 () ())))
-\end{verbatim}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\subsection{Операции}
-
-\begin{frame}[fragile]
-  \frametitle{Базови операции}
-
-  Проверка за коректност:
-  \pause
-\begin{lstlisting}
-(define (tree? t)
-  (or (null? t)
-      (and (list t) (= (length t) 3))
-           (tree? (cadr t))
-           (tree? (caddr t))))
-\end{lstlisting}
-  \pause
-  Конструктори:
-  \pause
-\begin{lstlisting}
-(define empty-tree '())
-(define (make-tree root left right) (list root left right))
-\end{lstlisting}
-  \pause
-  Селектори:
-  \pause
-\begin{lstlisting}
-(define root-tree car)
-(define left-tree cadr)
-(define right-tree caddr)
-(define empty-tree? null?)
-\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Разширени операции}
-
-  Дълбочина на дърво:
-  \pause
-\begin{lstlisting}
-(define (depth-tree t)
-  (if (empty-tree? t) 0
-      (1+ (max (depth (left-tree t))
-               (depth (right-tree t))))))
-\end{lstlisting}
-  \pause
-  Намиране на поддърво:
-  \pause
-\begin{onlyenv}<4 |trans:0>
-\begin{lstlisting}
-(define (memv-tree x t)
-  (cond ((empty-tree? t) #f)
-        ((eqv? x (root-tree t)) t)
-        (else (or (memv-tree x (left-tree t))
-                  (memv-tree x (right-tree t))))))
-\end{lstlisting}
-\end{onlyenv}
-\begin{onlyenv}<5->
-\begin{lstlisting}
-(define (memv-tree x t)
-  (and (not (empty-tree? t))
-       (or (and (eqv? x (root-tree t)) t)
-           (memv-tree x (left-tree t))
-           (memv-tree x (right-tree t)))))
-\end{lstlisting}
-\end{onlyenv}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Търсене на път в двоично дърво}
-
-  \textbf{Задача:} Да се намери в дървото път от корена до даден възел \tt x.
-  \pause
-  \begin{onlyenv}<2 |trans:0>
-\begin{lstlisting}
-(define (path-tree x t)
-  (cond ((empty-tree? t) #f)
-        ((eqv? x (root-tree t)) (list x))
-        (else (cons#f (root-tree t)
-                      (or (path-tree x (left-tree t))
-                          (path-tree x (right-tree t)))))))
-
-(define (cons#f h t) (and t (cons h t)))
-\end{lstlisting}
-  \end{onlyenv}
-  \begin{onlyenv}<3->
-\begin{lstlisting}
-(define (path-tree x t)
-  (and (not (empty-tree? t))
-       (or (and (eqv? x (root-tree t)) (list x))
-           (cons#f (root-tree t)
-                   (or (path-tree x (left-tree t))
-                       (path-tree x (right-tree t)))))))
-
-(define (cons#f h t) (and t (cons h t)))
-\end{lstlisting}
-  \end{onlyenv}
 \end{frame}
 
 \section{Асоциативни списъци}
@@ -752,14 +640,14 @@
 (define (add-assoc key value alist)
   (cons (cons key value) (del-assoc key alist)))
 \end{lstlisting}
+    \ifbool{altaddassoc}{
     \begin{itemize}
     \item А ако искаме да запазим реда на ключовете?
-    \end{itemize}
+    \end{itemize}}{}
   \end{itemize}
 \end{frame}
-\begin{comment}
-%% Ненужно усложняване на задачата
-\begin{frame}[fragile]
+
+\begin{frame}<\switch{altaddassoc}>[fragile]
   \frametitle{Задаване на стойност за ключ}
 \small
   \textbf{Вариант №1 (грозен и по-бърз):}
@@ -782,7 +670,6 @@
            (cons new-kv alist))))
 \end{lstlisting}
 \end{frame}
-\end{comment}
 
 \begin{frame}[fragile]
   \frametitle{Задачи за съществуване}
@@ -831,12 +718,276 @@
   (not (search (lambda (x) (not (p? x))) l)))
 \end{lstlisting}
 \end{frame}
+\section{Двоични дървета}
+
+\subsection{Представяне}
+
+\begin{frame}[fragile]
+  \frametitle{Представяне на двоични дървета}
+
+  Представяме двоични дървета като вложени списъци от три елемента:\\[2ex]
+  \begin{columns}[t,onlytextwidth]
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{forest} baseline
+        [корен [ляво] [дясно]]
+      \end{forest}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \tt(<корен> <ляво> <дясно>\tt)
+    \end{column}
+  \end{columns}
+  \pause
+  \vspace{2ex}
+  Пример:
+  \begin{columns}[t,onlytextwidth]
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{forest} baseline, for tree={circle,draw}
+        [1 [2] [3 [4] [5]]]
+      \end{forest}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+\begin{verbatim}
+(1 (2 () ())
+   (3 (4 () ())
+      (5 () ())))
+\end{verbatim}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\subsection{Операции}
+
+\begin{frame}[fragile]
+  \frametitle{Базови операции}
+
+  Проверка за коректност:
+  \pause
+\begin{lstlisting}
+(define (tree? t)
+  (or (null? t)
+      (and (list t) (= (length t) 3))
+           (tree? (cadr t))
+           (tree? (caddr t))))
+\end{lstlisting}
+  \pause
+  Конструктори:
+  \pause
+\begin{lstlisting}
+(define empty-tree '())
+(define (make-tree root left right) (list root left right))
+\end{lstlisting}
+  \pause
+  Селектори:
+  \pause
+\begin{lstlisting}
+(define root-tree car)
+(define left-tree cadr)
+(define right-tree caddr)
+(define empty-tree? null?)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Разширени операции}
+
+  Дълбочина на дърво:
+  \pause
+\begin{lstlisting}
+(define (depth-tree t)
+  (if (empty-tree? t) 0
+      (1+ (max (depth (left-tree t))
+               (depth (right-tree t))))))
+\end{lstlisting}
+  \pause
+  Намиране на поддърво:
+  \pause
+
+  \begin{fixedarea}[.4]
+    \begin{onlyenv}<4 |trans:0>
+\begin{lstlisting}
+(define (memv-tree x t)
+  (cond ((empty-tree? t) #f)
+        ((eqv? x (root-tree t)) t)
+        (else (or (memv-tree x (left-tree t))
+                  (memv-tree x (right-tree t))))))
+\end{lstlisting}
+    \end{onlyenv}
+    \begin{onlyenv}<5->
+\begin{lstlisting}
+(define (memv-tree x t)
+  (and (not (empty-tree? t))
+       (or (and (eqv? x (root-tree t)) t)
+           (memv-tree x (left-tree t))
+           (memv-tree x (right-tree t)))))
+\end{lstlisting}
+    \end{onlyenv}
+  \end{fixedarea}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Търсене на път в двоично дърво}
+
+  \textbf{Задача:} Да се намери в дървото път от корена до даден възел \tt x.
+  \pause
+  \begin{fixedarea}[.7]
+  \begin{onlyenv}<2 |trans:0>
+\begin{lstlisting}
+(define (path-tree x t)
+  (cond ((empty-tree? t) #f)
+        ((eqv? x (root-tree t)) (list x))
+        (else (cons#f (root-tree t)
+                      (or (path-tree x (left-tree t))
+                          (path-tree x (right-tree t)))))))
+
+(define (cons#f h t) (and t (cons h t)))
+\end{lstlisting}
+  \end{onlyenv}
+  \begin{onlyenv}<3->
+\begin{lstlisting}
+(define (path-tree x t)
+  (and (not (empty-tree? t))
+       (or (and (eqv? x (root-tree t)) (list x))
+           (cons#f (root-tree t)
+                   (or (path-tree x (left-tree t))
+                       (path-tree x (right-tree t)))))))
+
+(define (cons#f h t) (and t (cons h t)))
+\end{lstlisting}
+  \end{onlyenv}
+\end{fixedarea}
+\end{frame}
+
+\section{Дълбоки списъци}
+
+\begin{frame}<\switch{deeplists}>[fragile]
+  \frametitle{Работа с дълбоки списъци}
+
+% TODO диаграма на списъка с наредени двойки
+\begin{verbatim}
+((1 (2)) (((3) 4) (5 (6)) () (7)) 8)
+\end{verbatim}
+  \textbf{Задача.} Да се преброят в атомите в дълбок списък.\\
+  \textbf{Подход:} Обхождане в две посоки: хоризонтално и вертикално
+  \pause
+  \begin{itemize}[<+->]
+  \item \hzero{Хоризонтално дъно:} \rvl{достигане до празен списък \tt{()}}
+  \item \vzero{Вертикално дъно:} \rvl{достигане до друг атом}
+  \item \hstep{Хоризонтална стъпка:} \rvl{обхождане на опашката \tt{(cdr l)}}
+  \item \vstep{Вертикална стъпка:} \rvl{обхождане на главата \tt{(car l)}}
+  \end{itemize}
+  \vspace{2ex}
+  \onslide<+->
+  За удобство можем да дефинираме функцията \tt{atom?}:
+\begin{lstlisting}
+(define (atom? x) (and (not (null? x)) (not (pair? x))))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}<\switch{deeplists}>[fragile]
+  \frametitle{Примери}
+  \small
+  \textbf{Задача.} Да се преброят в атомите в дълбок списък.\\
+  \evalsto{(count-atoms '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}8
+  \pause
+\begin{lstlisting}
+(define (count-atoms l)
+  (cond ((null? l) @\hzero0@)
+        ((atom? l) @\vzero1@)
+        (else (+ @\vstep{(count-atoms (car l))} \hstep{(count-atoms (cdr l))}@))))
+\end{lstlisting}
+\vspace{2ex}
+  \pause
+  \textbf{Задача.} Да се съберат всички атоми от дълбок списък.\\
+  \evalsto{(flatten '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}{(1 2 3 4 5 6 7 8)}
+  \pause
+\begin{lstlisting}
+(define (flatten l)
+  (cond ((null? l) @\hzero{'()}@)
+        ((atom? l) @\vzero{(list l)}@)
+        (else (append @\vstep{(flatten (car l))} \hstep{(flatten (cdr l))}@))))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}<\switch{deeplists}>[fragile]
+  \frametitle{Примери}
+
+  \textbf{Задача.} Да се обърне редът на атомите в дълбок списък.\\
+  \evalsto{(deep-reverse '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}{(8 ((7) () ((6) 5) (4 (3))) ((2) 1))}
+  \pause
+\begin{lstlisting}
+(define (deep-reverse l)
+  (cond ((null? l) @\hzero{'()}@)
+        ((atom? l) @\vzero{l}@)
+        (else (append @\hstep{(deep-reverse (cdr l))}@
+                @\vstep{(list (deep-reverse (car l)))}@))))
+\end{lstlisting}
+\end{frame}
+
+% TODO: диаграма на дълбок списък без наредени двойки
+\begin{frame}<\switch{deeplists}>[fragile]
+  \frametitle{Свиване на дълбоки списъци}
+
+  \tt{(deep-foldr }<х-дъно> <в-дъно> <операция> <списък>\tt)\\
+  \pause
+  \onslide<+->
+\begin{lstlisting}
+(define (deep-foldr op term nv l)
+  (cond ((null? l) @\hzero{nv}@)
+        ((atom? l) @\vzero{(term l)}@)
+        (else (op @\vstep{(deep-foldr op term nv (car l))}@
+                  @\hstep{(deep-foldr op term nv (cdr l))}@))))
+\end{lstlisting}
+  \onslide<+->
+\begin{lstlisting}
+(define (count-atoms l) (deep-foldr @\rvl+ \rvl{(lambda (x) 1)} \rvl0@ l))
+\end{lstlisting}
+  \onslide<+->
+\begin{lstlisting}
+(define (flatten l) (deep-foldr @\rvl{append} \rvl{list} \rvl{'()}@ l))
+\end{lstlisting}
+  \onslide<+->
+  \begin{visibleenv}<12->
+\begin{lstlisting}
+(define (snoc x l) (append l (list x)))\end{lstlisting}%
+  \end{visibleenv}%
+\begin{lstlisting}
+(define (deep-reverse l) (deep-foldr @\rvl{snoc} \rvl{id} \rvl{'()}@ l))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}<\switch{deeplists}>[fragile]
+  \frametitle{Директна реализация на \tt{deep-foldr}}
+
+  Как работи \tt{deep-foldr}?
+  \pause
+  \begin{itemize}[<+->]
+  \item пуска себе си рекурсивно за всеки елемент на дълбокия списък
+  \item при достигане на вертикално дъно (атоми) прилага \tt{term}
+  \item и събира резултатите с \tt{op}
+  \end{itemize}
+  \onslide<+->
+  Можем да реализираме \tt{deep-foldr} чрез \tt{map} и \tt{foldr}!
+  \onslide<+->
+\begin{lstlisting}
+(define (branch p? f g) (lambda (x) (p? x) (f x) (g x)))
+(define (deep-foldr op term nv l)
+  (foldr @\hstep{op} \hzero{nv}@
+   (map (branch atom?
+                @\vzero{term}@
+                @\vstep{(lambda (l) (deep-foldr op term nv l))}@
+        l)))
+\end{lstlisting}
+  \onslide<+->
+ \textbf{Задача.} Реализирайте функция за ляво свиване на дълбоки списъци \tt{deep-foldl}.
+\end{frame}
 
 \section{Графи}
 
 \subsection{Представяне}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{graphs}>[fragile]
   \frametitle{Представяне на графи чрез асоциативни списъци}
 
   \begin{columns}[t,onlytextwidth]
@@ -865,7 +1016,7 @@
   Асоциативен списък, в който \alert{ключовете} са върховете, а \alert{стойностите} са списъци от техните деца.
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{graphs}>[fragile]
   \frametitle{Абстракция за граф}
 
 \begin{lstlisting}
@@ -885,7 +1036,7 @@
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{graphs}>[fragile]
   \frametitle{Абстракция за граф}
 
   \sizeboth\footnotesize
@@ -913,7 +1064,7 @@
 
 \subsection{Задачи}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{graphs}>[fragile]
   \frametitle{Локални задачи}
 
   \small
@@ -937,7 +1088,7 @@
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{graphs}>[fragile]
   \frametitle{Проверка за симетричност}
   \textbf{Задача. }Да се провери дали граф е симетричен.\\
   \pause
@@ -954,7 +1105,7 @@
 
 \subsection{Обхождане в дълбочина}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{graphs}>[fragile]
   \frametitle{Схема на обхождане в дълбочина}
 
   Обхождане на връх \tt u:
@@ -988,7 +1139,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{graphs}>[fragile]
   \frametitle{Търсене на път в дълбочина}
 
   \sizeboth\small
@@ -1039,7 +1190,7 @@
 
 \subsection{Търсене в ширина}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{graphs}>[fragile]
   \frametitle{Схема на обхождане в ширина}
   \begin{onlyenv}<1-2| trans:1>
     Обхождане, започващо от връх \tt u:
@@ -1102,7 +1253,7 @@
   \end{onlyenv}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{graphs}>[fragile]
   \frametitle{Разширяване на пътища}
 
   Удобно е пътищата да са представени като \alert{стек}
@@ -1137,7 +1288,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{graphs}>[fragile]
   \frametitle{Търсене на път в ширина}
 
   \sizeboth\footnotesize

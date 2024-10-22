@@ -3,16 +3,14 @@
 
 \title{Списъци}
 
-\date{16 октомври 2024 г.}
+\date{16--23 октомври 2024 г.}
 \lstset{language=Scheme}
-
-\newcommand{\hzero}{\textcolor{red}}
-\newcommand{\vzero}{\textcolor{orange}}
-\newcommand{\hstep}{\textcolor{green}}
-\newcommand{\vstep}{\textcolor{cyan}}
 
 % взели ли сме вече функции връщащи функции?
 \newboolfalse{highorder}
+
+% вариадични функции
+\newboolfalse{variadic}
 
 \begin{document}
 
@@ -532,133 +530,9 @@
   \end{tabular}
 \end{frame}
 
-\section{Дълбоки списъци}
-
-\begin{frame}[fragile]
-  \frametitle{Работа с дълбоки списъци}
-
-% TODO диаграма на списъка с наредени двойки
-\begin{verbatim}
-((1 (2)) (((3) 4) (5 (6)) () (7)) 8)
-\end{verbatim}
-  \textbf{Задача.} Да се преброят в атомите в дълбок списък.\\
-  \textbf{Подход:} Обхождане в две посоки: хоризонтално и вертикално
-  \pause
-  \begin{itemize}[<+->]
-  \item \hzero{Хоризонтално дъно:} \rvl{достигане до празен списък \tt{()}}
-  \item \vzero{Вертикално дъно:} \rvl{достигане до друг атом}
-  \item \hstep{Хоризонтална стъпка:} \rvl{обхождане на опашката \tt{(cdr l)}}
-  \item \vstep{Вертикална стъпка:} \rvl{обхождане на главата \tt{(car l)}}
-  \end{itemize}
-  \vspace{2ex}
-  \onslide<+->
-  За удобство можем да дефинираме функцията \tt{atom?}:
-\begin{lstlisting}
-(define (atom? x) (and (not (null? x)) (not (pair? x))))
-\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Примери}
-  \small
-  \textbf{Задача.} Да се преброят в атомите в дълбок списък.\\
-  \evalsto{(count-atoms '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}8
-  \pause
-\begin{lstlisting}
-(define (count-atoms l)
-  (cond ((null? l) @\hzero0@)
-        ((atom? l) @\vzero1@)
-        (else (+ @\vstep{(count-atoms (car l))} \hstep{(count-atoms (cdr l))}@))))
-\end{lstlisting}
-\vspace{2ex}
-  \pause
-  \textbf{Задача.} Да се съберат всички атоми от дълбок списък.\\
-  \evalsto{(flatten '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}{(1 2 3 4 5 6 7 8)}
-  \pause
-\begin{lstlisting}
-(define (flatten l)
-  (cond ((null? l) @\hzero{'()}@)
-        ((atom? l) @\vzero{(list l)}@)
-        (else (append @\vstep{(flatten (car l))} \hstep{(flatten (cdr l))}@))))
-\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Примери}
-
-  \textbf{Задача.} Да се обърне редът на атомите в дълбок списък.\\
-  \evalsto{(deep-reverse '((1 (2)) (((3) 4) (5 (6)) () (7)) 8))}{(8 ((7) () ((6) 5) (4 (3))) ((2) 1))}
-  \pause
-\begin{lstlisting}
-(define (deep-reverse l)
-  (cond ((null? l) @\hzero{'()}@)
-        ((atom? l) @\vzero{l}@)
-        (else (append @\hstep{(deep-reverse (cdr l))}@
-                @\vstep{(list (deep-reverse (car l)))}@))))
-\end{lstlisting}
-\end{frame}
-
-% TODO: диаграма на дълбок списък без наредени двойки
-\begin{frame}[fragile]
-  \frametitle{Свиване на дълбоки списъци}
-
-  \tt{(deep-foldr }<х-дъно> <в-дъно> <операция> <списък>\tt)\\
-  \pause
-  \onslide<+->
-\begin{lstlisting}
-(define (deep-foldr op term nv l)
-  (cond ((null? l) @\hzero{nv}@)
-        ((atom? l) @\vzero{(term l)}@)
-        (else (op @\vstep{(deep-foldr op term nv (car l))}@
-                  @\hstep{(deep-foldr op term nv (cdr l))}@))))
-\end{lstlisting}
-  \onslide<+->
-\begin{lstlisting}
-(define (count-atoms l) (deep-foldr @\rvl+ \rvl{(lambda (x) 1)} \rvl0@ l))
-\end{lstlisting}
-  \onslide<+->
-\begin{lstlisting}
-(define (flatten l) (deep-foldr @\rvl{append} \rvl{list} \rvl{'()}@ l))
-\end{lstlisting}
-  \onslide<+->
-  \begin{visibleenv}<12->
-\begin{lstlisting}
-(define (snoc x l) (append l (list x)))\end{lstlisting}%
-  \end{visibleenv}%
-\begin{lstlisting}
-(define (deep-reverse l) (deep-foldr @\rvl{snoc} \rvl{id} \rvl{'()}@ l))
-\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Директна реализация на \tt{deep-foldr}}
-
-  Как работи \tt{deep-foldr}?
-  \pause
-  \begin{itemize}[<+->]
-  \item пуска себе си рекурсивно за всеки елемент на дълбокия списък
-  \item при достигане на вертикално дъно (атоми) прилага \tt{term}
-  \item и събира резултатите с \tt{op}
-  \end{itemize}
-  \onslide<+->
-  Можем да реализираме \tt{deep-foldr} чрез \tt{map} и \tt{foldr}!
-  \onslide<+->
-\begin{lstlisting}
-(define (branch p? f g) (lambda (x) (p? x) (f x) (g x)))
-(define (deep-foldr op term nv l)
-  (foldr @\hstep{op} \hzero{nv}@
-   (map (branch atom?
-                @\vzero{term}@
-                @\vstep{(lambda (l) (deep-foldr op term nv l))}@
-        l)))
-\end{lstlisting}
-  \onslide<+->
- \textbf{Задача.} Реализирайте функция за ляво свиване на дълбоки списъци \tt{deep-foldl}.
-\end{frame}
-
 \section{Вариадични функции}
 
-\begin{frame}
+\begin{frame}<\switch{variadic}>
   \frametitle{Вариадични функции ---  приемащи произволен брой аргументи}
 
   \begin{itemize}[<+->]
@@ -675,7 +549,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}<\switch{variadic}>
   \frametitle{Примери}
 
   \begin{itemize}[<+->]
@@ -700,7 +574,8 @@
   \item \evalstop{(apply append '((1 2) (3 4) (5 6)))}{(1 2 3 4 5 6)}
   \item \evalstop{(apply list '(1 2 3 4))}{(1 2 3 4)}
   \end{itemize}
-  \onslide<+->
+\ifbool{variadic}{
+\onslide<+->
 \small
 \begin{lstlisting}
 (define (append . l)
@@ -709,10 +584,11 @@
          (else (cons (caar l)
                      (apply append (cons (cdar l) (cdr l)))))))
 \end{lstlisting}
+  }{}
 \end{frame}
 
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{variadic}>[fragile]
   \frametitle{Вариадичен \lst{map}}
 
   \begin{itemize}[<+->]
