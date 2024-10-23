@@ -303,7 +303,7 @@
   \item \evalstop{(map square '(1 2 3))}{(1 4 9)}
   \item \evalstop{(map cadr '((a b c) (d e f) (g h i)))}{(b e h)}
   \item \evalstop{(map (lambda (f) (f 2)) (list square 1+ odd?))}{(4 3 \#f)}
-  \item \evalstop{(map (lambda (f) (f 2)) (map twice (list square 1+ boolean?)))}{(16 4 \#t)}
+  \ifbool{highorder}{\item \evalstop{(map (lambda (f) (f 2)) (map twice (list square 1+ boolean?)))}{(16 4 \#t)}}{}
   \end{itemize}
 \end{frame}
 
