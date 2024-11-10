@@ -1,9 +1,12 @@
 \documentclass[alsotrans,beameroptions={aspectratio=169}]{beamerswitch}
 \usepackage{fprog}
 
+% вариадични функции
+\newboolfalse{variadic}
+
 \title{Потоци}
 
-\date[29.11--6.12.2023]{29 ноември -- 6 декември 2023 г.}
+\date{6 ноември 2024 г.}
 
 \lstset{language=Scheme}
 
@@ -244,7 +247,7 @@
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{variadic}>[fragile]
   \frametitle{\tt{map-stream} с произволен брой параметри}
 
   Стандартната функция \lst{map} за списъци позволява комбиниране на произволен брой $n$ списъци с $n$-аргументна функция.\\
@@ -291,7 +294,7 @@
     \end{onlyenv}
     \begin{onlyenv}<5-| trans:0>
 \begin{lstlisting}
-(define nats (cons-stream 0 (map-stream + ones nats)))
+(define nats (cons-stream 0 (\ifbool{variadic}{map-stream}{zip-streams} + ones nats)))
 \end{lstlisting}
     \end{onlyenv}
   \end{fixedarea}
@@ -307,7 +310,7 @@
 \begin{lstlisting}
 (define fibs (cons-stream 0
                (cons-stream 1
-                 (map-stream + fibs (tail fibs)))))
+                 (\ifbool{variadic}{map-stream}{zip-streams} + fibs (tail fibs)))))
 \end{lstlisting}
 \end{frame}
 
