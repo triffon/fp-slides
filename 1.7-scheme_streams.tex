@@ -294,7 +294,7 @@
     \end{onlyenv}
     \begin{onlyenv}<5-| trans:0>
 \begin{lstlisting}
-(define nats (cons-stream 0 (\ifbool{variadic}{map-stream}{zip-streams} + ones nats)))
+(define nats (cons-stream 0 (@\ifbool{variadic}{map-stream}{zip-streams}@ + ones nats)))
 \end{lstlisting}
     \end{onlyenv}
   \end{fixedarea}
@@ -310,7 +310,7 @@
 \begin{lstlisting}
 (define fibs (cons-stream 0
                (cons-stream 1
-                 (\ifbool{variadic}{map-stream}{zip-streams} + fibs (tail fibs)))))
+                 (@\ifbool{variadic}{map-stream}{zip-streams}@ + fibs (tail fibs)))))
 \end{lstlisting}
 \end{frame}
 
