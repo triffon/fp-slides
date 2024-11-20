@@ -32,7 +32,7 @@ jobs:
                 1.7-scheme_streams,
                 2.1-haskell_basics,
                 2.2-haskell_defs,
-                # 2.3-haskell_lists,
+                2.3-haskell_lists,
                 # 2.4-haskell_lazy,
                 # 2.5-haskell_data,
                 # 2.6-haskell_io,
