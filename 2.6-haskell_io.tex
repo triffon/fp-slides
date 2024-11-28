@@ -1,9 +1,35 @@
 \documentclass[alsotrans,beameroptions={aspectratio=169}]{beamerswitch}
 \usepackage{fprog}
 
-\title{Входно-изходни операции в Haskell}
+% взели ли сме вече лениво оценяване?
+\newboolfalse{lazy}
 
-\date{10--17 януари 2022 г.}
+% компилация по части
+\newbooltrue{parts}
+
+\ifbool{parts}{
+    \newbool{part1}
+    \newbool{part2}
+    \IfEndWith*{\JobName}{part1}{\booltrue{part1}}{
+      \IfEndWith*{\JobName}{part1-trans}{\booltrue{part1}}{
+        \IfEndWith*{\JobName}{part2}{\booltrue{part2}}{
+          \IfEndWith*{\JobName}{part2-trans}{\booltrue{part2}}{
+            \IfEndWith*{\JobName}{-trans}{}{
+              % в общия случай пускаме компилация на частите
+              \BeamerswitchSpawn{-part1}
+              \BeamerswitchSpawn{-part1-trans}
+              \BeamerswitchSpawn{-part2}
+              \BeamerswitchSpawn{-part2-trans}}
+            % приключваме с текущата обработка, частите вече са компилирани
+            \stop}}}}}{
+    % включване и на двете части
+    \newbooltrue{part1}
+    \newbooltrue{part2}
+  }
+
+\title{Входно-изходни операции в Haskell\ifbool{parts}{ -- част \ifbool{part1}{1}{}\ifbool{part2}{2}{}}{}}
+
+\date{\ifbool{part1}{29 ноември 2024 г.}{}}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -15,7 +41,7 @@
 
 \section{Странични ефекти в Haskell}
 
-\begin{frame}
+\begin{frame}<\switch{part1}>
   \frametitle{Странични ефекти в Haskell}
 
   \begin{itemize}[<+->]
@@ -40,7 +66,7 @@
   \end{center}
 \end{frame}
 
-\begin{frame}
+\begin{frame}<\switch{part1}>
   \frametitle{Поточна обработка}
   \textbf{Задача.} Да се въведат \tt{n} числа и да се изведе тяхното средно аритметично.\\
   \pause
@@ -59,7 +85,7 @@
 
 \section{\tt{IO}}
 
-\begin{frame}
+\begin{frame}<\switch{part1}>
   \frametitle{Типът \tt{IO a}}
 
   Стандартният генеричен тип \lst{IO a} задава тип на входно/изходна трансформация, резултатът от която е от тип \tt{a}.\\
@@ -80,7 +106,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part1}>[fragile]
   \frametitle{Главна функция \tt{main}}
 
   \begin{itemize}[<+->]
@@ -98,7 +124,7 @@
 
 \section{Синтаксис за вход/изход}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part1}>[fragile]
   \frametitle{Конструкцията \lst{do}}
 
   В Haskell има специален \alert{двумерен} синтаксис за композиране на трансформации:\\[1ex]
@@ -127,7 +153,7 @@ main = do line <- getLine
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile,fragile]
+\begin{frame}<\switch{part1}>[fragile]
   \frametitle{Локални дефиниции в \lst{do}}
   \small
   В някакъв смисъл \lst{<-} и \lst{return} са обратни една на друга операции:
@@ -153,7 +179,7 @@ main = do putStrLn "Моля, въведете палиндром: "
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}
+\begin{frame}<\switch{part1}>
   \frametitle{Вход и изход на данни}
 
   Как можем да извеждаме и въвеждаме данни от типове различни от \lst{Char} и \tt{String}?\\[2ex]
@@ -172,7 +198,7 @@ main = do putStrLn "Моля, въведете палиндром: "
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part1}>[fragile]
   \frametitle{Пример: средно аритметично на редица от числа}
 \lstsmall
 \begin{lstlisting}
@@ -197,7 +223,7 @@ main = do avg <- findAverage
 \section{Управляващи структури}
 
 
-\begin{frame}
+\begin{frame}<\switch{part1}>
   \frametitle{Управляващи функции}
 
   Можем да работим с трансформации с функции от по-висок ред:
@@ -228,7 +254,7 @@ main = do avg <- findAverage
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part1}>[fragile]
   \frametitle{Средно аритметично на числа v2.0}
 
   \small
@@ -250,7 +276,7 @@ main = forever $
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switchand{part1}{lazy}>[fragile]
   \frametitle{Ленив вход и изход}
 
   \begin{itemize}[<+->]
@@ -270,7 +296,7 @@ noSpaces = interact $ filter (/=' ')
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part1}>[fragile]
   \frametitle{Работа с файлове}
 
   \begin{itemize}[<+->]
@@ -298,7 +324,7 @@ encrypt cypher inFile outFile =
 
 \section{Монади}
 
-\begin{frame}
+\begin{frame}<\switch{part2}>
   \frametitle{Монади}
 
   \begin{itemize}[<+->]
@@ -315,7 +341,7 @@ encrypt cypher inFile outFile =
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}<\switch{part2}>
   \frametitle{Монадни операции}
 
   \begin{itemize}[<+->]
@@ -335,7 +361,7 @@ encrypt cypher inFile outFile =
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<\switch{part2}>[fragile]
   \frametitle{Императивен стил чрез монади}
 
   \small
