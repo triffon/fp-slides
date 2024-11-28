@@ -1,9 +1,15 @@
 \documentclass[alsotrans,beameroptions={aspectratio=169}]{beamerswitch}
 \usepackage{fprog}
 
+% взели ли сме вече вход/изход?
+\newbooltrue{io}
+
+% примери за безточково програмиране
+\newboolfalse{pointfree}
+
 \title[Лениво оценяване]{Лениво оценяване и програмиране от по-висок ред}
 
-\date{3--10 януари 2024 г.}
+\date{29 ноември 2024 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -435,6 +441,26 @@ sumHeads (x:xs) (y:ys) = x + y
   \end{itemize}
 \end{frame}
 
+\begin{frame}<\switch{io}>[fragile]
+  \frametitle{Ленив вход и изход}
+
+  \begin{itemize}[<+->]
+  \item Ленивото оценяване в Haskell ни позволява да работим с входно/изходни потоци
+  \item \lst{getContents :: IO String} --- връща списък от \alert{всички} символи на стандартния вход
+  \item списъкът се оценява лениво, т.е. прочита се при нужда
+  \item \textbf{Пример:}
+\begin{lstlisting}
+noSpaces = do text <- getContents
+              putStr $ filter (/=' ') text
+\end{lstlisting}
+  \item \lst{interact :: (String -> String) -> IO ()} --- лениво прилага функция над низове над стандартния вход и извежда резултата на стандартния изход
+  \item \textbf{Пример:}
+\begin{lstlisting}
+noSpaces = interact $ filter (/=' ')
+\end{lstlisting}
+  \end{itemize}
+\end{frame}
+
 \section{Безточково програмиране}
 
 \begin{frame}
@@ -481,7 +507,7 @@ sumHeads (x:xs) (y:ys) = x + y
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}<\switch{pointfree}>
   \frametitle{Безточково (point-free) програмиране}
 
   С помощта на операциите \tt{\$} и \tt. можем да дефинираме функции чрез директно използване на други функции.\\\pause
@@ -507,7 +533,7 @@ sumHeads (x:xs) (y:ys) = x + y
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}<\switch{pointfree}>
   \frametitle{Безточково (point-free) програмиране}
   \textbf{Пример 3:}
   \begin{itemize}[<+->]
@@ -522,7 +548,7 @@ sumHeads (x:xs) (y:ys) = x + y
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}<\switch{pointfree}>
   \frametitle{Безточково (point-free) програмиране}
 
   Можем да използваме още следните функции от \lst{Control.Monad}:
@@ -549,7 +575,7 @@ sumHeads (x:xs) (y:ys) = x + y
 \end{frame}
 
 
-\begin{frame}
+\begin{frame}<\switch{pointfree}>
   \frametitle{Безточково (point-free) програмиране}
   \textbf{Пример 4:}
   \begin{itemize}[<+->]
