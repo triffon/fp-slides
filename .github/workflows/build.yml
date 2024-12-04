@@ -48,7 +48,7 @@ jobs:
         uses: actions/checkout@v2
       # Compiles LaTeX file
       - name: LaTeX compile
-        uses: xu-cheng/latex-action@v2
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: ${{ matrix.file }}.tex
           latexmk_shell_escape: true
