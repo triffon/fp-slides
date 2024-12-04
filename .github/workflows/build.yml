@@ -33,7 +33,7 @@ jobs:
                 2.1-haskell_basics,
                 2.2-haskell_defs,
                 2.3-haskell_lists,
-                # 2.4-haskell_lazy,
+                2.4-haskell_lazy,
                 # 2.5-haskell_data,
                 # 2.6-haskell_io,
                 # 2.7-haskell_func
