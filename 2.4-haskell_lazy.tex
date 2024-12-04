@@ -9,7 +9,7 @@
 
 \title[Лениво оценяване]{Лениво оценяване и програмиране от по-висок ред}
 
-\date{4 декември 2024 г.}
+\date{4--11 декември 2024 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -404,7 +404,7 @@ sumHeads (x:xs) (y:ys) = x + y
     Отделянето на списъци работи и за безкрайни списъци.\pause
     \begin{itemize}[<+->]
     \item \tt{oddSquares = \rvl{[ x\^{}2 | x <- [1,3..] ]}}
-    \item {\small\tt{twins = \rvl{[ (x,x+2) | x <- [3..], isPrime x, isPrime
+    \item {\small\tt{twins = \rvl{[ (x,x+2) | x <- [3,5..], isPrime x, isPrime
           (x+2) ]}}}
     \item \tt{pairs = \rvl{[ (x,y) | x <- [0..], y <- [0..x - 1] ]}}
     \item \tt{pythagoreanTriples = \rvl{
