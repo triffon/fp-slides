@@ -7,6 +7,9 @@
 % компилация по части
 \newbooltrue{parts}
 
+% взели ли сме вече операцията ($)?
+\newbooltrue{app}
+
 \ifbool{parts}{
     \newbool{part1}
     \newbool{part2}
@@ -114,7 +117,7 @@
     специална: тя е входната точка на компилираната програма.
   \item По същество тя дефинира входно-изходна трансформация, която се прилага към стандартния вход и изход при изпълнение на програмата.
   \item \textbf{Пример:} \lst^main = putStrLn "Hello, world!"^
-  \item Можем ли да дефинираме \lst!main = putStrLn $ "Въведохте: " ++ getLine!? % поправка на оцветяването на синтаксис$
+  \item Можем ли да дефинираме \lst!main = putStrLn !\ifbool{app}{\lst!\$! }{\lst!(!}\lst!"Въведохте: " ++ getLine!\ifbool{app}{}{\lst!)!}? % поправка на оцветяването на синтаксис$
   \item \alert{Не!} \hspace{3em} \lst{getLine :: }\tta{IO} \lst{String}
   \item Композицията на входно-изходни трансформации работи по различен начин от композицията на функции
   \item Низът, който връща \lst{getLine} е „замърсен“ от входно-изходна операция
@@ -149,7 +152,7 @@
   \vspace{-.5ex}
 \begin{lstlisting}
 main = do line <- getLine
-          putStrLn $ "Въведохте: " ++ line
+          putStrLn @\ifbool{app}{\$ }{(}@"Въведохте: " ++ line@\ifbool{app}{}{)}@
 \end{lstlisting}
 \end{frame}
 
@@ -174,7 +177,7 @@ main = do putStrLn "Моля, въведете палиндром: "
           line <- getLine
           let revLine = reverse line
           if revLine == line then putStrLn "Благодаря!"
-          else do putStrLn $ line ++ " не е палиндром!"
+          else do putStrLn @\ifbool{app}{\$ }{(}@line ++ " не е палиндром!"@\ifbool{app}{}{)}@
                   main
 \end{lstlisting}
 \end{frame}
@@ -194,7 +197,7 @@ main = do putStrLn "Моля, въведете палиндром: "
   \item Haskell не може да познае типа на резултата, понеже е генеричен!
   \item \lst{getInt :: IO Int}
   \item \lst{getInt = do line <- getLine}\\
-    \hspace{7em}\lst{return \$ read line}
+    \hspace{7em}\lst!return! \ifbool{app}{\lst! \$! }{ \lst!(!}\lst!read line!\ifbool{app}{}{\lst!)!}
   \end{itemize}
 \end{frame}
 
@@ -206,17 +209,17 @@ findAverage :: IO Double@\pause@
 findAverage = do putStr "Моля, въведете брой: "
                  n <- getInt
                  s <- readAndSum n
-                 return $ fromIntegral s / fromIntegral n
+                 return @\ifbool{app}{\$ }{(}@fromIntegral s / fromIntegral n@\ifbool{app}{}{)}@
 @\pause@
 readAndSum :: Int -> IO Int@\pause@
 readAndSum 0 = return 0
 readAndSum n = do putStr "Моля, въведете число: "
                   x <- getInt
-                  s <- readAndSum $ n - 1
-                  return $ x + s
+                  s <- readAndSum @\ifbool{app}{\$ }{(}@n - 1@\ifbool{app}{}{)}@
+                  return @\ifbool{app}{\$ }{(}@x + s@\ifbool{app}{}{)}@
 @\pause@
 main = do avg <- findAverage
-          putStrLn $ "Средното аритметично е: " ++ show avg
+          putStrLn @\ifbool{app}{\$ }{(}@"Средното аритметично е: " ++ show avg@\ifbool{app}{}{)}@
 \end{lstlisting}
 \end{frame}
 
@@ -317,7 +320,7 @@ encrypt cypher inFile outFile =
   do h1 <- openFile inFile ReadMode
      text <- hGetContents h1
      h2 <- openFile outFile WriteMode
-     hPutStr h2 $ map cypher text
+     hPutStr h2 @\ifbool{app}{\$ }{(}@map cypher text@\ifbool{app}{}{)}@
 \end{lstlisting}
   \end{itemize}
 \end{frame}
