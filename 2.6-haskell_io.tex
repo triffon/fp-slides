@@ -8,7 +8,7 @@
 \newbooltrue{parts}
 
 % взели ли сме вече операцията ($)?
-\newbooltrue{app}
+\newbool{app}
 
 \ifbool{parts}{
     \newbool{part1}
@@ -29,6 +29,9 @@
     \newbooltrue{part1}
     \newbooltrue{part2}
   }
+
+\ifbool{part1}{\boolfalse{app}}{}
+\ifbool{part2}{\booltrue{app}}{}
 
 \title{Входно-изходни операции в Haskell\ifbool{parts}{ -- част \ifbool{part1}{1}{}\ifbool{part2}{2}{}}{}}
 
