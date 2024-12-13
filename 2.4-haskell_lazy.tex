@@ -451,12 +451,12 @@ sumHeads (x:xs) (y:ys) = x + y
   \item \textbf{Пример:}
 \begin{lstlisting}
 noSpaces = do text <- getContents
-              putStr $ filter (/=' ') text
+              putStr (filter (/=' ') text)
 \end{lstlisting}
   \item \lst{interact :: (String -> String) -> IO ()} --- лениво прилага функция над низове над стандартния вход и извежда резултата на стандартния изход
   \item \textbf{Пример:}
 \begin{lstlisting}
-noSpaces = interact $ filter (/=' ')
+noSpaces = interact (filter (/=' '))
 \end{lstlisting}
   \end{itemize}
 \end{frame}
@@ -641,7 +641,8 @@ noSpaces = interact $ filter (/=' ')
     \item първо оценява \tt x и след това прилага \tt f над оценката на \tt x
     \item прилага \tt f над \tt x със стриктно оценяване
     \item \lst^f x = f \$! (1-x)^
-    \item \lst^(\$!) = ap seq^
+    \ifbool{pointfree}{
+    \item \lst^(\$!) = ap seq^}{}
     \end{itemize}
   \end{itemize}
 \end{frame}
