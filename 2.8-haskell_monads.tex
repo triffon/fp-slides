@@ -1,0 +1,48 @@
+\documentclass[alsotrans,beameroptions={aspectratio=169}]{beamerswitch}
+\usepackage{fprog}
+
+\title{Приложения на функтори и монади}
+
+\date{15 януари 2025 г.}
+
+\lstset{language=Haskell,style=Haskell}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Приложения на Монади}
+
+\begin{frame}[fragile]
+  \frametitle{Maybe }
+
+  \lst{data Maybe a = Nothing | Just a}
+
+  \pause
+  \begin{itemize}[<+->]
+  \item Фокусиране върху „добрия“ случай
+  \item \lst{m1 <*> m2} --- трябва едновременно да имат стойност (\lst{and})
+  \item \lst{m1 <|> m2} --- трябва поне едно да има стойност (\list{or})
+  \item \lst{m1 >>= (\x -> m2)} --- стойността на \lst{m2} зависи от стойността на \lst{m1}
+  \item \textbf{Пример:} търсене на път в дърво
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Error }
+
+  \lst{data Error a = OK a | Error String}
+
+  \pause
+  \begin{itemize}[<+->]
+  \item Възможност за прекратяване на изчислението с изключение
+  \item \lst{m1 <*> m2} --- трябва едновременно да имат стойност (\lst{and})
+  \item \lst{m1 <|> m2} --- трябва поне едно да има стойност (\list{or})
+  \item \lst{m1 >>= (\x -> m2)} --- стойността на \lst{m2} зависи от стойността на \lst{m1}
+  \item \textbf{Пример:} търсене на път в дърво
+  \end{itemize}
+\end{frame}
+
+\end{document}
