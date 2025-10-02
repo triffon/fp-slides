@@ -22,8 +22,8 @@ jobs:
       matrix:
         file: [
                 0.0-org,
-                # 0.1-intro,
-                # 1.1-scheme_basics,
+                0.1-intro,
+                1.1-scheme_basics,
                 # 1.2-scheme_envs,
                 # 1.3-scheme_highorder,
                 # 1.4-scheme_lists,
