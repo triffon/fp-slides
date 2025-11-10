@@ -27,7 +27,7 @@
 \title{Структури от данни в Scheme}
 \subtitle{\ifbool{matrices}{матрици, }асоциативни списъци, дървета\ifbool{deeplists}{, дълбоки списъци}{}\ifbool{graphs}{, графи}{}}
 
-\date[25.10–6.11.2024 г.]{25 октомври – 6 ноември 2024 г.}
+\date[30.10--6.11.2025 г.]{30 октомври -- 6 ноември 2025 г.}
 
 \lstset{language=Scheme}
 
@@ -558,7 +558,7 @@
     Асоциативните списъци (още: речник, хеш, map) са списъци от наредени двойки \tt(<ключ> \tt. <стойност>\tt). <ключ> и <стойност> може да са произволни S-изрази.
   \end{definition}
   \vspace{2ex}
-  \tt{((}$K_1$ \tt. $V_1$\tt) \tt($K_1$ \tt. $V_2$\tt) \ldots \tt($K_n$ \tt. $V_n$\tt{))}\\[2ex]
+  \tt{((}$K_1$ \tt. $V_1$\tt) \tt($K_2$ \tt. $V_2$\tt) \ldots \tt($K_n$ \tt. $V_n$\tt{))}\\[2ex]
   \begin{tikzpicture}
     \pointcell{a1}
     \nextcell{a2}{a1}
@@ -800,7 +800,7 @@
       (1+ (max (depth (left-tree t))
                (depth (right-tree t))))))
 \end{lstlisting}
-  \pause
+\pause
   Намиране на поддърво:
   \pause
 
@@ -929,7 +929,7 @@
 \begin{frame}<\switch{deeplists}>[fragile]
   \frametitle{Свиване на дълбоки списъци}
 
-  \tt{(deep-foldr }<х-дъно> <в-дъно> <операция> <списък>\tt)\\
+  \tt{(deep-foldr }<операция> <в-дъно> <х-дъно> <списък>\tt)\\
   \pause
   \onslide<+->
 \begin{lstlisting}
