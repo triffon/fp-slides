@@ -9,7 +9,7 @@
 
 \title[Лениво оценяване]{Лениво оценяване и програмиране от по-висок ред}
 
-\date{11 декември 2025 г.}
+\date{11--18 декември 2025 г.}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -256,6 +256,7 @@ sumHeads (x:xs) (y:ys) = x + y
 
   \small
   \begin{tabular}{r@{ }l@{ }l}
+    %TODO: оценяване на filter докато се напасне шаблонът%
     &\multicolumn 2l{\tt{(filter isPrime [4..1000]) \underline{!!} 1}}\\\pause
     \lra&\multicolumn 2l{\tt{(\textbackslash(\_:xs) n -> xs !! (n-1)) \underline{(filter isPrime [4..1000])} 1}}\\
     \lra&\multicolumn 2l{\tt{(\textbackslash(\_:xs) n -> xs !! (n-1)) (\underline{filter} isPrime [4..1000]) 1}}\\
