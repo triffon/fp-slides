@@ -35,7 +35,7 @@
 
 \title{Входно-изходни операции в Haskell\ifbool{parts}{ -- част \ifbool{part1}{1}{}\ifbool{part2}{2}{}}{}}
 
-\date[\ifbool{part1}{11.12.2025 г.}{22.12.2025 г.}]{\ifbool{part1}{11 декември 2025 г.}{22 декември 2025 г.}}
+\date[\ifbool{part1}{11.12.2025 г.}{08.01.2026 г.}]{\ifbool{part1}{11 декември 2025 г.}{8 януари 2026 г.}}
 
 \lstset{language=Haskell,style=Haskell}
 
@@ -381,7 +381,7 @@ main = do line <- getLine
           putStrLn $ "Въведохте: " ++ line
 \end{lstlisting}
       \end{onlyenv}
-      \begin{onlyenv}<3>
+      \begin{onlyenv}<3|trans:0>
 \begin{lstlisting}
 main = getLine >>= (\line -> putStrLn $ "Въведохте " ++ line)
 \end{lstlisting}
