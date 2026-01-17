@@ -36,7 +36,7 @@ jobs:
                 2.4-haskell_lazy,
                 2.5-haskell_data,
                 # 2.6-haskell_io,
-                # 2.7-haskell_func
+                2.7-haskell_func
               ]
     # The type of runner that the job will run on
     runs-on: ubuntu-latest

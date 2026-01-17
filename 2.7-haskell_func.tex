@@ -149,7 +149,7 @@ instance Functor Pill where
 \begin{frame}[fragile]
   \frametitle{Класът \tt{Applicative}}
 \begin{lstlisting}
-class (Functor f) => Applicative f where
+class Functor f => Applicative f where
   pure  :: a -> f a
   (<*>) :: f (a -> b) -> f a -> f b
 \end{lstlisting}
