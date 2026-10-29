@@ -1,2 +1,3 @@
-$pdflatex = "pdflatex -shell-escape %O %S && if test -s %D; then ln -sf %D %R.pdf; fi";
-$out_dir = "out";
+$pdflatex = "pdflatex -shell-escape %O %S";
+$pdf_mode = 1;
+$aux_dir = "aux";
