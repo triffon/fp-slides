@@ -4,6 +4,9 @@
 % пример за правило на Хорнер и ляво натрупване
 \newboolfalse{horner}
 
+% слайдовете за All you need is lambda
+\newboolfalse{allneedlambda}
+
 % извеждане на Y комбинатора
 \newboolfalse{ycomb}
 
@@ -12,6 +15,9 @@
 
 % взели ли сме вече наредени двойки?
 \newbooltrue{pairs}
+
+% без слайдовете за All you need is lambda не показваме и техните части
+\ifbool{allneedlambda}{}{\boolfalse{pairs}\boolfalse{ycomb}}
 
 \ifbool{parts}{
     \newbool{part1}
@@ -35,7 +41,7 @@
 
 \title{Функции от по-висок ред\ifbool{parts}{ -- част \ifbool{part1}{1}{}\ifbool{part2}{2}{}}{}}
 
-\date{\ifbool{part1}{16 октомври 2026 г.}{30 октомври 2025 г.}}
+\date{\ifbool{part1}{16 октомври 2026 г.}{30 октомври 2026 г.}}
 
 \lstset{language=Scheme}
 
@@ -545,9 +551,9 @@
 \end{fixedarea}
 \end{frame}
 
-\section{All you need is \texorpdfstring{$\lambda$}{λ}}
+\ifbool{allneedlambda}{\section{All you need is \texorpdfstring{$\lambda$}{λ}}}{}
 
-\begin{frame}<\switch{part2}>
+\begin{frame}<\switchand{part2}{allneedlambda}>
   \frametitle{All you need is $\lambda$ \only<2->{--- \tt{let}}}
 
   Специалната форма \tt{lambda} е достатъчна за реализацията на (почти) всички конструкции в Scheme!\\[1ex]
@@ -573,7 +579,7 @@
   \end{center}
 \end{frame}
 
-\begin{frame}<\switch{part2}>[fragile]
+\begin{frame}<\switchand{part2}{allneedlambda}>[fragile]
   \frametitle{All you need is $\lambda$ --- булева логика}
 
 Симулация на булеви стойности и \lst{if}:
@@ -592,7 +598,7 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}<\switch{part2}>[fragile]
+\begin{frame}<\switchand{part2}{allneedlambda}>[fragile]
   \frametitle{All you need is $\lambda$ --- числа}
 
   Симулация на естествени числа (\emph{нумерали на Чърч})\\
