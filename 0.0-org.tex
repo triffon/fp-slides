@@ -8,6 +8,8 @@
 
 \hypersetup{colorlinks,urlcolor=blue,linkcolor=white}
 
+\newcommand{\aiann}[1]{\only<2>{\hfill\makebox[5cm][l]{\textcolor{green!50!black}{\textbf{#1}}}}}
+
 \begin{document}
 
 \begin{frame}
@@ -26,20 +28,20 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}<1>[label=components]
   \frametitle{Компоненти за оценяване}
 
   \begin{itemize}
-  \item Големи контролни: 2 $\times$ 30 т.
+  \item Големи контролни: 2 $\times$ 30 т. \aiann{ИИ-0}%
     \begin{enumerate}
-    \item 12.11 от 9 часа
+    \item 12.11 от 9 часа 
     \item 17.12 от 9 часа
     \end{enumerate}
-  \item Малки контролни: 2 $\times$ 10 т.
-  \item Проект: 1 $\times$ 30 т. максимум
-  \item Блиц тестове: 5 $\times$ 2 т. \alert{(минимум 5 т.)}
-  \item Изпит задачи: 1 $\times$ 50 т. \alert{(минимум 15 т.)}
-  \item Изпит теория: 1 $\times$ 50 т. \alert{(минимум 20 т.)}
+  \item Малки контролни: 2 $\times$ 10 т. \aiann{ИИ-0}
+  \item Проект: 1 $\times$ 30 т. максимум \aiann{ИИ-3}
+  \item Блиц тестове: 5 $\times$ 2 т. \alert{(минимум 5 т.)} \aiann{ИИ-2}
+  \item Изпит задачи: 1 $\times$ 50 т. \alert{(минимум 15 т.)} \aiann{ИИ-0}
+  \item Изпит теория: 1 $\times$ 50 т. \alert{(минимум 20 т.)} \aiann{ИИ-0}
   \item \textbf{Максимум:} 220 т.
   \item \textbf{Максимум текущ контрол:} 120 т.
   \end{itemize}
@@ -54,6 +56,34 @@
   \item 60 т. = Среден 3.00
   \end{itemize}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Използване на изкуствен интелект в СУ}
+
+  Режими на използване
+  \begin{itemize}
+  \item \textbf{ИИ-0 -- самостоятелно изпълнение:} без използване на системи с ИИ
+  \item \textbf{ИИ-1 -- техническа помощ:} само правопис, граматика, пунктуация, форматиране, библиография
+  \item \textbf{ИИ-2 -- подпомагане на подготовката:} идеи, обяснение на понятия, обратна връзка върху собствена чернова, обяснение и отстраняване на грешки в собствен код; \alert{без генерирано съдържание в предаваната работа}
+  \item \textbf{ИИ-3 -- генериране на съдържание:} съдържателен принос към работата (текст, код и др.) в рамките на изрично разрешените в условието дейности
+  \item \textbf{ИИ-4 -- задължително използване:} ИИ е част от изискванията на задачата
+  \end{itemize}
+
+  \vspace{1ex}
+  {\small
+  \href{https://www.uni-sofia.bg/index.php/bul/content/download/363036/2325663/version/3/file/\%D0\%9F\%D1\%80\%D0\%B0\%D0\%B2\%D0\%B8\%D0\%BB\%D0\%B0+\%D0\%B7\%D0\%B0+\%D0\%B8\%D0\%B7\%D0\%BF\%D0\%BE\%D0\%BB\%D0\%B7\%D0\%B2\%D0\%B0\%D0\%BD\%D0\%B5+\%D0\%BD\%D0\%B0+\%D0\%98\%D0\%98_\%D0\%A1\%D0\%A3_24.09.2026.pdf}{Правила за използване на ИИ в СУ}\\
+  \href{https://www.uni-sofia.bg/index.php/bul/content/download/363037/2325667/version/3/file/\%D0\%9D\%D0\%B0\%D1\%81\%D0\%BE\%D0\%BA\%D0\%B8+\%D0\%B7\%D0\%B0+\%D0\%B8\%D0\%B7\%D0\%BF\%D0\%BE\%D0\%BB\%D0\%B7\%D0\%B2\%D0\%B0\%D0\%BD\%D0\%B5+\%D0\%BD\%D0\%B0+\%D0\%A1\%D0\%98\%D0\%98+\%D0\%B2+\%D0\%A1\%D0\%A3+23.09.2026.pdf}{Насоки за използване на СИИ в СУ}}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Режими на използване на изкуствен интелект}
+
+  \begin{center}
+    \includegraphics[height=0.8\textheight,width=\textwidth,keepaspectratio]{images/ai-su.png}
+  \end{center}
+\end{frame}
+
+\againframe<2>{components}
 
 \begin{frame}
   \frametitle{Канали за комуникация}
