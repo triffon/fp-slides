@@ -770,7 +770,7 @@
 \begin{lstlisting}
 (define (tree? t)
   (or (null? t)
-      (and (list t) (= (length t) 3))
+      (and (list? t) (= (length t) 3))
            (tree? (cadr t))
            (tree? (caddr t))))
 \end{lstlisting}
